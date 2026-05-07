@@ -5697,8 +5697,9 @@ elBody.addEventListener("click", e => {
     const card = actBtn.closest(".contract-card");
     if (card) card.classList.toggle("is-collapsed");
   } else if (action === "open-dp") {
-    const wrap = actBtn.closest(".card-date-wrap");
-    const input = wrap.querySelector(".card-date-input");
+    const wrap = actBtn.closest(".card-date-wrap, .v3-cell-date-wrap");
+    if (!wrap) return;
+    const input = wrap.querySelector(".card-date-input, .v3-cell-date-input");
     openDatePicker(input, wrap);
   } else if (action === "remove") {
     state.rows.splice(idx, 1);
@@ -5728,9 +5729,9 @@ elBody.addEventListener("click", e => {
 
 /* Click on the date input itself opens the picker too */
 elBody.addEventListener("click", e => {
-  const input = e.target.closest(".card-date-input");
+  const input = e.target.closest(".card-date-input, .v3-cell-date-input");
   if (!input) return;
-  const wrap = input.closest(".card-date-wrap");
+  const wrap = input.closest(".card-date-wrap, .v3-cell-date-wrap");
   openDatePicker(input, wrap);
 });
 
@@ -5807,11 +5808,11 @@ document.getElementById("successReport").addEventListener("click", () => {
    Pressing Enter or Space opens the datepicker; arrow keys also.
    =================================================================== */
 elBody.addEventListener("keydown", e => {
-  const dateInput = e.target.closest(".card-date-input");
+  const dateInput = e.target.closest(".card-date-input, .v3-cell-date-input");
   if (!dateInput) return;
   if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
     e.preventDefault();
-    const wrap = dateInput.closest(".card-date-wrap");
+    const wrap = dateInput.closest(".card-date-wrap, .v3-cell-date-wrap");
     openDatePicker(dateInput, wrap);
   }
 });
@@ -5932,7 +5933,7 @@ function openDatePicker(input, wrap) {
 
   // Make popup visible (off-screen first to measure size)
   dpPopup.classList.add("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   if (wrap) wrap.classList.add("is-open");
 
   // Render contents first so we can measure
@@ -5975,7 +5976,7 @@ function openDatePicker(input, wrap) {
 
 function closeDatePicker() {
   if (dpPopup) dpPopup.classList.remove("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   dpCurrentInput = null;
 }
 
@@ -6060,7 +6061,7 @@ function clearDPDate() {
 // Click outside closes
 document.addEventListener("click", e => {
   if (!dpPopup || !dpPopup.classList.contains("is-open")) return;
-  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap")) return;
+  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap, .v3-cell-date-wrap")) return;
   closeDatePicker();
 });
 // Escape closes
@@ -6070,7 +6071,7 @@ document.addEventListener("keydown", e => {
 // Reposition on scroll
 window.addEventListener("scroll", () => {
   if (dpPopup && dpPopup.classList.contains("is-open") && dpCurrentInput) {
-    const wrap = dpCurrentInput.closest(".card-date-wrap");
+    const wrap = dpCurrentInput.closest(".card-date-wrap, .v3-cell-date-wrap");
     const rect = (wrap || dpCurrentInput).getBoundingClientRect();
     dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
     dpPopup.style.left = (window.scrollX + rect.left) + "px";
