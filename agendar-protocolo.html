@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /* ================================================================
-     Mosaic Direct — Design tokens (mirroring V5)
+     Design tokens (V5 parity)
      ================================================================ */
   :root {
     --mosaic-green-900: #003e2a;
@@ -50,6 +50,8 @@
     --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
     --shadow-modal:  0 18px 60px rgba(0,0,0,0.22), 0 6px 18px rgba(0,0,0,0.12);
     --shadow-popup:  0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.08);
+
+    --input-h: 44px;       /* unified input/button height across the page */
   }
 
   *, *::before, *::after { box-sizing: border-box; }
@@ -177,7 +179,7 @@
   }
 
   /* ================================================================
-     Mainnav
+     Mainnav with Contratos + Agendamento submenus
      ================================================================ */
   .mainnav {
     background: #fff;
@@ -316,41 +318,14 @@
   }
 
   /* ================================================================
-     Action row (top: select-protocol button + helper + view toggle)
+     Buttons (unified height)
      ================================================================ */
-  .action-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 22px;
-    position: relative;
-    z-index: 5;
-  }
-  .action-row .left {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    position: relative;
-    flex: 1;
-  }
-  .action-label {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-1);
-  }
-  .action-help {
-    font-size: 13px;
-    color: var(--text-3);
-    font-weight: 500;
-  }
-
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 44px;
+    height: var(--input-h);
     padding: 0 22px;
     border: 1.5px solid transparent;
     background: #fff;
@@ -385,112 +360,30 @@
     color: var(--text-1);
   }
   .btn-yellow:hover { background: var(--warning-yellow-d); }
-  .btn-link {
-    background: none;
-    border: none;
-    color: var(--link-green);
-    font-weight: 700;
-    padding: 0;
-    height: auto;
-  }
-  .btn-link:hover { text-decoration: underline; }
-
-  .btn-with-arrow::after {
-    content: "";
-    width: 8px; height: 8px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(45deg);
-    margin-top: -3px;
-    margin-left: 4px;
-  }
+  .btn-with-icon svg { flex-shrink: 0; }
 
   /* ================================================================
-     Select-protocol dropdown
+     Action row + view toggle
      ================================================================ */
-  .select-dropdown-wrap {
-    position: relative;
-  }
-  .select-dropdown {
-    position: absolute;
-    top: calc(100% + 6px);
-    right: 0;
-    width: 380px;
-    background: #fff;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-popup);
-    z-index: 40;
-    display: none;
-  }
-  .select-dropdown.is-open { display: block; }
-  .select-dropdown .search-input {
-    width: 100%;
-    height: 42px;
-    padding: 0 14px;
-    border: none;
-    border-bottom: 1px solid var(--border-soft);
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-  }
-  .select-dropdown .group-label {
-    padding: 10px 14px 6px;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .select-dropdown ul { list-style: none; margin: 0; padding: 0; }
-  .select-dropdown li {
-    padding: 10px 14px;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-1);
-    cursor: pointer;
-    display: flex;
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
-    gap: 8px;
+    gap: 24px;
+    margin-bottom: 22px;
   }
-  .select-dropdown li:hover { background: var(--bg-section); }
-  .select-dropdown li .icon-doc {
-    color: var(--text-3);
-    flex-shrink: 0;
-  }
-  .select-dropdown li mark {
-    background: var(--mosaic-yellow);
-    color: var(--text-1);
-    padding: 0 2px;
-  }
-  .select-dropdown .more-results {
-    padding: 12px 14px;
-    margin: 8px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
+  .action-label {
+    font-size: 16px;
     font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13.5px;
+    color: var(--text-1);
   }
-  .select-dropdown .more-results:hover {
-    background: var(--bg-section);
-    border-color: var(--mosaic-green-700);
-  }
-  .select-dropdown .empty {
-    padding: 20px 14px;
-    text-align: center;
-    color: var(--text-3);
+  .action-help {
     font-size: 13px;
-    font-style: italic;
+    color: var(--text-3);
+    font-weight: 500;
+    margin-top: 2px;
   }
 
-  /* ================================================================
-     View toggle (cards / table)
-     ================================================================ */
   .view-toggle {
     display: inline-flex;
     align-items: center;
@@ -498,7 +391,6 @@
     border: 1px solid var(--border-soft);
     padding: 3px;
     flex-shrink: 0;
-    align-self: center;
   }
   .view-toggle button {
     background: transparent;
@@ -540,7 +432,7 @@
   .empty-state.is-hidden { display: none; }
 
   /* ================================================================
-     Protocol cards (list mode)
+     Protocol cards (list mode) — V5-aligned
      ================================================================ */
   .proto-list {
     display: flex;
@@ -601,7 +493,7 @@
 
   .proto-card-recv {
     background: var(--bg-section);
-    padding: 10px 18px;
+    padding: 12px 18px;
     display: flex;
     flex-wrap: wrap;
     gap: 18px 28px;
@@ -625,15 +517,15 @@
   .proto-card-item {
     padding: 16px 18px;
     display: grid;
-    grid-template-columns: 1.6fr 0.7fr 1.2fr 1.2fr 0.9fr 0.9fr 1.1fr 1.4fr 0.6fr;
+    grid-template-columns: 1.6fr 0.7fr 1.2fr 1.2fr 0.9fr 0.9fr 1.1fr 1.5fr 0.6fr;
     gap: 14px;
-    align-items: center;
+    align-items: end;
   }
   .proto-card-item + .proto-card-item {
     border-top: 1px solid var(--border-soft);
   }
 
-  .item-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .item-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .item-field .lbl {
     font-size: 10px;
     font-weight: 800;
@@ -648,6 +540,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    height: var(--input-h);
+    display: flex;
+    align-items: center;
   }
   .item-field .val.saldo {
     color: var(--mosaic-green-700);
@@ -662,61 +557,65 @@
   }
 
   .pill-frete {
-    display: inline-block;
-    padding: 3px 8px;
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
     font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
+    border: 1.5px solid;
   }
-  .pill-frete.fob { background: rgba(0,106,77,0.12); color: var(--mosaic-green-800); }
-  .pill-frete.cif { background: rgba(213,107,26,0.14); color: var(--mosaic-orange); }
+  .pill-frete.fob { background: rgba(0,106,77,0.06); color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
+  .pill-frete.cif { background: var(--status-orange-bg); color: var(--status-orange); border-color: var(--status-orange); }
 
-  /* Inputs in row */
+  /* ================================================================
+     Inputs (unified height) — Volume / Date / Roteiro
+     ================================================================ */
+  .field-input,
   .row-input {
     width: 100%;
-    height: 36px;
-    padding: 0 12px;
+    height: var(--input-h);
+    padding: 0 14px;
     border: 1.5px solid var(--border);
     background: #fff;
-    font-size: 13px;
+    font-size: 14px;
     font-family: inherit;
     font-weight: 600;
     color: var(--text-1);
     outline: none;
     transition: border-color 120ms;
   }
+  .field-input:focus,
   .row-input:focus { border-color: var(--mosaic-green-700); }
+  .field-input::placeholder,
   .row-input::placeholder { color: var(--text-disabled); font-weight: 500; }
 
-  .vol-wrap {
-    position: relative;
-  }
+  .vol-wrap { position: relative; }
   .vol-wrap .row-input {
-    padding-right: 26px;
+    padding-right: 30px;
     text-align: right;
     font-variant-numeric: tabular-nums;
   }
   .vol-wrap .suffix {
     position: absolute;
-    right: 10px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     color: var(--text-3);
     pointer-events: none;
   }
 
-  .date-wrap {
-    position: relative;
-  }
+  .date-wrap { position: relative; }
   .date-wrap .row-input {
-    padding-right: 36px;
+    padding-right: 40px;
     cursor: pointer;
   }
   .date-wrap .cal-icon {
     position: absolute;
-    right: 8px;
+    right: 12px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-2);
@@ -725,22 +624,20 @@
 
   .roteiro-btn {
     width: 100%;
-    height: 36px;
-    padding: 0 10px;
+    height: var(--input-h);
+    padding: 0 14px;
     border: 1.5px solid var(--border);
     background: #fff;
-    font-size: 12.5px;
+    font-size: 13.5px;
     font-weight: 600;
     color: var(--text-1);
     cursor: pointer;
     text-align: left;
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     transition: border-color 120ms;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
   .roteiro-btn:hover { border-color: var(--mosaic-green-700); }
   .roteiro-btn .icon { flex-shrink: 0; color: var(--text-3); }
@@ -762,10 +659,12 @@
     display: inline-flex;
     gap: 4px;
     justify-content: flex-end;
+    align-items: center;
+    height: var(--input-h);
   }
   .row-actions button {
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     border: 1px solid var(--border-soft);
     background: #fff;
     color: var(--text-2);
@@ -815,7 +714,7 @@
     vertical-align: middle;
   }
   .proto-table tbody td {
-    padding: 12px 12px;
+    padding: 10px 12px;
     border-bottom: 1px solid var(--border-soft);
     color: var(--text-1);
     font-weight: 600;
@@ -869,26 +768,344 @@
   }
 
   /* ================================================================
-     Modal de busca avançada
+     Side drawer (V5 pattern)
+     ================================================================ */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease-out;
+  }
+  .drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
+    background: #fff;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .drawer.is-open { transform: translateX(0); }
+
+  .drawer-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    flex-shrink: 0;
+  }
+  .drawer-header .modal-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .titles { flex: 1; }
+  .drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .drawer-header .subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .drawer-header .close-x {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 120ms, color 120ms;
+  }
+  .drawer-header .close-x:hover {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+
+  .drawer-search {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .drawer-search-wrap {
+    position: relative;
+  }
+  .drawer-search-wrap input {
+    width: 100%;
+    height: var(--input-h);
+    padding: 0 44px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .drawer-search-wrap input::placeholder {
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .drawer-search-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .drawer-search-wrap .icon-left {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+  .drawer-search-wrap .clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .drawer-search-wrap .clear-btn:hover { color: var(--text-1); }
+  .drawer-search-wrap.has-value .clear-btn { display: inline-flex; }
+
+  .drawer-meta {
+    padding: 12px 28px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .drawer-meta .selected-count {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .drawer-meta .selected-count.is-zero { color: var(--text-3); }
+  .drawer-meta .select-all {
+    background: transparent;
+    border: none;
+    color: var(--link-green);
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .drawer-meta .select-all:hover { text-decoration: underline; }
+
+  .drawer-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .drawer-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
+  }
+  .drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background-color 120ms;
+    user-select: none;
+  }
+  .drawer-item:hover { background: rgba(0, 106, 77, 0.04); }
+  .drawer-item.is-selected {
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
+  }
+  .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+  .drawer-item.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border-strong);
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .drawer-item.is-selected .checkbox {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .checkbox svg { opacity: 0; transition: opacity 120ms; }
+  .drawer-item.is-selected .checkbox svg { opacity: 1; }
+
+  .drawer-item-body { flex: 1; min-width: 0; }
+  .drawer-item-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .drawer-item-pcode {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--mosaic-green-900);
+    letter-spacing: 0.01em;
+  }
+  .drawer-item-contract {
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: 12.5px;
+  }
+  .drawer-item-frete {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .drawer-item-frete--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .drawer-item-frete--cif {
+    color: var(--status-orange);
+    border-color: var(--status-orange);
+    background: var(--status-orange-bg);
+  }
+  .drawer-item-product {
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 13px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .drawer-item-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .drawer-item-meta strong {
+    color: var(--text-2);
+    font-weight: 800;
+  }
+  .drawer-item-saldo {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .drawer-item-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .drawer-item mark {
+    background: rgba(240, 192, 32, 0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
+
+  .drawer-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-footer .count {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .drawer-footer .count strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .drawer-footer .actions { display: flex; gap: 12px; }
+
+  /* ================================================================
+     Modal — base + confirm/success variants
      ================================================================ */
   .modal-backdrop {
     position: fixed;
     inset: 0;
     background: var(--bg-overlay);
-    z-index: 100;
+    z-index: 130;
     display: none;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding: 56px 32px 32px;
-    overflow-y: auto;
+    padding: 24px;
   }
-  .modal-backdrop.is-open {
-    display: flex;
-  }
+  .modal-backdrop.is-open { display: flex; }
   .modal {
     background: #fff;
     width: 100%;
-    max-width: 1280px;
+    max-width: 480px;
     box-shadow: var(--shadow-modal);
     transform: translateY(8px);
     transition: transform 200ms ease-out;
@@ -896,158 +1113,6 @@
   }
   .modal-backdrop.is-open .modal { transform: translateY(0); }
 
-  .modal-busca .modal-header {
-    padding: 22px 28px;
-    border-bottom: 1px solid var(--border-soft);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .modal-busca .modal-header h2 {
-    margin: 0;
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--mosaic-green-900);
-    letter-spacing: -0.005em;
-  }
-  .modal-busca .close-x {
-    background: transparent;
-    border: none;
-    width: 36px;
-    height: 36px;
-    color: var(--text-2);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .modal-busca .close-x:hover { color: var(--text-1); }
-
-  .modal-busca .filter-row {
-    padding: 18px 28px;
-    background: var(--bg-section);
-    display: flex;
-    gap: 14px;
-    align-items: flex-end;
-    border-bottom: 1px solid var(--border-soft);
-  }
-  .modal-busca .filter-field {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 220px;
-  }
-  .modal-busca .filter-field label {
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-2);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  .modal-busca .filter-field input {
-    height: 40px;
-    padding: 0 12px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-  }
-  .modal-busca .filter-field input:focus { border-color: var(--mosaic-green-700); }
-
-  .modal-busca .results-wrap {
-    max-height: calc(100vh - 320px);
-    overflow: auto;
-  }
-  .modal-busca .results-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    min-width: 1700px;
-  }
-  .modal-busca .results-table thead th {
-    background: var(--bg-section-2);
-    color: var(--text-1);
-    font-weight: 800;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-align: left;
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    white-space: nowrap;
-  }
-  .modal-busca .results-table tbody td {
-    padding: 10px 10px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .modal-busca .results-table tbody tr:hover td { background: var(--bg-row-alt); }
-  .modal-busca .results-table tbody tr.is-checked td { background: rgba(0,106,77,0.08); }
-  .modal-busca .results-table .pcode-cell {
-    font-weight: 800;
-    color: var(--mosaic-green-900);
-  }
-  .modal-busca .results-table .saldo-cell {
-    color: var(--mosaic-green-700);
-    font-weight: 800;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-  .modal-busca .checkbox {
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--border-strong);
-    background: #fff;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .modal-busca tr.is-checked .checkbox {
-    background: var(--mosaic-green-800);
-    border-color: var(--mosaic-green-800);
-  }
-  .modal-busca .checkbox svg {
-    color: #fff;
-    opacity: 0;
-  }
-  .modal-busca tr.is-checked .checkbox svg { opacity: 1; }
-
-  .modal-busca .modal-footer {
-    padding: 16px 28px;
-    border-top: 1px solid var(--border-soft);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-  }
-  .modal-busca .modal-footer .count {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-2);
-  }
-  .modal-busca .modal-footer .count strong {
-    color: var(--mosaic-green-700);
-  }
-  .modal-busca .modal-footer .footer-actions {
-    display: inline-flex;
-    gap: 12px;
-  }
-
-  /* ================================================================
-     Confirm + Success modals (compact)
-     ================================================================ */
-  .modal-confirm {
-    max-width: 480px;
-    padding: 0;
-  }
   .modal-confirm .confirm-header {
     padding: 22px 28px 0;
     display: flex;
@@ -1060,6 +1125,18 @@
     font-weight: 800;
     color: var(--mosaic-green-900);
   }
+  .modal-confirm .close-x {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-confirm .close-x:hover { color: var(--text-1); }
   .modal-confirm .confirm-body {
     padding: 18px 28px 28px;
     text-align: center;
@@ -1104,16 +1181,16 @@
   .modal-confirm .confirm-actions .btn { flex: 1; }
 
   /* ================================================================
-     Roteiro side drawer
+     Roteiro side drawer (smaller, slides in same as main drawer)
      ================================================================ */
   .roteiro-drawer-backdrop {
     position: fixed;
     inset: 0;
-    background: var(--bg-overlay);
+    background: rgba(15, 25, 20, 0.45);
     z-index: 110;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 200ms;
+    transition: opacity 240ms ease-out;
   }
   .roteiro-drawer-backdrop.is-open {
     opacity: 1;
@@ -1124,10 +1201,9 @@
     top: 0;
     right: 0;
     bottom: 0;
-    width: 480px;
-    max-width: 100vw;
+    width: min(480px, 100%);
     background: #fff;
-    z-index: 120;
+    z-index: 111;
     transform: translateX(100%);
     transition: transform 280ms cubic-bezier(0.2, 0.8, 0.3, 1);
     display: flex;
@@ -1220,6 +1296,79 @@
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+  }
+
+  /* ================================================================
+     Datepicker popup (custom)
+     ================================================================ */
+  .dp-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-popup);
+    z-index: 70;
+    width: 280px;
+    padding: 12px;
+    display: none;
+  }
+  .dp-popup.is-open { display: block; }
+  .dp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 8px;
+  }
+  .dp-head .month {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-1);
+  }
+  .dp-head button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    cursor: pointer;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dp-head button:hover { background: var(--bg-section); color: var(--text-1); }
+  .dp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .dp-grid .dow {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 4px 0;
+  }
+  .dp-grid .day {
+    aspect-ratio: 1;
+    border: none;
+    background: transparent;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    transition: background-color 80ms, color 80ms;
+  }
+  .dp-grid .day:hover { background: var(--bg-section); }
+  .dp-grid .day.is-other { color: var(--text-disabled); }
+  .dp-grid .day.is-today {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .dp-grid .day.is-selected {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-weight: 800;
   }
 
   /* ================================================================
@@ -1319,79 +1468,6 @@
     display: block;
     margin-bottom: 2px;
   }
-
-  /* ================================================================
-     Datepicker popup (custom calendar)
-     ================================================================ */
-  .dp-popup {
-    position: absolute;
-    background: #fff;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-popup);
-    z-index: 70;
-    width: 280px;
-    padding: 12px;
-    display: none;
-  }
-  .dp-popup.is-open { display: block; }
-  .dp-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 4px 8px;
-  }
-  .dp-head .month {
-    font-size: 13.5px;
-    font-weight: 800;
-    color: var(--text-1);
-  }
-  .dp-head button {
-    width: 28px;
-    height: 28px;
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    cursor: pointer;
-    color: var(--text-2);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .dp-head button:hover { background: var(--bg-section); color: var(--text-1); }
-  .dp-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-  }
-  .dp-grid .dow {
-    font-size: 10px;
-    font-weight: 800;
-    color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    text-align: center;
-    padding: 4px 0;
-  }
-  .dp-grid .day {
-    aspect-ratio: 1;
-    border: none;
-    background: transparent;
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text-1);
-    cursor: pointer;
-    transition: background-color 80ms, color 80ms;
-  }
-  .dp-grid .day:hover { background: var(--bg-section); }
-  .dp-grid .day.is-other { color: var(--text-disabled); }
-  .dp-grid .day.is-today {
-    color: var(--mosaic-green-800);
-    font-weight: 800;
-  }
-  .dp-grid .day.is-selected {
-    background: var(--mosaic-green-800);
-    color: #fff;
-    font-weight: 800;
-  }
 </style>
 </head>
 <body>
@@ -1431,7 +1507,13 @@
     <a href="#" class="navitem">Home</a>
     <a href="#" class="navitem has-dropdown">Produtos</a>
     <a href="#" class="navitem has-dropdown">Cotações</a>
-    <a href="#" class="navitem has-dropdown">Contratos</a>
+    <span class="navitem has-dropdown" id="navContratos">
+      Contratos
+      <div class="submenu">
+        <a href="#">Meus contratos</a>
+        <a href="criar-protocolo.html">Criar Protocolo</a>
+      </div>
+    </span>
     <span class="navitem has-dropdown" id="navAgendamento">
       Agendamento
       <div class="submenu">
@@ -1469,27 +1551,17 @@
   </div>
   <h1 class="page-title">Agendar Protocolo(s)</h1>
 
-  <!-- Action row: select-protocol button + helper + view toggle -->
+  <!-- Action row: label/help on left + select button + view toggle -->
   <div class="action-row">
-    <div class="left">
+    <div>
       <div class="action-label">Selecionar protocolo(s)</div>
-      <div class="action-help">Pesquise pelos protocolos para realizar o agendamento</div>
+      <div class="action-help">Clique no botão ao lado para escolher os protocolos que deseja agendar.</div>
     </div>
 
-    <div class="select-dropdown-wrap">
-      <button class="btn btn-primary btn-with-arrow" id="openSelectBtn" type="button">
-        Selecionar protocolo(s)
-      </button>
-      <div class="select-dropdown" id="selectDropdown" role="listbox">
-        <input type="text" id="selectSearch" class="search-input" placeholder="Buscar protocolo..." autocomplete="off" />
-        <div class="group-label" id="recentLabel">Protocolos Recentes</div>
-        <ul id="recentList"></ul>
-        <div class="more-results" id="moreResults" style="display:none">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          <span>Mostre mais resultados para "<span id="moreTerm"></span>"</span>
-        </div>
-      </div>
-    </div>
+    <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Selecionar protocolo(s)
+    </button>
 
     <div class="view-toggle" role="tablist" aria-label="Visualização">
       <button data-view="cards" class="is-active" type="button">
@@ -1550,60 +1622,59 @@
   </div>
 </div>
 
-<!-- Modal: busca avançada =========================================== -->
-<div class="modal-backdrop" id="buscaModal">
-  <div class="modal modal-busca" role="dialog" aria-labelledby="buscaTitle" aria-modal="true">
-    <div class="modal-header">
-      <h2 id="buscaTitle">Pesquisar protocolo</h2>
-      <button class="close-x" type="button" data-close="buscaModal" aria-label="Fechar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+<!-- Side drawer: Selecionar protocolos ============================ -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="protocolDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-header">
+    <span class="modal-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </span>
+    <div class="titles">
+      <h3 id="drawerTitle">Selecionar protocolos</h3>
+      <div class="subtitle">Escolha um ou mais protocolos para adicionar ao agendamento.</div>
+    </div>
+    <button class="close-x" data-close-drawer aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-search">
+    <div class="drawer-search-wrap" id="drawerSearchWrap">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="drawerSearch" placeholder="Buscar por protocolo, contrato, recebedor, produto..." autocomplete="off" />
+      <button class="clear-btn" id="drawerClearBtn" type="button" aria-label="Limpar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="filter-row">
-      <div class="filter-field">
-        <label for="buscaContrato">Contrato</label>
-        <input type="text" id="buscaContrato" placeholder="Q-XXXXX" />
-      </div>
-      <button class="btn btn-primary" id="buscarBtn" type="button">Buscar</button>
-    </div>
-    <div class="results-wrap">
-      <table class="results-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th>Protocolo</th>
-            <th>Contrato</th>
-            <th>Item</th>
-            <th>Ref. Cliente</th>
-            <th>CPF/CNPJ Filial</th>
-            <th>Cidade/UF Filial</th>
-            <th>Nome Recebedor</th>
-            <th>CPF/CNPJ Recebedor</th>
-            <th>IE Recebedor</th>
-            <th>Cidade/UF Recebedor</th>
-            <th>Produto</th>
-            <th style="text-align:right">Saldo Disp. (t)</th>
-          </tr>
-        </thead>
-        <tbody id="buscaResultsBody"></tbody>
-      </table>
-    </div>
-    <div class="modal-footer">
-      <div class="count" id="buscaCount"><strong>0</strong> protocolo(s) selecionado(s)</div>
-      <div class="footer-actions">
-        <button class="btn btn-secondary" type="button" data-close="buscaModal">Cancelar</button>
-        <button class="btn btn-primary" id="buscaSelectBtn" type="button" disabled>Selecionar</button>
-      </div>
+  </div>
+
+  <div class="drawer-meta">
+    <span><span id="drawerCount">0</span> resultado(s)</span>
+    <span style="display:flex; align-items:center; gap:14px;">
+      <span class="selected-count is-zero" id="drawerSelectedCount">0 selecionados</span>
+      <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
+    </span>
+  </div>
+
+  <div class="drawer-list" id="drawerList"></div>
+
+  <div class="drawer-footer">
+    <div class="count" id="drawerFooterCount">Nenhum protocolo selecionado</div>
+    <div class="actions">
+      <button class="btn btn-secondary" data-close-drawer>Cancelar</button>
+      <button class="btn btn-primary" id="drawerAddBtn" disabled>Adicionar selecionados</button>
     </div>
   </div>
-</div>
+</aside>
 
 <!-- Modal: confirmar =========================================== -->
 <div class="modal-backdrop" id="confirmModal">
   <div class="modal modal-confirm" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
     <div class="confirm-header">
       <h3 id="confirmTitle">Confirmar agendamento</h3>
-      <button class="close-x" type="button" data-close="confirmModal" aria-label="Fechar" style="background:transparent;border:none;width:32px;height:32px;color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+      <button class="close-x" type="button" data-close="confirmModal" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
@@ -1654,7 +1725,7 @@
     </div>
   </div>
   <div class="roteiro-drawer-body">
-    <label id="roteiroLabel">Descrição <span class="opt-tag">Opcional</span></label>
+    <label id="roteiroLabel">Descrição <span class="opt-tag">Pré-preenchido com o protocolo</span></label>
     <textarea id="roteiroText" placeholder="Adicione observações de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
   </div>
   <div class="roteiro-drawer-footer">
@@ -1699,10 +1770,28 @@
    Agendar Protocolo — application logic
    =================================================================== */
 
-/* ---------- Mock data ---------------------------------------------- */
-const PROTOCOLOS_RECENTES = ["M9W38746", "M93HD231", "M586JF3BH", "M092DB23"];
-
+/* ---------- Mock data --------------------------------------------- */
 const PROTOCOLOS_DISPONIVEIS = [
+  {
+    protocolo: "M9W38746", contrato: "Q-20303", item: "10",
+    refCliente: "474663",
+    cpfFilial: "71.320.915/0006-37", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "AGRO DO LESTE LTDA", cpfRecebedor: "44.512.330/0001-22",
+    ieRecebedor: "118.299.922-56", cidadeRecebedor: "Limeira/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "1.000,00",
+    frete: "FOB", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/08/2025", dataFim: "30/10/2025"
+  },
+  {
+    protocolo: "M93HD231", contrato: "Q-20385", item: "20",
+    refCliente: "474664",
+    cpfFilial: "71.320.915/0006-37", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "FAZENDA SANTA CLARA", cpfRecebedor: "12.345.678/0001-90",
+    ieRecebedor: "877.714.770-60", cidadeRecebedor: "Ribeirão Preto/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "750,00",
+    frete: "CIF", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/08/2025", dataFim: "30/11/2025"
+  },
   {
     protocolo: "M3D49483", contrato: "Q-20356", item: "10",
     refCliente: "2735331",
@@ -1742,14 +1831,34 @@ const PROTOCOLOS_DISPONIVEIS = [
     produto: "EXCLN 24 05 24 UR", saldo: "4,64",
     frete: "CIF", planta: "Toll Cefértil - Cubatão",
     dataInicio: "01/07/2025", dataFim: "31/12/2025"
+  },
+  {
+    protocolo: "M586JF3BH", contrato: "Q-38542", item: "30",
+    refCliente: "—",
+    cpfFilial: "71.320.915/0006-37", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "COOPERATIVA NOVA UNIÃO", cpfRecebedor: "55.999.111/0001-44",
+    ieRecebedor: "210.555.880-30", cidadeRecebedor: "Araraquara/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "520,00",
+    frete: "FOB", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/09/2025", dataFim: "31/01/2026"
+  },
+  {
+    protocolo: "M092DB23", contrato: "Q-85721", item: "40",
+    refCliente: "112233",
+    cpfFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "AGROPECUÁRIA BOM JESUS", cpfRecebedor: "33.221.110/0001-55",
+    ieRecebedor: "445.667.880-99", cidadeRecebedor: "Piracicaba/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "1.350,00",
+    frete: "CIF", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/08/2025", dataFim: "31/12/2025"
   }
 ];
 
-/* ---------- State -------------------------------------------------- */
+/* ---------- State ------------------------------------------------- */
 const state = {
-  rows: [],            /* selected protocols, each with volume/semana/roteiro */
+  rows: [],
   view: "cards",
-  buscaSelected: new Set(),
+  drawerSelected: new Set(),     /* indices into PROTOCOLOS_DISPONIVEIS */
 };
 
 let rowIdSeq = 1;
@@ -1764,7 +1873,7 @@ function makeRow(p) {
   };
 }
 
-/* ---------- DOM refs ---------------------------------------------- */
+/* ---------- DOM refs --------------------------------------------- */
 const elEmpty = document.getElementById("emptyState");
 const elList = document.getElementById("protoList");
 const elTableWrap = document.getElementById("protoTableWrap");
@@ -1772,7 +1881,7 @@ const elTableBody = document.getElementById("protoTableBody");
 const elSummary = document.getElementById("summaryInfo");
 const elAgendar = document.getElementById("agendarBtn");
 
-/* ---------- Render ------------------------------------------------- */
+/* ---------- Render ------------------------------------------------ */
 function render() {
   const hasRows = state.rows.length > 0;
   elEmpty.classList.toggle("is-hidden", hasRows);
@@ -1866,9 +1975,7 @@ function renderCards() {
             <span class="label">${r.roteiro ? truncate(r.roteiro, 38) : "Adicionar roteiro"}</span>
           </button>
         </div>
-        <div class="row-actions">
-          <!-- spacer to match grid -->
-        </div>
+        <div class="row-actions"></div>
       </div>
     </div>
   `).join("");
@@ -1890,13 +1997,13 @@ function renderTable() {
       <td>${r.planta}</td>
       <td>${r.cpfFilial}</td>
       <td class="saldo-cell">${r.saldo}</td>
-      <td class="input-cell" style="min-width:130px">
+      <td class="input-cell" style="min-width:140px">
         <span class="vol-wrap">
           <input type="text" class="row-input" data-rid="${r.rid}" data-field="volume" value="${r.volume}" placeholder="0,00" inputmode="decimal" />
           <span class="suffix">t</span>
         </span>
       </td>
-      <td class="input-cell" style="min-width:160px">
+      <td class="input-cell" style="min-width:170px">
         <span class="date-wrap">
           <input type="text" class="row-input date-input" data-rid="${r.rid}" data-field="semana" value="${r.semana}" placeholder="DD/MM/AAAA" readonly />
           <span class="cal-icon" aria-hidden="true">
@@ -1904,7 +2011,7 @@ function renderTable() {
           </span>
         </span>
       </td>
-      <td class="input-cell" style="min-width:220px">
+      <td class="input-cell" style="min-width:240px">
         <button type="button" class="roteiro-btn ${r.roteiro ? "has-value" : ""}" data-action="open-roteiro" data-rid="${r.rid}">
           <span class="icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -1948,7 +2055,7 @@ function updateSummary() {
   }
 }
 
-/* ---------- View toggle ------------------------------------------- */
+/* ---------- View toggle ----------------------------------------- */
 document.querySelectorAll(".view-toggle button").forEach(btn => {
   btn.addEventListener("click", () => {
     state.view = btn.dataset.view;
@@ -1957,178 +2064,155 @@ document.querySelectorAll(".view-toggle button").forEach(btn => {
   });
 });
 
-/* ---------- Select dropdown (recent + search) --------------------- */
-const elOpenSelect = document.getElementById("openSelectBtn");
-const elSelectDropdown = document.getElementById("selectDropdown");
-const elSelectSearch = document.getElementById("selectSearch");
-const elRecentList = document.getElementById("recentList");
-const elRecentLabel = document.getElementById("recentLabel");
-const elMoreResults = document.getElementById("moreResults");
-const elMoreTerm = document.getElementById("moreTerm");
+/* ---------- Side drawer (Selecionar protocolos) ----------------- */
+const elDrawer = document.getElementById("protocolDrawer");
+const elDrawerBackdrop = document.getElementById("drawerBackdrop");
+const elDrawerSearch = document.getElementById("drawerSearch");
+const elDrawerSearchWrap = document.getElementById("drawerSearchWrap");
+const elDrawerClearBtn = document.getElementById("drawerClearBtn");
+const elDrawerList = document.getElementById("drawerList");
+const elDrawerCount = document.getElementById("drawerCount");
+const elDrawerSelectedCount = document.getElementById("drawerSelectedCount");
+const elDrawerSelectAll = document.getElementById("drawerSelectAll");
+const elDrawerFooterCount = document.getElementById("drawerFooterCount");
+const elDrawerAddBtn = document.getElementById("drawerAddBtn");
 
-function renderRecent(filter) {
-  const term = (filter || "").trim();
-  const items = term
-    ? PROTOCOLOS_RECENTES.filter(c => c.toUpperCase().includes(term.toUpperCase()))
-    : PROTOCOLOS_RECENTES.slice();
-  elRecentList.innerHTML = items.map(code => {
-    let display = code;
-    if (term) {
-      const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
-      display = code.replace(re, "<mark>$1</mark>");
-    }
-    return `
-      <li data-action="quick-add" data-code="${code}">
-        <span class="icon-doc">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        </span>
-        <span>${display}</span>
-      </li>`;
-  }).join("");
-
-  if (term) {
-    elRecentLabel.textContent = items.length ? "Resultados recentes" : "Nenhum recente";
-    if (!items.length) {
-      elRecentList.innerHTML = `<li class="empty" style="color:var(--text-3);font-style:italic;cursor:default">Sem correspondência nos recentes.</li>`;
-    }
-    elMoreResults.style.display = "flex";
-    elMoreTerm.textContent = term;
-  } else {
-    elRecentLabel.textContent = "Protocolos Recentes";
-    elMoreResults.style.display = "none";
-  }
-}
-
-function openSelectDropdown() {
-  elSelectDropdown.classList.add("is-open");
-  elSelectSearch.value = "";
-  renderRecent("");
-  setTimeout(() => elSelectSearch.focus(), 60);
-}
-function closeSelectDropdown() {
-  elSelectDropdown.classList.remove("is-open");
-}
-
-elOpenSelect.addEventListener("click", e => {
-  e.stopPropagation();
-  if (elSelectDropdown.classList.contains("is-open")) closeSelectDropdown();
-  else openSelectDropdown();
-});
-elSelectSearch.addEventListener("input", () => renderRecent(elSelectSearch.value));
-elSelectSearch.addEventListener("keydown", e => {
-  if (e.key === "Escape") { closeSelectDropdown(); elOpenSelect.focus(); }
-});
-elRecentList.addEventListener("click", e => {
-  const li = e.target.closest("[data-action='quick-add']");
-  if (!li) return;
-  const code = li.dataset.code;
-  /* Quick-add a recent: open the busca modal with that contract pre-filled
-     as a friendly fallback (since the recent codes aren't in the mock dataset). */
-  closeSelectDropdown();
-  openBuscaModal(code);
-});
-elMoreResults.addEventListener("click", () => {
-  const term = elSelectSearch.value.trim();
-  closeSelectDropdown();
-  openBuscaModal(term);
-});
-document.addEventListener("click", e => {
-  if (!elSelectDropdown.contains(e.target) && e.target !== elOpenSelect) closeSelectDropdown();
-});
-
-/* ---------- Modal: busca avançada -------------------------------- */
-const elBuscaModal = document.getElementById("buscaModal");
-const elBuscaBody = document.getElementById("buscaResultsBody");
-const elBuscaContrato = document.getElementById("buscaContrato");
-const elBuscaCount = document.getElementById("buscaCount");
-const elBuscaSelectBtn = document.getElementById("buscaSelectBtn");
-
-function openBuscaModal(prefillContrato) {
-  state.buscaSelected = new Set();
-  elBuscaContrato.value = prefillContrato || "";
-  renderBuscaResults();
-  elBuscaModal.classList.add("is-open");
-}
-function closeBuscaModal() {
-  elBuscaModal.classList.remove("is-open");
-}
-
-function renderBuscaResults() {
-  const term = elBuscaContrato.value.trim().toUpperCase();
-  const items = term
-    ? PROTOCOLOS_DISPONIVEIS.filter(p =>
-        p.contrato.toUpperCase().includes(term) ||
-        p.protocolo.toUpperCase().includes(term))
-    : PROTOCOLOS_DISPONIVEIS.slice();
-
-  if (!items.length) {
-    elBuscaBody.innerHTML = `
-      <tr><td colspan="13" style="text-align:center;padding:48px 12px;color:var(--text-3);font-style:italic">
-        Nenhum protocolo encontrado para "${escapeHtml(elBuscaContrato.value)}".
-      </td></tr>`;
-  } else {
-    elBuscaBody.innerHTML = items.map(p => {
-      const checked = state.buscaSelected.has(p.protocolo);
-      return `
-        <tr class="${checked ? "is-checked" : ""}" data-action="toggle-busca" data-code="${p.protocolo}">
-          <td>
-            <span class="checkbox" aria-hidden="true">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </span>
-          </td>
-          <td class="pcode-cell">${p.protocolo}</td>
-          <td>${p.contrato}</td>
-          <td>${p.item}</td>
-          <td>${p.refCliente || "—"}</td>
-          <td>${p.cpfFilial}</td>
-          <td>${p.cidadeFilial}</td>
-          <td><strong>${p.nomeRecebedor}</strong></td>
-          <td>${p.cpfRecebedor}</td>
-          <td>${p.ieRecebedor}</td>
-          <td>${p.cidadeRecebedor}</td>
-          <td>${p.produto}</td>
-          <td class="saldo-cell">${p.saldo}</td>
-        </tr>`;
-    }).join("");
-  }
-  updateBuscaCount();
-}
-
-function updateBuscaCount() {
-  const n = state.buscaSelected.size;
-  elBuscaCount.innerHTML = `<strong>${n}</strong> protocolo(s) selecionado(s)`;
-  elBuscaSelectBtn.disabled = n === 0;
+function highlightMatch(text, q) {
+  if (!q || !text) return text == null ? "" : String(text);
+  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return String(text).replace(new RegExp("(" + safe + ")", "ig"), "<mark>$1</mark>");
 }
 
 function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
-elBuscaBody.addEventListener("click", e => {
-  const tr = e.target.closest("[data-action='toggle-busca']");
-  if (!tr) return;
-  const code = tr.dataset.code;
-  if (state.buscaSelected.has(code)) state.buscaSelected.delete(code);
-  else state.buscaSelected.add(code);
-  renderBuscaResults();
+function filteredProtocolos(q) {
+  if (!q) return PROTOCOLOS_DISPONIVEIS.map((p, i) => ({ p, i }));
+  const ql = q.toLowerCase();
+  const fields = ["protocolo","contrato","item","refCliente","nomeRecebedor","cpfRecebedor","cidadeRecebedor","produto","planta","frete"];
+  return PROTOCOLOS_DISPONIVEIS
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => fields.some(f => String(p[f] || "").toLowerCase().includes(ql)));
+}
+
+function renderDrawerList() {
+  const q = (elDrawerSearch.value || "").trim();
+  elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
+
+  const items = filteredProtocolos(q);
+  elDrawerCount.textContent = items.length;
+
+  const alreadyAdded = new Set(state.rows.map(r => r.protocolo));
+
+  if (!items.length) {
+    elDrawerList.innerHTML = `<div class="drawer-empty">Nenhum protocolo encontrado para "${escapeHtml(q)}".</div>`;
+  } else {
+    elDrawerList.innerHTML = items.map(({ p, i }) => {
+      const selected = state.drawerSelected.has(i);
+      const disabled = alreadyAdded.has(p.protocolo);
+      const fretePill = `drawer-item-frete--${p.frete.toLowerCase()}`;
+      return `
+        <div class="drawer-item ${selected ? 'is-selected' : ''} ${disabled ? 'is-disabled' : ''}" data-i="${i}">
+          <span class="checkbox" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div class="drawer-item-body">
+            <div class="drawer-item-line1">
+              <span class="drawer-item-pcode">${highlightMatch(p.protocolo, q)}</span>
+              <span class="drawer-item-contract">${highlightMatch(p.contrato, q)} · Item ${p.item}</span>
+              <span class="drawer-item-frete ${fretePill}">${p.frete}</span>
+              ${disabled ? '<span class="drawer-item-contract" style="color:var(--text-3)">já adicionado</span>' : ''}
+            </div>
+            <div class="drawer-item-product">${highlightMatch(p.produto, q)}</div>
+            <div class="drawer-item-meta">
+              <span><strong>Recebedor:</strong> ${highlightMatch(p.nomeRecebedor, q)}</span>
+              <span><strong>Cidade:</strong> ${highlightMatch(p.cidadeRecebedor, q)}</span>
+              <span><strong>Planta:</strong> ${highlightMatch(p.planta, q)}</span>
+              <span><strong>Vigência:</strong> ${p.dataInicio} → ${p.dataFim}</span>
+            </div>
+          </div>
+          <div class="drawer-item-saldo">${p.saldo}<span class="unit">t</span></div>
+        </div>`;
+    }).join("");
+  }
+
+  updateDrawerSelectedChips();
+}
+
+function updateDrawerSelectedChips() {
+  const n = state.drawerSelected.size;
+  elDrawerSelectedCount.textContent = n === 0 ? "0 selecionados" : `${n} ${n === 1 ? 'selecionado' : 'selecionados'}`;
+  elDrawerSelectedCount.classList.toggle("is-zero", n === 0);
+  elDrawerFooterCount.innerHTML = n === 0
+    ? "Nenhum protocolo selecionado"
+    : `<strong>${n}</strong> ${n === 1 ? 'protocolo selecionado' : 'protocolos selecionados'}`;
+  elDrawerAddBtn.disabled = n === 0;
+}
+
+function openDrawer() {
+  state.drawerSelected.clear();
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawer.classList.add("is-open");
+  elDrawer.setAttribute("aria-hidden", "false");
+  elDrawerBackdrop.classList.add("is-open");
+  setTimeout(() => elDrawerSearch.focus(), 320);
+}
+function closeDrawer() {
+  elDrawer.classList.remove("is-open");
+  elDrawer.setAttribute("aria-hidden", "true");
+  elDrawerBackdrop.classList.remove("is-open");
+}
+
+document.getElementById("openDrawerBtn").addEventListener("click", openDrawer);
+document.querySelectorAll("[data-close-drawer]").forEach(b => b.addEventListener("click", closeDrawer));
+elDrawerBackdrop.addEventListener("click", closeDrawer);
+
+elDrawerSearch.addEventListener("input", renderDrawerList);
+elDrawerClearBtn.addEventListener("click", () => {
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawerSearch.focus();
 });
 
-document.getElementById("buscarBtn").addEventListener("click", () => renderBuscaResults());
-elBuscaContrato.addEventListener("keydown", e => {
-  if (e.key === "Enter") { e.preventDefault(); renderBuscaResults(); }
+elDrawerList.addEventListener("click", e => {
+  const item = e.target.closest(".drawer-item");
+  if (!item || item.classList.contains("is-disabled")) return;
+  e.preventDefault();
+  const i = parseInt(item.dataset.i, 10);
+  if (state.drawerSelected.has(i)) state.drawerSelected.delete(i);
+  else state.drawerSelected.add(i);
+  item.classList.toggle("is-selected");
+  updateDrawerSelectedChips();
 });
 
-elBuscaSelectBtn.addEventListener("click", () => {
-  /* Add selected protocols, skipping any already in state.rows */
-  const existing = new Set(state.rows.map(r => r.protocolo));
-  const toAdd = PROTOCOLOS_DISPONIVEIS.filter(p =>
-    state.buscaSelected.has(p.protocolo) && !existing.has(p.protocolo));
-  toAdd.forEach(p => state.rows.push(makeRow(p)));
-  closeBuscaModal();
+elDrawerSelectAll.addEventListener("click", () => {
+  const q = (elDrawerSearch.value || "").trim();
+  const visible = filteredProtocolos(q);
+  const alreadyAdded = new Set(state.rows.map(r => r.protocolo));
+  const eligible = visible.filter(({ p }) => !alreadyAdded.has(p.protocolo));
+  const allSelected = eligible.every(({ i }) => state.drawerSelected.has(i));
+  if (allSelected) {
+    eligible.forEach(({ i }) => state.drawerSelected.delete(i));
+  } else {
+    eligible.forEach(({ i }) => state.drawerSelected.add(i));
+  }
+  renderDrawerList();
+});
+
+elDrawerAddBtn.addEventListener("click", () => {
+  const indices = Array.from(state.drawerSelected).sort((a, b) => a - b);
+  indices.forEach(i => {
+    const p = PROTOCOLOS_DISPONIVEIS[i];
+    if (p) state.rows.push(makeRow(p));
+  });
+  state.drawerSelected.clear();
+  closeDrawer();
   render();
 });
 
-/* ---------- Row interactions (delegated) ------------------------- */
+/* ---------- Row interactions (delegated) ------------------------ */
 document.body.addEventListener("input", e => {
   const inp = e.target.closest("[data-rid][data-field]");
   if (!inp) return;
@@ -2365,7 +2449,6 @@ document.getElementById("confirmYes").addEventListener("click", () => {
 
 document.getElementById("successReport").addEventListener("click", () => {
   elSuccessModal.classList.remove("is-open");
-  /* Mock — would route to /relatorio-agendamento. Reset for clean state. */
   state.rows = [];
   rowIdSeq = 1;
   render();
@@ -2387,16 +2470,16 @@ document.getElementById("cancelBtn").addEventListener("click", () => {
   }
 });
 
-/* ESC closes any modal */
+/* ESC closes top-most layer */
 document.addEventListener("keydown", e => {
   if (e.key !== "Escape") return;
-  if (elRoteiroDrawer.classList.contains("is-open")) { closeRoteiroDrawer(); return; }
   if (elDpPopup.classList.contains("is-open")) { closeDatePicker(); return; }
+  if (elRoteiroDrawer.classList.contains("is-open")) { closeRoteiroDrawer(); return; }
+  if (elDrawer.classList.contains("is-open")) { closeDrawer(); return; }
   document.querySelectorAll(".modal-backdrop.is-open").forEach(m => m.classList.remove("is-open"));
-  closeSelectDropdown();
 });
 
-/* Backdrop click closes modals (but not when clicking inside .modal) */
+/* Backdrop click closes modals */
 document.querySelectorAll(".modal-backdrop").forEach(bd => {
   bd.addEventListener("click", e => {
     if (e.target === bd) bd.classList.remove("is-open");
