@@ -1,0 +1,2427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Agendar Protocolo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ================================================================
+     Mosaic Direct — Design tokens (mirroring V5)
+     ================================================================ */
+  :root {
+    --mosaic-green-900: #003e2a;
+    --mosaic-green-800: #00583d;
+    --mosaic-green-700: #006a4d;
+    --mosaic-green-600: #0a7a5a;
+    --mosaic-green-500: #16a37a;
+
+    --mosaic-yellow:  #f0c020;
+    --mosaic-orange:  #d56b1a;
+    --mosaic-red:     #b9202a;
+    --mosaic-teal:    #2c8b78;
+
+    --status-orange:    #c76814;
+    --status-orange-bg: #fff5ec;
+    --warning-yellow:   #e6c84a;
+    --warning-yellow-d: #c8aa28;
+
+    --bg-page:        #ffffff;
+    --bg-section:     #f4f4f4;
+    --bg-section-2:   #ebebeb;
+    --bg-row-alt:     #f9f9f9;
+    --bg-overlay:     rgba(35, 45, 40, 0.55);
+
+    --border-soft:    #e1e1e1;
+    --border:         #cdcdcd;
+    --border-strong:  #9c9c9c;
+
+    --text-1:         #15201b;
+    --text-2:         #3b4642;
+    --text-3:         #6b7570;
+    --text-disabled:  #a8aeab;
+    --text-on-green:  #ffffff;
+    --link-green:     #006a4d;
+
+    --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-modal:  0 18px 60px rgba(0,0,0,0.22), 0 6px 18px rgba(0,0,0,0.12);
+    --shadow-popup:  0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.08);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-page);
+    color: var(--text-1);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  input, select, textarea { font-family: inherit; }
+  a { color: var(--link-green); }
+
+  /* ================================================================
+     Topbar
+     ================================================================ */
+  .topbar {
+    background: #fff;
+    padding: 18px 56px 12px;
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    gap: 32px;
+    align-items: center;
+  }
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo .wordmark {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.01em;
+  }
+  .logo .wordmark sup { font-size: 11px; font-weight: 700; opacity: 0.7; }
+  .logo .shapes {
+    display: inline-flex;
+    gap: 3px;
+  }
+  .logo .shapes span {
+    width: 10px; height: 10px;
+    display: inline-block;
+  }
+  .logo .shapes .y { background: var(--mosaic-yellow); }
+  .logo .shapes .o { background: var(--mosaic-orange); }
+  .logo .shapes .r { background: var(--mosaic-red); }
+  .logo .shapes .t { background: var(--mosaic-teal); }
+
+  .global-search {
+    position: relative;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .global-search input {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 0 48px 0 20px;
+    font-size: 15px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .global-search input:focus { border-color: var(--mosaic-green-700); }
+  .global-search .icon-search {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+
+  .user-cluster {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    justify-content: flex-end;
+  }
+  .lang-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    height: 38px;
+    padding: 0 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-size: 13px;
+  }
+  .user-info {
+    line-height: 1.15;
+    text-align: right;
+  }
+  .user-info .name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--text-1);
+  }
+  .user-info .org {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .icon-pill {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ================================================================
+     Mainnav
+     ================================================================ */
+  .mainnav {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 0 56px;
+  }
+  .mainnav-inner {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    align-items: center;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+  .mainnav a, .mainnav .navitem {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 22px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-1);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mainnav .navitem.has-dropdown::after {
+    content: "";
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--text-1);
+    border-bottom: 2px solid var(--text-1);
+    transform: rotate(45deg);
+    margin-top: -3px;
+    margin-left: 2px;
+  }
+  .mainnav .navitem.is-active { background: #f0f0f0; }
+  .mainnav .navitem .submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    box-shadow: var(--shadow-popup);
+    border: 1px solid var(--border-soft);
+    min-width: 280px;
+    padding: 8px 0;
+    z-index: 60;
+    display: none;
+  }
+  .mainnav .navitem.is-active .submenu,
+  .mainnav .navitem.has-dropdown:hover .submenu { display: block; }
+  .mainnav .navitem.has-dropdown:hover { background: #f6f6f6; }
+  .mainnav .submenu a {
+    display: block;
+    padding: 12px 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    text-decoration: none;
+  }
+  .mainnav .submenu a.current {
+    color: var(--link-green);
+    text-decoration: underline;
+  }
+  .mainnav .submenu a:hover { background: var(--bg-section); }
+
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .hero {
+    height: 200px;
+    background:
+      linear-gradient(95deg,
+        rgba(0,80,55,0.55) 0%,
+        rgba(0,80,55,0.20) 35%,
+        rgba(0,0,0,0.0) 70%),
+      linear-gradient(180deg, #4a7236 0%, #6f9242 35%, #b78b3a 75%, #c47a39 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 5% 65%, rgba(60,90,40,0.85) 0 14%, transparent 30%),
+      radial-gradient(ellipse at 18% 85%, rgba(40,70,30,0.85) 0 10%, transparent 25%),
+      radial-gradient(ellipse at 92% 70%, rgba(80,120,55,0.9) 0 18%, transparent 35%),
+      radial-gradient(ellipse at 70% 90%, rgba(50,80,35,0.7) 0 12%, transparent 28%),
+      radial-gradient(circle at 80% 25%, rgba(255,200,80,0.6) 0 8%, transparent 30%);
+    pointer-events: none;
+  }
+  .hero .mosaic-overlay {
+    position: absolute;
+    left: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    z-index: 2;
+  }
+  .hero .mosaic-overlay .wordmark {
+    font-size: 38px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .hero .mosaic-overlay .wordmark sup { font-size: 14px; opacity: 0.85; }
+
+  /* ================================================================
+     Page container
+     ================================================================ */
+  .page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px 56px 140px;
+  }
+  .breadcrumbs {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .breadcrumbs a {
+    color: var(--link-green);
+    text-decoration: none;
+  }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 8px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+
+  /* ================================================================
+     Action row (top: select-protocol button + helper + view toggle)
+     ================================================================ */
+  .action-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 5;
+  }
+  .action-row .left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+    flex: 1;
+  }
+  .action-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .action-help {
+    font-size: 13px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 22px;
+    border: 1.5px solid transparent;
+    background: #fff;
+    color: var(--text-1);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 120ms, border-color 120ms, color 120ms, transform 80ms;
+    user-select: none;
+    text-decoration: none;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--mosaic-green-900); }
+  .btn-primary:disabled,
+  .btn-primary.is-disabled {
+    background: #c8d2cd;
+    color: #fff;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .btn-yellow {
+    background: var(--mosaic-yellow);
+    color: var(--text-1);
+  }
+  .btn-yellow:hover { background: var(--warning-yellow-d); }
+  .btn-link {
+    background: none;
+    border: none;
+    color: var(--link-green);
+    font-weight: 700;
+    padding: 0;
+    height: auto;
+  }
+  .btn-link:hover { text-decoration: underline; }
+
+  .btn-with-arrow::after {
+    content: "";
+    width: 8px; height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    margin-top: -3px;
+    margin-left: 4px;
+  }
+
+  /* ================================================================
+     Select-protocol dropdown
+     ================================================================ */
+  .select-dropdown-wrap {
+    position: relative;
+  }
+  .select-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    width: 380px;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-popup);
+    z-index: 40;
+    display: none;
+  }
+  .select-dropdown.is-open { display: block; }
+  .select-dropdown .search-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+    border: none;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+  }
+  .select-dropdown .group-label {
+    padding: 10px 14px 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .select-dropdown ul { list-style: none; margin: 0; padding: 0; }
+  .select-dropdown li {
+    padding: 10px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .select-dropdown li:hover { background: var(--bg-section); }
+  .select-dropdown li .icon-doc {
+    color: var(--text-3);
+    flex-shrink: 0;
+  }
+  .select-dropdown li mark {
+    background: var(--mosaic-yellow);
+    color: var(--text-1);
+    padding: 0 2px;
+  }
+  .select-dropdown .more-results {
+    padding: 12px 14px;
+    margin: 8px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+  }
+  .select-dropdown .more-results:hover {
+    background: var(--bg-section);
+    border-color: var(--mosaic-green-700);
+  }
+  .select-dropdown .empty {
+    padding: 20px 14px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  /* ================================================================
+     View toggle (cards / table)
+     ================================================================ */
+  .view-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    padding: 3px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--text-3);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .view-toggle button.is-active {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  /* ================================================================
+     Empty state
+     ================================================================ */
+  .empty-state {
+    border: 1px dashed var(--border);
+    background: var(--bg-row-alt);
+    padding: 56px 24px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .empty-state strong {
+    display: block;
+    color: var(--text-2);
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .empty-state.is-hidden { display: none; }
+
+  /* ================================================================
+     Protocol cards (list mode)
+     ================================================================ */
+  .proto-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .proto-list.is-hidden { display: none; }
+
+  .proto-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .proto-card-head {
+    background: var(--mosaic-green-900);
+    color: #fff;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .proto-card-head .pcode {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .proto-card-head .pmeta {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+  .proto-card-head .pmeta strong {
+    color: #fff;
+    font-weight: 800;
+    margin-right: 4px;
+  }
+  .proto-card-head .head-actions {
+    margin-left: auto;
+    display: inline-flex;
+    gap: 4px;
+  }
+  .proto-card-head .head-actions button {
+    background: rgba(255,255,255,0.10);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 120ms;
+  }
+  .proto-card-head .head-actions button:hover { background: rgba(255,255,255,0.22); }
+  .proto-card-head .head-actions button.danger:hover { background: var(--mosaic-red); }
+
+  .proto-card-recv {
+    background: var(--bg-section);
+    padding: 10px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 12.5px;
+  }
+  .recv-field { display: inline-flex; flex-direction: column; gap: 2px; }
+  .recv-field .lbl {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .recv-field .val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+
+  .proto-card-item {
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: 1.6fr 0.7fr 1.2fr 1.2fr 0.9fr 0.9fr 1.1fr 1.4fr 0.6fr;
+    gap: 14px;
+    align-items: center;
+  }
+  .proto-card-item + .proto-card-item {
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .item-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .item-field .lbl {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .item-field .val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .item-field .val.saldo {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .item-field .val.saldo .unit {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .pill-frete {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+  }
+  .pill-frete.fob { background: rgba(0,106,77,0.12); color: var(--mosaic-green-800); }
+  .pill-frete.cif { background: rgba(213,107,26,0.14); color: var(--mosaic-orange); }
+
+  /* Inputs in row */
+  .row-input {
+    width: 100%;
+    height: 36px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .row-input:focus { border-color: var(--mosaic-green-700); }
+  .row-input::placeholder { color: var(--text-disabled); font-weight: 500; }
+
+  .vol-wrap {
+    position: relative;
+  }
+  .vol-wrap .row-input {
+    padding-right: 26px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .vol-wrap .suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-3);
+    pointer-events: none;
+  }
+
+  .date-wrap {
+    position: relative;
+  }
+  .date-wrap .row-input {
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .date-wrap .cal-icon {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+
+  .roteiro-btn {
+    width: 100%;
+    height: 36px;
+    padding: 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: border-color 120ms;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .roteiro-btn:hover { border-color: var(--mosaic-green-700); }
+  .roteiro-btn .icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-btn .label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .roteiro-btn.has-value {
+    border-color: var(--mosaic-green-700);
+    color: var(--text-1);
+  }
+  .roteiro-btn.has-value .icon { color: var(--mosaic-green-700); }
+  .roteiro-btn:not(.has-value) .label { color: var(--text-3); font-weight: 500; }
+
+  .row-actions {
+    display: inline-flex;
+    gap: 4px;
+    justify-content: flex-end;
+  }
+  .row-actions button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 120ms, color 120ms, border-color 120ms;
+  }
+  .row-actions button:hover {
+    background: var(--bg-section);
+    color: var(--text-1);
+    border-color: var(--border);
+  }
+  .row-actions button.danger:hover {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+
+  /* ================================================================
+     Protocol table view
+     ================================================================ */
+  .proto-table-wrap {
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+  }
+  .proto-table-wrap.is-hidden { display: none; }
+  .proto-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    min-width: 1900px;
+  }
+  .proto-table thead th {
+    background: var(--bg-section);
+    text-align: left;
+    padding: 12px 12px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .proto-table tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 600;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .proto-table tbody tr:hover td { background: var(--bg-row-alt); }
+  .proto-table .saldo-cell {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .proto-table .pcode-cell {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .proto-table td.input-cell { padding: 6px 8px; }
+
+  /* ================================================================
+     Footer fixed action bar
+     ================================================================ */
+  .summary-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    padding: 14px 56px;
+    z-index: 50;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+  }
+  .summary-actions {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+  }
+  .summary-actions .summary-info {
+    margin-right: auto;
+    font-size: 13px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .summary-actions .summary-info strong {
+    color: var(--text-1);
+    font-weight: 800;
+  }
+
+  /* ================================================================
+     Modal de busca avançada
+     ================================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 100;
+    display: none;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 56px 32px 32px;
+    overflow-y: auto;
+  }
+  .modal-backdrop.is-open {
+    display: flex;
+  }
+  .modal {
+    background: #fff;
+    width: 100%;
+    max-width: 1280px;
+    box-shadow: var(--shadow-modal);
+    transform: translateY(8px);
+    transition: transform 200ms ease-out;
+    overflow: hidden;
+  }
+  .modal-backdrop.is-open .modal { transform: translateY(0); }
+
+  .modal-busca .modal-header {
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-busca .modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .modal-busca .close-x {
+    background: transparent;
+    border: none;
+    width: 36px;
+    height: 36px;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .modal-busca .close-x:hover { color: var(--text-1); }
+
+  .modal-busca .filter-row {
+    padding: 18px 28px;
+    background: var(--bg-section);
+    display: flex;
+    gap: 14px;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .modal-busca .filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 220px;
+  }
+  .modal-busca .filter-field label {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .modal-busca .filter-field input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+  }
+  .modal-busca .filter-field input:focus { border-color: var(--mosaic-green-700); }
+
+  .modal-busca .results-wrap {
+    max-height: calc(100vh - 320px);
+    overflow: auto;
+  }
+  .modal-busca .results-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    min-width: 1700px;
+  }
+  .modal-busca .results-table thead th {
+    background: var(--bg-section-2);
+    color: var(--text-1);
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    white-space: nowrap;
+  }
+  .modal-busca .results-table tbody td {
+    padding: 10px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .modal-busca .results-table tbody tr:hover td { background: var(--bg-row-alt); }
+  .modal-busca .results-table tbody tr.is-checked td { background: rgba(0,106,77,0.08); }
+  .modal-busca .results-table .pcode-cell {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .modal-busca .results-table .saldo-cell {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .modal-busca .checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-strong);
+    background: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .modal-busca tr.is-checked .checkbox {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .modal-busca .checkbox svg {
+    color: #fff;
+    opacity: 0;
+  }
+  .modal-busca tr.is-checked .checkbox svg { opacity: 1; }
+
+  .modal-busca .modal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+  }
+  .modal-busca .modal-footer .count {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+  }
+  .modal-busca .modal-footer .count strong {
+    color: var(--mosaic-green-700);
+  }
+  .modal-busca .modal-footer .footer-actions {
+    display: inline-flex;
+    gap: 12px;
+  }
+
+  /* ================================================================
+     Confirm + Success modals (compact)
+     ================================================================ */
+  .modal-confirm {
+    max-width: 480px;
+    padding: 0;
+  }
+  .modal-confirm .confirm-header {
+    padding: 22px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-confirm .confirm-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .modal-confirm .confirm-body {
+    padding: 18px 28px 28px;
+    text-align: center;
+  }
+  .modal-confirm .confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    margin: 8px auto 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-confirm .confirm-icon.info {
+    background: rgba(240,192,32,0.16);
+    color: var(--status-orange);
+  }
+  .modal-confirm .confirm-icon.success {
+    background: rgba(0,106,77,0.14);
+    color: var(--mosaic-green-700);
+  }
+  .modal-confirm .confirm-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-1);
+    line-height: 1.5;
+    margin: 0 0 22px;
+  }
+  .modal-confirm .confirm-text strong {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .modal-confirm .confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .modal-confirm .confirm-actions.stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal-confirm .confirm-actions .btn { flex: 1; }
+
+  /* ================================================================
+     Roteiro side drawer
+     ================================================================ */
+  .roteiro-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms;
+  }
+  .roteiro-drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .roteiro-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 480px;
+    max-width: 100vw;
+    background: #fff;
+    z-index: 120;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.18);
+  }
+  .roteiro-drawer.is-open { transform: translateX(0); }
+  .roteiro-drawer-header {
+    padding: 22px 26px 14px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .roteiro-drawer-header .titles {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .roteiro-drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .roteiro-drawer-header .subtitle {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .roteiro-drawer-header .subtitle strong {
+    color: var(--text-1);
+    font-weight: 800;
+    margin-right: 4px;
+  }
+  .roteiro-drawer-header .close-x {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roteiro-drawer-header .close-x:hover { color: var(--text-1); }
+  .roteiro-drawer-body {
+    flex: 1;
+    padding: 20px 26px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .roteiro-drawer-body label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .roteiro-drawer-body .opt-tag {
+    background: var(--bg-section);
+    color: var(--text-3);
+    padding: 1px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-left: 6px;
+    text-transform: none;
+  }
+  .roteiro-drawer-body textarea {
+    flex: 1;
+    min-height: 220px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-1);
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+  }
+  .roteiro-drawer-body textarea:focus { border-color: var(--mosaic-green-700); }
+  .roteiro-drawer-footer {
+    padding: 16px 26px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ================================================================
+     Proto-nav (cross-prototype floating menu)
+     ================================================================ */
+  .proto-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 90;
+    font-family: var(--font-sans);
+  }
+  .proto-nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #15201b;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    transition: background-color 120ms;
+    letter-spacing: 0.02em;
+  }
+  .proto-nav-trigger:hover { background: #003e2a; }
+  .proto-nav-trigger .chev { margin-left: 4px; transition: transform 200ms; }
+  .proto-nav.is-open .proto-nav-trigger .chev { transform: rotate(180deg); }
+  .proto-nav-panel {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: #fff;
+    border: 1px solid #cdcdcd;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .proto-nav.is-open .proto-nav-panel { display: block; }
+  .proto-nav-header {
+    background: #003e2a;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    letter-spacing: 0.02em;
+  }
+  .proto-nav-header span {
+    font-size: 9px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .proto-nav-section-title {
+    background: #f4f4f4;
+    padding: 8px 16px;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7570;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+  }
+  .proto-nav-link {
+    display: block;
+    padding: 10px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #15201b;
+    text-decoration: none;
+    border-bottom: 1px solid #e1e1e1;
+    transition: background-color 120ms;
+  }
+  .proto-nav-link:last-child { border-bottom: none; }
+  .proto-nav-link:hover { background: rgba(0,106,77,0.06); color: #003e2a; }
+  .proto-nav-link.is-current {
+    background: rgba(0,106,77,0.10);
+    color: #003e2a;
+    font-weight: 800;
+    border-left: 3px solid #006a4d;
+    padding-left: 13px;
+  }
+  .proto-nav-link .label-id {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7570;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ================================================================
+     Datepicker popup (custom calendar)
+     ================================================================ */
+  .dp-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-popup);
+    z-index: 70;
+    width: 280px;
+    padding: 12px;
+    display: none;
+  }
+  .dp-popup.is-open { display: block; }
+  .dp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 8px;
+  }
+  .dp-head .month {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-1);
+  }
+  .dp-head button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    cursor: pointer;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dp-head button:hover { background: var(--bg-section); color: var(--text-1); }
+  .dp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .dp-grid .dow {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 4px 0;
+  }
+  .dp-grid .day {
+    aspect-ratio: 1;
+    border: none;
+    background: transparent;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    transition: background-color 80ms, color 80ms;
+  }
+  .dp-grid .day:hover { background: var(--bg-section); }
+  .dp-grid .day.is-other { color: var(--text-disabled); }
+  .dp-grid .day.is-today {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .dp-grid .day.is-selected {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-weight: 800;
+  }
+</style>
+</head>
+<body>
+
+<!-- Top header ==================================================== -->
+<header class="topbar">
+  <div class="logo" aria-label="Mosaic">
+    <span class="wordmark">Mosaic<sup>®</sup></span>
+    <span class="shapes" aria-hidden="true">
+      <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
+    </span>
+  </div>
+  <div class="global-search">
+    <input type="text" placeholder="Pesquisar..." aria-label="Pesquisar" />
+    <span class="icon-search" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+  </div>
+  <div class="user-cluster">
+    <div class="lang-select">
+      EN
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="user-info">
+      <div class="name">Alyssa Harris</div>
+      <div class="org">MAR JAC POULT...</div>
+    </div>
+    <div class="icon-pill" aria-label="Calendário">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    </div>
+  </div>
+</header>
+
+<!-- Main nav ====================================================== -->
+<nav class="mainnav">
+  <div class="mainnav-inner">
+    <a href="#" class="navitem">Home</a>
+    <a href="#" class="navitem has-dropdown">Produtos</a>
+    <a href="#" class="navitem has-dropdown">Cotações</a>
+    <a href="#" class="navitem has-dropdown">Contratos</a>
+    <span class="navitem has-dropdown" id="navAgendamento">
+      Agendamento
+      <div class="submenu">
+        <a href="agendar-contrato-normal-v5.html">Agendar Contrato Normal</a>
+        <a href="agendar-protocolo.html" class="current">Agendar Protocolo</a>
+        <a href="#">Relatório de Status Agendamento</a>
+        <a href="#">Relatório Planejado vs Realizado</a>
+        <a href="#">Relatório de Embarques</a>
+      </div>
+    </span>
+    <a href="#" class="navitem has-dropdown">Faturamento</a>
+    <a href="#" class="navitem">Documentos</a>
+    <a href="#" class="navitem has-dropdown">Financeiro</a>
+    <a href="#" class="navitem has-dropdown">Suporte</a>
+  </div>
+</nav>
+
+<!-- Hero ========================================================== -->
+<div class="hero">
+  <div class="mosaic-overlay">
+    <div class="logo logo--hero" aria-hidden="true">
+      <span class="wordmark">Mosaic<sup>®</sup></span>
+    </div>
+  </div>
+</div>
+
+<!-- Page ========================================================== -->
+<main class="page">
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <a href="#">Agendamento</a>
+    <span class="sep">›</span>
+    <span class="current">Agendar Protocolo</span>
+  </div>
+  <h1 class="page-title">Agendar Protocolo(s)</h1>
+
+  <!-- Action row: select-protocol button + helper + view toggle -->
+  <div class="action-row">
+    <div class="left">
+      <div class="action-label">Selecionar protocolo(s)</div>
+      <div class="action-help">Pesquise pelos protocolos para realizar o agendamento</div>
+    </div>
+
+    <div class="select-dropdown-wrap">
+      <button class="btn btn-primary btn-with-arrow" id="openSelectBtn" type="button">
+        Selecionar protocolo(s)
+      </button>
+      <div class="select-dropdown" id="selectDropdown" role="listbox">
+        <input type="text" id="selectSearch" class="search-input" placeholder="Buscar protocolo..." autocomplete="off" />
+        <div class="group-label" id="recentLabel">Protocolos Recentes</div>
+        <ul id="recentList"></ul>
+        <div class="more-results" id="moreResults" style="display:none">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span>Mostre mais resultados para "<span id="moreTerm"></span>"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-toggle" role="tablist" aria-label="Visualização">
+      <button data-view="cards" class="is-active" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7"/><rect x="3" y="14" width="18" height="7"/></svg>
+        Cards
+      </button>
+      <button data-view="table" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Tabela
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState">
+    <strong>Nenhum protocolo selecionado.</strong>
+    Use o botão "Selecionar protocolo(s)" acima para começar.
+  </div>
+
+  <!-- Cards (list mode) -->
+  <div class="proto-list is-hidden" id="protoList"></div>
+
+  <!-- Table view -->
+  <div class="proto-table-wrap is-hidden" id="protoTableWrap">
+    <table class="proto-table">
+      <thead>
+        <tr>
+          <th>Protocolo</th>
+          <th>Contrato/Item</th>
+          <th>Ref. Cliente</th>
+          <th>Vigência</th>
+          <th>Recebedor</th>
+          <th>CPF/CNPJ</th>
+          <th>IE</th>
+          <th>Cidade/UF</th>
+          <th>Produto</th>
+          <th>Frete</th>
+          <th>Planta</th>
+          <th>CNPJ Filial</th>
+          <th style="text-align:right">Saldo (t)</th>
+          <th>Volume (t)</th>
+          <th>Semana</th>
+          <th>Roteiro</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="protoTableBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Footer fixo ==================================================== -->
+<div class="summary-footer">
+  <div class="summary-actions">
+    <div class="summary-info" id="summaryInfo">Selecione protocolos para começar.</div>
+    <button class="btn btn-secondary" id="cancelBtn" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="agendarBtn" type="button" disabled>Agendar</button>
+  </div>
+</div>
+
+<!-- Modal: busca avançada =========================================== -->
+<div class="modal-backdrop" id="buscaModal">
+  <div class="modal modal-busca" role="dialog" aria-labelledby="buscaTitle" aria-modal="true">
+    <div class="modal-header">
+      <h2 id="buscaTitle">Pesquisar protocolo</h2>
+      <button class="close-x" type="button" data-close="buscaModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="filter-row">
+      <div class="filter-field">
+        <label for="buscaContrato">Contrato</label>
+        <input type="text" id="buscaContrato" placeholder="Q-XXXXX" />
+      </div>
+      <button class="btn btn-primary" id="buscarBtn" type="button">Buscar</button>
+    </div>
+    <div class="results-wrap">
+      <table class="results-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Protocolo</th>
+            <th>Contrato</th>
+            <th>Item</th>
+            <th>Ref. Cliente</th>
+            <th>CPF/CNPJ Filial</th>
+            <th>Cidade/UF Filial</th>
+            <th>Nome Recebedor</th>
+            <th>CPF/CNPJ Recebedor</th>
+            <th>IE Recebedor</th>
+            <th>Cidade/UF Recebedor</th>
+            <th>Produto</th>
+            <th style="text-align:right">Saldo Disp. (t)</th>
+          </tr>
+        </thead>
+        <tbody id="buscaResultsBody"></tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <div class="count" id="buscaCount"><strong>0</strong> protocolo(s) selecionado(s)</div>
+      <div class="footer-actions">
+        <button class="btn btn-secondary" type="button" data-close="buscaModal">Cancelar</button>
+        <button class="btn btn-primary" id="buscaSelectBtn" type="button" disabled>Selecionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: confirmar =========================================== -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal modal-confirm" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+    <div class="confirm-header">
+      <h3 id="confirmTitle">Confirmar agendamento</h3>
+      <button class="close-x" type="button" data-close="confirmModal" aria-label="Fechar" style="background:transparent;border:none;width:32px;height:32px;color:var(--text-2);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="confirm-body">
+      <div class="confirm-icon info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>
+      </div>
+      <p class="confirm-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Pronto para continuar?</p>
+      <div class="confirm-actions">
+        <button class="btn btn-secondary" type="button" data-close="confirmModal">Voltar</button>
+        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: sucesso =========================================== -->
+<div class="modal-backdrop" id="successModal">
+  <div class="modal modal-confirm" role="dialog" aria-labelledby="successTitle" aria-modal="true">
+    <div class="confirm-header">
+      <h3 id="successTitle">Agendamento concluído</h3>
+    </div>
+    <div class="confirm-body">
+      <div class="confirm-icon success" aria-hidden="true">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+      </div>
+      <p class="confirm-text">Seus protocolos foram <strong>AGENDADOS!</strong></p>
+      <div class="confirm-actions stack">
+        <button class="btn btn-secondary" id="successReport" type="button" style="background:var(--mosaic-green-900);color:#fff;border-color:var(--mosaic-green-900);">Ver Relatório de Agendamento</button>
+        <button class="btn btn-yellow" id="successNew" type="button">Agendar Protocolos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Roteiro side drawer =========================================== -->
+<div class="roteiro-drawer-backdrop" id="roteiroBackdrop"></div>
+<aside class="roteiro-drawer" id="roteiroDrawer" role="dialog" aria-hidden="true" aria-labelledby="roteiroTitle">
+  <div class="roteiro-drawer-header">
+    <div class="titles">
+      <div>
+        <h3 id="roteiroTitle">Roteiro do protocolo</h3>
+        <div class="subtitle" id="roteiroSubtitle"></div>
+      </div>
+      <button class="close-x" id="roteiroClose" type="button" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="roteiro-drawer-body">
+    <label id="roteiroLabel">Descrição <span class="opt-tag">Opcional</span></label>
+    <textarea id="roteiroText" placeholder="Adicione observações de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
+  </div>
+  <div class="roteiro-drawer-footer">
+    <button class="btn btn-secondary" id="roteiroCancel" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="roteiroSave" type="button">Salvar</button>
+  </div>
+</aside>
+
+<!-- Datepicker popup container -->
+<div class="dp-popup" id="dpPopup" role="dialog" aria-hidden="true"></div>
+
+<!-- Cross-prototype nav -->
+<div class="proto-nav" id="protoNav">
+  <button class="proto-nav-trigger" id="protoNavTrigger" type="button" aria-label="Outros protótipos">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 2v6l-4 8a4 4 0 0 0 4 6h6a4 4 0 0 0 4-6l-4-8V2"/>
+      <line x1="9" y1="2" x2="15" y2="2"/>
+      <line x1="6" y1="14" x2="18" y2="14"/>
+    </svg>
+    <span>Protótipos</span>
+    <svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+  <div class="proto-nav-panel" id="protoNavPanel">
+    <div class="proto-nav-header">
+      Protótipos Mosaic Direct
+      <span>SAM · 2026</span>
+    </div>
+    <div class="proto-nav-section-title">Agendar Contratos Normais</div>
+    <a href="agendar-contrato-normal.html" class="proto-nav-link"><span class="label-id">V1</span>Versão inicial</a>
+    <a href="agendar-contrato-normal-v2-cards.html" class="proto-nav-link"><span class="label-id">V2</span>Cards + drawer</a>
+    <a href="agendar-contrato-normal-v3.html" class="proto-nav-link"><span class="label-id">V3</span>Cards / Tabela</a>
+    <a href="agendar-contrato-normal-v5.html" class="proto-nav-link"><span class="label-id">Final</span>Versão final</a>
+    <div class="proto-nav-section-title">Agendamento</div>
+    <a href="agendar-protocolo.html" class="proto-nav-link is-current"><span class="label-id">Novo</span>Agendar Protocolo</a>
+    <div class="proto-nav-section-title">Contratos</div>
+    <a href="criar-protocolo.html" class="proto-nav-link">Criar Protocolo</a>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   Agendar Protocolo — application logic
+   =================================================================== */
+
+/* ---------- Mock data ---------------------------------------------- */
+const PROTOCOLOS_RECENTES = ["M9W38746", "M93HD231", "M586JF3BH", "M092DB23"];
+
+const PROTOCOLOS_DISPONIVEIS = [
+  {
+    protocolo: "M3D49483", contrato: "Q-20356", item: "10",
+    refCliente: "2735331",
+    cpfFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "JOSE DA SILVA", cpfRecebedor: "712.865.870-64",
+    ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "32,00",
+    frete: "FOB", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/07/2025", dataFim: "31/12/2025"
+  },
+  {
+    protocolo: "M3D4F821", contrato: "Q-13945", item: "50",
+    refCliente: "—",
+    cpfFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "CARLOS ALVES", cpfRecebedor: "488.722.440-05",
+    ieRecebedor: "877.714.770-60", cidadeRecebedor: "Limeira/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "160,00",
+    frete: "CIF", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/07/2025", dataFim: "31/12/2025"
+  },
+  {
+    protocolo: "M3D49TH1", contrato: "Q-94721", item: "20",
+    refCliente: "—",
+    cpfFilial: "40.908.039/0001-26", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "MARIA BEZERRA", cpfRecebedor: "40.908.039/0001-26",
+    ieRecebedor: "118.299.922-56", cidadeRecebedor: "Sertãozinho/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "203,13",
+    frete: "CIF", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/07/2025", dataFim: "31/12/2025"
+  },
+  {
+    protocolo: "M3D4HE29", contrato: "Q-20351", item: "80",
+    refCliente: "2084442",
+    cpfFilial: "91.459.226/0001-00", cidadeFilial: "Sertãozinho/SP",
+    nomeRecebedor: "TEREZA AKEMI", cpfRecebedor: "91.459.226/0001-00",
+    ieRecebedor: "032.475.991-21", cidadeRecebedor: "Sertãozinho/SP",
+    produto: "EXCLN 24 05 24 UR", saldo: "4,64",
+    frete: "CIF", planta: "Toll Cefértil - Cubatão",
+    dataInicio: "01/07/2025", dataFim: "31/12/2025"
+  }
+];
+
+/* ---------- State -------------------------------------------------- */
+const state = {
+  rows: [],            /* selected protocols, each with volume/semana/roteiro */
+  view: "cards",
+  buscaSelected: new Set(),
+};
+
+let rowIdSeq = 1;
+function makeRow(p) {
+  const preRoteiro = `${p.produto} · ${p.frete} · ${p.planta} · Entrega em ${p.cidadeRecebedor}`;
+  return {
+    rid: rowIdSeq++,
+    ...p,
+    volume: "",
+    semana: "",
+    roteiro: preRoteiro,
+  };
+}
+
+/* ---------- DOM refs ---------------------------------------------- */
+const elEmpty = document.getElementById("emptyState");
+const elList = document.getElementById("protoList");
+const elTableWrap = document.getElementById("protoTableWrap");
+const elTableBody = document.getElementById("protoTableBody");
+const elSummary = document.getElementById("summaryInfo");
+const elAgendar = document.getElementById("agendarBtn");
+
+/* ---------- Render ------------------------------------------------- */
+function render() {
+  const hasRows = state.rows.length > 0;
+  elEmpty.classList.toggle("is-hidden", hasRows);
+  elList.classList.toggle("is-hidden", !hasRows || state.view !== "cards");
+  elTableWrap.classList.toggle("is-hidden", !hasRows || state.view !== "table");
+  if (hasRows) {
+    if (state.view === "cards") renderCards();
+    else renderTable();
+  }
+  updateSummary();
+}
+
+function renderCards() {
+  elList.innerHTML = state.rows.map(r => `
+    <div class="proto-card" data-rid="${r.rid}">
+      <div class="proto-card-head">
+        <span class="pcode">${r.protocolo}</span>
+        <span class="pmeta"><strong>Contrato:</strong>${r.contrato} · Item ${r.item}</span>
+        <span class="pmeta"><strong>Ref:</strong>${r.refCliente || "—"}</span>
+        <span class="pmeta"><strong>Vigência:</strong>${r.dataInicio} → ${r.dataFim}</span>
+        <span class="head-actions">
+          <button type="button" data-action="duplicate" data-rid="${r.rid}" title="Duplicar protocolo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button type="button" class="danger" data-action="remove" data-rid="${r.rid}" title="Remover protocolo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </span>
+      </div>
+      <div class="proto-card-recv">
+        <div class="recv-field">
+          <span class="lbl">Recebedor</span>
+          <span class="val">${r.nomeRecebedor}</span>
+        </div>
+        <div class="recv-field">
+          <span class="lbl">CPF/CNPJ</span>
+          <span class="val">${r.cpfRecebedor}</span>
+        </div>
+        <div class="recv-field">
+          <span class="lbl">IE</span>
+          <span class="val">${r.ieRecebedor}</span>
+        </div>
+        <div class="recv-field">
+          <span class="lbl">Cidade/UF</span>
+          <span class="val">${r.cidadeRecebedor}</span>
+        </div>
+      </div>
+      <div class="proto-card-item">
+        <div class="item-field">
+          <span class="lbl">Produto</span>
+          <span class="val">${r.produto}</span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Frete</span>
+          <span class="val"><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Planta</span>
+          <span class="val">${r.planta}</span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">CNPJ Filial</span>
+          <span class="val">${r.cpfFilial}</span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Saldo (t)</span>
+          <span class="val saldo">${r.saldo}<span class="unit">t</span></span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Volume Desejado (t)</span>
+          <span class="vol-wrap">
+            <input type="text" class="row-input" data-rid="${r.rid}" data-field="volume" value="${r.volume}" placeholder="0,00" inputmode="decimal" />
+            <span class="suffix">t</span>
+          </span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Semana Desejada</span>
+          <span class="date-wrap">
+            <input type="text" class="row-input date-input" data-rid="${r.rid}" data-field="semana" value="${r.semana}" placeholder="DD/MM/AAAA" readonly />
+            <span class="cal-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </span>
+          </span>
+        </div>
+        <div class="item-field">
+          <span class="lbl">Roteiro Protocolo</span>
+          <button type="button" class="roteiro-btn ${r.roteiro ? "has-value" : ""}" data-action="open-roteiro" data-rid="${r.rid}">
+            <span class="icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <span class="label">${r.roteiro ? truncate(r.roteiro, 38) : "Adicionar roteiro"}</span>
+          </button>
+        </div>
+        <div class="row-actions">
+          <!-- spacer to match grid -->
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderTable() {
+  elTableBody.innerHTML = state.rows.map(r => `
+    <tr data-rid="${r.rid}">
+      <td class="pcode-cell">${r.protocolo}</td>
+      <td>${r.contrato}/${r.item}</td>
+      <td>${r.refCliente || "—"}</td>
+      <td>${r.dataInicio} → ${r.dataFim}</td>
+      <td><strong>${r.nomeRecebedor}</strong></td>
+      <td>${r.cpfRecebedor}</td>
+      <td>${r.ieRecebedor}</td>
+      <td>${r.cidadeRecebedor}</td>
+      <td>${r.produto}</td>
+      <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
+      <td>${r.planta}</td>
+      <td>${r.cpfFilial}</td>
+      <td class="saldo-cell">${r.saldo}</td>
+      <td class="input-cell" style="min-width:130px">
+        <span class="vol-wrap">
+          <input type="text" class="row-input" data-rid="${r.rid}" data-field="volume" value="${r.volume}" placeholder="0,00" inputmode="decimal" />
+          <span class="suffix">t</span>
+        </span>
+      </td>
+      <td class="input-cell" style="min-width:160px">
+        <span class="date-wrap">
+          <input type="text" class="row-input date-input" data-rid="${r.rid}" data-field="semana" value="${r.semana}" placeholder="DD/MM/AAAA" readonly />
+          <span class="cal-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          </span>
+        </span>
+      </td>
+      <td class="input-cell" style="min-width:220px">
+        <button type="button" class="roteiro-btn ${r.roteiro ? "has-value" : ""}" data-action="open-roteiro" data-rid="${r.rid}">
+          <span class="icon">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </span>
+          <span class="label">${r.roteiro ? truncate(r.roteiro, 30) : "Adicionar"}</span>
+        </button>
+      </td>
+      <td>
+        <div class="row-actions">
+          <button type="button" data-action="duplicate" data-rid="${r.rid}" title="Duplicar">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+          <button type="button" class="danger" data-action="remove" data-rid="${r.rid}" title="Remover">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>
+  `).join("");
+}
+
+function truncate(s, n) {
+  if (!s) return "";
+  return s.length > n ? s.slice(0, n - 1) + "…" : s;
+}
+
+function updateSummary() {
+  const total = state.rows.length;
+  if (total === 0) {
+    elSummary.textContent = "Selecione protocolos para começar.";
+    elAgendar.disabled = true;
+    return;
+  }
+  const ready = state.rows.filter(r => r.volume.trim() && r.semana.trim()).length;
+  if (ready === total) {
+    elSummary.innerHTML = `<strong>${total}</strong> protocolo(s) pronto(s) para agendamento.`;
+    elAgendar.disabled = false;
+  } else {
+    elSummary.innerHTML = `<strong>${ready}/${total}</strong> protocolo(s) preenchido(s). Volume e Semana são obrigatórios.`;
+    elAgendar.disabled = true;
+  }
+}
+
+/* ---------- View toggle ------------------------------------------- */
+document.querySelectorAll(".view-toggle button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    state.view = btn.dataset.view;
+    document.querySelectorAll(".view-toggle button").forEach(b => b.classList.toggle("is-active", b === btn));
+    render();
+  });
+});
+
+/* ---------- Select dropdown (recent + search) --------------------- */
+const elOpenSelect = document.getElementById("openSelectBtn");
+const elSelectDropdown = document.getElementById("selectDropdown");
+const elSelectSearch = document.getElementById("selectSearch");
+const elRecentList = document.getElementById("recentList");
+const elRecentLabel = document.getElementById("recentLabel");
+const elMoreResults = document.getElementById("moreResults");
+const elMoreTerm = document.getElementById("moreTerm");
+
+function renderRecent(filter) {
+  const term = (filter || "").trim();
+  const items = term
+    ? PROTOCOLOS_RECENTES.filter(c => c.toUpperCase().includes(term.toUpperCase()))
+    : PROTOCOLOS_RECENTES.slice();
+  elRecentList.innerHTML = items.map(code => {
+    let display = code;
+    if (term) {
+      const re = new RegExp("(" + term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+      display = code.replace(re, "<mark>$1</mark>");
+    }
+    return `
+      <li data-action="quick-add" data-code="${code}">
+        <span class="icon-doc">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </span>
+        <span>${display}</span>
+      </li>`;
+  }).join("");
+
+  if (term) {
+    elRecentLabel.textContent = items.length ? "Resultados recentes" : "Nenhum recente";
+    if (!items.length) {
+      elRecentList.innerHTML = `<li class="empty" style="color:var(--text-3);font-style:italic;cursor:default">Sem correspondência nos recentes.</li>`;
+    }
+    elMoreResults.style.display = "flex";
+    elMoreTerm.textContent = term;
+  } else {
+    elRecentLabel.textContent = "Protocolos Recentes";
+    elMoreResults.style.display = "none";
+  }
+}
+
+function openSelectDropdown() {
+  elSelectDropdown.classList.add("is-open");
+  elSelectSearch.value = "";
+  renderRecent("");
+  setTimeout(() => elSelectSearch.focus(), 60);
+}
+function closeSelectDropdown() {
+  elSelectDropdown.classList.remove("is-open");
+}
+
+elOpenSelect.addEventListener("click", e => {
+  e.stopPropagation();
+  if (elSelectDropdown.classList.contains("is-open")) closeSelectDropdown();
+  else openSelectDropdown();
+});
+elSelectSearch.addEventListener("input", () => renderRecent(elSelectSearch.value));
+elSelectSearch.addEventListener("keydown", e => {
+  if (e.key === "Escape") { closeSelectDropdown(); elOpenSelect.focus(); }
+});
+elRecentList.addEventListener("click", e => {
+  const li = e.target.closest("[data-action='quick-add']");
+  if (!li) return;
+  const code = li.dataset.code;
+  /* Quick-add a recent: open the busca modal with that contract pre-filled
+     as a friendly fallback (since the recent codes aren't in the mock dataset). */
+  closeSelectDropdown();
+  openBuscaModal(code);
+});
+elMoreResults.addEventListener("click", () => {
+  const term = elSelectSearch.value.trim();
+  closeSelectDropdown();
+  openBuscaModal(term);
+});
+document.addEventListener("click", e => {
+  if (!elSelectDropdown.contains(e.target) && e.target !== elOpenSelect) closeSelectDropdown();
+});
+
+/* ---------- Modal: busca avançada -------------------------------- */
+const elBuscaModal = document.getElementById("buscaModal");
+const elBuscaBody = document.getElementById("buscaResultsBody");
+const elBuscaContrato = document.getElementById("buscaContrato");
+const elBuscaCount = document.getElementById("buscaCount");
+const elBuscaSelectBtn = document.getElementById("buscaSelectBtn");
+
+function openBuscaModal(prefillContrato) {
+  state.buscaSelected = new Set();
+  elBuscaContrato.value = prefillContrato || "";
+  renderBuscaResults();
+  elBuscaModal.classList.add("is-open");
+}
+function closeBuscaModal() {
+  elBuscaModal.classList.remove("is-open");
+}
+
+function renderBuscaResults() {
+  const term = elBuscaContrato.value.trim().toUpperCase();
+  const items = term
+    ? PROTOCOLOS_DISPONIVEIS.filter(p =>
+        p.contrato.toUpperCase().includes(term) ||
+        p.protocolo.toUpperCase().includes(term))
+    : PROTOCOLOS_DISPONIVEIS.slice();
+
+  if (!items.length) {
+    elBuscaBody.innerHTML = `
+      <tr><td colspan="13" style="text-align:center;padding:48px 12px;color:var(--text-3);font-style:italic">
+        Nenhum protocolo encontrado para "${escapeHtml(elBuscaContrato.value)}".
+      </td></tr>`;
+  } else {
+    elBuscaBody.innerHTML = items.map(p => {
+      const checked = state.buscaSelected.has(p.protocolo);
+      return `
+        <tr class="${checked ? "is-checked" : ""}" data-action="toggle-busca" data-code="${p.protocolo}">
+          <td>
+            <span class="checkbox" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </td>
+          <td class="pcode-cell">${p.protocolo}</td>
+          <td>${p.contrato}</td>
+          <td>${p.item}</td>
+          <td>${p.refCliente || "—"}</td>
+          <td>${p.cpfFilial}</td>
+          <td>${p.cidadeFilial}</td>
+          <td><strong>${p.nomeRecebedor}</strong></td>
+          <td>${p.cpfRecebedor}</td>
+          <td>${p.ieRecebedor}</td>
+          <td>${p.cidadeRecebedor}</td>
+          <td>${p.produto}</td>
+          <td class="saldo-cell">${p.saldo}</td>
+        </tr>`;
+    }).join("");
+  }
+  updateBuscaCount();
+}
+
+function updateBuscaCount() {
+  const n = state.buscaSelected.size;
+  elBuscaCount.innerHTML = `<strong>${n}</strong> protocolo(s) selecionado(s)`;
+  elBuscaSelectBtn.disabled = n === 0;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+
+elBuscaBody.addEventListener("click", e => {
+  const tr = e.target.closest("[data-action='toggle-busca']");
+  if (!tr) return;
+  const code = tr.dataset.code;
+  if (state.buscaSelected.has(code)) state.buscaSelected.delete(code);
+  else state.buscaSelected.add(code);
+  renderBuscaResults();
+});
+
+document.getElementById("buscarBtn").addEventListener("click", () => renderBuscaResults());
+elBuscaContrato.addEventListener("keydown", e => {
+  if (e.key === "Enter") { e.preventDefault(); renderBuscaResults(); }
+});
+
+elBuscaSelectBtn.addEventListener("click", () => {
+  /* Add selected protocols, skipping any already in state.rows */
+  const existing = new Set(state.rows.map(r => r.protocolo));
+  const toAdd = PROTOCOLOS_DISPONIVEIS.filter(p =>
+    state.buscaSelected.has(p.protocolo) && !existing.has(p.protocolo));
+  toAdd.forEach(p => state.rows.push(makeRow(p)));
+  closeBuscaModal();
+  render();
+});
+
+/* ---------- Row interactions (delegated) ------------------------- */
+document.body.addEventListener("input", e => {
+  const inp = e.target.closest("[data-rid][data-field]");
+  if (!inp) return;
+  const rid = parseInt(inp.dataset.rid, 10);
+  const row = state.rows.find(r => r.rid === rid);
+  if (!row) return;
+  row[inp.dataset.field] = inp.value;
+  updateSummary();
+});
+
+document.body.addEventListener("click", e => {
+  const dupBtn = e.target.closest("[data-action='duplicate']");
+  if (dupBtn) {
+    const rid = parseInt(dupBtn.dataset.rid, 10);
+    const row = state.rows.find(r => r.rid === rid);
+    if (row) {
+      const idx = state.rows.indexOf(row);
+      const clone = makeRow({
+        protocolo: row.protocolo, contrato: row.contrato, item: row.item,
+        refCliente: row.refCliente, cpfFilial: row.cpfFilial, cidadeFilial: row.cidadeFilial,
+        nomeRecebedor: row.nomeRecebedor, cpfRecebedor: row.cpfRecebedor,
+        ieRecebedor: row.ieRecebedor, cidadeRecebedor: row.cidadeRecebedor,
+        produto: row.produto, saldo: row.saldo, frete: row.frete,
+        planta: row.planta, dataInicio: row.dataInicio, dataFim: row.dataFim
+      });
+      state.rows.splice(idx + 1, 0, clone);
+      render();
+    }
+    return;
+  }
+  const remBtn = e.target.closest("[data-action='remove']");
+  if (remBtn) {
+    const rid = parseInt(remBtn.dataset.rid, 10);
+    state.rows = state.rows.filter(r => r.rid !== rid);
+    render();
+    return;
+  }
+});
+
+/* ---------- Roteiro drawer -------------------------------------- */
+const elRoteiroDrawer = document.getElementById("roteiroDrawer");
+const elRoteiroBackdrop = document.getElementById("roteiroBackdrop");
+const elRoteiroText = document.getElementById("roteiroText");
+const elRoteiroSubtitle = document.getElementById("roteiroSubtitle");
+let roteiroCurrentRid = null;
+
+function openRoteiroDrawer(rid) {
+  const row = state.rows.find(r => r.rid === rid);
+  if (!row) return;
+  roteiroCurrentRid = rid;
+  elRoteiroSubtitle.innerHTML = `<strong>${row.protocolo}</strong> · ${row.contrato} item ${row.item} · ${row.frete}`;
+  elRoteiroText.value = row.roteiro || "";
+  elRoteiroDrawer.classList.add("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "false");
+  elRoteiroBackdrop.classList.add("is-open");
+  setTimeout(() => elRoteiroText.focus(), 280);
+}
+function closeRoteiroDrawer() {
+  elRoteiroDrawer.classList.remove("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "true");
+  elRoteiroBackdrop.classList.remove("is-open");
+  roteiroCurrentRid = null;
+}
+function saveRoteiroDrawer() {
+  if (roteiroCurrentRid == null) { closeRoteiroDrawer(); return; }
+  const row = state.rows.find(r => r.rid === roteiroCurrentRid);
+  if (row) row.roteiro = elRoteiroText.value;
+  closeRoteiroDrawer();
+  render();
+}
+
+document.body.addEventListener("click", e => {
+  const btn = e.target.closest("[data-action='open-roteiro']");
+  if (!btn) return;
+  e.preventDefault();
+  const rid = parseInt(btn.dataset.rid, 10);
+  openRoteiroDrawer(rid);
+});
+document.getElementById("roteiroClose").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroCancel").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroSave").addEventListener("click", saveRoteiroDrawer);
+elRoteiroBackdrop.addEventListener("click", closeRoteiroDrawer);
+
+/* ---------- Custom datepicker ----------------------------------- */
+const elDpPopup = document.getElementById("dpPopup");
+let dpCurrentInput = null;
+let dpYear, dpMonth;
+
+function parseDateBR(s) {
+  if (!s) return null;
+  const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s.trim());
+  if (!m) return null;
+  const d = new Date(parseInt(m[3], 10), parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+  return isNaN(d.getTime()) ? null : d;
+}
+function formatDateBR(d) {
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  return `${dd}/${mm}/${d.getFullYear()}`;
+}
+const MONTHS_PT = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const DOWS_PT = ["D","S","T","Q","Q","S","S"];
+
+function renderDpGrid() {
+  const today = new Date();
+  const todayKey = today.toISOString().slice(0,10);
+  const selected = dpCurrentInput && parseDateBR(dpCurrentInput.value);
+  const selKey = selected ? selected.toISOString().slice(0,10) : null;
+
+  const first = new Date(dpYear, dpMonth, 1);
+  const startDow = first.getDay();
+  const daysInMonth = new Date(dpYear, dpMonth + 1, 0).getDate();
+  const daysInPrev = new Date(dpYear, dpMonth, 0).getDate();
+
+  let html = `
+    <div class="dp-head">
+      <button type="button" data-dp-action="prev" aria-label="Mês anterior">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="month">${MONTHS_PT[dpMonth]} ${dpYear}</span>
+      <button type="button" data-dp-action="next" aria-label="Próximo mês">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div class="dp-grid">`;
+  DOWS_PT.forEach(d => { html += `<span class="dow">${d}</span>`; });
+  for (let i = startDow - 1; i >= 0; i--) {
+    const day = daysInPrev - i;
+    html += `<button type="button" class="day is-other" data-dp-action="pick-prev" data-day="${day}">${day}</button>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(dpYear, dpMonth, d);
+    const key = dt.toISOString().slice(0,10);
+    const cls = ["day"];
+    if (key === todayKey) cls.push("is-today");
+    if (key === selKey) cls.push("is-selected");
+    html += `<button type="button" class="${cls.join(" ")}" data-dp-action="pick" data-day="${d}">${d}</button>`;
+  }
+  const totalCells = startDow + daysInMonth;
+  const trailing = (7 - (totalCells % 7)) % 7;
+  for (let d = 1; d <= trailing; d++) {
+    html += `<button type="button" class="day is-other" data-dp-action="pick-next" data-day="${d}">${d}</button>`;
+  }
+  html += `</div>`;
+  elDpPopup.innerHTML = html;
+}
+
+function openDatePicker(inp) {
+  dpCurrentInput = inp;
+  const cur = parseDateBR(inp.value) || new Date();
+  dpYear = cur.getFullYear();
+  dpMonth = cur.getMonth();
+  renderDpGrid();
+
+  const rect = inp.getBoundingClientRect();
+  const popupWidth = 280;
+  let left = window.scrollX + rect.left;
+  if (left + popupWidth > window.scrollX + window.innerWidth - 8) {
+    left = window.scrollX + rect.right - popupWidth;
+  }
+  elDpPopup.style.left = left + "px";
+  elDpPopup.style.top = (window.scrollY + rect.bottom + 4) + "px";
+  elDpPopup.classList.add("is-open");
+}
+function closeDatePicker() {
+  elDpPopup.classList.remove("is-open");
+  dpCurrentInput = null;
+}
+
+document.body.addEventListener("click", e => {
+  const dateInp = e.target.closest(".date-input, .date-wrap");
+  if (dateInp && !elDpPopup.contains(e.target)) {
+    e.preventDefault();
+    const inp = dateInp.matches(".date-input") ? dateInp : dateInp.querySelector(".date-input");
+    if (inp) openDatePicker(inp);
+    return;
+  }
+  if (!elDpPopup.contains(e.target) && elDpPopup.classList.contains("is-open")) {
+    closeDatePicker();
+  }
+});
+
+elDpPopup.addEventListener("click", e => {
+  const btn = e.target.closest("[data-dp-action]");
+  if (!btn) return;
+  const action = btn.dataset.dpAction;
+  if (action === "prev") {
+    dpMonth--;
+    if (dpMonth < 0) { dpMonth = 11; dpYear--; }
+    renderDpGrid();
+  } else if (action === "next") {
+    dpMonth++;
+    if (dpMonth > 11) { dpMonth = 0; dpYear++; }
+    renderDpGrid();
+  } else if (action === "pick" || action === "pick-prev" || action === "pick-next") {
+    const day = parseInt(btn.dataset.day, 10);
+    let y = dpYear, m = dpMonth;
+    if (action === "pick-prev") { m--; if (m < 0) { m = 11; y--; } }
+    if (action === "pick-next") { m++; if (m > 11) { m = 0; y++; } }
+    const dt = new Date(y, m, day);
+    if (dpCurrentInput) {
+      dpCurrentInput.value = formatDateBR(dt);
+      const rid = parseInt(dpCurrentInput.dataset.rid, 10);
+      const row = state.rows.find(r => r.rid === rid);
+      if (row) row.semana = dpCurrentInput.value;
+      updateSummary();
+    }
+    closeDatePicker();
+  }
+});
+
+/* ---------- Confirm + Success modals ---------------------------- */
+const elConfirmModal = document.getElementById("confirmModal");
+const elSuccessModal = document.getElementById("successModal");
+const elConfirmCount = document.getElementById("confirmCount");
+
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.close;
+    document.getElementById(id).classList.remove("is-open");
+  });
+});
+
+document.getElementById("agendarBtn").addEventListener("click", () => {
+  if (!state.rows.length) return;
+  elConfirmCount.textContent = state.rows.length;
+  elConfirmModal.classList.add("is-open");
+});
+
+document.getElementById("confirmYes").addEventListener("click", () => {
+  elConfirmModal.classList.remove("is-open");
+  elSuccessModal.classList.add("is-open");
+});
+
+document.getElementById("successReport").addEventListener("click", () => {
+  elSuccessModal.classList.remove("is-open");
+  /* Mock — would route to /relatorio-agendamento. Reset for clean state. */
+  state.rows = [];
+  rowIdSeq = 1;
+  render();
+});
+
+document.getElementById("successNew").addEventListener("click", () => {
+  elSuccessModal.classList.remove("is-open");
+  state.rows = [];
+  rowIdSeq = 1;
+  render();
+});
+
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  if (!state.rows.length) return;
+  if (confirm("Descartar todos os protocolos selecionados?")) {
+    state.rows = [];
+    rowIdSeq = 1;
+    render();
+  }
+});
+
+/* ESC closes any modal */
+document.addEventListener("keydown", e => {
+  if (e.key !== "Escape") return;
+  if (elRoteiroDrawer.classList.contains("is-open")) { closeRoteiroDrawer(); return; }
+  if (elDpPopup.classList.contains("is-open")) { closeDatePicker(); return; }
+  document.querySelectorAll(".modal-backdrop.is-open").forEach(m => m.classList.remove("is-open"));
+  closeSelectDropdown();
+});
+
+/* Backdrop click closes modals (but not when clicking inside .modal) */
+document.querySelectorAll(".modal-backdrop").forEach(bd => {
+  bd.addEventListener("click", e => {
+    if (e.target === bd) bd.classList.remove("is-open");
+  });
+});
+
+/* ---------- Proto-nav toggle ------------------------------------ */
+(function() {
+  const nav = document.getElementById("protoNav");
+  const trigger = document.getElementById("protoNavTrigger");
+  trigger.addEventListener("click", e => {
+    e.stopPropagation();
+    nav.classList.toggle("is-open");
+  });
+  document.addEventListener("click", e => {
+    if (!nav.contains(e.target)) nav.classList.remove("is-open");
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") nav.classList.remove("is-open");
+  });
+})();
+
+/* ---------- Init ------------------------------------------------- */
+render();
+</script>
+
+</body>
+</html>
