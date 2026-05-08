@@ -713,6 +713,23 @@
     white-space: nowrap;
     vertical-align: middle;
   }
+  .proto-table thead .proto-table-groups th {
+    background: var(--mosaic-green-900);
+    color: #fff;
+    text-align: center;
+    font-size: 11px;
+    border-bottom: 1px solid rgba(255,255,255,0.18);
+    border-right: 1px solid rgba(255,255,255,0.18);
+  }
+  .proto-table thead .proto-table-groups th:last-child,
+  .proto-table thead .proto-table-groups th[rowspan] { border-right: 0; }
+  .proto-table thead .proto-table-groups th[rowspan] {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+  .proto-table thead .proto-table-groups .grp-contrato      { background: var(--mosaic-green-800); }
+  .proto-table thead .proto-table-groups .grp-item-contrato { background: var(--mosaic-green-700); }
+  .proto-table thead .proto-table-groups .grp-item-item     { background: var(--mosaic-teal); }
   .proto-table tbody td {
     padding: 10px 12px;
     border-bottom: 1px solid var(--border-soft);
@@ -797,6 +814,7 @@
     transform: translateX(100%);
     transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
+  .drawer.drawer--wide { width: min(1100px, 100%); }
   .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
@@ -981,12 +999,14 @@
     color: #fff;
     transition: background-color 120ms, border-color 120ms;
   }
-  .drawer-item.is-selected .checkbox {
+  .drawer-item.is-selected .checkbox,
+  .drawer-table tr.is-selected .checkbox {
     background: var(--mosaic-green-800);
     border-color: var(--mosaic-green-800);
   }
   .checkbox svg { opacity: 0; transition: opacity 120ms; }
-  .drawer-item.is-selected .checkbox svg { opacity: 1; }
+  .drawer-item.is-selected .checkbox svg,
+  .drawer-table tr.is-selected .checkbox svg { opacity: 1; }
 
   .drawer-item-body { flex: 1; min-width: 0; }
   .drawer-item-line1 {
@@ -1065,6 +1085,109 @@
     color: inherit;
     padding: 0 1px;
     font-weight: 800;
+  }
+
+  /* ----- Drawer table selector (used in agendar-protocolo) ------- */
+  .drawer-table-wrap {
+    flex: 1;
+    overflow: auto;
+  }
+  .drawer-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .drawer-table thead th {
+    text-align: left;
+    padding: 12px 12px;
+    font-weight: 800;
+    color: var(--text-1);
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    background: #fafafa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .drawer-table thead th:first-child { padding-left: 28px; width: 36px; }
+  .drawer-table thead th:last-child  { padding-right: 28px; text-align: right; }
+  .drawer-table tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 500;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .drawer-table tbody td:first-child { padding-left: 28px; }
+  .drawer-table tbody td:last-child  { padding-right: 28px; text-align: right; }
+  .drawer-table tbody tr {
+    cursor: pointer;
+    transition: background-color 120ms;
+  }
+  .drawer-table tbody tr:hover { background: var(--bg-row-alt); }
+  .drawer-table tbody tr.is-selected {
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
+  }
+  .drawer-table tbody tr.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+  .drawer-table tbody tr.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .drawer-table .cell-pcode {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: 0.01em;
+  }
+  .drawer-table .cell-strong { font-weight: 800; color: var(--text-1); }
+  .drawer-table .cell-muted  { color: var(--text-3); font-weight: 600; }
+  .drawer-table .cell-saldo {
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .drawer-table .cell-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .drawer-table .cell-frete {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .drawer-table .cell-frete--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .drawer-table .cell-frete--cif {
+    color: var(--status-orange);
+    border-color: var(--status-orange);
+    background: var(--status-orange-bg);
+  }
+  .drawer-table .checkbox { margin: 0; }
+  .drawer-table mark {
+    background: rgba(240, 192, 32, 0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
+  .drawer-empty-row td {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
   }
 
   .drawer-footer {
@@ -1179,6 +1302,101 @@
     align-items: stretch;
   }
   .modal-confirm .confirm-actions .btn { flex: 1; }
+
+  /* ================================================================
+     V5-style confirmation modal (matches agendar-contrato-normal-v5)
+     ================================================================ */
+  .modal-confirm-v2 {
+    max-width: 540px;
+    padding: 0;
+    overflow: hidden;
+    border-top: none;
+  }
+  .confirm-v2-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .confirm-v2-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .confirm-v2-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 120ms;
+  }
+  .confirm-v2-close:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--mosaic-green-900);
+  }
+  .confirm-v2-body {
+    padding: 28px 28px 24px;
+    background: #fff;
+    text-align: left;
+  }
+  .confirm-v2-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 999px;
+  }
+  .confirm-v2-icon--info {
+    background: rgba(0, 106, 77, 0.10);
+    color: var(--mosaic-green-700);
+  }
+  .confirm-v2-icon--success {
+    background: rgba(0, 106, 77, 0.10);
+    color: var(--mosaic-green-700);
+  }
+  .confirm-v2-icon--warn {
+    background: rgba(199, 104, 20, 0.12);
+    color: var(--status-orange);
+  }
+  .confirm-v2-text {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-1);
+    font-weight: 500;
+    text-align: left;
+  }
+  .confirm-v2-text strong { font-weight: 800; }
+  .confirm-v2-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .confirm-v2-actions--stack {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .confirm-v2-actions--stack .btn { width: 100%; }
+  .btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+  .btn-danger:hover {
+    background: #9c1b22;
+    border-color: #9c1b22;
+  }
 
   /* ================================================================
      Roteiro side drawer (smaller, slides in same as main drawer)
@@ -1588,24 +1806,30 @@
   <div class="proto-table-wrap is-hidden" id="protoTableWrap">
     <table class="proto-table">
       <thead>
+        <tr class="proto-table-groups">
+          <th rowspan="2">Protocolo</th>
+          <th colspan="3" class="grp grp-contrato">Contrato</th>
+          <th colspan="5" class="grp grp-item-contrato">Item de contrato</th>
+          <th colspan="8" class="grp grp-item-item">Item de item</th>
+          <th rowspan="2"></th>
+        </tr>
         <tr>
-          <th>Protocolo</th>
-          <th>Contrato/Item</th>
+          <th>Contrato</th>
           <th>Ref. Cliente</th>
           <th>Vigência</th>
-          <th>Recebedor</th>
-          <th>CPF/CNPJ</th>
-          <th>IE</th>
-          <th>Cidade/UF</th>
+          <th>Item</th>
           <th>Produto</th>
           <th>Frete</th>
           <th>Planta</th>
           <th>CNPJ Filial</th>
+          <th>Recebedor</th>
+          <th>CPF/CNPJ</th>
+          <th>IE</th>
+          <th>Cidade/UF</th>
           <th style="text-align:right">Saldo (t)</th>
           <th>Volume (t)</th>
           <th>Semana</th>
           <th>Roteiro</th>
-          <th></th>
         </tr>
       </thead>
       <tbody id="protoTableBody"></tbody>
@@ -1624,7 +1848,7 @@
 
 <!-- Side drawer: Selecionar protocolos ============================ -->
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
-<aside class="drawer" id="protocolDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+<aside class="drawer drawer--wide" id="protocolDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
   <div class="drawer-header">
     <span class="modal-icon" aria-hidden="true">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -1658,7 +1882,25 @@
     </span>
   </div>
 
-  <div class="drawer-list" id="drawerList"></div>
+  <div class="drawer-table-wrap">
+    <table class="drawer-table" id="drawerTable">
+      <thead>
+        <tr>
+          <th aria-label="Selecionar"></th>
+          <th>Protocolo</th>
+          <th>Contrato</th>
+          <th>Item</th>
+          <th>Produto</th>
+          <th>Frete</th>
+          <th>Recebedor</th>
+          <th>Cidade/UF</th>
+          <th>Vigência</th>
+          <th>Saldo (t)</th>
+        </tr>
+      </thead>
+      <tbody id="drawerList"></tbody>
+    </table>
+  </div>
 
   <div class="drawer-footer">
     <div class="count" id="drawerFooterCount">Nenhum protocolo selecionado</div>
@@ -1671,21 +1913,24 @@
 
 <!-- Modal: confirmar =========================================== -->
 <div class="modal-backdrop" id="confirmModal">
-  <div class="modal modal-confirm" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
-    <div class="confirm-header">
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+    <div class="confirm-v2-header">
       <h3 id="confirmTitle">Confirmar agendamento</h3>
-      <button class="close-x" type="button" data-close="confirmModal" aria-label="Fechar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <button class="confirm-v2-close" type="button" data-close="confirmModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="confirm-body">
-      <div class="confirm-icon info" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
       </div>
-      <p class="confirm-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Pronto para continuar?</p>
-      <div class="confirm-actions">
+      <p class="confirm-v2-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <div class="confirm-v2-actions">
         <button class="btn btn-secondary" type="button" data-close="confirmModal">Voltar</button>
-        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar</button>
+        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar e enviar</button>
       </div>
     </div>
   </div>
@@ -1693,18 +1938,24 @@
 
 <!-- Modal: sucesso =========================================== -->
 <div class="modal-backdrop" id="successModal">
-  <div class="modal modal-confirm" role="dialog" aria-labelledby="successTitle" aria-modal="true">
-    <div class="confirm-header">
-      <h3 id="successTitle">Agendamento concluído</h3>
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="successTitle" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3 id="successTitle">Agendamentos enviados</h3>
+      <button class="confirm-v2-close" type="button" data-close="successModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-    <div class="confirm-body">
-      <div class="confirm-icon success" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--success" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
+          <polyline points="8 12.5 11 15.5 16 9.5"/>
+        </svg>
       </div>
-      <p class="confirm-text">Seus protocolos foram <strong>AGENDADOS!</strong></p>
-      <div class="confirm-actions stack">
-        <button class="btn btn-secondary" id="successReport" type="button" style="background:var(--mosaic-green-900);color:#fff;border-color:var(--mosaic-green-900);">Ver Relatório de Agendamento</button>
-        <button class="btn btn-yellow" id="successNew" type="button">Agendar Protocolos</button>
+      <p class="confirm-v2-text"><strong>Seus protocolos foram agendados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar mais protocolos</button>
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
       </div>
     </div>
   </div>
@@ -1985,17 +2236,18 @@ function renderTable() {
   elTableBody.innerHTML = state.rows.map(r => `
     <tr data-rid="${r.rid}">
       <td class="pcode-cell">${r.protocolo}</td>
-      <td>${r.contrato}/${r.item}</td>
+      <td>${r.contrato}</td>
       <td>${r.refCliente || "—"}</td>
       <td>${r.dataInicio} → ${r.dataFim}</td>
-      <td><strong>${r.nomeRecebedor}</strong></td>
-      <td>${r.cpfRecebedor}</td>
-      <td>${r.ieRecebedor}</td>
-      <td>${r.cidadeRecebedor}</td>
+      <td>${r.item}</td>
       <td>${r.produto}</td>
       <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
       <td>${r.planta}</td>
       <td>${r.cpfFilial}</td>
+      <td><strong>${r.nomeRecebedor}</strong></td>
+      <td>${r.cpfRecebedor}</td>
+      <td>${r.ieRecebedor}</td>
+      <td>${r.cidadeRecebedor}</td>
       <td class="saldo-cell">${r.saldo}</td>
       <td class="input-cell" style="min-width:140px">
         <span class="vol-wrap">
@@ -2106,34 +2358,30 @@ function renderDrawerList() {
   const alreadyAdded = new Set(state.rows.map(r => r.protocolo));
 
   if (!items.length) {
-    elDrawerList.innerHTML = `<div class="drawer-empty">Nenhum protocolo encontrado para "${escapeHtml(q)}".</div>`;
+    elDrawerList.innerHTML = `<tr class="drawer-empty-row"><td colspan="10">Nenhum protocolo encontrado para "${escapeHtml(q)}".</td></tr>`;
   } else {
     elDrawerList.innerHTML = items.map(({ p, i }) => {
       const selected = state.drawerSelected.has(i);
       const disabled = alreadyAdded.has(p.protocolo);
-      const fretePill = `drawer-item-frete--${p.frete.toLowerCase()}`;
+      const fretePill = `cell-frete--${p.frete.toLowerCase()}`;
+      const cidade = `${p.cidadeRecebedor || ''}`;
       return `
-        <div class="drawer-item ${selected ? 'is-selected' : ''} ${disabled ? 'is-disabled' : ''}" data-i="${i}">
-          <span class="checkbox" aria-hidden="true">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          </span>
-          <div class="drawer-item-body">
-            <div class="drawer-item-line1">
-              <span class="drawer-item-pcode">${highlightMatch(p.protocolo, q)}</span>
-              <span class="drawer-item-contract">${highlightMatch(p.contrato, q)} · Item ${p.item}</span>
-              <span class="drawer-item-frete ${fretePill}">${p.frete}</span>
-              ${disabled ? '<span class="drawer-item-contract" style="color:var(--text-3)">já adicionado</span>' : ''}
-            </div>
-            <div class="drawer-item-product">${highlightMatch(p.produto, q)}</div>
-            <div class="drawer-item-meta">
-              <span><strong>Recebedor:</strong> ${highlightMatch(p.nomeRecebedor, q)}</span>
-              <span><strong>Cidade:</strong> ${highlightMatch(p.cidadeRecebedor, q)}</span>
-              <span><strong>Planta:</strong> ${highlightMatch(p.planta, q)}</span>
-              <span><strong>Vigência:</strong> ${p.dataInicio} → ${p.dataFim}</span>
-            </div>
-          </div>
-          <div class="drawer-item-saldo">${p.saldo}<span class="unit">t</span></div>
-        </div>`;
+        <tr class="drawer-row ${selected ? 'is-selected' : ''} ${disabled ? 'is-disabled' : ''}" data-i="${i}" title="${disabled ? 'Já adicionado ao agendamento' : ''}">
+          <td>
+            <span class="checkbox" aria-hidden="true">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+          </td>
+          <td class="cell-pcode">${highlightMatch(p.protocolo, q)}</td>
+          <td class="cell-strong">${highlightMatch(p.contrato, q)}</td>
+          <td class="cell-strong">${escapeHtml(p.item)}</td>
+          <td class="cell-strong">${highlightMatch(p.produto, q)}</td>
+          <td><span class="cell-frete ${fretePill}">${p.frete}</span></td>
+          <td>${highlightMatch(p.nomeRecebedor, q)}</td>
+          <td class="cell-muted">${highlightMatch(cidade, q)}</td>
+          <td class="cell-muted">${p.dataInicio} → ${p.dataFim}</td>
+          <td class="cell-saldo">${p.saldo}<span class="unit">t</span></td>
+        </tr>`;
     }).join("");
   }
 
@@ -2177,7 +2425,7 @@ elDrawerClearBtn.addEventListener("click", () => {
 });
 
 elDrawerList.addEventListener("click", e => {
-  const item = e.target.closest(".drawer-item");
+  const item = e.target.closest(".drawer-row");
   if (!item || item.classList.contains("is-disabled")) return;
   e.preventDefault();
   const i = parseInt(item.dataset.i, 10);
