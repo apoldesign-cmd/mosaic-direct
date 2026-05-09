@@ -1468,6 +1468,276 @@
     display: block;
     margin-bottom: 2px;
   }
+
+  /* ================================================================
+     V5-style — confirmation modals (.modal-confirm-v2)
+     ================================================================ */
+  .modal-confirm-v2 {
+    max-width: 540px;
+    padding: 0;
+    overflow: hidden;
+    border-top: none;
+  }
+  .confirm-v2-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .confirm-v2-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .confirm-v2-close {
+    width: 32px; height: 32px;
+    border: none; background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background-color 120ms;
+  }
+  .confirm-v2-close:hover { background: rgba(0,0,0,0.05); color: var(--mosaic-green-900); }
+  .confirm-v2-body {
+    padding: 28px 28px 24px;
+    background: #fff;
+    text-align: left;
+  }
+  .confirm-v2-icon {
+    width: 56px; height: 56px;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 999px;
+  }
+  .confirm-v2-icon--info    { background: rgba(0,106,77,0.10); color: var(--mosaic-green-700); }
+  .confirm-v2-icon--success { background: rgba(0,106,77,0.10); color: var(--mosaic-green-700); }
+  .confirm-v2-icon--warn    { background: rgba(199,104,20,0.12); color: var(--status-orange); }
+  .confirm-v2-text {
+    margin: 0 0 22px;
+    font-size: 15px; line-height: 1.55;
+    color: var(--text-1); font-weight: 500;
+    text-align: left;
+  }
+  .confirm-v2-text strong { font-weight: 800; }
+  .confirm-v2-actions { display: flex; justify-content: flex-end; gap: 12px; }
+
+  /* ================================================================
+     V5-style — grouped cards by contract (ported from agendar-contrato-normal-v5)
+     ================================================================ */
+  .v5-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  .v5-card.is-progress  { border-left: 3px solid var(--mosaic-yellow); }
+  .v5-card.is-complete  { border-left: 3px solid var(--mosaic-green-700); }
+  .v5-card.is-incomplete { border-left: 3px solid var(--border-strong); }
+  .v5-level-tag {
+    display: inline-flex; align-items: center;
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: #fff; background: var(--mosaic-green-800);
+    padding: 3px 7px; line-height: 1;
+    flex-shrink: 0;
+  }
+  .v5-level-tag--item { background: var(--mosaic-green-700); }
+  .v5-card-head {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border);
+    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
+    flex-wrap: wrap;
+  }
+  .v5-card-head .card-contract {
+    font-size: 16px; font-weight: 800;
+    color: var(--text-1); letter-spacing: -0.005em;
+    flex-shrink: 0;
+  }
+  .v5-head-divider { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+  .v5-head-inline {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-2); font-weight: 600;
+    white-space: nowrap;
+  }
+  .v5-head-inline strong { color: var(--text-1); font-weight: 800; }
+  .v5-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
+  .v5-meta-label {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-3); font-weight: 800; margin-right: 1px;
+  }
+  .v5-item-count {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 800; color: var(--text-3);
+    background: var(--bg-section);
+    padding: 3px 8px;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .v5-items-list { display: flex; flex-direction: column; }
+  .v5-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
+    gap: 14px;
+    padding: 12px 16px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+    border-left: 3px solid transparent;
+    transition: background-color 120ms, border-left-color 200ms;
+  }
+  .v5-item-row.is-incomplete { border-left-color: var(--border-strong); }
+  .v5-item-row.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
+  }
+  .v5-item-row.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 25%);
+  }
+  .v5-item-row:last-of-type { border-bottom: none; }
+  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
+  .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
+  .v5-item-line .badge { font-size: 9px; padding: 2px 7px; }
+  .badge {
+    display: inline-flex; align-items: center;
+    border: 1.5px solid; font-weight: 800;
+    font-size: 10px; letter-spacing: 0.08em;
+    padding: 2px 8px;
+  }
+  .badge--fob { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
+  .badge--cif { color: var(--status-orange); border-color: var(--status-orange); background: var(--status-orange-bg); }
+  .v5-item-product {
+    font-size: 13px; font-weight: 800; color: var(--text-1);
+    line-height: 1.3;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    min-width: 0; flex: 1;
+  }
+  .v5-item-meta-piece { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .v5-item-meta-piece strong { color: var(--text-1); font-weight: 800; }
+  .v5-meta-sep { color: var(--border); font-weight: 800; }
+  .v5-item-line--bottom .arrow { color: var(--mosaic-green-700); font-weight: 800; margin: 0 1px; }
+  .v5-item-saldo {
+    font-size: 14px; font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .v5-item-saldo .unit {
+    font-size: 10px; color: var(--text-2);
+    font-weight: 700; margin-left: 2px;
+    letter-spacing: 0.04em;
+  }
+  /* Form fields V5: Volume + Semana + Roteiro, all 32px */
+  .v5-item-fields {
+    display: grid;
+    grid-template-columns: 110px 130px minmax(180px, 240px);
+    gap: 8px;
+    align-items: end;
+  }
+  .v5-item-fields .field-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .v5-item-fields .field-block label {
+    font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-3); font-weight: 700;
+    margin-bottom: 0; height: 14px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .v5-item-fields .field-block label .req { color: var(--mosaic-red); }
+  .v5-item-fields .field-block label .opt-tag { font-size: 8px; }
+  .v5-item-fields .input-with-suffix,
+  .v5-item-fields .v5-date-wrap,
+  .v5-item-fields .roteiro-toggle-btn {
+    height: 32px !important; box-sizing: border-box;
+  }
+  .v5-item-fields .input-with-suffix {
+    position: relative; display: block;
+  }
+  .v5-item-fields .input-with-suffix input,
+  .v5-item-fields .v5-date-wrap input {
+    width: 100%;
+    height: 32px !important; line-height: 32px;
+    border: 1.5px solid var(--border); background: #fff;
+    color: var(--text-1); font-family: inherit; font-weight: 600;
+    font-size: 12.5px;
+    padding: 0 22px 0 10px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .v5-item-fields .input-with-suffix input:focus,
+  .v5-item-fields .v5-date-wrap input:focus { border-color: var(--mosaic-green-700); }
+  .v5-item-fields .input-with-suffix .suffix {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--text-3); font-weight: 700;
+    pointer-events: none;
+  }
+  .v5-item-fields .v5-date-wrap { position: relative; display: block; }
+  .v5-item-fields .v5-date-wrap input { padding-right: 28px; cursor: pointer; }
+  .v5-item-fields .v5-date-wrap .cal-trigger {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px;
+    background: transparent; border: none;
+    color: var(--text-3); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .v5-item-fields .v5-date-wrap .cal-trigger:hover { color: var(--mosaic-green-700); }
+
+  /* Roteiro toggle button (replaces inline textarea) */
+  .roteiro-toggle-btn {
+    display: inline-flex; align-items: center; justify-content: space-between;
+    gap: 6px; width: 100%; height: 32px; padding: 0 10px;
+    border: 1.5px dashed var(--border); background: #fff;
+    color: var(--text-3); font-family: inherit;
+    font-size: 12px; font-weight: 600;
+    text-align: left; cursor: pointer;
+    transition: all 120ms;
+    box-sizing: border-box; line-height: 32px;
+  }
+  .roteiro-toggle-btn:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.03);
+  }
+  .roteiro-toggle-btn.has-value {
+    border-style: solid; color: var(--text-1); background: #fff;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-text {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-weight: 600;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
+  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+
+  .v5-item-actions { display: flex; gap: 4px; align-items: center; }
+  .v5-item-actions button {
+    width: 28px; height: 28px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-2); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all 120ms;
+  }
+  .v5-item-actions button:hover { color: var(--mosaic-green-800); border-color: var(--mosaic-green-700); }
+  .v5-item-actions button.danger:hover { color: var(--mosaic-red); border-color: var(--mosaic-red); }
+
+  .v5-card .card-status {
+    border-top: 1px solid var(--border-soft);
+    padding: 8px 16px;
+    font-size: 11.5px; font-weight: 700;
+    color: var(--text-3);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .v5-card .card-status--complete   { color: var(--mosaic-green-700); }
+  .v5-card .card-status--incomplete { color: var(--text-3); }
+
 </style>
 </head>
 <body>
@@ -1669,42 +1939,45 @@
   </div>
 </aside>
 
-<!-- Modal: confirmar =========================================== -->
+<!-- Modal: confirmar (V5 .modal-confirm-v2) ===================== -->
 <div class="modal-backdrop" id="confirmModal">
-  <div class="modal modal-confirm" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
-    <div class="confirm-header">
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+    <div class="confirm-v2-header">
       <h3 id="confirmTitle">Confirmar agendamento</h3>
-      <button class="close-x" type="button" data-close="confirmModal" aria-label="Fechar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      <button class="confirm-v2-close" type="button" data-close="confirmModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </div>
-    <div class="confirm-body">
-      <div class="confirm-icon info" aria-hidden="true">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
       </div>
-      <p class="confirm-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Pronto para continuar?</p>
-      <div class="confirm-actions">
+      <p class="confirm-v2-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <div class="confirm-v2-actions">
         <button class="btn btn-secondary" type="button" data-close="confirmModal">Voltar</button>
-        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar</button>
+        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar e enviar</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: sucesso =========================================== -->
+<!-- Modal: sucesso (V5 .modal-confirm-v2) ====================== -->
 <div class="modal-backdrop" id="successModal">
-  <div class="modal modal-confirm" role="dialog" aria-labelledby="successTitle" aria-modal="true">
-    <div class="confirm-header">
-      <h3 id="successTitle">Agendamento concluído</h3>
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="successTitle" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3 id="successTitle">Agendamentos enviados</h3>
+      <button class="confirm-v2-close" type="button" data-close="successModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-    <div class="confirm-body">
-      <div class="confirm-icon success" aria-hidden="true">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--success" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><polyline points="8 12.5 11 15.5 16 9.5"/></svg>
       </div>
-      <p class="confirm-text">Seus protocolos foram <strong>AGENDADOS!</strong></p>
-      <div class="confirm-actions stack">
-        <button class="btn btn-secondary" id="successReport" type="button" style="background:var(--mosaic-green-900);color:#fff;border-color:var(--mosaic-green-900);">Ver Relatório de Agendamento</button>
-        <button class="btn btn-yellow" id="successNew" type="button">Agendar Protocolos</button>
+      <p class="confirm-v2-text"><strong>Seus protocolos foram agendados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar mais protocolos</button>
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
       </div>
     </div>
   </div>
@@ -1894,91 +2167,124 @@ function render() {
   updateSummary();
 }
 
+function rowStatusV5(r) {
+  const v = !!(r.volume && r.volume.trim());
+  const s = !!(r.semana && r.semana.trim());
+  if (v && s) return "complete";
+  if (v || s) return "progress";
+  return "incomplete";
+}
+
 function renderCards() {
-  elList.innerHTML = state.rows.map(r => `
-    <div class="proto-card" data-rid="${r.rid}">
-      <div class="proto-card-head">
-        <span class="pcode">${r.protocolo}</span>
-        <span class="pmeta"><strong>Contrato:</strong>${r.contrato} · Item ${r.item}</span>
-        <span class="pmeta"><strong>Ref:</strong>${r.refCliente || "—"}</span>
-        <span class="pmeta"><strong>Vigência:</strong>${r.dataInicio} → ${r.dataFim}</span>
-        <span class="head-actions">
-          <button type="button" data-action="duplicate" data-rid="${r.rid}" title="Duplicar protocolo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-          </button>
-          <button type="button" class="danger" data-action="remove" data-rid="${r.rid}" title="Remover protocolo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          </button>
-        </span>
-      </div>
-      <div class="proto-card-recv">
-        <div class="recv-field">
-          <span class="lbl">Recebedor</span>
-          <span class="val">${r.nomeRecebedor}</span>
+  /* V5-style — group rows by contract */
+  const groups = [];
+  const groupIndex = new Map();
+  state.rows.forEach(r => {
+    let g = groupIndex.get(r.contrato);
+    if (!g) {
+      g = { contrato: r.contrato, items: [] };
+      groupIndex.set(r.contrato, g);
+      groups.push(g);
+    }
+    g.items.push(r);
+  });
+
+  const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="1"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
+  const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
+  const ICON_EXPAND = `<svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
+  const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
+
+  elList.innerHTML = groups.map(group => {
+    const first = group.items[0];
+    const allComplete = group.items.every(r => rowStatusV5(r) === "complete");
+    const anyTouched = group.items.some(r => r.volume || r.semana);
+    const groupStatus = allComplete ? "complete" : (anyTouched ? "progress" : "incomplete");
+
+    const headerHTML = `
+      <header class="card-head v5-card-head">
+        <span class="v5-level-tag">Contrato</span>
+        <span class="card-contract">${first.contrato}</span>
+        <span class="v5-head-divider"></span>
+        <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente || '—'}</strong></span>
+        <span class="v5-head-divider"></span>
+        <span class="v5-head-inline"><span class="v5-meta-label">Vigência</span><strong>${first.dataInicio}</strong><span class="arrow">→</span><strong>${first.dataFim}</strong></span>
+        <span class="v5-item-count">${group.items.length} ${group.items.length === 1 ? 'protocolo' : 'protocolos'}</span>
+      </header>`;
+
+    const itemsHTML = group.items.map(r => {
+      const status = rowStatusV5(r);
+      const isCIF = r.frete === "CIF";
+      const fretePill = isCIF ? "badge--cif" : "badge--fob";
+
+      return `
+        <div class="v5-item-row is-${status}" data-rid="${r.rid}">
+          <div class="v5-item-info">
+            <div class="v5-item-line v5-item-line--top">
+              <span class="v5-level-tag v5-level-tag--item">Protocolo</span>
+              <span class="v5-item-id">${r.protocolo}</span>
+              <span class="badge ${fretePill}">${r.frete}</span>
+              <span class="v5-item-product" title="${r.produto}">${r.produto}</span>
+            </div>
+            <div class="v5-item-line v5-item-line--bottom">
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Item</span><strong>${r.item}</strong></span>
+              <span class="v5-meta-sep">·</span>
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Recebedor</span><strong>${r.nomeRecebedor}</strong></span>
+              <span class="v5-meta-sep">·</span>
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Cidade</span>${r.cidadeRecebedor}</span>
+              <span class="v5-meta-sep">·</span>
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Saldo</span><span class="v5-item-saldo">${r.saldo}<span class="unit">t</span></span></span>
+            </div>
+          </div>
+
+          <div class="v5-item-fields">
+            <div class="field-block">
+              <label>Volume <span class="req">*</span></label>
+              <div class="input-with-suffix">
+                <input type="text" inputmode="decimal"
+                       class="row-input"
+                       value="${r.volume}"
+                       placeholder="0,00"
+                       data-rid="${r.rid}" data-field="volume" />
+                <span class="suffix">t</span>
+              </div>
+            </div>
+            <div class="field-block">
+              <label>Semana <span class="req">*</span></label>
+              <div class="v5-date-wrap" data-rid="${r.rid}">
+                <input type="text"
+                       class="row-input date-input"
+                       value="${r.semana}"
+                       placeholder="DD/MM/AAAA"
+                       data-rid="${r.rid}" data-field="semana"
+                       readonly />
+                <button class="cal-trigger" data-action="open-dp" data-rid="${r.rid}" type="button" aria-label="Abrir calendário">${ICON_CAL}</button>
+              </div>
+            </div>
+            <div class="field-block">
+              <label>Roteiro <span class="opt-tag">Opc.</span></label>
+              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-action="open-roteiro" data-rid="${r.rid}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
+                <span class="roteiro-toggle-text">${r.roteiro ? truncate(r.roteiro, 36) : 'Adicionar roteiro'}</span>
+                ${ICON_EXPAND}
+              </button>
+            </div>
+          </div>
+
+          <div class="v5-item-actions">
+            <button type="button" data-action="duplicate" data-rid="${r.rid}" title="Duplicar protocolo">${ICON_DUP}</button>
+            <button type="button" class="danger" data-action="remove" data-rid="${r.rid}" title="Remover protocolo">${ICON_DEL}</button>
+          </div>
         </div>
-        <div class="recv-field">
-          <span class="lbl">CPF/CNPJ</span>
-          <span class="val">${r.cpfRecebedor}</span>
-        </div>
-        <div class="recv-field">
-          <span class="lbl">IE</span>
-          <span class="val">${r.ieRecebedor}</span>
-        </div>
-        <div class="recv-field">
-          <span class="lbl">Cidade/UF</span>
-          <span class="val">${r.cidadeRecebedor}</span>
-        </div>
-      </div>
-      <div class="proto-card-item">
-        <div class="item-field">
-          <span class="lbl">Produto</span>
-          <span class="val">${r.produto}</span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Frete</span>
-          <span class="val"><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Planta</span>
-          <span class="val">${r.planta}</span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">CNPJ Filial</span>
-          <span class="val">${r.cpfFilial}</span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Saldo (t)</span>
-          <span class="val saldo">${r.saldo}<span class="unit">t</span></span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Volume Desejado (t)</span>
-          <span class="vol-wrap">
-            <input type="text" class="row-input" data-rid="${r.rid}" data-field="volume" value="${r.volume}" placeholder="0,00" inputmode="decimal" />
-            <span class="suffix">t</span>
-          </span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Semana Desejada</span>
-          <span class="date-wrap">
-            <input type="text" class="row-input date-input" data-rid="${r.rid}" data-field="semana" value="${r.semana}" placeholder="DD/MM/AAAA" readonly />
-            <span class="cal-icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            </span>
-          </span>
-        </div>
-        <div class="item-field">
-          <span class="lbl">Roteiro Protocolo</span>
-          <button type="button" class="roteiro-btn ${r.roteiro ? "has-value" : ""}" data-action="open-roteiro" data-rid="${r.rid}">
-            <span class="icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            </span>
-            <span class="label">${r.roteiro ? truncate(r.roteiro, 38) : "Adicionar roteiro"}</span>
-          </button>
-        </div>
-        <div class="row-actions"></div>
-      </div>
-    </div>
-  `).join("");
+      `;
+    }).join("");
+
+    const footer = groupStatus === "complete"
+      ? `<div class="card-status card-status--complete">${ICON_CHK} Todos os protocolos prontos para agendar</div>`
+      : `<div class="card-status card-status--incomplete">${ICON_BANG} Preencha Volume e Semana para agendar</div>`;
+
+    return `<article class="v5-card is-${groupStatus}" data-contract="${group.contrato}">${headerHTML}<div class="v5-items-list">${itemsHTML}</div>${footer}</article>`;
+  }).join("");
 }
 
 function renderTable() {
@@ -2383,7 +2689,7 @@ function closeDatePicker() {
 }
 
 document.body.addEventListener("click", e => {
-  const dateInp = e.target.closest(".date-input, .date-wrap");
+  const dateInp = e.target.closest(".date-input, .date-wrap, .v5-date-wrap");
   if (dateInp && !elDpPopup.contains(e.target)) {
     e.preventDefault();
     const inp = dateInp.matches(".date-input") ? dateInp : dateInp.querySelector(".date-input");
