@@ -84,28 +84,35 @@
   }
   .logo {
     display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1;
   }
   .logo .wordmark {
-    font-size: 26px;
+    font-family: "Manrope", sans-serif;
+    font-style: italic;
     font-weight: 800;
-    color: var(--mosaic-green-900);
+    font-size: 36px;
     letter-spacing: -0.01em;
+    color: #0a0a0a;
+    line-height: 0.9;
   }
-  .logo .wordmark sup { font-size: 11px; font-weight: 700; opacity: 0.7; }
+  .logo .wordmark sup {
+    font-size: 11px;
+    font-weight: 700;
+    font-style: normal;
+    margin-left: 1px;
+    vertical-align: super;
+  }
   .logo .shapes {
-    display: inline-flex;
-    gap: 3px;
+    width: 96px;
+    height: auto;
+    margin-top: -2px;
+    margin-left: 6px;
+    display: block;
   }
-  .logo .shapes span {
-    width: 10px; height: 10px;
-    display: inline-block;
-  }
-  .logo .shapes .y { background: var(--mosaic-yellow); }
-  .logo .shapes .o { background: var(--mosaic-orange); }
-  .logo .shapes .r { background: var(--mosaic-red); }
-  .logo .shapes .t { background: var(--mosaic-teal); }
+  .logo--hero .wordmark { color: #fff; }
 
   .global-search {
     position: relative;
@@ -386,28 +393,39 @@
 
   .view-toggle {
     display: inline-flex;
-    align-items: center;
-    background: var(--bg-section);
-    border: 1px solid var(--border-soft);
-    padding: 3px;
-    flex-shrink: 0;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
   }
   .view-toggle button {
     background: transparent;
     border: none;
-    padding: 7px 14px;
-    font-size: 12.5px;
+    padding: 8px 16px;
+    font-size: 12px;
     font-weight: 700;
-    color: var(--text-3);
+    color: var(--text-2);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    transition: background-color 120ms, color 120ms;
+  }
+  .view-toggle button:hover:not(.is-active) {
+    background: var(--bg-section);
+    color: var(--text-1);
   }
   .view-toggle button.is-active {
-    background: #fff;
-    color: var(--mosaic-green-800);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .view-toggle button + button {
+    border-left: 1.5px solid var(--border);
+  }
+  .view-toggle button.is-active + button,
+  .view-toggle button + button.is-active {
+    border-left-color: var(--mosaic-green-800);
   }
 
   /* ================================================================
