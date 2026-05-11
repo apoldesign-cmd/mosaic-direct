@@ -4222,9 +4222,25 @@
     margin-top: 2px;
     letter-spacing: 0.01em;
   }
-  .v3-table .cell-saldo-emphasis {
-    text-align: right;
+  .v3-table .cell-saldo-emphasis,
+  .v3-table thead th.th-saldo {
+    text-align: left;
     white-space: nowrap;
+  }
+  /* Stack tertiary (Origem under Produto/Embalagem) */
+  .v3-table .cell-stack .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .v3-table .v3-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 2px;
   }
   .v3-table .cell-saldo-emphasis .saldo-primary {
     font-size: 16px;
@@ -4861,11 +4877,9 @@ function renderCardsView() {
             <div class="field-block ${missVolume ? 'is-missing' : ''}">
               <label>Volume <span class="req">*</span></label>
               <div class="input-with-suffix">
-                <input type="number"
+                <input type="text" inputmode="decimal"
                        value="${r.volume ?? ''}"
-                       placeholder="0"
-                       min="0"
-                       max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                       placeholder="0,00"
                        data-row="${idx}" data-field="volume" />
                 <span class="suffix">t</span>
               </div>
@@ -5314,9 +5328,22 @@ elBuscaSel.addEventListener("click", () => {
 /* ===================================================================
    Workspace table — input + action wiring (event delegation)
    =================================================================== */
+function maskVolumeDecimal(input) {
+  let v = (input.value || "").replace(/[^\d,]/g, "");
+  const parts = v.split(",");
+  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
+  const segs = v.split(",");
+  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
+  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
+  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = segs.join(",");
+}
+
 elBody.addEventListener("input", e => {
   const t = e.target;
   if (!t.matches('[data-field]')) return;
+  /* Volume mask: format on input (pt-BR decimal) */
+  if (t.dataset.field === "volume") maskVolumeDecimal(t);
   const idx = parseInt(t.dataset.row, 10);
   const field = t.dataset.field;
   if (!state.rows[idx]) return;
@@ -5487,9 +5514,9 @@ function renderTableView() {
         <tr>
           <th class="v3-status-cell" aria-label="Status"></th>
           <th>Contrato / Ref. / Vigência</th>
-          <th>Produto / Embalagem</th>
-          <th>Origem → Destino</th>
-          <th>Saldo</th>
+          <th>Produto / Embalagem / Origem</th>
+          <th>Destino / CNPJ Filial</th>
+          <th class="th-saldo">Saldo</th>
           <th>Volume <span class="req">*</span></th>
           <th>Semana <span class="req">*</span></th>
           <th>Roteiro <span class="opt-tag">opc.</span></th>
@@ -5541,16 +5568,17 @@ function renderTableView() {
         <div class="stack-tertiary">${startShort} → ${endLong}</div>
       </td>
 
-      <!-- Item: Produto / Embalagem -->
+      <!-- Item: Produto / Embalagem / Origem -->
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.produto}</div>
         <div class="stack-secondary">${r.embalagem}</div>
+        <div class="stack-tertiary"><span class="v3-meta-label">De</span> ${r.planta}</div>
       </td>
 
-      <!-- Item: Origem → Destino -->
+      <!-- Destino / CNPJ Filial -->
       <td class="cell-stack">
-        <div class="stack-primary">${r.planta}</div>
-        <div class="stack-secondary"><span class="arrow-to">→</span> ${r.enviarPara}</div>
+        <div class="stack-primary cell-strong">${r.enviarPara}</div>
+        <div class="stack-secondary"><span class="v3-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
       </td>
 
       <!-- Saldo, emphasized -->
@@ -5561,11 +5589,9 @@ function renderTableView() {
       <!-- Volume input -->
       <td class="${missVolume ? 'is-missing' : ''}">
         <div class="v3-cell-volume-wrap">
-          <input type="number" class="v3-cell-input v3-cell-num"
+          <input type="text" inputmode="decimal" class="v3-cell-input v3-cell-num"
                  value="${r.volume ?? ''}"
-                 placeholder="0"
-                 min="0"
-                 max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                 placeholder="0,00"
                  data-row="${idx}" data-field="volume" />
           <span class="suffix">t</span>
         </div>
