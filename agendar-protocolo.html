@@ -772,7 +772,28 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 12.5px;
-    min-width: 1900px;
+    min-width: 1200px;
+  }
+  .proto-table .cell-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .proto-table .cell-stack .stack-primary {
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1.25;
+  }
+  .proto-table .cell-stack .stack-secondary {
+    font-size: 10.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .proto-table .cell-stack .stack-secondary strong {
+    color: var(--text-2);
+    font-weight: 700;
   }
   .proto-table thead th {
     background: var(--bg-section);
@@ -1932,21 +1953,15 @@
       <thead>
         <tr>
           <th>Protocolo</th>
-          <th>Contrato/Item</th>
-          <th>Ref. Cliente</th>
+          <th>Contrato / Item</th>
           <th>Vigência</th>
-          <th>Recebedor</th>
-          <th>CPF/CNPJ</th>
-          <th>IE</th>
-          <th>Cidade/UF</th>
-          <th>Produto</th>
-          <th>Frete</th>
-          <th>Planta</th>
-          <th>CNPJ Filial</th>
-          <th style="text-align:right">Saldo (t)</th>
-          <th>Volume (t)</th>
-          <th>Semana</th>
+          <th>Volume (t) *</th>
+          <th>Semana *</th>
           <th>Roteiro</th>
+          <th style="text-align:right">Saldo (t)</th>
+          <th>Recebedor</th>
+          <th>Produto / Frete</th>
+          <th>Planta / Filial</th>
           <th></th>
         </tr>
       </thead>
@@ -2382,25 +2397,20 @@ function renderTable() {
   elTableBody.innerHTML = state.rows.map(r => `
     <tr data-rid="${r.rid}">
       <td class="pcode-cell">${r.protocolo}</td>
-      <td>${r.contrato}/${r.item}</td>
-      <td>${r.refCliente || "—"}</td>
+      <td>
+        <div class="cell-stack">
+          <span class="stack-primary">${r.contrato} / ${r.item}</span>
+          <span class="stack-secondary">Ref. ${r.refCliente || "—"}</span>
+        </div>
+      </td>
       <td>${r.dataInicio} → ${r.dataFim}</td>
-      <td><strong>${r.nomeRecebedor}</strong></td>
-      <td>${r.cpfRecebedor}</td>
-      <td>${r.ieRecebedor}</td>
-      <td>${r.cidadeRecebedor}</td>
-      <td>${r.produto}</td>
-      <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
-      <td>${r.planta}</td>
-      <td>${r.cpfFilial}</td>
-      <td class="saldo-cell">${r.saldo}</td>
-      <td class="input-cell" style="min-width:140px">
+      <td class="input-cell" style="min-width:120px">
         <span class="vol-wrap">
           <input type="text" class="row-input" data-rid="${r.rid}" data-field="volume" value="${r.volume}" placeholder="0,00" inputmode="decimal" />
           <span class="suffix">t</span>
         </span>
       </td>
-      <td class="input-cell" style="min-width:170px">
+      <td class="input-cell" style="min-width:150px">
         <span class="date-wrap">
           <input type="text" class="row-input date-input" data-rid="${r.rid}" data-field="semana" value="${r.semana}" placeholder="DD/MM/AAAA" readonly />
           <span class="cal-icon" aria-hidden="true">
@@ -2408,13 +2418,32 @@ function renderTable() {
           </span>
         </span>
       </td>
-      <td class="input-cell" style="min-width:240px">
+      <td class="input-cell" style="min-width:200px">
         <button type="button" class="roteiro-btn ${r.roteiro ? "has-value" : ""}" data-action="open-roteiro" data-rid="${r.rid}">
           <span class="icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
           </span>
-          <span class="label">${r.roteiro ? truncate(r.roteiro, 30) : "Adicionar"}</span>
+          <span class="label">${r.roteiro ? truncate(r.roteiro, 26) : "Adicionar"}</span>
         </button>
+      </td>
+      <td class="saldo-cell">${r.saldo}</td>
+      <td>
+        <div class="cell-stack">
+          <span class="stack-primary">${r.nomeRecebedor}</span>
+          <span class="stack-secondary">${r.cpfRecebedor} · ${r.cidadeRecebedor}</span>
+        </div>
+      </td>
+      <td>
+        <div class="cell-stack">
+          <span class="stack-primary">${r.produto}</span>
+          <span class="stack-secondary"><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></span>
+        </div>
+      </td>
+      <td>
+        <div class="cell-stack">
+          <span class="stack-primary">${r.planta}</span>
+          <span class="stack-secondary">CNPJ ${r.cpfFilial}</span>
+        </div>
       </td>
       <td>
         <div class="row-actions">
