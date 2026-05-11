@@ -3965,6 +3965,21 @@
     margin-top: 2px;
   }
   .col-status-cell { width: 36px; text-align: center; }
+  .col-status-text { width: 200px; min-width: 180px; }
+  .col-status-text .v3-status-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .status-text {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+  .status-text--complete   { color: var(--mosaic-green-700); }
+  .status-text--pending    { color: var(--text-2); font-weight: 600; }
+  .status-text--pending strong { color: var(--mosaic-red); font-weight: 800; }
+  .status-text--incomplete { color: var(--text-3); font-style: italic; }
   .col-actions { width: 70px; }
   .col-volume { min-width: 100px; }
   .col-date { min-width: 130px; }
@@ -4072,7 +4087,7 @@
     justify-content: center;
   }
   .proto-roteiro-wrap .roteiro-expand:hover { color: var(--mosaic-green-800); }
-  .proto-emb-select {
+  .proto-emb-input {
     width: 100%;
     height: 34px;
     padding: 0 28px 0 10px;
@@ -4090,15 +4105,15 @@
     outline: none;
     cursor: pointer;
   }
-  .proto-emb-select:focus { border-color: var(--mosaic-green-700); }
+  .proto-emb-input:focus { border-color: var(--mosaic-green-700); }
   td.is-missing .proto-cell-input,
   td.is-missing .coop-pick-btn,
-  td.is-missing .proto-emb-select {
+  td.is-missing .proto-emb-input {
     border-color: var(--border);
   }
   .proto-table-wrap.show-validation td.is-missing .proto-cell-input,
   .proto-table-wrap.show-validation td.is-missing .coop-pick-btn,
-  .proto-table-wrap.show-validation td.is-missing .proto-emb-select {
+  .proto-table-wrap.show-validation td.is-missing .proto-emb-input {
     border-color: rgba(185, 32, 42, 0.55);
     background: rgba(185, 32, 42, 0.025);
   }
@@ -4371,7 +4386,7 @@
   .v5-form-grid .v5-date-wrap,
   .v5-form-grid .roteiro-toggle-btn,
   .v5-form-grid .v5-coop-pick-btn,
-  .v5-form-grid select.proto-emb-select,
+  .v5-form-grid .proto-emb-input,
   .v5-form-grid .v5-money-wrap,
   .v5-form-grid > .form-row input {
     height: 32px !important; box-sizing: border-box;
@@ -4382,7 +4397,7 @@
   .v5-form-grid .input-with-suffix input,
   .v5-form-grid .v5-date-wrap input,
   .v5-form-grid .form-row > .field-block > input,
-  .v5-form-grid select.proto-emb-select {
+  .v5-form-grid .proto-emb-input {
     width: 100%; height: 32px !important; line-height: 32px;
     border: 1.5px solid var(--border); background: #fff;
     color: var(--text-1); font-family: inherit; font-weight: 600;
@@ -4394,7 +4409,7 @@
   .v5-form-grid .input-with-suffix input:focus,
   .v5-form-grid .v5-date-wrap input:focus,
   .v5-form-grid .form-row > .field-block > input:focus,
-  .v5-form-grid select.proto-emb-select:focus { border-color: var(--mosaic-green-700); }
+  .v5-form-grid .proto-emb-input:focus { border-color: var(--mosaic-green-700); }
   .v5-form-grid .input-with-suffix .suffix {
     position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
     font-size: 11px; color: var(--text-3); font-weight: 700; pointer-events: none;
@@ -4408,7 +4423,7 @@
     display: inline-flex; align-items: center; justify-content: center;
   }
   .v5-form-grid .v5-date-wrap .cal-trigger:hover { color: var(--mosaic-green-700); }
-  .v5-form-grid select.proto-emb-select {
+  .v5-form-grid .proto-emb-input {
     appearance: none; -webkit-appearance: none; padding-right: 28px;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
     background-repeat: no-repeat;
@@ -4503,8 +4518,6 @@
   .v5-card .card-status--complete   { color: var(--mosaic-green-700); }
   .v5-card .card-status--incomplete { color: var(--text-3); }
 
-  /* Hide the old wide proto-table when in cards mode (cards is the default) */
-  .cards-container.is-cards-view .proto-table-wrap { display: none; }
 
 </style>
 </head>
@@ -5097,6 +5110,15 @@ const EMBALAGENS = [
   "BigBag 1.000kg",
 ];
 
+/* Single shared datalist for embalagem autocomplete (cards + tabela) */
+(function ensureEmbalagensDatalist() {
+  if (document.getElementById("embalagensList")) return;
+  const dl = document.createElement("datalist");
+  dl.id = "embalagensList";
+  dl.innerHTML = EMBALAGENS.map(e => `<option value="${e}"></option>`).join("");
+  document.body.appendChild(dl);
+})();
+
 const state = {
   view: "empty",
   rows: [],
@@ -5199,10 +5221,8 @@ function refreshHintV2() {
 function renderCardsView() {
   /* V5-style grouped cards (vertical-stacked, no horizontal scroll) */
   elBody.innerHTML = "";
-  elBody.classList.add("is-cards-view");
 
   if (state.rows.length === 0) {
-    elBody.classList.remove("is-cards-view");
     elBody.innerHTML = `
       <div class="cards-empty">
         <strong>Nenhum contrato selecionado</strong>
@@ -5295,10 +5315,12 @@ function renderCardsView() {
               </div>
               <div class="field-block">
                 <label>Embalagem <span class="req">*</span></label>
-                <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-                  <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-                  ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-                </select>
+                <input type="text" class="proto-emb-input"
+                       list="embalagensList"
+                       value="${r.embalagemSelected || ''}"
+                       placeholder="Digite ou selecione"
+                       autocomplete="off"
+                       data-row="${idx}" data-field="embalagemSelected" />
               </div>
             </div>
 
@@ -5774,6 +5796,21 @@ function afterFieldChange(idx, sourceEl) {
   tr.classList.add(`is-${newStatus}`);
   const dot = tr.querySelector(".v3-status-dot");
   if (dot) dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
+  /* Refresh the status text in the Status column */
+  const statusTextEl = tr.querySelector(".status-text");
+  if (statusTextEl) {
+    const pend = pendingFields(r);
+    if (newStatus === "complete") {
+      statusTextEl.className = "status-text status-text--complete";
+      statusTextEl.textContent = "Pronto";
+    } else if (pend.length === 0) {
+      statusTextEl.className = "status-text status-text--incomplete";
+      statusTextEl.textContent = "Em branco";
+    } else {
+      statusTextEl.className = "status-text status-text--pending";
+      statusTextEl.innerHTML = "Pendente: <strong>" + pend.join(", ") + "</strong>";
+    }
+  }
   const td = sourceEl.closest("td");
   if (td) {
     const f = sourceEl.dataset.field;
@@ -5855,7 +5892,7 @@ function renderProtocolTable() {
     <table class="proto-table">
       <thead>
         <tr>
-          <th class="col-status-cell" aria-label="Status"></th>
+          <th class="col-status-text">Status</th>
           <th>Contrato / Item</th>
           <th>Produto</th>
           <th class="col-saldo">Saldo / Vigência</th>
@@ -5897,6 +5934,16 @@ function renderProtocolTable() {
     else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress">${ICON_BANG}</span>`;
     else dot = `<span class="v3-status-dot v3-status-dot--incomplete">${ICON_DOT}</span>`;
 
+    const pending = pendingFields(r);
+    let statusText;
+    if (status === "complete") {
+      statusText = `<span class="status-text status-text--complete">Pronto</span>`;
+    } else if (pending.length === 0) {
+      statusText = `<span class="status-text status-text--incomplete">Em branco</span>`;
+    } else {
+      statusText = `<span class="status-text status-text--pending">Pendente: <strong>${pending.join(", ")}</strong></span>`;
+    }
+
     const startShort = r.dataInicio ? r.dataInicio.slice(0, 5) : "";
     const endLong = r.dataFim || "";
     const coopName = r.cooperado ? r.cooperado.nome : "";
@@ -5905,7 +5952,12 @@ function renderProtocolTable() {
     tr.className = `is-${status}`;
     tr.setAttribute("data-row", idx);
     tr.innerHTML = `
-      <td class="col-status-cell">${dot}</td>
+      <td class="col-status-text">
+        <div class="cell-stack" style="gap:4px">
+          ${dot}
+          ${statusText}
+        </div>
+      </td>
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.contrato}</div>
         <div class="stack-secondary">Item <strong>${r.item}</strong> · Ref. ${r.refCliente}</div>
@@ -5936,10 +5988,12 @@ function renderProtocolTable() {
         </div>
       </td>
       <td class="${missEmb ? 'is-missing' : ''}">
-        <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-          <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-          ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-        </select>
+        <input type="text" class="proto-emb-input"
+               list="embalagensList"
+               value="${r.embalagemSelected || ''}"
+               placeholder="Digite ou selecione"
+               autocomplete="off"
+               data-row="${idx}" data-field="embalagemSelected" />
       </td>
       <td class="${missRoteiro ? 'is-missing' : ''}">
         <div class="proto-roteiro-wrap">
