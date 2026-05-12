@@ -5143,10 +5143,20 @@ function isAlreadyAdded(r) {
   return state.rows.some(row => row.contrato === r.contrato && row.item === r.item);
 }
 
+/* Converte DD/MM/YYYY -> timestamp para ordenacao */
+function _drawerSortKey(brDate) {
+  if (!brDate) return Infinity;
+  const m = String(brDate).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return Infinity;
+  return new Date(+m[3], +m[2] - 1, +m[1]).getTime();
+}
+
 function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
+  /* US SMDP-131: contratos ordenados por End Date (dataFim) do mais antigo
+     pro mais novo. Empate desempata por contrato + item. */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
@@ -5156,6 +5166,13 @@ function renderDrawerList() {
         r.frete, r.planta, r.enviarPara, r.cnpj, r.dataInicio, r.dataFim, r.saldo
       ].join(" ").toLowerCase();
       return haystack.includes(q);
+    })
+    .sort((a, b) => {
+      const dA = _drawerSortKey(a.r.dataFim);
+      const dB = _drawerSortKey(b.r.dataFim);
+      if (dA !== dB) return dA - dB;
+      if (a.r.contrato !== b.r.contrato) return a.r.contrato.localeCompare(b.r.contrato);
+      return String(a.r.item).localeCompare(String(b.r.item), undefined, { numeric: true });
     });
 
   elDrawerCount.textContent = filtered.length;
@@ -5185,9 +5202,11 @@ function renderDrawerList() {
           </div>
           <div class="drawer-item-product">${highlightMatch(r.produto, q)}</div>
           <div class="drawer-item-meta">
+            <span><strong>Ref. Cliente:</strong> ${highlightMatch(r.refCliente || '—', q)}</span>
             <span><strong>Embalagem:</strong> ${highlightMatch(r.embalagem, q)}</span>
             <span><strong>Planta:</strong> ${highlightMatch(r.planta, q)}</span>
             <span><strong>Enviar para:</strong> ${highlightMatch(r.enviarPara, q)}</span>
+            <span><strong>CNPJ Filial:</strong> ${highlightMatch(r.cnpj || '—', q)}</span>
             <span><strong>Vigência:</strong> ${r.dataInicio} → ${r.dataFim}</span>
           </div>
         </div>
