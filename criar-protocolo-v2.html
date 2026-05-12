@@ -4362,7 +4362,47 @@
   }
   .v5-item-row:last-of-type { border-bottom: none; }
 
-  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .v5-item-cell-stacks {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    padding: 4px 0;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 8px;
+  }
+  .v5-item-cell-stacks .cell-stack { min-width: 0; }
+  .v5-item-cell-stacks .stack-tertiary,
+  .proto-table .cell-stack .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .proto-table .cell-stack .v5-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 2px;
+  }
+  .v5-item-cell-stacks .v5-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 2px;
+  }
+  .v5-item-saldo-inline {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .v5-item-saldo-inline .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
   .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
   .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
   .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
@@ -5458,17 +5498,20 @@ function renderCardsView() {
         <div class="v5-item-row is-${status}" data-row="${idx}">
           <div class="v5-item-info">
             <div class="v5-item-line v5-item-line--top">
-              <span class="v5-level-tag v5-level-tag--item">Item</span>
-              <span class="v5-item-id">${r.item}</span>
+              <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
               <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-              <span class="v5-item-product" title="${r.produto}">${r.produto}</span>
+              <span class="v5-item-saldo-inline">${r.saldo}<span class="unit">t</span></span>
             </div>
-            <div class="v5-item-line v5-item-line--bottom">
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Embalagem</span><strong>${r.embalagem}</strong></span>
-              <span class="v5-meta-sep">·</span>
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Rota</span><strong>${r.planta}</strong><span class="arrow">→</span>${r.enviarPara || ''}</span>
-              <span class="v5-meta-sep">·</span>
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Saldo</span><span class="v5-item-saldo">${r.saldo}<span class="unit">t</span></span></span>
+            <div class="v5-item-cell-stacks">
+              <div class="cell-stack">
+                <div class="stack-primary cell-strong">${r.produto}</div>
+                <div class="stack-secondary">${r.embalagem}</div>
+                <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+              </div>
+              <div class="cell-stack">
+                <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
+                <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
+              </div>
             </div>
           </div>
 
@@ -6051,7 +6094,8 @@ function renderProtocolTable() {
         <tr>
           <th class="col-status-cell" aria-label="Status"></th>
           <th>Contrato / Item</th>
-          <th>Produto</th>
+          <th>Produto / Embalagem / Origem</th>
+          <th>Destino / CNPJ Filial</th>
           <th class="col-saldo">Saldo / Vigência</th>
           <th class="col-coop">Cooperado <span class="req">*</span></th>
           <th class="col-volume">Volume desejado <span class="req">*</span></th>
@@ -6110,6 +6154,11 @@ function renderProtocolTable() {
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.produto}</div>
         <div class="stack-secondary">${r.embalagem}</div>
+        <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+      </td>
+      <td class="cell-stack">
+        <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
+        <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
       </td>
       <td class="cell-stack col-saldo">
         <div class="saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
