@@ -4309,16 +4309,38 @@
     background: var(--bg-section);
   }
   .drawer-item.is-disabled {
-    opacity: 0.55;
     pointer-events: none;
     cursor: not-allowed;
   }
-  /* Tag de bloqueio fica 100% visivel mesmo em row dimmed */
+  /* Diminuir conteudo da row dimming individual (nao usa opacity no
+     parent porque opacity cascade evita filho visivel). */
+  .drawer-item.is-disabled .checkbox,
+  .drawer-item.is-disabled .drawer-item-contract,
+  .drawer-item.is-disabled .drawer-item-item,
+  .drawer-item.is-disabled .drawer-item-frete,
+  .drawer-item.is-disabled .drawer-item-product,
+  .drawer-item.is-disabled .drawer-item-meta,
+  .drawer-item.is-disabled .drawer-item-saldo {
+    opacity: 0.5;
+  }
+  /* Tag de bloqueio: fundo solido vermelho/laranja, sempre vivida */
   .drawer-item.is-disabled .status-tag {
     opacity: 1;
     font-weight: 800;
+    color: #fff !important;
   }
-
+  .drawer-item.is-disabled .status-tag--unsigned {
+    background: var(--mosaic-red) !important;
+    border-color: var(--mosaic-red) !important;
+  }
+  .drawer-item.is-disabled .status-tag--amendment {
+    background: var(--status-orange) !important;
+    border-color: var(--status-orange) !important;
+  }
+  .drawer-item.is-disabled .status-tag--canceled {
+    background: var(--text-2) !important;
+    border-color: var(--text-2) !important;
+  }
 
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
