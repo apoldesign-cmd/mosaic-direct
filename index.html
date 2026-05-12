@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mosaic Direct — Protótipos</title>
+<title>Mosaic Direct — Protótipos UX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -41,145 +41,162 @@
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
   }
+  a { color: var(--mosaic-green-700); text-decoration: none; }
+  a:hover { color: var(--mosaic-green-800); }
 
-  .hero-bg {
-    position: relative;
-    background: linear-gradient(135deg, var(--mosaic-green-900) 0%, var(--mosaic-green-800) 60%, var(--mosaic-green-700) 100%);
+  /* Top mini-bar (colado no teto, apenas neste hub) */
+  .topbar-mini {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--mosaic-green-900);
     color: #fff;
-    padding: 56px 56px 80px;
-    overflow: hidden;
+    z-index: 200;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 56px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
   }
-  .hero-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 18% 22%, rgba(240,192,32,0.10) 0%, transparent 30%),
-      radial-gradient(circle at 80% 60%, rgba(44,139,120,0.18) 0%, transparent 35%),
-      radial-gradient(circle at 50% 90%, rgba(213,107,26,0.06) 0%, transparent 40%);
-    pointer-events: none;
+  .topbar-mini-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
   }
-  .hero-inner {
+  .topbar-mini-brand:hover { color: var(--mosaic-yellow); }
+  .topbar-mini-brand sup { font-size: 9px; font-weight: 700; margin-left: 1px; vertical-align: super; }
+  .topbar-mini-divider {
+    width: 1px;
+    height: 18px;
+    background: rgba(255,255,255,0.2);
+    margin: 0 14px;
+  }
+  .topbar-mini-meta {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+  }
+  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } .topbar-mini-meta { display: none; } }
+
+  /* Hero header */
+  .hero-header {
     max-width: 1320px;
     margin: 0 auto;
-    position: relative;
+    padding: 64px 56px 32px;
   }
-  .brand {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    margin-bottom: 36px;
-  }
-  .brand sup { font-size: 11px; font-weight: 600; opacity: 0.7; }
-  .brand-shapes {
-    display: inline-flex;
-    gap: 3px;
-    margin-left: 6px;
-    align-self: center;
-  }
-  .brand-shapes span {
-    width: 12px; height: 12px;
-    border-radius: 1px;
-  }
-  .brand-shapes .y { background: var(--mosaic-yellow); }
-  .brand-shapes .o { background: var(--mosaic-orange); }
-  .brand-shapes .r { background: var(--mosaic-red); }
-  .brand-shapes .t { background: var(--mosaic-teal); }
-
-  .label-eyebrow {
+  .hero-eyebrow {
     font-size: 11px;
     font-weight: 800;
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--mosaic-yellow);
-    margin-bottom: 12px;
+    letter-spacing: 0.16em;
+    color: var(--mosaic-green-700);
+    margin-bottom: 14px;
   }
-  h1.page-title {
+  .hero-title {
     font-size: 44px;
     font-weight: 800;
     line-height: 1.1;
     letter-spacing: -0.015em;
-    margin: 0 0 12px;
+    margin: 0 0 16px;
+    color: var(--text-1);
   }
-  .lede {
+  .hero-lede {
     font-size: 16px;
-    line-height: 1.55;
-    color: rgba(255,255,255,0.82);
-    max-width: 680px;
+    line-height: 1.6;
+    color: var(--text-2);
+    max-width: 720px;
     margin: 0;
+    font-weight: 500;
   }
-  .meta-row {
+  .hero-meta {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
-    margin-top: 28px;
-    color: rgba(255,255,255,0.65);
-    font-size: 12px;
-    font-weight: 600;
+    gap: 8px;
+    margin-top: 22px;
   }
-  .meta-row span { display: inline-flex; align-items: center; gap: 6px; }
-  .meta-row strong { color: #fff; font-weight: 800; }
+  .meta-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--text-2);
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    padding: 5px 10px;
+    border-radius: 999px;
+  }
+  .meta-chip strong { color: var(--mosaic-green-800); font-weight: 800; }
 
-  /* Content area */
+  /* Container + sections */
   .container {
     max-width: 1320px;
-    margin: -48px auto 0;
-    padding: 0 56px 80px;
-    position: relative;
+    margin: 0 auto;
+    padding: 16px 56px 80px;
   }
-
-  .section-title {
+  .section {
+    margin-top: 48px;
+  }
+  .section:first-of-type { margin-top: 16px; }
+  .section-head {
     display: flex;
-    align-items: baseline;
-    gap: 14px;
-    margin: 36px 0 18px;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 14px;
   }
-  .section-title h2 {
+  .section-head h2 {
     margin: 0;
     font-size: 22px;
     font-weight: 800;
-    color: var(--text-1);
     letter-spacing: -0.005em;
+    color: var(--text-1);
   }
-  .section-title .count {
-    font-size: 11px;
-    font-weight: 700;
+  .section-head .lede {
     color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-size: 13px;
+    font-weight: 600;
   }
-  .section-title:first-of-type { margin-top: 0; }
 
+  /* Grid + cards */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 18px;
   }
 
-  .proto-card {
+  .task-card {
     background: var(--bg-card);
     border: 1px solid var(--border-soft);
-    text-decoration: none;
-    color: inherit;
     display: flex;
     flex-direction: column;
-    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1),
-                box-shadow 200ms,
-                border-color 200ms;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.3, 1),
+                box-shadow 220ms, border-color 220ms;
+    box-shadow: var(--shadow-card);
     position: relative;
     overflow: hidden;
-    cursor: pointer;
-    box-shadow: var(--shadow-card);
   }
-  .proto-card:hover {
+  .task-card.is-active {
+    cursor: pointer;
+  }
+  .task-card.is-active:hover {
     transform: translateY(-3px);
     box-shadow: var(--shadow-hover);
     border-color: var(--mosaic-green-700);
   }
-  .proto-card::before {
+  .task-card.is-active::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -189,57 +206,83 @@
     transform-origin: left;
     transition: transform 240ms ease-out;
   }
-  .proto-card:hover::before { transform: scaleX(1); }
+  .task-card.is-active:hover::before { transform: scaleX(1); }
+  .task-card.is-locked {
+    background: linear-gradient(180deg, #fafaf8 0%, #f5f4ef 100%);
+    cursor: not-allowed;
+    opacity: 0.92;
+  }
+  .task-card.is-locked::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--mosaic-orange);
+  }
 
-  .card-head {
-    padding: 20px 22px 14px;
+  .task-head {
+    padding: 18px 22px 10px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
+    flex-wrap: wrap;
   }
-  .card-tag {
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--mosaic-green-800);
-    background: rgba(0,106,77,0.08);
-    padding: 3px 8px;
-    flex-shrink: 0;
-  }
-  .card-tag--latest {
-    background: var(--mosaic-yellow);
-    color: var(--text-1);
-  }
-  .card-tag--new {
-    background: var(--mosaic-green-800);
-    color: #fff;
-  }
-  .card-id {
+  .task-jira {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     font-size: 11px;
     font-weight: 800;
     color: var(--text-3);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
   }
-  .card-title {
+  .task-jira-id {
+    color: var(--text-1);
+    background: var(--bg-section);
+    padding: 2px 7px;
+  }
+  .task-jira-id--epic { color: var(--mosaic-green-800); }
+  .task-status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 9px;
+    border: 1.5px solid;
+  }
+  .task-status-chip--done {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+  }
+  .task-status-chip--dev {
+    color: var(--mosaic-orange);
+    border-color: var(--mosaic-orange);
+    background: rgba(213,107,26,0.08);
+  }
+
+  .task-title {
     padding: 0 22px 8px;
     font-size: 18px;
     font-weight: 800;
     color: var(--text-1);
     letter-spacing: -0.01em;
-    line-height: 1.25;
+    line-height: 1.3;
   }
-  .card-desc {
+  .task-desc {
     padding: 0 22px 16px;
     font-size: 13px;
     color: var(--text-2);
-    line-height: 1.5;
+    line-height: 1.55;
     flex: 1;
     font-weight: 500;
   }
-  .card-features {
+  .task-features {
     padding: 0 22px 16px;
     display: flex;
     flex-wrap: wrap;
@@ -250,121 +293,354 @@
     font-weight: 700;
     color: var(--text-3);
     background: var(--bg-section);
-    padding: 3px 8px;
+    padding: 3px 9px;
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
+    border-radius: 999px;
   }
-  .card-foot {
-    padding: 14px 22px;
+
+  .task-dates {
+    padding: 12px 22px;
     background: var(--bg-section);
+    border-top: 1px solid var(--border-soft);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .task-date {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .task-date-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    font-weight: 800;
+  }
+  .task-date-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .task-date-value--orange { color: var(--mosaic-orange); }
+
+  .task-foot {
+    padding: 14px 22px;
     border-top: 1px solid var(--border-soft);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: 12.5px;
     font-weight: 700;
     color: var(--mosaic-green-800);
   }
-  .card-foot svg {
-    transition: transform 200ms;
+  .task-foot--locked {
+    color: var(--text-3);
+    font-style: italic;
+    font-weight: 600;
   }
-  .proto-card:hover .card-foot svg { transform: translateX(4px); }
-
-  /* Notes section */
-  .notes {
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    padding: 28px 32px;
-    margin-top: 32px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-  }
-  .notes h3 {
-    margin: 0 0 12px;
-    font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-1);
-  }
-  .notes ul {
-    margin: 0;
-    padding-left: 18px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-2);
-  }
-  .notes li { margin-bottom: 6px; }
-  .notes strong { color: var(--text-1); font-weight: 800; }
-  .notes code {
-    background: var(--bg-section);
-    padding: 1px 6px;
-    font-size: 11.5px;
-    font-family: "SF Mono", Monaco, Consolas, monospace;
-    color: var(--mosaic-green-800);
+  .task-foot svg { transition: transform 200ms; }
+  .task-card.is-active:hover .task-foot svg { transform: translateX(4px); }
+  .lock-icon {
+    color: var(--mosaic-orange);
   }
 
-  .footer {
-    text-align: center;
-    padding: 48px 56px 32px;
+  /* Footer */
+  .page-footer {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 32px 56px 60px;
     color: var(--text-3);
     font-size: 12px;
     font-weight: 600;
-  }
-  .footer .mark {
-    font-weight: 800;
-    color: var(--text-2);
+    border-top: 1px solid var(--border-soft);
   }
 
   @media (max-width: 720px) {
-    .hero-bg { padding: 32px 24px 64px; }
-    h1.page-title { font-size: 32px; }
-    .container { padding: 0 24px 40px; }
-    .notes {
-      grid-template-columns: 1fr;
-      padding: 20px 22px;
-    }
+    .hero-header, .container, .page-footer { padding-left: 20px; padding-right: 20px; }
+    .hero-title { font-size: 32px; }
+    .grid { grid-template-columns: 1fr; }
   }
-
-  /* Banner hero removido — layout limpo (so top-nav). */
-  .hero, .hero-bg {
-    display: none !important;
-  }
-
-
-  /* Top mini-bar (colado no topo, em todas as telas) */
-  .topbar-mini {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background: var(--mosaic-green-900, #003e2a);
-    color: #fff;
-    z-index: 200;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    padding: 0 56px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  }
-  .topbar-mini-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-family: "Manrope", sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-  }
-  .topbar-mini-brand:hover { color: var(--mosaic-yellow, #f0c020); }
-  .topbar-mini-brand sup { font-size: 8px; font-weight: 700; margin-left: 1px; vertical-align: super; }
-  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } }
-
 </style>
+</head>
+<body>
+
+<!-- Top mini-bar (logo no teto) -->
+<div class="topbar-mini">
+  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
+    </svg>
+    <span>Mosaic<sup>®</sup> Direct</span>
+  </a>
+  <span class="topbar-mini-divider" aria-hidden="true"></span>
+  <span class="topbar-mini-meta">Protótipos UX · Mosaic Direct</span>
+</div>
+
+<!-- Hero -->
+<header class="hero-header">
+  <div class="hero-eyebrow">Mosaic Direct · Protótipos UX</div>
+  <h1 class="hero-title">Hub de telas em desenvolvimento</h1>
+  <p class="hero-lede">
+    Protótipos HTML interativos do portal Mosaic Direct (agribusiness BR).
+    Cada card abaixo representa uma User Story (US) do Jira, com a tela
+    navegável correspondente, datas de início e entrega, e o status atual.
+  </p>
+  <div class="hero-meta">
+    <span class="meta-chip"><strong>3</strong> telas entregues</span>
+    <span class="meta-chip"><strong>1</strong> em desenvolvimento</span>
+    <span class="meta-chip">Ambiente Vercel · auto-deploy</span>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ============================================================
+       SECTION 1 — Entregues
+       ============================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Telas entregues</h2>
+      <span class="lede">Disponíveis para uso e revisão</span>
+    </div>
+
+    <div class="grid">
+
+      <!-- SMDP-238 / SMDP-70 — Cadastro de Cooperado -->
+      <a href="criar-protocolo.html#cadastrar-cooperado" class="task-card is-active">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-70</span>
+            <span>/</span>
+            <span class="task-jira-id">SMDP-238</span>
+          </div>
+          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+        </div>
+        <div class="task-title">[UX] Cadastro de Cooperado</div>
+        <div class="task-desc">
+          Drawer lateral V5-style para registrar novo cooperado (Pessoa Física
+          ou Jurídica) sem sair do fluxo de criação de protocolo. Status
+          "Pendente" por 10 min após cadastro, depois "Ativo". Máscaras pt-BR
+          em CPF/CNPJ, CEP, IE. Autofill via ViaCEP. Volta automática para o
+          picker preservando as linhas já preenchidas.
+        </div>
+        <div class="task-features">
+          <span class="feature-pill">Side-drawer V5</span>
+          <span class="feature-pill">Status Pendente/Ativo</span>
+          <span class="feature-pill">Máscaras pt-BR</span>
+          <span class="feature-pill">CEP autofill</span>
+          <span class="feature-pill">Preserva linhas</span>
+        </div>
+        <div class="task-dates">
+          <div class="task-date">
+            <span class="task-date-label">Início</span>
+            <span class="task-date-value">05/05/2026</span>
+          </div>
+          <div class="task-date">
+            <span class="task-date-label">Entrega</span>
+            <span class="task-date-value">12/05/2026</span>
+          </div>
+        </div>
+        <div class="task-foot">
+          <span>Abrir tela</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- SMDP-237 / SMDP-131 — Criação de Agendamento - Contrato Normal -->
+      <a href="agendar-contrato-normal-v5.html" class="task-card is-active">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-131</span>
+            <span>/</span>
+            <span class="task-jira-id">SMDP-237</span>
+          </div>
+          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+        </div>
+        <div class="task-title">[UX] Criação de Agendamento — Contrato Normal</div>
+        <div class="task-desc">
+          Fluxo completo de agendamento de contratos normais (V5). Cards
+          agrupados por contrato com itens dentro. Drawer de seleção com
+          Ref. Cliente, CNPJ Filial, IE, Preço/Ton e Status (bloqueio
+          visual de cancelados/sem assinatura). Validações de Volume
+          individual e agregado por contrato. Datepicker bloqueia datas
+          passadas.
+        </div>
+        <div class="task-features">
+          <span class="feature-pill">Cards multi-item</span>
+          <span class="feature-pill">Drawer filtros</span>
+          <span class="feature-pill">Volume ≤ Saldo</span>
+          <span class="feature-pill">Status bloqueado</span>
+          <span class="feature-pill">Sort por Vigência</span>
+        </div>
+        <div class="task-dates">
+          <div class="task-date">
+            <span class="task-date-label">Início</span>
+            <span class="task-date-value">02/05/2026</span>
+          </div>
+          <div class="task-date">
+            <span class="task-date-label">Entrega</span>
+            <span class="task-date-value">12/05/2026</span>
+          </div>
+        </div>
+        <div class="task-foot">
+          <span>Abrir tela</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- SMDP-233 / SMDP-167 — Criação de Protocolo -->
+      <a href="criar-protocolo.html" class="task-card is-active">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-167</span>
+            <span>/</span>
+            <span class="task-jira-id">SMDP-233</span>
+          </div>
+          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+        </div>
+        <div class="task-title">[UX] Criação de Protocolo</div>
+        <div class="task-desc">
+          Fluxo de criação de protocolos a partir de contratos selecionados.
+          Toggle Cards/Tabela. Cooperado picker com cadastro inline. Máscaras
+          em Volume (t), Preço (R$), CPF/CNPJ, CEP, IE. Validação de
+          consistência NF (Número + Data + Preço como grupo). Datepickers
+          bloqueiam datas inválidas (futura para NF, passada para Semana).
+          Auto-scroll horizontal entre campos. Colunas Status + Contrato +
+          Produto fixas (sticky).
+        </div>
+        <div class="task-features">
+          <span class="feature-pill">Cards form-style</span>
+          <span class="feature-pill">Toggle Cards/Tabela</span>
+          <span class="feature-pill">Cadastro inline</span>
+          <span class="feature-pill">Sticky columns</span>
+          <span class="feature-pill">Validações</span>
+        </div>
+        <div class="task-dates">
+          <div class="task-date">
+            <span class="task-date-label">Início</span>
+            <span class="task-date-value">03/05/2026</span>
+          </div>
+          <div class="task-date">
+            <span class="task-date-label">Entrega</span>
+            <span class="task-date-value">12/05/2026</span>
+          </div>
+        </div>
+        <div class="task-foot">
+          <span>Abrir tela</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- SMDP-235 — Agendar Protocolo (entregue) -->
+      <a href="agendar-protocolo.html" class="task-card is-active">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-168</span>
+            <span>/</span>
+            <span class="task-jira-id">SMDP-235</span>
+          </div>
+          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+        </div>
+        <div class="task-title">[UX] Agendamento de Protocolo</div>
+        <div class="task-desc">
+          Fluxo de agendamento de protocolos já criados. Cards agrupados
+          por contrato. Tabela compacta otimizada (Volume / Semana /
+          Roteiro logo após Vigência). Confirmação V5 + hint pulse no
+          empty state. Datepicker Semana bloqueia datas passadas.
+        </div>
+        <div class="task-features">
+          <span class="feature-pill">Cards V5</span>
+          <span class="feature-pill">Tabela compacta</span>
+          <span class="feature-pill">Hint pulse empty</span>
+          <span class="feature-pill">Confirmar V5</span>
+        </div>
+        <div class="task-dates">
+          <div class="task-date">
+            <span class="task-date-label">Início</span>
+            <span class="task-date-value">04/05/2026</span>
+          </div>
+          <div class="task-date">
+            <span class="task-date-label">Entrega</span>
+            <span class="task-date-value">10/05/2026</span>
+          </div>
+        </div>
+        <div class="task-foot">
+          <span>Abrir tela</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — Em desenvolvimento
+       ============================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Em desenvolvimento</h2>
+      <span class="lede">Próxima entrega · travada para acesso</span>
+    </div>
+
+    <div class="grid">
+
+      <!-- SMDP-236 / SMDP-137 — Relatório de Status de Agendamentos -->
+      <div class="task-card is-locked" aria-disabled="true">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-137</span>
+            <span>/</span>
+            <span class="task-jira-id">SMDP-236</span>
+          </div>
+          <span class="task-status-chip task-status-chip--dev">⚙ Em desenvolvimento</span>
+        </div>
+        <div class="task-title">[UX] Relatório de Status de Agendamentos</div>
+        <div class="task-desc">
+          Visualização única de todas as requisições de agendamento — confirmado,
+          faturado, indisponível, ações pendentes — com filtros por período,
+          status, contrato, protocolo, produto e tipo. Cada linha mostra
+          Quantidade Solicitada, Confirmada (via SO ou AM Confirm) e Faturada.
+          Tela read-only. Carrega a semana ativa por padrão.
+        </div>
+        <div class="task-features">
+          <span class="feature-pill">Filtros por período</span>
+          <span class="feature-pill">SO + AM Confirm</span>
+          <span class="feature-pill">Lifecycle SAP</span>
+          <span class="feature-pill">Read-only</span>
+        </div>
+        <div class="task-dates">
+          <div class="task-date">
+            <span class="task-date-label">Início previsto</span>
+            <span class="task-date-value task-date-value--orange">13/05/2026</span>
+          </div>
+          <div class="task-date">
+            <span class="task-date-label">Entrega prevista</span>
+            <span class="task-date-value task-date-value--orange">A definir</span>
+          </div>
+        </div>
+        <div class="task-foot task-foot--locked">
+          <span>
+            <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px; margin-right:4px;">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Travado · em desenvolvimento
+          </span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer class="page-footer">
+  Mosaic Direct · Protótipos UX · iterações com PO em ciclos curtos.
+  Hospedado no Vercel · auto-deploy via GitHub.
+</footer>
+
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
 <script>
@@ -385,172 +661,5 @@
     a.appendChild(r);
   })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script>
-
-</head>
-<body>
-<!-- Top mini-bar (colado no teto) -->
-<div class="topbar-mini" aria-hidden="false">
-  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
-    </svg>
-    <span>Mosaic<sup>®</sup> Direct</span>
-  </a>
-</div>
-
-
-<div class="hero-bg">
-  <div class="hero-inner">
-    <div class="brand">
-      Mosaic<sup>®</sup> Direct
-      <span class="brand-shapes" aria-hidden="true">
-        <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
-      </span>
-    </div>
-    <div class="label-eyebrow">Protótipos · SAM 2026</div>
-    <h1 class="page-title">Telas em prototipação</h1>
-    <p class="lede">
-      Coleção de mockups interativos para o portal Mosaic Direct.
-      Cada tela é navegável, com dados de exemplo e fluxos completos.
-      Use o menu flutuante "Protótipos" no canto inferior esquerdo de qualquer tela
-      para alternar entre elas.
-    </p>
-    <div class="meta-row">
-      <span><strong>6</strong> telas</span>
-      <span><strong>3</strong> fluxos</span>
-      <span>Atualizado em <strong>maio · 2026</strong></span>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-
-  <div class="section-title">
-    <h2>Agendar Contratos Normais</h2>
-    <span class="count">1 tela</span>
-  </div>
-
-  <div class="grid">
-
-    <a href="agendar-contrato-normal-v5.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">Contratos</span>
-        <span class="card-tag card-tag--latest">Versão final</span>
-      </div>
-      <div class="card-title">Agendar Contratos Normais</div>
-      <div class="card-desc">
-        Fluxo consolidado. Cada card representa um contrato e agrupa todos
-        os itens. Drawer de seleção com Ref. Cliente, CNPJ Filial, IE,
-        Preço/Ton, Status. Volume / Semana / Roteiro editáveis por item.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Agrupamento por contrato</span>
-        <span class="feature-pill">Drawer com filtros</span>
-        <span class="feature-pill">Validações</span>
-        <span class="feature-pill">Multi-item</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-  </div>
-
-  <div class="section-title">
-    <h2>Agendamento</h2>
-    <span class="count">1 tela</span>
-  </div>
-
-  <div class="grid">
-
-    <a href="agendar-protocolo.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">Novo</span>
-        <span class="card-tag card-tag--new">Recém-adicionada</span>
-      </div>
-      <div class="card-title">Agendar Protocolo(s)</div>
-      <div class="card-desc">
-        Fluxo paralelo ao Agendar Contrato Normal: o usuário seleciona protocolos
-        já criados (dropdown de recentes + busca avançada com 12 colunas) e
-        preenche Volume, Semana e Roteiro por linha. Cards horizontais com 3
-        níveis (protocolo · recebedor · item), datepicker custom, drawer de
-        roteiro pré-preenchido.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Dropdown recentes</span>
-        <span class="feature-pill">Busca avançada</span>
-        <span class="feature-pill">Multi-protocolo</span>
-        <span class="feature-pill">Roteiro pré-preenchido</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-  </div>
-
-  <div class="section-title">
-    <h2>Contratos</h2>
-    <span class="count">1 tela</span>
-  </div>
-
-  <div class="grid">
-
-    <a href="criar-protocolo.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">Protocolo</span>
-        <span class="card-tag card-tag--latest">Versão final</span>
-      </div>
-      <div class="card-title">Criar Protocolo(s)</div>
-      <div class="card-desc">
-        Fluxo de criação de protocolos a partir de contratos selecionados.
-        Cooperado picker, cadastro inline (PF/PJ + endereço), máscaras pt-BR,
-        toggle Cards/Tabela, e padrão V5 (Produto/Embalagem/Origem +
-        Destino/CNPJ Filial).
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Toggle Cards/Tabela</span>
-        <span class="feature-pill">Cadastrar cooperado inline</span>
-        <span class="feature-pill">Máscaras pt-BR</span>
-        <span class="feature-pill">Padrão V5</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-  </div>
-
-  <div class="notes">
-    <div>
-      <h3>Como navegar</h3>
-      <ul>
-        <li>Cada card abre o protótipo correspondente em uma nova janela do mesmo link.</li>
-        <li>Em qualquer tela, use o botão flutuante <strong>🧪 Protótipos</strong> no canto inferior esquerdo para alternar.</li>
-        <li>O botão atual fica destacado em verde no menu.</li>
-        <li>Pressione <code>Esc</code> ou clique fora para fechar o menu.</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Sobre os mockups</h3>
-      <ul>
-        <li>Todos os dados são <strong>fictícios</strong> e servem só para ilustrar o fluxo.</li>
-        <li>Os contratos disponíveis (Q-20303, Q-20385, Q-20392, Q-38542, Q-85721, Q-39742) repetem entre as telas para consistência.</li>
-        <li>Tipografia <strong>Manrope</strong>, paleta oficial Mosaic.</li>
-        <li>Layout calibrado para <strong>1320px</strong> de largura útil.</li>
-      </ul>
-    </div>
-  </div>
-
-</div>
-
-<div class="footer">
-  <div class="mark">Mosaic Direct</div>
-  Protótipos não-vinculantes — somente para fins de validação de UX e fluxo.
-</div>
-
 </body>
 </html>
