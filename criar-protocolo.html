@@ -4805,37 +4805,6 @@
   }
 
 
-  /* Top mini-bar (colado no topo, em todas as telas) */
-  .topbar-mini {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    background: var(--mosaic-green-900, #003e2a);
-    color: #fff;
-    z-index: 200;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    padding: 0 56px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  }
-  .topbar-mini-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: #fff;
-    font-family: "Manrope", sans-serif;
-    font-weight: 800;
-    font-size: 13px;
-    letter-spacing: 0.01em;
-    text-decoration: none;
-  }
-  .topbar-mini-brand:hover { color: var(--mosaic-yellow, #f0c020); }
-  .topbar-mini-brand sup { font-size: 8px; font-weight: 700; margin-left: 1px; vertical-align: super; }
-  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } }
-
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -4860,16 +4829,6 @@
 
 </head>
 <body>
-<!-- Top mini-bar (colado no teto) -->
-<div class="topbar-mini" aria-hidden="false">
-  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
-    </svg>
-    <span>Mosaic<sup>®</sup> Direct</span>
-  </a>
-</div>
-
 
 
 
