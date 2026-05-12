@@ -3965,21 +3965,6 @@
     margin-top: 2px;
   }
   .col-status-cell { width: 36px; text-align: center; }
-  .col-status-text { width: 200px; min-width: 180px; }
-  .col-status-text .v3-status-dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .status-text {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
-  .status-text--complete   { color: var(--mosaic-green-700); }
-  .status-text--pending    { color: var(--text-2); font-weight: 600; }
-  .status-text--pending strong { color: var(--mosaic-red); font-weight: 800; }
-  .status-text--incomplete { color: var(--text-3); font-style: italic; }
   .col-actions { width: 70px; }
   .col-volume { min-width: 100px; }
   .col-date { min-width: 130px; }
@@ -5846,21 +5831,6 @@ function afterFieldChange(idx, sourceEl) {
   tr.classList.add(`is-${newStatus}`);
   const dot = tr.querySelector(".v3-status-dot");
   if (dot) dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
-  /* Refresh the status text in the Status column */
-  const statusTextEl = tr.querySelector(".status-text");
-  if (statusTextEl) {
-    const pend = pendingFields(r);
-    if (newStatus === "complete") {
-      statusTextEl.className = "status-text status-text--complete";
-      statusTextEl.textContent = "Pronto";
-    } else if (pend.length === 0) {
-      statusTextEl.className = "status-text status-text--incomplete";
-      statusTextEl.textContent = "Em branco";
-    } else {
-      statusTextEl.className = "status-text status-text--pending";
-      statusTextEl.innerHTML = "Pendente: <strong>" + pend.join(", ") + "</strong>";
-    }
-  }
   const td = sourceEl.closest("td");
   if (td) {
     const f = sourceEl.dataset.field;
@@ -5942,7 +5912,7 @@ function renderProtocolTable() {
     <table class="proto-table">
       <thead>
         <tr>
-          <th class="col-status-text">Status</th>
+          <th class="col-status-cell" aria-label="Status"></th>
           <th>Contrato / Item</th>
           <th>Produto</th>
           <th class="col-saldo">Saldo / Vigência</th>
@@ -5984,16 +5954,6 @@ function renderProtocolTable() {
     else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress">${ICON_BANG}</span>`;
     else dot = `<span class="v3-status-dot v3-status-dot--incomplete">${ICON_DOT}</span>`;
 
-    const pending = pendingFields(r);
-    let statusText;
-    if (status === "complete") {
-      statusText = `<span class="status-text status-text--complete">Pronto</span>`;
-    } else if (pending.length === 0) {
-      statusText = `<span class="status-text status-text--incomplete">Em branco</span>`;
-    } else {
-      statusText = `<span class="status-text status-text--pending">Pendente: <strong>${pending.join(", ")}</strong></span>`;
-    }
-
     const startShort = r.dataInicio ? r.dataInicio.slice(0, 5) : "";
     const endLong = r.dataFim || "";
     const coopName = r.cooperado ? r.cooperado.nome : "";
@@ -6005,12 +5965,7 @@ function renderProtocolTable() {
     tr.className = `is-${status}`;
     tr.setAttribute("data-row", idx);
     tr.innerHTML = `
-      <td class="col-status-text">
-        <div class="cell-stack" style="gap:4px">
-          ${dot}
-          ${statusText}
-        </div>
-      </td>
+      <td class="col-status-cell">${dot}</td>
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.contrato}</div>
         <div class="stack-secondary">Item <strong>${r.item}</strong> · Ref. ${r.refCliente}</div>
