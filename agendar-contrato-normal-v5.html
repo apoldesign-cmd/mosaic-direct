@@ -4255,6 +4255,15 @@
     font-weight: 700;
     margin-left: 2px;
   }
+
+  /* Validation: Semana passada */
+  input.is-invalid,
+  .card-date-wrap.is-invalid input,
+  .v3-date-wrap.is-invalid input,
+  .v3-cell-volume-wrap.is-invalid input {
+    border-color: var(--mosaic-red) !important;
+    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
+  }
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -4977,14 +4986,42 @@ function renderCardsView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
+  refreshSemanaValidation();
 }
 
 /* No longer needed in v2 — kept as no-op for compatibility */
 function upgradeTableForInputs() {}
 
+/* Validation: Semana nao pode ser passada */
+function brDateToDateV5(br) {
+  if (!br) return null;
+  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+function todayStartV5() {
+  const t = new Date(); t.setHours(0, 0, 0, 0); return t;
+}
+function rowInvalidSemana(r) {
+  if (!r.semana) return false;
+  const d = brDateToDateV5(r.semana);
+  return d && d < todayStartV5();
+}
+function refreshSemanaValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll(`[data-row="${idx}"][data-field="semana"]`).forEach(el => {
+      const wrap = el.closest('.card-date-wrap, .v3-date-wrap, .v3-cell-volume-wrap') || el;
+      const bad = rowInvalidSemana(r);
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = bad ? "Semana desejada não pode ser uma data passada" : "";
+    });
+  });
+}
+
 function canAgendar() {
   if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete");
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r));
 }
 
 function updateSummary() {
@@ -5376,6 +5413,7 @@ elBody.addEventListener("input", e => {
    element (would lose focus/cursor). Only update siblings that don't
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
+  refreshSemanaValidation();
   elAgendar.disabled = !canAgendar();
   updateSummary();
 
@@ -5652,6 +5690,7 @@ function renderTableView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
+  refreshSemanaValidation();
 }
 
 function updateCardStatusFooter(card, r) {
