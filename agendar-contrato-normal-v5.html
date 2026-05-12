@@ -4264,6 +4264,25 @@
     border-color: var(--mosaic-red) !important;
     box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
   }
+
+  /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
+  .v3-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
+
+
+  /* Banner image override (substitui o gradient quando o asset existe).
+     Salvar a imagem em /assets/hero-banner.jpg. Se nao existir, o
+     gradient antigo aparece como fallback. */
+  .hero, .hero-bg {
+    background-image: url("./assets/hero-banner.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+  .hero::before, .hero::after,
+  .hero-bg::before, .hero-bg::after {
+    display: none !important;
+  }
+
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -4472,10 +4491,8 @@
 
   <div class="drawer-meta">
     <span><span id="drawerCount">0</span> resultado(s)</span>
-    <span style="display:flex; align-items:center; gap:14px;">
-      <span class="selected-count is-zero" id="drawerSelectedCount">0 selecionados</span>
-      <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
-    </span>
+    <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
+    <span class="selected-count is-zero" id="drawerSelectedCount" hidden>0 selecionados</span>
   </div>
 
   <div class="drawer-list" id="drawerList"></div>
