@@ -1478,6 +1478,24 @@
     gap: 24px;
     z-index: 50;
   }
+  /* Inner wrapper centra/limita o footer ao max-width da page */
+  .summary-footer > .summary-stats,
+  .summary-footer > .summary-actions {
+    /* nada — fallback */
+  }
+  .summary-footer.summary-footer--centered {
+    padding: 0;
+    justify-content: center;
+  }
+  .summary-footer--centered .summary-footer-inner {
+    width: 100%;
+    max-width: 1320px;
+    padding: 16px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
   /* Reserve space at the bottom of the page so content doesn't sit under
      the fixed footer */
   .page { padding-bottom: 100px !important; }
@@ -2448,6 +2466,28 @@
     transition: color 200ms;
   }
   /* Reset the strong red styling: only apply when validation has been triggered */
+  /* Inputs invalidos (regras de consistencia NF/Data/Preco/Semana) */
+  .is-invalid input,
+  .is-invalid select,
+  input.is-invalid,
+  select.is-invalid,
+  .v5-money-wrap.is-invalid input,
+  .v5-date-wrap.is-invalid input,
+  .input-with-suffix.is-invalid input,
+  .proto-money-wrap.is-invalid input,
+  .proto-date-wrap.is-invalid input,
+  .card-date-wrap.is-invalid input {
+    border-color: var(--mosaic-red) !important;
+    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
+  }
+  .field-error {
+    display: block;
+    font-size: 10.5px;
+    color: var(--mosaic-red);
+    font-weight: 700;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
   .cards-container:not(.show-validation) .field-block.is-missing label .req { color: var(--text-3); }
   .cards-container:not(.show-validation) .field-block.is-missing .input-with-suffix input,
   .cards-container:not(.show-validation) .field-block.is-missing .card-date-wrap input,
@@ -4853,25 +4893,27 @@
     <!-- Rendered by JS -->
   </div>
 
-  <!-- Sticky summary footer -->
-  <div class="summary-footer" id="summaryFooter">
-    <div class="summary-stats">
-      <div class="summary-stat">
-        <span class="label">Contratos</span>
-        <span class="value" id="statContracts">0</span>
+  <!-- Sticky summary footer (inner wrapper acompanha max-width da page) -->
+  <div class="summary-footer summary-footer--centered" id="summaryFooter">
+    <div class="summary-footer-inner">
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <span class="label">Contratos</span>
+          <span class="value" id="statContracts">0</span>
+        </div>
+        <div class="summary-stat">
+          <span class="label">Volume Total</span>
+          <span class="value" id="statVolume">0<span class="unit">t</span></span>
+        </div>
+        <div class="summary-stat">
+          <span class="label">Prontos para Criar</span>
+          <span class="value" id="statReady">0/0</span>
+        </div>
       </div>
-      <div class="summary-stat">
-        <span class="label">Volume Total</span>
-        <span class="value" id="statVolume">0<span class="unit">t</span></span>
+      <div class="summary-actions">
+        <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+        <button class="btn btn-primary" id="agendarBtn" disabled>Criar Protocolo(s)</button>
       </div>
-      <div class="summary-stat">
-        <span class="label">Prontos para Criar</span>
-        <span class="value" id="statReady">0/0</span>
-      </div>
-    </div>
-    <div class="summary-actions">
-      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-      <button class="btn btn-primary" id="agendarBtn" disabled>Criar Protocolo(s)</button>
     </div>
   </div>
 </main>
@@ -5613,6 +5655,7 @@ function renderCardsView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
+  refreshAllValidations();
 }
 
 /* No longer needed in v2 — kept as no-op for compatibility */
@@ -5620,17 +5663,89 @@ function upgradeTableForInputs() {}
 
 function canAgendar() {
   if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete");
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowHasInvalid(r));
+}
+
+function parseBRNumber(s) {
+  if (s == null || s === "") return 0;
+  const n = parseFloat(String(s).replace(/\./g, "").replace(",", "."));
+  return isNaN(n) ? 0 : n;
+}
+
+function sumVolumeDesejado() {
+  return state.rows.reduce((sum, r) => sum + parseBRNumber(r.volumeDesejado), 0);
+}
+
+/* DD/MM/YYYY -> Date (00:00 local). Retorna null se invalido. */
+function brDateToDate(br) {
+  if (!br) return null;
+  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+function todayStart() {
+  const t = new Date();
+  t.setHours(0, 0, 0, 0);
+  return t;
+}
+
+/* Validations:
+   - Grupo NF (nfVendaNum, nfVendaData, precoVenda): se um preenchido, os outros tres viram obrigatorios
+   - nfVendaData: nao pode ser futura
+   - precoVenda: deve ser > 0 quando preenchido
+   - semana: nao pode ser passada
+   Retorna { field: msg } pra cada problema. */
+function rowValidationErrors(r) {
+  const errs = {};
+  const numFilled   = !!(r.nfVendaNum && String(r.nfVendaNum).trim());
+  const dataFilled  = !!(r.nfVendaData && String(r.nfVendaData).trim());
+  const precoVal    = parseBRNumber(r.precoVenda);
+  const precoFilled = precoVal > 0 || (r.precoVenda && String(r.precoVenda).trim() !== "");
+  const anyFilled   = numFilled || dataFilled || precoFilled;
+  if (anyFilled) {
+    if (!numFilled)   errs.nfVendaNum  = "Preencha o Nº NF Venda";
+    if (!dataFilled)  errs.nfVendaData = "Preencha a Data NF Venda";
+    if (precoVal <= 0) errs.precoVenda = "Preço deve ser maior que 0";
+  }
+  if (dataFilled) {
+    const d = brDateToDate(r.nfVendaData);
+    if (d && d > todayStart()) errs.nfVendaData = "Data da NF não pode ser futura";
+  }
+  if (r.semana && String(r.semana).trim()) {
+    const d = brDateToDate(r.semana);
+    if (d && d < todayStart()) errs.semana = "Semana desejada não pode ser passada";
+  }
+  return errs;
+}
+
+function rowHasInvalid(r) {
+  return Object.keys(rowValidationErrors(r)).length > 0;
+}
+
+/* Aplica classe .is-invalid nos inputs conforme rowValidationErrors */
+function refreshRowValidation(idx) {
+  const r = state.rows[idx];
+  if (!r) return;
+  const errs = rowValidationErrors(r);
+  ["nfVendaNum", "nfVendaData", "precoVenda", "semana"].forEach(field => {
+    document.querySelectorAll(`[data-row="${idx}"][data-field="${field}"]`).forEach(el => {
+      const wrap = el.closest('.v5-money-wrap, .v5-date-wrap, .input-with-suffix, .proto-money-wrap, .proto-date-wrap, .card-date-wrap') || el;
+      const bad = !!errs[field];
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = errs[field] || "";
+    });
+  });
+}
+function refreshAllValidations() {
+  state.rows.forEach((_, idx) => refreshRowValidation(idx));
 }
 
 function updateSummary() {
-  const totalVolume = state.rows.reduce((sum, r) => {
-    const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
-    return sum + (isNaN(v) ? 0 : v);
-  }, 0);
+  const totalVolume = sumVolumeDesejado();
   const ready = state.rows.filter(r => rowStatus(r) === "complete").length;
   document.getElementById("statContracts").textContent = state.rows.length;
-  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR')}<span class="unit">t</span>`;
+  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span class="unit">t</span>`;
   document.getElementById("statReady").textContent = `${ready}/${state.rows.length || 0}`;
   document.getElementById("statReady").classList.toggle("muted", ready < state.rows.length);
 }
@@ -6006,6 +6121,7 @@ elBody.addEventListener("input", e => {
    element (would lose focus/cursor). Only update siblings that don't
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
+  refreshRowValidation(idx);
   elAgendar.disabled = !canAgendar();
   updateSummary();
   const r = state.rows[idx];
@@ -6248,6 +6364,7 @@ function renderProtocolTable() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
+  refreshAllValidations();
 }
 
 function updateCardStatusFooter(card, r) {
@@ -6395,13 +6512,10 @@ document.getElementById("agendarBtn").addEventListener("click", () => {
   // Populate the submit-modal summary
   const summaryEl = document.getElementById("submitSummary");
   if (summaryEl) {
-    const totalVolume = state.rows.reduce((sum, r) => {
-      const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
-      return sum + (isNaN(v) ? 0 : v);
-    }, 0);
+    const totalVolume = sumVolumeDesejado();
     summaryEl.innerHTML = `
-      <div class="row"><span>Contratos a agendar</span><strong>${state.rows.length}</strong></div>
-      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR")} t</strong></div>
+      <div class="row"><span>Protocolos a criar</span><strong>${state.rows.length}</strong></div>
+      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2})} t</strong></div>
     `;
   }
   openModal("submitModal");
