@@ -2259,8 +2259,62 @@
   }
   .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
   .drawer-item.is-disabled {
-    opacity: 0.45;
     pointer-events: none;
+    cursor: not-allowed;
+  }
+  /* Dimming individual (evita opacity cascade que apaga a tag) */
+  .drawer-item.is-disabled .checkbox,
+  .drawer-item.is-disabled .drawer-item-contract,
+  .drawer-item.is-disabled .drawer-item-item,
+  .drawer-item.is-disabled .drawer-item-frete,
+  .drawer-item.is-disabled .drawer-item-product,
+  .drawer-item.is-disabled .drawer-item-meta,
+  .drawer-item.is-disabled .drawer-item-saldo {
+    opacity: 0.45;
+  }
+  /* Status tag: fundo solido vermelho/laranja vivo */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border: 1.5px solid;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .status-tag--amendment {
+    color: var(--status-orange, #c76814);
+    border-color: var(--status-orange, #c76814);
+    background: var(--status-orange-bg, rgba(199,104,20,0.08));
+  }
+  .status-tag--unsigned {
+    color: var(--mosaic-red);
+    border-color: var(--mosaic-red);
+    background: rgba(185,32,42,0.06);
+  }
+  .status-tag--canceled {
+    color: var(--text-3);
+    border-color: var(--text-3);
+    background: var(--bg-section);
+  }
+  .drawer-item.is-disabled .status-tag {
+    opacity: 1;
+    font-weight: 800;
+    color: #fff !important;
+  }
+  .drawer-item.is-disabled .status-tag--unsigned {
+    background: var(--mosaic-red) !important;
+    border-color: var(--mosaic-red) !important;
+  }
+  .drawer-item.is-disabled .status-tag--amendment {
+    background: var(--status-orange, #c76814) !important;
+    border-color: var(--status-orange, #c76814) !important;
+  }
+  .drawer-item.is-disabled .status-tag--canceled {
+    background: var(--text-2) !important;
+    border-color: var(--text-2) !important;
   }
 
   .checkbox {
@@ -5395,17 +5449,17 @@
    DATA: contracts in the advanced-search results
    =================================================================== */
 const SEARCH_RESULTS = [
-  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
-  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
-  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
-  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
-  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
+  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
+  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
+  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", ie: "192.554.418.336", precoTon: "1.980,00", status: "unsigned", statusReason: "Contrato não assinado — bloqueado", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
+  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.620,00", status: "ativo", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
+  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", ie: "638.092.514.275", precoTon: "2.380,00", status: "ativo", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
 ];
 
 /* Indices that come pre-selected in advanced-selected step */
@@ -5917,19 +5971,35 @@ function isAlreadyAdded(r) {
   return state.rows.some(row => row.contrato === r.contrato && row.item === r.item);
 }
 
+function _drawerSortKey(brDate) {
+  if (!brDate) return Infinity;
+  const m = String(brDate).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return Infinity;
+  return new Date(+m[3], +m[2] - 1, +m[1]).getTime();
+}
+
 function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
+  /* Ordenacao por End Date (dataFim) asc — alinha com V5 / US SMDP-131 */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
       if (!q) return true;
       const haystack = [
         r.contrato, r.item, r.refCliente, r.produto, r.embalagem,
-        r.frete, r.planta, r.enviarPara, r.cnpj, r.dataInicio, r.dataFim, r.saldo
+        r.frete, r.planta, r.enviarPara, r.cnpj, r.ie || '', r.precoTon || '',
+        r.dataInicio, r.dataFim, r.saldo
       ].join(" ").toLowerCase();
       return haystack.includes(q);
+    })
+    .sort((a, b) => {
+      const dA = _drawerSortKey(a.r.dataFim);
+      const dB = _drawerSortKey(b.r.dataFim);
+      if (dA !== dB) return dA - dB;
+      if (a.r.contrato !== b.r.contrato) return a.r.contrato.localeCompare(b.r.contrato);
+      return String(a.r.item).localeCompare(String(b.r.item), undefined, { numeric: true });
     });
 
   elDrawerCount.textContent = filtered.length;
@@ -5943,8 +6013,9 @@ function renderDrawerList() {
   elDrawerList.innerHTML = filtered.map(({ r, i }) => {
     const selected = state.selectedInModal.has(i);
     const added = isAlreadyAdded(r);
+    const blocked = r.status && r.status !== "ativo";
     return `
-      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added ? 'is-disabled' : ''}" data-i="${i}">
+      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added || blocked ? 'is-disabled' : ''}" data-i="${i}" ${blocked ? `title="${r.statusReason || 'Contrato bloqueado'}"` : ''}>
         <span class="checkbox">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </span>
@@ -5956,6 +6027,7 @@ function renderDrawerList() {
             <span style="color:var(--border-strong);">·</span>
             <span class="drawer-item-frete drawer-item-frete--${r.frete === 'CIF' ? 'cif' : 'fob'}">${r.frete}</span>
             ${ added ? `<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>` : ''}
+            ${ blocked ? `<span class="status-tag status-tag--${r.status}">${r.statusReason || 'Bloqueado'}</span>` : ''}
           </div>
           <div class="drawer-item-product">${highlightMatch(r.produto, q)}</div>
           <div class="drawer-item-meta">
@@ -5964,6 +6036,8 @@ function renderDrawerList() {
             <span><strong>Planta:</strong> ${highlightMatch(r.planta, q)}</span>
             <span><strong>Enviar para:</strong> ${highlightMatch(r.enviarPara, q)}</span>
             <span><strong>CNPJ Filial:</strong> ${highlightMatch(r.cnpj || '—', q)}</span>
+            ${r.ie ? `<span><strong>IE:</strong> ${highlightMatch(r.ie, q)}</span>` : ''}
+            ${r.precoTon ? `<span><strong>Preço/Ton:</strong> R$ ${r.precoTon}</span>` : ''}
             <span><strong>Vigência:</strong> ${r.dataInicio} → ${r.dataFim}</span>
           </div>
         </div>
