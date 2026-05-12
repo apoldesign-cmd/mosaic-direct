@@ -6174,6 +6174,31 @@ elBuscaSel.addEventListener("click", () => {
 /* ===================================================================
    Workspace table — input + action wiring (event delegation)
    =================================================================== */
+/* Enter avanca pro proximo campo (preenchimento rapido). */
+function focusNextFieldInRow(currentEl) {
+  if (!currentEl) return;
+  const tr = currentEl.closest("tr[data-row], [data-row]");
+  if (!tr) return;
+  const focusables = Array.from(tr.querySelectorAll(
+    "input[data-field]:not([readonly]):not([disabled]), select[data-field]:not([disabled]), button[data-action='open-coop']:not(:disabled), button[data-action='open-roteiro']:not(:disabled)"
+  ));
+  const idx = focusables.indexOf(currentEl);
+  if (idx === -1 || idx >= focusables.length - 1) return;
+  const next = focusables[idx + 1];
+  if (next) {
+    next.focus();
+    if (next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }
+}
+elBody.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const t = e.target;
+  if (!t.matches || !t.matches("[data-field]")) return;
+  if (t.tagName === "TEXTAREA") return;
+  e.preventDefault();
+  focusNextFieldInRow(t);
+});
+
 elBody.addEventListener("input", e => {
   const t = e.target;
   if (!t.matches('[data-field]')) return;
