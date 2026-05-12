@@ -4020,8 +4020,8 @@
   .proto-table { border-collapse: separate; border-spacing: 0; }
   .proto-table thead th { background: var(--bg-section); }
   .proto-table tbody td { background: #fff; }
-  .proto-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
-  .proto-table tbody tr:hover td { background: rgba(0,106,77,0.04); }
+  .proto-table tbody tr:nth-child(even) td { background: #f5f5f2; }
+  .proto-table tbody tr:hover td { background: #eef4f1; } /* solido, sem transparencia (col sticky precisa de bg opaco) */
 
   .proto-table thead th:nth-child(1),
   .proto-table tbody td:nth-child(1),
@@ -4440,9 +4440,24 @@
     margin-bottom: 4px;
     flex-wrap: wrap;
   }
+  /* Card stack--produto: tags em coluna a esquerda + corpo (produto/embalagem/origem) */
+  .v5-item-cell-stacks .cell-stack--produto {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .v5-item-cell-stacks .v5-cell-tags-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .v5-item-cell-stacks .v5-cell-tags-col .badge { font-size: 9px; padding: 2px 7px; }
+  .v5-item-cell-stacks .v5-cell-produto-body { min-width: 0; }
   .v5-item-cell-stacks .v5-cell-tags .badge { font-size: 9px; padding: 2px 7px; }
   .v5-item-cell-stacks .v5-cell-saldo {
-    margin-top: 6px;
+    margin-bottom: 6px;
     font-size: 15px;
     font-weight: 800;
     color: var(--mosaic-green-800);
@@ -4789,6 +4804,38 @@
     display: none !important;
   }
 
+
+  /* Top mini-bar (colado no topo, em todas as telas) */
+  .topbar-mini {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--mosaic-green-900, #003e2a);
+    color: #fff;
+    z-index: 200;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 56px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .topbar-mini-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+  .topbar-mini-brand:hover { color: var(--mosaic-yellow, #f0c020); }
+  .topbar-mini-brand sup { font-size: 8px; font-weight: 700; margin-left: 1px; vertical-align: super; }
+  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } }
+
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -4813,6 +4860,16 @@
 
 </head>
 <body>
+<!-- Top mini-bar (colado no teto) -->
+<div class="topbar-mini" aria-hidden="false">
+  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
+    </svg>
+    <span>Mosaic<sup>®</sup> Direct</span>
+  </a>
+</div>
+
 
 
 
@@ -5595,17 +5652,19 @@ function renderCardsView() {
         <div class="v5-item-row is-${status}" data-row="${idx}">
           <div class="v5-item-info">
             <div class="v5-item-cell-stacks">
-              <div class="cell-stack">
-                <div class="v5-cell-tags">
+              <div class="cell-stack cell-stack--produto">
+                <div class="v5-cell-tags-col">
                   <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
                   <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
                 </div>
-                <div class="stack-primary cell-strong">${r.produto}</div>
-                <div class="stack-secondary">${r.embalagem}</div>
-                <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
-                <div class="v5-cell-saldo">${r.saldo}<span class="unit">t</span></div>
+                <div class="v5-cell-produto-body">
+                  <div class="stack-primary cell-strong">${r.produto}</div>
+                  <div class="stack-secondary">${r.embalagem}</div>
+                  <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+                </div>
               </div>
               <div class="cell-stack">
+                <div class="v5-cell-saldo">${r.saldo}<span class="unit">t</span></div>
                 <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
                 <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
               </div>

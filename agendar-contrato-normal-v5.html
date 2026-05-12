@@ -1471,12 +1471,19 @@
     background: #fff;
     border-top: 1px solid var(--border);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 50;
+  }
+  .summary-footer-inner {
+    width: 100%;
+    max-width: 1320px;
     padding: 16px 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    z-index: 50;
   }
   /* Reserve space at the bottom of the page so content doesn't sit under
      the fixed footer */
@@ -4274,6 +4281,71 @@
     display: none !important;
   }
 
+  /* Status tags no drawer (contratos bloqueados / com aditivo / nao assinados) */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border: 1.5px solid;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .status-tag--amendment {
+    color: var(--status-orange);
+    border-color: var(--status-orange);
+    background: var(--status-orange-bg, rgba(199,104,20,0.08));
+  }
+  .status-tag--unsigned {
+    color: var(--mosaic-red);
+    border-color: var(--mosaic-red);
+    background: rgba(185,32,42,0.06);
+  }
+  .status-tag--canceled {
+    color: var(--text-3);
+    border-color: var(--text-3);
+    background: var(--bg-section);
+  }
+  .drawer-item.is-disabled {
+    opacity: 0.55;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+
+
+  /* Top mini-bar (colado no topo, em todas as telas) */
+  .topbar-mini {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--mosaic-green-900, #003e2a);
+    color: #fff;
+    z-index: 200;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 56px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .topbar-mini-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+  .topbar-mini-brand:hover { color: var(--mosaic-yellow, #f0c020); }
+  .topbar-mini-brand sup { font-size: 8px; font-weight: 700; margin-left: 1px; vertical-align: super; }
+  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } }
+
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -4298,6 +4370,16 @@
 
 </head>
 <body>
+<!-- Top mini-bar (colado no teto) -->
+<div class="topbar-mini" aria-hidden="false">
+  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
+    </svg>
+    <span>Mosaic<sup>®</sup> Direct</span>
+  </a>
+</div>
+
 
 
 
@@ -4425,25 +4507,27 @@
     <!-- Rendered by JS -->
   </div>
 
-  <!-- Sticky summary footer -->
+  <!-- Sticky summary footer (inner wrap acompanha max-width da page) -->
   <div class="summary-footer" id="summaryFooter">
-    <div class="summary-stats">
-      <div class="summary-stat">
-        <span class="label">Contratos</span>
-        <span class="value" id="statContracts">0</span>
+    <div class="summary-footer-inner">
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <span class="label">Contratos</span>
+          <span class="value" id="statContracts">0</span>
+        </div>
+        <div class="summary-stat">
+          <span class="label">Volume Total</span>
+          <span class="value" id="statVolume">0<span class="unit">t</span></span>
+        </div>
+        <div class="summary-stat">
+          <span class="label">Prontos para Agendar</span>
+          <span class="value" id="statReady">0/0</span>
+        </div>
       </div>
-      <div class="summary-stat">
-        <span class="label">Volume Total</span>
-        <span class="value" id="statVolume">0<span class="unit">t</span></span>
+      <div class="summary-actions">
+        <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+        <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
       </div>
-      <div class="summary-stat">
-        <span class="label">Prontos para Agendar</span>
-        <span class="value" id="statReady">0/0</span>
-      </div>
-    </div>
-    <div class="summary-actions">
-      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-      <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
     </div>
   </div>
 </main>
@@ -4707,17 +4791,17 @@
    DATA: contracts in the advanced-search results
    =================================================================== */
 const SEARCH_RESULTS = [
-  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
-  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
-  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
-  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
-  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
+  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
+  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
+  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", ie: "192.554.418.336", precoTon: "1.980,00", status: "unsigned", statusReason: "Contrato não assinado — bloqueado", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
+  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.620,00", status: "ativo", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
+  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", ie: "638.092.514.275", precoTon: "2.380,00", status: "ativo", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
 ];
 
 /* Indices that come pre-selected in advanced-selected step */
@@ -5027,9 +5111,39 @@ function refreshSemanaValidation() {
   });
 }
 
+/* Volume <= Saldo individual (US "Individual Row Balance") + soma por contrato (US "Aggregated Balance") */
+function parseBR(s) { if (!s) return 0; const n = parseFloat(String(s).replace(/\./g,'').replace(',','.')); return isNaN(n) ? 0 : n; }
+function rowVolumeExceeds(r) {
+  const vol = parseBR(r.volume);
+  const saldo = parseBR(r.saldo);
+  return vol > 0 && vol > saldo;
+}
+function contractAggregateExceeds(contrato) {
+  const rowsOfContrato = state.rows.filter(r => r.contrato === contrato);
+  if (rowsOfContrato.length === 0) return false;
+  const totalVol = rowsOfContrato.reduce((s, r) => s + parseBR(r.volume), 0);
+  const saldoMax = parseBR(rowsOfContrato[0].saldo);
+  return totalVol > saldoMax;
+}
+function rowInvalidVolume(r) { return rowVolumeExceeds(r) || contractAggregateExceeds(r.contrato); }
+function refreshVolumeValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll(`[data-row="${idx}"][data-field="volume"]`).forEach(el => {
+      const wrap = el.closest('.input-with-suffix, .v3-cell-volume-wrap') || el;
+      const indiv = rowVolumeExceeds(r);
+      const agg = contractAggregateExceeds(r.contrato);
+      const bad = indiv || agg;
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = indiv ? `Volume excede o saldo (${r.saldo} t)` :
+                 agg   ? `Soma de volumes do contrato ${r.contrato} excede o saldo` : "";
+    });
+  });
+}
+
 function canAgendar() {
   if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r));
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r) && !rowInvalidVolume(r));
 }
 
 function updateSummary() {
@@ -5143,19 +5257,35 @@ function isAlreadyAdded(r) {
   return state.rows.some(row => row.contrato === r.contrato && row.item === r.item);
 }
 
+function _drawerSortKey(brDate) {
+  if (!brDate) return Infinity;
+  const m = String(brDate).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return Infinity;
+  return new Date(+m[3], +m[2] - 1, +m[1]).getTime();
+}
+
 function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
+  /* US SMDP-131 Sorting: por End Date (dataFim) do mais antigo pro novo */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
       if (!q) return true;
       const haystack = [
         r.contrato, r.item, r.refCliente, r.produto, r.embalagem,
-        r.frete, r.planta, r.enviarPara, r.cnpj, r.dataInicio, r.dataFim, r.saldo
+        r.frete, r.planta, r.enviarPara, r.cnpj, r.ie || '', r.precoTon || '',
+        r.dataInicio, r.dataFim, r.saldo
       ].join(" ").toLowerCase();
       return haystack.includes(q);
+    })
+    .sort((a, b) => {
+      const dA = _drawerSortKey(a.r.dataFim);
+      const dB = _drawerSortKey(b.r.dataFim);
+      if (dA !== dB) return dA - dB;
+      if (a.r.contrato !== b.r.contrato) return a.r.contrato.localeCompare(b.r.contrato);
+      return String(a.r.item).localeCompare(String(b.r.item), undefined, { numeric: true });
     });
 
   elDrawerCount.textContent = filtered.length;
@@ -5169,8 +5299,9 @@ function renderDrawerList() {
   elDrawerList.innerHTML = filtered.map(({ r, i }) => {
     const selected = state.selectedInModal.has(i);
     const added = isAlreadyAdded(r);
+    const blocked = r.status && r.status !== "ativo";
     return `
-      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added ? 'is-disabled' : ''}" data-i="${i}">
+      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added || blocked ? 'is-disabled' : ''}" data-i="${i}" ${blocked ? `title="${r.statusReason || 'Contrato bloqueado'}"` : ''}>
         <span class="checkbox">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </span>
@@ -5182,12 +5313,17 @@ function renderDrawerList() {
             <span style="color:var(--border-strong);">·</span>
             <span class="drawer-item-frete drawer-item-frete--${r.frete === 'CIF' ? 'cif' : 'fob'}">${r.frete}</span>
             ${ added ? `<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>` : ''}
+            ${ blocked ? `<span class="status-tag status-tag--${r.status}">${r.statusReason || 'Bloqueado'}</span>` : ''}
           </div>
           <div class="drawer-item-product">${highlightMatch(r.produto, q)}</div>
           <div class="drawer-item-meta">
+            <span><strong>Ref. Cliente:</strong> ${highlightMatch(r.refCliente || '—', q)}</span>
             <span><strong>Embalagem:</strong> ${highlightMatch(r.embalagem, q)}</span>
             <span><strong>Planta:</strong> ${highlightMatch(r.planta, q)}</span>
             <span><strong>Enviar para:</strong> ${highlightMatch(r.enviarPara, q)}</span>
+            <span><strong>CNPJ Filial:</strong> ${highlightMatch(r.cnpj || '—', q)}</span>
+            ${r.ie ? `<span><strong>IE:</strong> ${highlightMatch(r.ie, q)}</span>` : ''}
+            ${r.precoTon ? `<span><strong>Preço/Ton:</strong> R$ ${r.precoTon}</span>` : ''}
             <span><strong>Vigência:</strong> ${r.dataInicio} → ${r.dataFim}</span>
           </div>
         </div>
@@ -5422,6 +5558,7 @@ elBody.addEventListener("input", e => {
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
   refreshSemanaValidation();
+  refreshVolumeValidation();
   elAgendar.disabled = !canAgendar();
   updateSummary();
 
@@ -6112,6 +6249,8 @@ function renderDP() {
   }
 
   const grid = dpPopup.querySelector(".dp-grid");
+  const dataField = dpCurrentInput && dpCurrentInput.dataset ? dpCurrentInput.dataset.field : "";
+  const blockPast = dataField === "semana";
   grid.innerHTML = cells.map(({ d, isOther }) => {
     const sameDay = (a, b) => a && b &&
       a.getFullYear() === b.getFullYear() &&
@@ -6121,7 +6260,12 @@ function renderDP() {
     if (isOther) classes.push("is-other");
     if (sameDay(d, today)) classes.push("is-today");
     if (sameDay(d, dpSelected)) classes.push("is-selected");
-    return `<button type="button" class="${classes.join(" ")}" data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
+    let titleAttr = "";
+    if (blockPast && d < today) {
+      classes.push("is-disabled");
+      titleAttr = ' title="Não pode data anterior à atual"';
+    }
+    return `<button type="button" class="${classes.join(" ")}"${titleAttr} data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
   }).join("");
 }
 

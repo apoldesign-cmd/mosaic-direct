@@ -332,6 +332,38 @@
     display: none !important;
   }
 
+
+  /* Top mini-bar (colado no topo, em todas as telas) */
+  .topbar-mini {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: var(--mosaic-green-900, #003e2a);
+    color: #fff;
+    z-index: 200;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 56px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  }
+  .topbar-mini-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-family: "Manrope", sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+  .topbar-mini-brand:hover { color: var(--mosaic-yellow, #f0c020); }
+  .topbar-mini-brand sup { font-size: 8px; font-weight: 700; margin-left: 1px; vertical-align: super; }
+  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } }
+
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -356,6 +388,16 @@
 
 </head>
 <body>
+<!-- Top mini-bar (colado no teto) -->
+<div class="topbar-mini" aria-hidden="false">
+  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
+    </svg>
+    <span>Mosaic<sup>®</sup> Direct</span>
+  </a>
+</div>
+
 
 <div class="hero-bg">
   <div class="hero-inner">
@@ -385,98 +427,27 @@
 
   <div class="section-title">
     <h2>Agendar Contratos Normais</h2>
-    <span class="count">4 versões</span>
+    <span class="count">1 tela</span>
   </div>
 
   <div class="grid">
 
     <a href="agendar-contrato-normal-v5.html" class="proto-card">
       <div class="card-head">
-        <span class="card-id">Final</span>
+        <span class="card-id">Contratos</span>
         <span class="card-tag card-tag--latest">Versão final</span>
       </div>
-      <div class="card-title">Cards compactos com múltiplos itens</div>
+      <div class="card-title">Agendar Contratos Normais</div>
       <div class="card-desc">
-        Versão consolidada do fluxo. Cada card representa um contrato e
-        agrupa todos os itens daquele contrato. Layout horizontal compacto:
-        header em uma linha (Contrato · Ref · Vigência), itens em uma linha
-        (produto · embalagem · rota · saldo · campos). Botão inline para
-        adicionar mais itens do mesmo contrato.
+        Fluxo consolidado. Cada card representa um contrato e agrupa todos
+        os itens. Drawer de seleção com Ref. Cliente, CNPJ Filial, IE,
+        Preço/Ton, Status. Volume / Semana / Roteiro editáveis por item.
       </div>
       <div class="card-features">
         <span class="feature-pill">Agrupamento por contrato</span>
-        <span class="feature-pill">Layout compacto</span>
-        <span class="feature-pill">Popover de itens</span>
+        <span class="feature-pill">Drawer com filtros</span>
+        <span class="feature-pill">Validações</span>
         <span class="feature-pill">Multi-item</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal-v3.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V3</span>
-        <span class="card-tag">Cards / Tabela</span>
-      </div>
-      <div class="card-title">Cards / Tabela com toggle</div>
-      <div class="card-desc">
-        Versão consolidada com chave seletora entre visualização em cards e tabela.
-        Cards têm sub-modos Lista e Grid. Toggle no canto superior direito alinhado ao título.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Cards · Tabela</span>
-        <span class="feature-pill">Lista · Grid</span>
-        <span class="feature-pill">Roteiro drawer</span>
-        <span class="feature-pill">Saldo destacado</span>
-        <span class="feature-pill">Auto-expand</span>
-        <span class="feature-pill">Datepicker smart</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal-v2-cards.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V2</span>
-        <span class="card-tag">Cards</span>
-      </div>
-      <div class="card-title">Cards verticais com accordion</div>
-      <div class="card-desc">
-        Iteração intermediária focada em cards. Drawer lateral para seleção de
-        contratos, accordion automático (primeiro aberto, próximo expande ao
-        completar), datepicker custom, modais redesenhados.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Cards</span>
-        <span class="feature-pill">Side drawer</span>
-        <span class="feature-pill">Click anywhere toggle</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V1</span>
-        <span class="card-tag">Versão inicial</span>
-      </div>
-      <div class="card-title">Versão simplificada (base)</div>
-      <div class="card-desc">
-        Primeira iteração e ponto de partida do projeto. Tabela tradicional
-        com modal centralizado para seleção de contratos. Busca por todos os
-        campos com highlight em amarelo, multi-select, edição inline de
-        Volume / Semana / Roteiro. Útil como referência da abordagem mais enxuta.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Tabela</span>
-        <span class="feature-pill">Modal</span>
-        <span class="feature-pill">Multi-select</span>
       </div>
       <div class="card-foot">
         <span>Abrir protótipo</span>
