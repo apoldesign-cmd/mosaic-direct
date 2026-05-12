@@ -2675,6 +2675,33 @@ elDrawerAddBtn.addEventListener("click", () => {
   render();
 });
 
+/* Enter avanca pro proximo campo da MESMA linha (preenchimento rapido). */
+function focusNextFieldInRow(currentEl) {
+  if (!currentEl) return;
+  const container = currentEl.closest("[data-rid]");
+  if (!container) return;
+  const rid = container.dataset.rid;
+  /* Acha todos os campos editaveis da linha (tem o mesmo data-rid). */
+  const focusables = Array.from(document.querySelectorAll(
+    `[data-rid="${rid}"] input[data-field]:not([readonly]):not([disabled]), [data-rid="${rid}"] select[data-field]:not([disabled]), [data-rid="${rid}"] button[data-action='open-roteiro']:not(:disabled)`
+  ));
+  const idx = focusables.indexOf(currentEl);
+  if (idx === -1 || idx >= focusables.length - 1) return;
+  const next = focusables[idx + 1];
+  if (next) {
+    next.focus();
+    if (next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  }
+}
+document.body.addEventListener("keydown", e => {
+  if (e.key !== "Enter") return;
+  const t = e.target;
+  if (!t.matches || !t.matches("[data-rid][data-field]")) return;
+  if (t.tagName === "TEXTAREA") return;
+  e.preventDefault();
+  focusNextFieldInRow(t);
+});
+
 /* ---------- Row interactions (delegated) ------------------------ */
 document.body.addEventListener("input", e => {
   const inp = e.target.closest("[data-rid][data-field]");
