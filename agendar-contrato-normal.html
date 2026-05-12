@@ -1559,6 +1559,25 @@
     letter-spacing: 0.06em;
   }
 
+
+  /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
+  .big-table, .results-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
+
+
+  /* Banner image override (substitui o gradient quando o asset existe).
+     Salvar a imagem em /assets/hero-banner.jpg. Se nao existir, o
+     gradient antigo aparece como fallback. */
+  .hero, .hero-bg {
+    background-image: url("./assets/hero-banner.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+  .hero::before, .hero::after,
+  .hero-bg::before, .hero-bg::after {
+    display: none !important;
+  }
+
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>

@@ -4014,6 +4014,31 @@
   .col-roteiro { min-width: 180px; }
   .col-saldo { min-width: 110px; }
   .col-coop { min-width: 200px; }
+
+  /* Sticky-left columns na proto-table (Status + Contrato/Item + Produto/Embalagem/Origem)
+     pra usuario manter contexto ao scrollar horizontalmente */
+  .proto-table { border-collapse: separate; border-spacing: 0; }
+  .proto-table thead th { background: var(--bg-section); }
+  .proto-table tbody td { background: #fff; }
+  .proto-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
+  .proto-table tbody tr:hover td { background: rgba(0,106,77,0.04); }
+
+  .proto-table thead th:nth-child(1),
+  .proto-table tbody td:nth-child(1),
+  .proto-table thead th:nth-child(2),
+  .proto-table tbody td:nth-child(2),
+  .proto-table thead th:nth-child(3),
+  .proto-table tbody td:nth-child(3) {
+    position: sticky;
+    z-index: 1;
+  }
+  .proto-table thead th:nth-child(1) { left: 0; width: 36px; z-index: 3; }
+  .proto-table tbody td:nth-child(1) { left: 0; }
+  .proto-table thead th:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; z-index: 3; }
+  .proto-table tbody td:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; }
+  .proto-table thead th:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; z-index: 3; }
+  .proto-table tbody td:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; box-shadow: 1px 0 0 var(--border-soft); }
+  .proto-table thead th:nth-child(3) { box-shadow: 1px 0 0 var(--border-soft); }
   .coop-pick-btn {
     display: inline-flex;
     align-items: center;
@@ -4756,6 +4781,21 @@
   }
   .v5-money-wrap input {
     padding-left: 28px;
+  }
+
+
+  /* Banner image override (substitui o gradient quando o asset existe).
+     Salvar a imagem em /assets/hero-banner.jpg. Se nao existir, o
+     gradient antigo aparece como fallback. */
+  .hero, .hero-bg {
+    background-image: url("./assets/hero-banner.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+  .hero::before, .hero::after,
+  .hero-bg::before, .hero-bg::after {
+    display: none !important;
   }
 
 </style>
@@ -6133,6 +6173,24 @@ elBody.addEventListener("input", e => {
   if (!state.rows[idx]) return;
   state.rows[idx][field] = t.value;
   afterFieldChange(idx, t);
+});
+
+/* Auto-scroll horizontal: ao terminar de preencher um campo (change/blur),
+   scrolla o proximo campo da mesma linha pra dentro da viewport. */
+function scrollNextFieldIntoView(sourceEl) {
+  if (!sourceEl || !sourceEl.value) return;
+  const tr = sourceEl.closest("tr[data-row]");
+  if (!tr) return;
+  const fields = Array.from(tr.querySelectorAll("input[data-field], select[data-field], button[data-action='open-coop'], button[data-action='open-roteiro']"));
+  const i = fields.indexOf(sourceEl);
+  if (i === -1 || i >= fields.length - 1) return;
+  const next = fields[i + 1];
+  if (next) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+}
+elBody.addEventListener("change", e => {
+  const t = e.target;
+  if (!t.matches('[data-field]')) return;
+  setTimeout(() => scrollNextFieldIntoView(t), 30);
 });
 
 /* Lightweight update on each keystroke — never re-render the source
