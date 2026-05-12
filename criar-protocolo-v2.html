@@ -4407,8 +4407,28 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 16px;
     padding: 4px 0;
-    border-top: 1px solid var(--border-soft);
-    padding-top: 8px;
+  }
+  .v5-item-cell-stacks .v5-cell-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .v5-item-cell-stacks .v5-cell-tags .badge { font-size: 9px; padding: 2px 7px; }
+  .v5-item-cell-stacks .v5-cell-saldo {
+    margin-top: 6px;
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .v5-item-cell-stacks .v5-cell-saldo .unit {
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
   }
   .v5-item-cell-stacks .cell-stack { min-width: 0; }
   .v5-item-cell-stacks .stack-tertiary,
@@ -5543,16 +5563,16 @@ function renderCardsView() {
       return `
         <div class="v5-item-row is-${status}" data-row="${idx}">
           <div class="v5-item-info">
-            <div class="v5-item-line v5-item-line--top">
-              <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
-              <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-              <span class="v5-item-saldo-inline">${r.saldo}<span class="unit">t</span></span>
-            </div>
             <div class="v5-item-cell-stacks">
               <div class="cell-stack">
+                <div class="v5-cell-tags">
+                  <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
+                  <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
+                </div>
                 <div class="stack-primary cell-strong">${r.produto}</div>
                 <div class="stack-secondary">${r.embalagem}</div>
                 <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+                <div class="v5-cell-saldo">${r.saldo}<span class="unit">t</span></div>
               </div>
               <div class="cell-stack">
                 <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
@@ -5643,11 +5663,9 @@ function renderCardsView() {
       `;
     }).join("");
 
-    const groupFooter = groupStatus === "complete"
-      ? `<div class="card-status card-status--complete">${ICON_CHK} Todos os itens prontos para criar</div>`
-      : `<div class="card-status card-status--incomplete">${ICON_BANG} Preencha os campos obrigatórios</div>`;
-
-    card.innerHTML = headerHTML + `<div class="v5-items-list">${itemsHTML}</div>` + groupFooter;
+    /* Footer "Todos os itens prontos" removido (sem valor visual, ocupava espaco).
+       Status do grupo ja transparece via border-left colorida do card. */
+    card.innerHTML = headerHTML + `<div class="v5-items-list">${itemsHTML}</div>`;
     list.appendChild(card);
   });
 
@@ -6732,6 +6750,9 @@ function renderDP() {
   }
 
   const grid = dpPopup.querySelector(".dp-grid");
+  const dataField = dpCurrentInput && dpCurrentInput.dataset ? dpCurrentInput.dataset.field : "";
+  const blockPast   = dataField === "semana";        /* Semana: nao pode passada */
+  const blockFuture = dataField === "nfVendaData";   /* Data NF: nao pode futura */
   grid.innerHTML = cells.map(({ d, isOther }) => {
     const sameDay = (a, b) => a && b &&
       a.getFullYear() === b.getFullYear() &&
@@ -6741,7 +6762,12 @@ function renderDP() {
     if (isOther) classes.push("is-other");
     if (sameDay(d, today)) classes.push("is-today");
     if (sameDay(d, dpSelected)) classes.push("is-selected");
-    return `<button type="button" class="${classes.join(" ")}" data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
+    let disabledReason = "";
+    if (blockPast && d < today) disabledReason = "Não pode data anterior à atual";
+    if (blockFuture && d > today) disabledReason = "Data NF não pode ser futura";
+    if (disabledReason) classes.push("is-disabled");
+    const titleAttr = disabledReason ? ` title="${disabledReason}"` : "";
+    return `<button type="button" class="${classes.join(" ")}"${titleAttr} data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
   }).join("");
 }
 
@@ -7182,9 +7208,33 @@ function maskCPFCNPJ(input) {
   const num = document.getElementById("cadCoopNumero");
   if (doc) doc.addEventListener("input", e => maskCPFCNPJ(e.target));
   if (ie)  ie.addEventListener("input",  e => maskOnlyDigits(e.target));
-  if (cep) cep.addEventListener("input", e => maskCEP(e.target));
+  if (cep) cep.addEventListener("input", e => {
+    maskCEP(e.target);
+    /* Quando CEP atinge 8 digitos, busca ViaCEP e preenche endereco */
+    const digits = (e.target.value || "").replace(/\D/g, "");
+    if (digits.length === 8) lookupCEP(digits);
+  });
   if (num) num.addEventListener("input", e => maskOnlyDigits(e.target));
 })();
+
+/* Busca CEP via ViaCEP e preenche Endereco, Bairro, Cidade, Estado */
+function lookupCEP(cep) {
+  fetch(`https://viacep.com.br/ws/${cep}/json/`)
+    .then(r => r.ok ? r.json() : null)
+    .then(data => {
+      if (!data || data.erro) return;
+      const setIf = (id, val) => {
+        const el = document.getElementById(id);
+        if (el && !el.value) el.value = val || "";
+      };
+      setIf("cadCoopEndereco", data.logradouro);
+      setIf("cadCoopBairro",   data.bairro);
+      setIf("cadCoopCidade",   data.localidade);
+      const uf = document.getElementById("cadCoopEstado");
+      if (uf && !uf.value && data.uf) uf.value = data.uf;
+    })
+    .catch(() => { /* silent */ });
+}
 
 /* Delegated mask wiring for dynamic per-row inputs (re-rendered) */
 document.body.addEventListener("input", e => {
