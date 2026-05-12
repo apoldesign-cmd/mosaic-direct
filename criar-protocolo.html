@@ -4072,7 +4072,7 @@
     justify-content: center;
   }
   .proto-roteiro-wrap .roteiro-expand:hover { color: var(--mosaic-green-800); }
-  .proto-emb-input {
+  .proto-emb-select {
     width: 100%;
     height: 34px;
     padding: 0 28px 0 10px;
@@ -4090,15 +4090,15 @@
     outline: none;
     cursor: pointer;
   }
-  .proto-emb-input:focus { border-color: var(--mosaic-green-700); }
+  .proto-emb-select:focus { border-color: var(--mosaic-green-700); }
   td.is-missing .proto-cell-input,
   td.is-missing .coop-pick-btn,
-  td.is-missing .proto-emb-input {
+  td.is-missing .proto-emb-select {
     border-color: var(--border);
   }
   .proto-table-wrap.show-validation td.is-missing .proto-cell-input,
   .proto-table-wrap.show-validation td.is-missing .coop-pick-btn,
-  .proto-table-wrap.show-validation td.is-missing .proto-emb-input {
+  .proto-table-wrap.show-validation td.is-missing .proto-emb-select {
     border-color: rgba(185, 32, 42, 0.55);
     background: rgba(185, 32, 42, 0.025);
   }
@@ -4255,67 +4255,93 @@
   }
 
   /* ================================================================
-     V5-style grouped cards (vertical-stacked, no horizontal scroll)
+     V2 — V5-style grouped cards (ported from agendar-contrato-normal-v5)
      ================================================================ */
   .v5-card {
-    background: #fff;
-    border: 1px solid var(--border);
-    margin-bottom: 16px;
-    display: flex;
+    display: flex !important;
     flex-direction: column;
+    grid-template-columns: none !important;
   }
-  .v5-card.is-progress    { border-left: 3px solid var(--mosaic-yellow); }
-  .v5-card.is-complete    { border-left: 3px solid var(--mosaic-green-700); }
-  .v5-card.is-incomplete  { border-left: 3px solid var(--border-strong); }
 
   .v5-level-tag {
-    display: inline-flex; align-items: center;
-    font-size: 9px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.1em;
-    color: #fff; background: var(--mosaic-green-800);
-    padding: 3px 7px; line-height: 1; flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--mosaic-green-800);
+    padding: 3px 7px;
+    line-height: 1;
+    flex-shrink: 0;
   }
   .v5-level-tag--item { background: var(--mosaic-green-700); }
 
   .v5-card-head {
-    display: flex; flex-direction: row;
-    align-items: center; gap: 10px;
-    padding: 10px 16px;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px !important;
     border-bottom: 2px solid var(--border);
     background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
+    cursor: default !important;
     flex-wrap: wrap;
   }
   .v5-card-head .card-contract {
-    font-size: 16px; font-weight: 800;
-    color: var(--text-1); letter-spacing: -0.005em;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
     flex-shrink: 0;
   }
-  .v5-head-divider { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+  .v5-head-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
   .v5-head-inline {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--text-2); font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 600;
     white-space: nowrap;
   }
   .v5-head-inline strong { color: var(--text-1); font-weight: 800; }
   .v5-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
+  .v5-card-head .v5-meta-label,
   .v5-meta-label {
-    font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-3); font-weight: 800; margin-right: 1px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 1px;
   }
   .v5-item-count {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
-    font-weight: 800; color: var(--text-3);
-    background: var(--bg-section);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 800;
+    color: var(--text-3);
+    background: var(--bg-section-2, var(--bg-section));
     padding: 3px 8px;
-    margin-left: auto; flex-shrink: 0;
+    margin-left: auto;
+    flex-shrink: 0;
   }
+  .v5-head-remove { flex-shrink: 0; }
 
-  /* Items list (vertical stack) */
   .v5-items-list { display: flex; flex-direction: column; }
   .v5-item-row {
-    display: flex; flex-direction: column;
-    gap: 10px;
-    padding: 14px 16px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
+    gap: 14px;
+    padding: 12px 16px;
+    align-items: center;
     border-bottom: 1px solid var(--border-soft);
     border-left: 3px solid transparent;
     transition: background-color 120ms, border-left-color 200ms;
@@ -4323,207 +4349,355 @@
   .v5-item-row.is-incomplete { border-left-color: var(--border-strong); }
   .v5-item-row.is-progress {
     border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 30%);
+    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
   }
   .v5-item-row.is-complete {
     border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
+    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 25%);
+  }
+  .cards-container.show-validation .v5-item-row.is-incomplete,
+  .cards-container.show-validation .v5-item-row.is-progress {
+    border-left-color: var(--mosaic-red);
+    background: linear-gradient(to right, rgba(185,32,42,0.03), transparent 25%);
   }
   .v5-item-row:last-of-type { border-bottom: none; }
 
-  /* Item meta row (top) */
-  .v5-item-meta-line {
-    display: flex; align-items: center; gap: 8px;
-    flex-wrap: wrap; min-width: 0;
+  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+  .v5-item-cell-stacks {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+    padding: 4px 0;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 8px;
   }
-  .v5-item-id { font-size: 13px; font-weight: 800; color: var(--text-1); }
-  .v5-item-meta-line .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-product {
-    font-size: 13px; font-weight: 800; color: var(--text-1);
-    line-height: 1.3;
-    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    min-width: 0; flex: 1;
+  .v5-item-cell-stacks .cell-stack { min-width: 0; }
+  .v5-item-cell-stacks .stack-tertiary,
+  .proto-table .cell-stack .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .proto-table .cell-stack .v5-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 2px;
+  }
+  .v5-item-cell-stacks .v5-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 2px;
   }
   .v5-item-saldo-inline {
-    font-size: 13px; font-weight: 800;
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 800;
     color: var(--mosaic-green-800);
     font-variant-numeric: tabular-nums;
-    margin-left: auto;
-    flex-shrink: 0;
   }
   .v5-item-saldo-inline .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
-  .v5-item-secondary {
-    font-size: 11.5px; color: var(--text-2); font-weight: 600;
-    display: flex; flex-wrap: wrap; gap: 4px 10px;
+  .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
+  .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
+  .v5-item-line .badge { font-size: 9px; padding: 2px 7px; }
+  .v5-item-product {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-1);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
   }
-  .v5-item-secondary strong { color: var(--text-1); font-weight: 800; }
-  .v5-item-secondary .v5-meta-label { display: inline-block; }
+  .v5-item-meta-piece { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .v5-item-meta-piece strong { color: var(--text-1); font-weight: 800; }
   .v5-meta-sep { color: var(--border); font-weight: 800; }
+  .v5-item-line--bottom .arrow { color: var(--mosaic-green-700); font-weight: 800; margin: 0 1px; }
+  .v5-item-saldo {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .v5-item-saldo .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
 
-  /* Item form fields — vertical stack (no horizontal scroll) */
-  .v5-form-grid {
+  /* Item form fields — V5 layout adaptado pro criar-protocolo
+     (mais campos: cooperado + volume + embalagem + roteiro) */
+  .v5-item-fields {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(180px, 220px) 110px 130px minmax(180px, 220px);
     gap: 8px;
+    align-items: end;
   }
-  .v5-form-grid .form-row {
-    display: grid;
-    gap: 8px;
-  }
-  .v5-form-grid .form-row--full { grid-template-columns: 1fr; }
-  .v5-form-grid .form-row--2     { grid-template-columns: 1fr 1fr; }
-  .v5-form-grid .form-row--4     { grid-template-columns: repeat(2, 1fr); }
-  @media (min-width: 720px) {
-    .v5-form-grid .form-row--4   { grid-template-columns: repeat(4, 1fr); }
-  }
-
-  .v5-form-grid .field-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
-  .v5-form-grid .field-block label {
+  .v5-item-fields .field-block { gap: 2px; min-width: 0; }
+  .v5-item-fields .field-block label {
     font-size: 9px;
-    text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-3); font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-bottom: 0;
     height: 14px;
-    display: flex; align-items: center; gap: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
-  .v5-form-grid .field-block label .req { color: var(--mosaic-red); }
-  .v5-form-grid .field-block label .opt-tag { font-size: 8px; }
-
-  .v5-form-grid .input-with-suffix,
-  .v5-form-grid .v5-date-wrap,
-  .v5-form-grid .roteiro-toggle-btn,
-  .v5-form-grid .v5-coop-pick-btn,
-  .v5-form-grid .proto-emb-input,
-  .v5-form-grid .v5-money-wrap,
-  .v5-form-grid > .form-row input {
-    height: 32px !important; box-sizing: border-box;
+  .v5-item-fields .field-block label .req { color: var(--mosaic-red); }
+  .v5-item-fields .field-block label .opt-tag { font-size: 8px; }
+  .v5-item-fields .input-with-suffix,
+  .v5-item-fields .card-date-wrap,
+  .v5-item-fields .roteiro-toggle-btn,
+  .v5-item-fields .v5-coop-pick-btn,
+  .v5-item-fields select.proto-emb-select,
+  .v5-item-fields .v5-money-wrap {
+    height: 32px !important;
+    box-sizing: border-box;
   }
-  .v5-form-grid .input-with-suffix {
-    position: relative; display: block;
-  }
-  .v5-form-grid .input-with-suffix input,
-  .v5-form-grid .v5-date-wrap input,
-  .v5-form-grid .form-row > .field-block > input,
-  .v5-form-grid .proto-emb-input {
-    width: 100%; height: 32px !important; line-height: 32px;
-    border: 1.5px solid var(--border); background: #fff;
-    color: var(--text-1); font-family: inherit; font-weight: 600;
+  .v5-item-fields .input-with-suffix input,
+  .v5-item-fields .card-date-wrap input,
+  .v5-item-fields select.proto-emb-select {
+    height: 32px !important;
+    line-height: 32px;
     font-size: 12.5px;
+    padding-top: 0;
+    padding-bottom: 0;
+    box-sizing: border-box;
+  }
+  .v5-item-fields .input-with-suffix {
+    position: relative;
+    display: block;
+  }
+  .v5-item-fields .input-with-suffix input {
+    width: 100%;
     padding: 0 22px 0 10px;
-    box-sizing: border-box; outline: none;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-family: inherit;
+    font-weight: 600;
+    outline: none;
     transition: border-color 120ms;
   }
-  .v5-form-grid .input-with-suffix input:focus,
-  .v5-form-grid .v5-date-wrap input:focus,
-  .v5-form-grid .form-row > .field-block > input:focus,
-  .v5-form-grid .proto-emb-input:focus { border-color: var(--mosaic-green-700); }
-  .v5-form-grid .input-with-suffix .suffix {
-    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-    font-size: 11px; color: var(--text-3); font-weight: 700; pointer-events: none;
+  .v5-item-fields .input-with-suffix input:focus { border-color: var(--mosaic-green-700); }
+  .v5-item-fields .input-with-suffix .suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 700;
+    pointer-events: none;
   }
-  .v5-form-grid .v5-date-wrap { position: relative; display: block; }
-  .v5-form-grid .v5-date-wrap input { padding-right: 28px; cursor: pointer; }
-  .v5-form-grid .v5-date-wrap .cal-trigger {
-    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
-    width: 22px; height: 22px;
-    background: transparent; border: none; color: var(--text-3); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-  }
-  .v5-form-grid .v5-date-wrap .cal-trigger:hover { color: var(--mosaic-green-700); }
-  .v5-form-grid .proto-emb-input {
-    appearance: none; -webkit-appearance: none; padding-right: 28px;
+  .v5-item-fields select.proto-emb-select {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-family: inherit;
+    font-weight: 600;
+    padding: 0 28px 0 10px;
+    appearance: none;
+    -webkit-appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
     background-repeat: no-repeat;
     background-position: right 10px center;
     cursor: pointer;
   }
-  .v5-form-grid .v5-money-wrap { position: relative; display: block; }
-  .v5-form-grid .v5-money-wrap .prefix {
-    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
-    font-size: 11px; color: var(--text-3); font-weight: 700; pointer-events: none;
-  }
-  .v5-form-grid .v5-money-wrap input { padding-left: 28px; }
+  .v5-item-fields select.proto-emb-select:focus { border-color: var(--mosaic-green-700); outline: none; }
 
-  /* Cooperado picker button — full width, prominent */
+  /* Cooperado picker button */
   .v5-coop-pick-btn {
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
     gap: 6px;
     width: 100%;
-    padding: 0 12px;
+    padding: 0 10px;
     border: 1.5px solid var(--border);
     background: #fff;
     color: var(--text-3);
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     text-align: left;
     cursor: pointer;
     transition: all 120ms;
     line-height: 32px;
-    box-sizing: border-box;
   }
-  .v5-coop-pick-btn:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); }
+  .v5-coop-pick-btn:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
   .v5-coop-pick-btn.has-value {
-    color: var(--text-1); font-weight: 700;
+    color: var(--text-1);
+    font-weight: 700;
     border-color: var(--mosaic-green-700);
   }
   .v5-coop-pick-btn .coop-text {
-    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .v5-coop-pick-btn svg { color: var(--text-3); flex-shrink: 0; }
   .v5-coop-pick-btn:hover svg { color: var(--mosaic-green-700); }
 
   /* Roteiro toggle button */
   .roteiro-toggle-btn {
-    display: inline-flex; align-items: center; justify-content: space-between;
-    gap: 6px; width: 100%; height: 32px; padding: 0 10px;
-    border: 1.5px dashed var(--border); background: #fff;
-    color: var(--text-3); font-family: inherit;
-    font-size: 12px; font-weight: 600;
-    text-align: left; cursor: pointer;
-    transition: all 120ms; box-sizing: border-box; line-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1.5px dashed var(--border);
+    background: #fff;
+    color: var(--text-3);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 120ms;
+    box-sizing: border-box;
+    line-height: 32px;
   }
   .roteiro-toggle-btn:hover {
     border-color: var(--mosaic-green-700);
     color: var(--mosaic-green-800);
-    background: rgba(0,106,77,0.03);
+    background: rgba(0, 106, 77, 0.03);
   }
-  .roteiro-toggle-btn.has-value { border-style: solid; color: var(--text-1); background: #fff; }
+  .roteiro-toggle-btn.has-value {
+    border-style: solid;
+    color: var(--text-1);
+    background: #fff;
+  }
   .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
-  .roteiro-toggle-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+  .roteiro-toggle-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
   .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
   .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
   .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
 
-  /* Item actions row (duplicate / remove) */
-  .v5-item-foot {
-    display: flex; justify-content: flex-end; gap: 4px;
-  }
-  .v5-item-foot button {
-    width: 28px; height: 28px;
-    background: transparent; border: 1px solid var(--border);
-    color: var(--text-2); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
-    transition: all 120ms;
-  }
-  .v5-item-foot button:hover { color: var(--mosaic-green-800); border-color: var(--mosaic-green-700); }
-  .v5-item-foot button.danger:hover { color: var(--mosaic-red); border-color: var(--mosaic-red); }
+  .v5-item-actions { display: flex; gap: 4px; align-items: center; }
 
-  .badge { display: inline-flex; align-items: center; border: 1.5px solid; font-weight: 800; font-size: 10px; letter-spacing: 0.08em; padding: 2px 8px; }
-  .badge--fob { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
-  .badge--cif { color: var(--status-orange); border-color: var(--status-orange); background: var(--status-orange-bg); }
+  /* Add-item bar */
+  .v5-add-item { position: relative; border-top: 1px solid var(--border-soft); }
+  .v5-add-item-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: var(--bg-section);
+    border: none;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 8px 16px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 120ms, color 120ms;
+    letter-spacing: 0.01em;
+  }
+  .v5-add-item-btn:hover { background: rgba(0, 106, 77, 0.06); color: var(--mosaic-green-900); }
+  .v5-add-item-count {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
 
   .v5-card .card-status {
     border-top: 1px solid var(--border-soft);
     padding: 8px 16px;
-    font-size: 11.5px; font-weight: 700;
-    color: var(--text-3);
-    display: flex; align-items: center; gap: 6px;
   }
-  .v5-card .card-status--complete   { color: var(--mosaic-green-700); }
-  .v5-card .card-status--incomplete { color: var(--text-3); }
 
+  /* V2 — force list-only mode (Lista/Grid toggle removed) */
+  #cardsLayoutToggle { display: none !important; }
+
+  /* Optional fields row (NF / Preço / Semana) — second row inside card */
+  .v5-item-extra {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr) minmax(130px, 1fr) minmax(140px, 1fr);
+    gap: 8px;
+    align-items: end;
+    padding-top: 10px;
+    margin-top: 10px;
+    border-top: 1px dashed var(--border-soft);
+  }
+  .v5-item-extra .field-block { gap: 2px; min-width: 0; }
+  .v5-item-extra .field-block label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-bottom: 0;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .v5-item-extra input,
+  .v5-item-extra .v5-money-wrap,
+  .v5-item-extra .card-date-wrap {
+    height: 32px !important;
+    box-sizing: border-box;
+  }
+  .v5-item-extra input {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 12.5px;
+    padding: 0 10px;
+    line-height: 32px;
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .v5-item-extra input:focus { border-color: var(--mosaic-green-700); }
+  .v5-money-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .v5-money-wrap .prefix {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 700;
+    pointer-events: none;
+  }
+  .v5-money-wrap input {
+    padding-left: 28px;
+  }
 
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
@@ -4629,9 +4803,9 @@
   <div class="breadcrumbs">
     <a href="#">Home</a>
     <span class="sep">›</span>
-    <a href="#">Agendamento</a>
+    <a href="#">Contratos</a>
     <span class="sep">›</span>
-    <span class="current">Agendar Contratos Normais</span>
+    <span class="current">Criar Protocolo</span>
   </div>
 
   <div class="title-row">
@@ -4982,6 +5156,10 @@
       </span>
       <input type="text" id="coopDrawerSearch" placeholder="Buscar por nome, CPF/CNPJ ou fazenda…" autocomplete="off" />
     </div>
+    <button class="btn btn-secondary btn-with-icon" id="coopDrawerCadastrarBtn" type="button" style="margin-top:10px; width:100%; justify-content:center;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Cadastrar novo cooperado
+    </button>
   </div>
   <div class="drawer-body coop-drawer-list" id="coopDrawerList"></div>
   <div class="drawer-footer">
@@ -5021,11 +5199,11 @@
       </div>
       <div class="field-block span-6">
         <label>CPF / CNPJ <span class="req">*</span></label>
-        <input type="text" id="cadCoopDoc" placeholder="000.000.000-00" />
+        <input type="text" id="cadCoopDoc" inputmode="numeric" maxlength="18" placeholder="000.000.000-00" />
       </div>
       <div class="field-block span-6">
         <label>Inscrição Estadual <span class="req">*</span></label>
-        <input type="text" id="cadCoopIE" placeholder="000.000.000.000" />
+        <input type="text" id="cadCoopIE" inputmode="numeric" maxlength="14" placeholder="000.000.000.000" />
       </div>
     </div>
 
@@ -5033,7 +5211,7 @@
     <div class="form-grid">
       <div class="field-block span-4">
         <label>CEP <span class="req">*</span></label>
-        <input type="text" id="cadCoopCEP" placeholder="00000-000" />
+        <input type="text" id="cadCoopCEP" inputmode="numeric" maxlength="9" placeholder="00000-000" />
       </div>
       <div class="field-block span-8">
         <label>Endereço <span class="req">*</span></label>
@@ -5142,15 +5320,6 @@ const EMBALAGENS = [
   "BigBag 1.000kg",
 ];
 
-/* Single shared datalist for embalagem autocomplete (cards + tabela) */
-(function ensureEmbalagensDatalist() {
-  if (document.getElementById("embalagensList")) return;
-  const dl = document.createElement("datalist");
-  dl.id = "embalagensList";
-  dl.innerHTML = EMBALAGENS.map(e => `<option value="${e}"></option>`).join("");
-  document.body.appendChild(dl);
-})();
-
 const state = {
   view: "empty",
   rows: [],
@@ -5251,7 +5420,7 @@ function refreshHintV2() {
 }
 
 function renderCardsView() {
-  /* V5-style grouped cards (vertical-stacked, no horizontal scroll) */
+  /* V2 — V5-style grouped cards for criar-protocolo */
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
@@ -5266,7 +5435,7 @@ function renderCardsView() {
     return;
   }
 
-  /* Group rows by contract (preserves insertion order) */
+  /* Group rows by contract code, preserving insertion order */
   const groups = [];
   const groupIndex = new Map();
   state.rows.forEach((r, idx) => {
@@ -5279,153 +5448,163 @@ function renderCardsView() {
     g.items.push({ idx, row: r });
   });
 
-  const ICON_DUP    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
-  const ICON_DEL    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
-  const ICON_CAL    = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
+  const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
+  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
   const ICON_SEARCH = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`;
-  const ICON_EXP    = `<svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
-  const ICON_CHK    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const ICON_BANG   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
+  const ICON_EXPAND = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
+  const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+  const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
 
-  const html = groups.map(group => {
+  const list = document.createElement("div");
+  list.className = "cards-list layout-list";
+
+  groups.forEach(group => {
     const first = group.items[0].row;
     const allComplete = group.items.every(i => protoRowStatus(i.row) === "complete");
-    const anyTouched  = group.items.some(i => i.row.cooperado || i.row.volumeDesejado || i.row.embalagemSelected || i.row.roteiro);
+    const anyTouched = group.items.some(i => i.row.cooperado || i.row.volumeDesejado || i.row.embalagemSelected || i.row.roteiro);
     const groupStatus = allComplete ? "complete" : (anyTouched ? "progress" : "incomplete");
+
+    const card = document.createElement("article");
+    card.className = `contract-card v5-card is-${groupStatus}`;
+    card.setAttribute("data-contract", group.contrato);
 
     const headerHTML = `
       <header class="card-head v5-card-head">
         <span class="v5-level-tag">Contrato</span>
         <span class="card-contract">${first.contrato}</span>
         <span class="v5-head-divider"></span>
-        <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente || '—'}</strong></span>
+        <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente}</strong></span>
         <span class="v5-head-divider"></span>
         <span class="v5-head-inline"><span class="v5-meta-label">Vigência</span><strong>${first.dataInicio}</strong><span class="arrow">→</span><strong>${first.dataFim}</strong></span>
         <span class="v5-item-count">${group.items.length} ${group.items.length === 1 ? 'item' : 'itens'}</span>
       </header>`;
 
     const itemsHTML = group.items.map(({ idx, row: r }) => {
-      const status   = protoRowStatus(r);
-      const isCIF    = r.frete === "CIF";
+      const status = protoRowStatus(r);
+      const isCIF = r.frete === "CIF";
+      const missCoop = !r.cooperado;
+      const missVolume = !r.volumeDesejado;
+      const missEmb = !r.embalagemSelected;
+      const missRoteiro = !r.roteiro;
       const coopName = r.cooperado ? r.cooperado.nome : "";
       const coopPendingBadge = r.cooperado && isCoopPending(r.cooperado)
         ? '<span class="coop-pending-tag" title="Cadastro aguardando aprovação">Pendente</span>'
         : '';
+      const maxVol = parseFloat((r.saldo || '0').toString().replace(/\./g,'').replace(',','.'));
 
       return `
         <div class="v5-item-row is-${status}" data-row="${idx}">
-          <div class="v5-item-meta-line">
-            <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
-            <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-            <span class="v5-item-product" title="${r.produto}">${r.produto}</span>
-            <span class="v5-item-saldo-inline">${r.saldo}<span class="unit">t</span></span>
-          </div>
-          <div class="v5-item-secondary">
-            <span><span class="v5-meta-label">Embalagem</span><strong>${r.embalagem}</strong></span>
-            <span class="v5-meta-sep">·</span>
-            <span><span class="v5-meta-label">Rota</span><strong>${r.planta}</strong><span class="arrow">→</span>${r.enviarPara || ''}</span>
-          </div>
-
-          <div class="v5-form-grid">
-            <div class="form-row form-row--full">
-              <div class="field-block">
-                <label>Cooperado <span class="req">*</span></label>
-                <button class="v5-coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
-                  <span class="coop-text">${coopName || 'Selecionar cooperado'}${coopPendingBadge}</span>
-                  ${ICON_SEARCH}
-                </button>
-              </div>
+          <div class="v5-item-info">
+            <div class="v5-item-line v5-item-line--top">
+              <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
+              <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
+              <span class="v5-item-saldo-inline">${r.saldo}<span class="unit">t</span></span>
             </div>
-
-            <div class="form-row form-row--2">
-              <div class="field-block">
-                <label>Volume desejado <span class="req">*</span></label>
-                <div class="input-with-suffix">
-                  <input type="text" inputmode="decimal"
-                         value="${r.volumeDesejado ?? ''}"
-                         placeholder="0,00"
-                         data-row="${idx}" data-field="volumeDesejado" />
-                  <span class="suffix">t</span>
-                </div>
+            <div class="v5-item-cell-stacks">
+              <div class="cell-stack">
+                <div class="stack-primary cell-strong">${r.produto}</div>
+                <div class="stack-secondary">${r.embalagem}</div>
+                <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
               </div>
-              <div class="field-block">
-                <label>Embalagem <span class="req">*</span></label>
-                <input type="text" class="proto-emb-input"
-                       list="embalagensList"
-                       value="${r.embalagemSelected || ''}"
-                       placeholder="Digite ou selecione"
-                       autocomplete="off"
-                       data-row="${idx}" data-field="embalagemSelected" />
-              </div>
-            </div>
-
-            <div class="form-row form-row--full">
-              <div class="field-block">
-                <label>Roteiro <span class="req">*</span></label>
-                <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-action="open-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
-                  <span class="roteiro-toggle-text">${r.roteiro ? (r.roteiro.length > 60 ? r.roteiro.substring(0, 60) + '…' : r.roteiro) : 'Adicionar roteiro'}</span>
-                  ${ICON_EXP}
-                </button>
-              </div>
-            </div>
-
-            <div class="form-row form-row--4">
-              <div class="field-block">
-                <label>Nº NF Venda <span class="opt-tag">opc.</span></label>
-                <input type="text" inputmode="numeric"
-                       value="${r.nfVendaNum ?? ''}"
-                       placeholder="—"
-                       data-row="${idx}" data-field="nfVendaNum" />
-              </div>
-              <div class="field-block">
-                <label>Data NF Venda <span class="opt-tag">opc.</span></label>
-                <div class="v5-date-wrap" data-row="${idx}">
-                  <input type="text" class="card-date-input"
-                         value="${r.nfVendaData || ''}"
-                         placeholder="DD/MM/AAAA"
-                         data-row="${idx}" data-field="nfVendaData" readonly />
-                  <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-                </div>
-              </div>
-              <div class="field-block">
-                <label>Preço/Ton <span class="opt-tag">opc.</span></label>
-                <div class="v5-money-wrap">
-                  <span class="prefix">R$</span>
-                  <input type="text" inputmode="decimal"
-                         value="${r.precoVenda ?? ''}"
-                         placeholder="0,00"
-                         data-row="${idx}" data-field="precoVenda" />
-                </div>
-              </div>
-              <div class="field-block">
-                <label>Semana desejada</label>
-                <div class="v5-date-wrap" data-row="${idx}">
-                  <input type="text" class="card-date-input"
-                         value="${r.semana || ''}"
-                         placeholder="DD/MM/AAAA"
-                         data-row="${idx}" data-field="semana" readonly />
-                  <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-                </div>
+              <div class="cell-stack">
+                <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
+                <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
               </div>
             </div>
           </div>
 
-          <div class="v5-item-foot">
-            <button data-action="duplicate" data-row="${idx}" title="Duplicar item" type="button">${ICON_DUP}</button>
-            <button class="danger" data-action="remove" data-row="${idx}" title="Remover item" type="button">${ICON_DEL}</button>
+          <div class="v5-item-fields">
+            <div class="field-block ${missCoop ? 'is-missing' : ''}">
+              <label>Cooperado <span class="req">*</span></label>
+              <button class="v5-coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
+                <span class="coop-text">${coopName || 'Selecionar'}${coopPendingBadge}</span>
+                ${ICON_SEARCH}
+              </button>
+            </div>
+            <div class="field-block ${missVolume ? 'is-missing' : ''}">
+              <label>Volume <span class="req">*</span></label>
+              <div class="input-with-suffix">
+                <input type="text" inputmode="decimal"
+                       value="${r.volumeDesejado ?? ''}"
+                       placeholder="0,00"
+                       data-row="${idx}" data-field="volumeDesejado" />
+                <span class="suffix">t</span>
+              </div>
+            </div>
+            <div class="field-block ${missEmb ? 'is-missing' : ''}">
+              <label>Embalagem <span class="req">*</span></label>
+              <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
+                <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
+                ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field-block field-block--roteiro-btn ${missRoteiro ? 'is-missing' : ''}">
+              <label>Roteiro <span class="req">*</span></label>
+              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-action="open-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
+                <span class="roteiro-toggle-text">${r.roteiro ? r.roteiro.substring(0, 36) + (r.roteiro.length > 36 ? '…' : '') : 'Adicionar roteiro'}</span>
+                <svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="v5-item-actions">
+            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar item" type="button">${ICON_DUP}</button>
+            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover item" type="button">${ICON_DEL}</button>
+          </div>
+
+          <div class="v5-item-extra">
+            <div class="field-block">
+              <label>Nº NF Venda <span class="opt-tag">opc.</span></label>
+              <input type="text" inputmode="numeric"
+                     value="${r.nfVendaNum ?? ''}"
+                     placeholder="—"
+                     data-row="${idx}" data-field="nfVendaNum" />
+            </div>
+            <div class="field-block">
+              <label>Data NF Venda <span class="opt-tag">opc.</span></label>
+              <div class="card-date-wrap" data-row="${idx}">
+                <input type="text" class="card-date-input"
+                       value="${r.nfVendaData || ''}"
+                       placeholder="DD/MM/AAAA"
+                       data-row="${idx}" data-field="nfVendaData" readonly />
+                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
+              </div>
+            </div>
+            <div class="field-block">
+              <label>Preço/Ton <span class="opt-tag">opc.</span></label>
+              <div class="v5-money-wrap">
+                <span class="prefix">R$</span>
+                <input type="text" inputmode="decimal"
+                       value="${r.precoVenda ?? ''}"
+                       placeholder="0,00"
+                       data-row="${idx}" data-field="precoVenda" />
+              </div>
+            </div>
+            <div class="field-block">
+              <label>Semana desejada</label>
+              <div class="card-date-wrap" data-row="${idx}">
+                <input type="text" class="card-date-input"
+                       value="${r.semana || ''}"
+                       placeholder="DD/MM/AAAA"
+                       data-row="${idx}" data-field="semana" readonly />
+                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
+              </div>
+            </div>
           </div>
         </div>
       `;
     }).join("");
 
-    const footer = groupStatus === "complete"
+    const groupFooter = groupStatus === "complete"
       ? `<div class="card-status card-status--complete">${ICON_CHK} Todos os itens prontos para criar</div>`
       : `<div class="card-status card-status--incomplete">${ICON_BANG} Preencha os campos obrigatórios</div>`;
 
-    return `<article class="v5-card is-${groupStatus}" data-contract="${group.contrato}">${headerHTML}<div class="v5-items-list">${itemsHTML}</div>${footer}</article>`;
-  }).join("");
+    card.innerHTML = headerHTML + `<div class="v5-items-list">${itemsHTML}</div>` + groupFooter;
+    list.appendChild(card);
+  });
 
-  elBody.innerHTML = html;
+  elBody.appendChild(list);
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
@@ -5511,7 +5690,7 @@ document.getElementById("cardsLayoutToggle").addEventListener("click", e => {
 });
 
 function refreshLayoutToggleVisibility() {
-  /* Lista/Grid toggle suprimido permanentemente (anti-pattern CLAUDE.md) */
+  /* V2: Lista/Grid toggle removido — sempre escondido. */
   const tog = document.getElementById("cardsLayoutToggle");
   if (!tog) return;
   tog.style.display = "none";
@@ -5914,7 +6093,8 @@ function renderProtocolTable() {
         <tr>
           <th class="col-status-cell" aria-label="Status"></th>
           <th>Contrato / Item</th>
-          <th>Produto</th>
+          <th>Produto / Embalagem / Origem</th>
+          <th>Destino / CNPJ Filial</th>
           <th class="col-saldo">Saldo / Vigência</th>
           <th class="col-coop">Cooperado <span class="req">*</span></th>
           <th class="col-volume">Volume desejado <span class="req">*</span></th>
@@ -5973,6 +6153,11 @@ function renderProtocolTable() {
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.produto}</div>
         <div class="stack-secondary">${r.embalagem}</div>
+        <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+      </td>
+      <td class="cell-stack">
+        <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
+        <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
       </td>
       <td class="cell-stack col-saldo">
         <div class="saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
@@ -5986,22 +6171,18 @@ function renderProtocolTable() {
       </td>
       <td class="${missVolume ? 'is-missing' : ''}">
         <div class="proto-volume-wrap">
-          <input type="number" class="proto-cell-input is-num"
+          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
                  value="${r.volumeDesejado ?? ''}"
-                 placeholder="0"
-                 min="0"
-                 max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                 placeholder="0,00"
                  data-row="${idx}" data-field="volumeDesejado" />
           <span class="suffix">t</span>
         </div>
       </td>
       <td class="${missEmb ? 'is-missing' : ''}">
-        <input type="text" class="proto-emb-input"
-               list="embalagensList"
-               value="${r.embalagemSelected || ''}"
-               placeholder="Digite ou selecione"
-               autocomplete="off"
-               data-row="${idx}" data-field="embalagemSelected" />
+        <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
+          <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
+          ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
+        </select>
       </td>
       <td class="${missRoteiro ? 'is-missing' : ''}">
         <div class="proto-roteiro-wrap">
@@ -6013,7 +6194,7 @@ function renderProtocolTable() {
         </div>
       </td>
       <td>
-        <input type="text" class="proto-cell-input"
+        <input type="text" inputmode="numeric" class="proto-cell-input"
                value="${r.nfVendaNum ?? ''}"
                placeholder="—"
                data-row="${idx}" data-field="nfVendaNum" />
@@ -6031,7 +6212,7 @@ function renderProtocolTable() {
       <td>
         <div class="proto-money-wrap">
           <span class="prefix">R$</span>
-          <input type="text" class="proto-cell-input is-num"
+          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
                  value="${r.precoVenda ?? ''}"
                  placeholder="0,00"
                  data-row="${idx}" data-field="precoVenda" />
@@ -6585,7 +6766,7 @@ function saveRoteiroDrawer() {
   /* If we couldn't find any element (e.g. between renders), still update state */
   if (typeof updateSummary === "function") updateSummary();
   if (typeof refreshHintV2 === "function") refreshHintV2();
-  /* Trigger re-render so V5 .roteiro-toggle-btn reflects the new value */
+  /* V2: re-render so V5 cards (.roteiro-toggle-btn) reflect the new value */
   if (typeof renderTable === "function") renderTable();
   closeRoteiroDrawer();
 }
@@ -6676,22 +6857,11 @@ function renderCoopDrawerList() {
   elCoopSelectBtn.disabled = !coopPickContext.tempSelected || isCoopPending(coopPickContext.tempSelected);
 }
 
-/* Coop fica "pendente" por ~10 min após cadastro (mock de aprovação cadastral).
-   Cooperado pendente nao pode ser selecionado em criar protocolo. */
-function isCoopPending(c) {
-  if (!c || !c.pending) return false;
-  if (c.pendingUntil && Date.now() > c.pendingUntil) {
-    c.pending = false;
-    return false;
-  }
-  return true;
-}
-
 elCoopSearch.addEventListener("input", renderCoopDrawerList);
 elCoopList.addEventListener("click", e => {
   const item = e.target.closest(".drawer-item-coop");
   if (!item) return;
-  if (item.classList.contains("is-pending")) return; /* lock pendentes */
+  if (item.classList.contains("is-pending")) return;
   const id = item.dataset.coopId;
   coopPickContext.tempSelected = COOPERADOS.find(c => c.id === id);
   renderCoopDrawerList();
@@ -6750,9 +6920,19 @@ document.getElementById("cadCoopSalvar").addEventListener("click", () => {
     pendingUntil: Date.now() + 10 * 60 * 1000,
   };
   COOPERADOS.push(newCoop);
-  closeModal("cadCoopModal");
+  if (typeof closeCadCoopDrawer === "function") closeCadCoopDrawer(); else closeModal("cadCoopModal");
   openModal("cadCoopSuccessModal");
 });
+
+/* Coop pendente: fica travado por 10 min apos cadastro */
+function isCoopPending(c) {
+  if (!c || !c.pending) return false;
+  if (c.pendingUntil && Date.now() > c.pendingUntil) {
+    c.pending = false;
+    return false;
+  }
+  return true;
+}
 
 elBody.addEventListener("click", e => {
   const btn = e.target.closest('[data-action="open-coop"]');
@@ -6771,6 +6951,89 @@ elBody.addEventListener("click", e => {
   const sourceEl = btn.parentElement.querySelector("input[data-field='roteiro']");
   if (typeof openRoteiroDrawer === "function") openRoteiroDrawer(idx, sourceEl);
 });
+
+/* ===================================================================
+   V2 — Inline "Cadastrar novo cooperado" trigger inside coop drawer
+   =================================================================== */
+(function wireCoopCadastrarInline() {
+  const btn = document.getElementById("coopDrawerCadastrarBtn");
+  if (!btn) return;
+  btn.addEventListener("click", () => {
+    if (typeof closeCoopDrawer === "function") closeCoopDrawer();
+    const triggerBtn = document.getElementById("openCadastrarCoopBtn");
+    if (triggerBtn) triggerBtn.click();
+  });
+})();
+
+/* ===================================================================
+   V2 — Input masks (volume, currency, CPF/CNPJ, CEP, IE, numeric)
+   =================================================================== */
+function maskVolumeDecimal(input) {
+  let v = (input.value || "").replace(/[^\d,]/g, "");
+  const parts = v.split(",");
+  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
+  const segs = v.split(",");
+  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
+  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
+  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = segs.join(",");
+}
+
+function maskCurrencyBRL(input) {
+  const raw = (input.value || "").replace(/\D/g, "");
+  if (!raw) { input.value = ""; return; }
+  const padded = raw.padStart(3, "0");
+  const cents = padded.slice(-2);
+  let intPart = padded.slice(0, -2).replace(/^0+(\d)/, "$1");
+  intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = intPart + "," + cents;
+}
+
+function maskOnlyDigits(input) {
+  input.value = (input.value || "").replace(/\D/g, "");
+}
+
+function maskCEP(input) {
+  let v = (input.value || "").replace(/\D/g, "").slice(0, 8);
+  if (v.length > 5) v = v.slice(0, 5) + "-" + v.slice(5);
+  input.value = v;
+}
+
+function maskCPFCNPJ(input) {
+  let v = (input.value || "").replace(/\D/g, "");
+  if (v.length <= 11) {
+    v = v.slice(0, 11);
+    if (v.length > 9)      v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6,9) + "-" + v.slice(9);
+    else if (v.length > 6) v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6);
+    else if (v.length > 3) v = v.slice(0,3) + "." + v.slice(3);
+  } else {
+    v = v.slice(0, 14);
+    v = v.slice(0,2) + "." + v.slice(2,5) + "." + v.slice(5,8) + "/" + v.slice(8,12) + "-" + v.slice(12,14);
+  }
+  input.value = v;
+}
+
+/* Wire static cad-coop modal fields */
+(function wireCadCoopMasks() {
+  const doc = document.getElementById("cadCoopDoc");
+  const ie  = document.getElementById("cadCoopIE");
+  const cep = document.getElementById("cadCoopCEP");
+  const num = document.getElementById("cadCoopNumero");
+  if (doc) doc.addEventListener("input", e => maskCPFCNPJ(e.target));
+  if (ie)  ie.addEventListener("input",  e => maskOnlyDigits(e.target));
+  if (cep) cep.addEventListener("input", e => maskCEP(e.target));
+  if (num) num.addEventListener("input", e => maskOnlyDigits(e.target));
+})();
+
+/* Delegated mask wiring for dynamic per-row inputs (re-rendered) */
+document.body.addEventListener("input", e => {
+  const t = e.target;
+  if (!(t.matches && t.matches("[data-field]"))) return;
+  const f = t.dataset.field;
+  if (f === "volumeDesejado") maskVolumeDecimal(t);
+  else if (f === "precoVenda") maskCurrencyBRL(t);
+  else if (f === "nfVendaNum") maskOnlyDigits(t);
+}, true);
 
 goTo("empty");
 </script>
