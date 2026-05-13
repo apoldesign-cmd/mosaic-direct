@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Status de Agendamento</title>
+<title>Mosaic Direct — Relatório de Protocolos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1871,13 +1871,19 @@
 
   .filter-row {
     display: grid;
-    grid-template-columns: minmax(220px, 2fr) 130px 130px 1fr 1fr;
+    grid-template-columns: minmax(220px, 2fr) 1fr 1fr 1fr 1fr;
     gap: 12px;
     align-items: end;
     background: var(--bg-section);
     border: 1px solid var(--border-soft);
     padding: 14px 16px;
     margin-bottom: 16px;
+  }
+  .filter-row--proto {
+    grid-template-columns: minmax(240px, 1.6fr) repeat(8, minmax(140px, 1fr));
+  }
+  @media (max-width: 1500px) {
+    .filter-row--proto { grid-template-columns: repeat(4, 1fr); }
   }
   .filter-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .filter-block label {
@@ -1926,7 +1932,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 12.5px;
-    min-width: 1700px;
+    min-width: 2400px;
   }
   .report-table thead th {
     background: var(--bg-section);
@@ -1982,6 +1988,13 @@
   .status-pill--faturado      { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
   .status-pill--indisponivel  { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
   .status-pill--acao_pendente { color: var(--text-1); border-color: var(--mosaic-yellow); background: var(--mosaic-yellow); }
+
+  .status-pill--novo            { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
+  .status-pill--liberado        { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.10); }
+  .status-pill--em_agendamento  { color: var(--status-orange); border-color: var(--status-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
+  .status-pill--concluido       { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
+  .status-pill--cancelado       { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
+
 
   .report-empty {
     background: var(--bg-section);
@@ -2092,52 +2105,77 @@
     <span class="sep">›</span>
     <a href="#">Agendamento</a>
     <span class="sep">›</span>
-    <span class="current">Relatório de Status de Agendamento</span>
+    <span class="current">Relatório de Protocolos</span>
   </div>
-  <h1 class="page-title">Relatório de Status de Agendamento</h1>
+  <h1 class="page-title">Relatório de Protocolos</h1>
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega <strong>a semana ativa</strong> por padrão. Use os filtros abaixo para ajustar o período ou refinar por contrato, protocolo, produto e tipo. Tela <strong>read-only</strong> — não permite edição.</span>
+    <span>Acompanhe seus protocolos: <strong>quantidades agendadas, faturadas e saldos</strong> em tempo real. Tela <strong>read-only</strong> — use os filtros para refinar a visualização.</span>
   </div>
 
   <!-- Filter row -->
-  <div class="filter-row">
+  <div class="filter-row filter-row--proto">
     <div class="filter-block filter-block--search">
-      <label>Pesquisar contrato / protocolo / produto</label>
+      <label>Buscar (Protocolo, Contrato SAP, Cotação)</label>
       <div class="filter-search-wrap">
         <span class="icon-left" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </span>
-        <input type="text" id="filterSearch" placeholder="Ex.: Q-20303, EXCLN, MD-..." autocomplete="off" />
+        <input type="text" id="filterSearch" placeholder="Ex.: M9W38746, Q-20303, ..." autocomplete="off" />
       </div>
-    </div>
-    <div class="filter-block">
-      <label>Período · de</label>
-      <input type="text" id="filterFrom" placeholder="DD/MM/AAAA" />
-    </div>
-    <div class="filter-block">
-      <label>Período · até</label>
-      <input type="text" id="filterTo" placeholder="DD/MM/AAAA" />
     </div>
     <div class="filter-block">
       <label>Status</label>
       <select id="filterStatus">
         <option value="">Todos</option>
-        <option value="confirmacao">Aguardando confirmação</option>
-        <option value="confirmado">Confirmado</option>
-        <option value="faturamento">Aguardando faturamento</option>
-        <option value="faturado">Faturado</option>
-        <option value="indisponivel">Indisponível</option>
-        <option value="acao_pendente">Ação pendente</option>
+        <option value="novo">Novo</option>
+        <option value="liberado">Liberado para agendar entregas</option>
+        <option value="em_agendamento">Em agendamento de entregas</option>
+        <option value="concluido">Concluído</option>
+        <option value="cancelado">Cancelado</option>
       </select>
     </div>
     <div class="filter-block">
-      <label>Tipo</label>
-      <select id="filterTipo">
+      <label>CPF/CNPJ Filial</label>
+      <select id="filterCnpjFilial">
         <option value="">Todos</option>
-        <option value="plan">Plan</option>
-        <option value="replan">Replan</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Filial do Cliente</label>
+      <select id="filterFilial">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>CPF/CNPJ Cooperado</label>
+      <select id="filterCnpjCoop">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Nome do Cooperado</label>
+      <select id="filterNomeCoop">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>IE do Cooperado</label>
+      <select id="filterIeCoop">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Descrição do Produto</label>
+      <select id="filterProduto">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>NF do Protocolo</label>
+      <select id="filterNfProto">
+        <option value="">Todas</option>
       </select>
     </div>
   </div>
@@ -2147,20 +2185,29 @@
     <table class="report-table" id="reportTable">
       <thead>
         <tr>
-          <th>Solicitação</th>
-          <th>Tipo</th>
           <th>Protocolo</th>
-          <th>Ordem (SO)</th>
           <th>Status</th>
-          <th>Contrato / Item</th>
-          <th>Produto / Embalagem</th>
+          <th>Contrato SAP</th>
+          <th>Cotação</th>
+          <th>Filial do Cliente</th>
+          <th>CPF/CNPJ Filial</th>
+          <th>Cidade/UF</th>
+          <th>Cooperado</th>
+          <th>CPF/CNPJ Coop</th>
+          <th>IE Coop</th>
+          <th>Produto</th>
+          <th>Descrição Produto</th>
+          <th>Embalagem</th>
           <th>Frete</th>
-          <th>Planta / Enviar para</th>
-          <th>CNPJ Filial</th>
-          <th>Cliente Final</th>
-          <th style="text-align:right">Vol. Solicitado (t)</th>
-          <th style="text-align:right">Vol. Confirmado (t)</th>
-          <th style="text-align:right">Vol. Faturado (t)</th>
+          <th>Planta</th>
+          <th>NF Protocolo</th>
+          <th>Data NF</th>
+          <th style="text-align:right">Preço Venda</th>
+          <th style="text-align:right">Qtd Protocolo</th>
+          <th style="text-align:right">Qtd Agendada</th>
+          <th style="text-align:right">Saldo a Agendar</th>
+          <th style="text-align:right">Qtd Faturada</th>
+          <th style="text-align:right">Qtd a Faturar</th>
         </tr>
       </thead>
       <tbody id="reportTableBody">
@@ -2177,82 +2224,102 @@
 
 <script>
 /* ============================================================
-   Mock data — scheduling requests por status no relatorio.
-   Cada linha = uma solicitacao de agendamento.
+   Mock data — Protocolos (estrutura BR_MD_Reports_Rel_Protocolos)
+   Status visiveis: Novo / Liberado / Em agendamento / Concluido / Cancelado
+   ("Enviar ao SAP" e interno — nao mostrar aqui)
    ============================================================ */
-const REQUESTS = [
-  { sol: "MD-00000123", tipo: "Plan",   protocolo: "—",      so: "—",          status: "confirmacao", statusLabel: "Aguardando confirmação", contrato: "Q-20303", item: "10", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Carlos Alves",     volSol: "100,00", volConf: "100,00", volFat: "—"     },
-  { sol: "MD-00000124", tipo: "Plan",   protocolo: "—",      so: "—",          status: "confirmacao", statusLabel: "Aguardando confirmação", contrato: "Q-20303", item: "20", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Renato Cesar",     volSol: "250,00", volConf: "250,00", volFat: "—"     },
-  { sol: "MD-00000125", tipo: "Replan", protocolo: "—",      so: "SO-9874512", status: "confirmado",  statusLabel: "Confirmado",             contrato: "Q-20303", item: "30", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Tereza Akemi",     volSol: "180,00", volConf: "175,00", volFat: "—"     },
-  { sol: "MD-00000126", tipo: "Plan",   protocolo: "PR-2031", so: "SO-9874513", status: "faturado",   statusLabel: "Faturado",               contrato: "Q-20392", item: "10", produto: "MPANITRO 20 05 20 UR",       embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP",   cnpj: "71.320.915/0006-37", clienteFinal: "Beto Dos Santos",  volSol: "300,00", volConf: "300,00", volFat: "300,00" },
-  { sol: "MD-00000127", tipo: "Plan",   protocolo: "—",      so: "SO-9874514", status: "faturamento", statusLabel: "Aguardando faturamento", contrato: "Q-20392", item: "20", produto: "MPANITRO 20 05 20 UR",       embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP",   cnpj: "71.320.915/0006-37", clienteFinal: "Jorge Dos Anjos",  volSol: "120,00", volConf: "120,00", volFat: "—"     },
-  { sol: "MD-00000128", tipo: "Replan", protocolo: "PR-2032", so: "—",          status: "indisponivel", statusLabel: "Indisponível",          contrato: "Q-85721", item: "10", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Aguinado Gomes",   volSol: "450,00", volConf: "—",     volFat: "—"     },
-  { sol: "MD-00000129", tipo: "Plan",   protocolo: "—",      so: "—",          status: "acao_pendente", statusLabel: "Ação pendente",        contrato: "Q-39742", item: "10", produto: "EXCLN 18 09 27 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG",     cnpj: "71.320.915/0006-37", clienteFinal: "Marco Antonio",    volSol: "80,00",  volConf: "—",     volFat: "—"     },
-  { sol: "MD-00000130", tipo: "Plan",   protocolo: "PR-2033", so: "SO-9874515", status: "faturado",   statusLabel: "Faturado",               contrato: "Q-20303", item: "40", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Carlos Alves",     volSol: "200,00", volConf: "200,00", volFat: "200,00" },
+const PROTOCOLOS = [
+  { protocolo: "M9W38746", status: "novo",            statusLabel: "Novo",                            contratoSap: "Q-20303", cotacao: "C-2025-001", filial: "Cefértil Cubatão",  cnpjFilial: "71.320.915/0006-37", cidadeFilial: "Cubatão",       ufFilial: "SP", cooperado: "AGUINADO GOMES",  cnpjCoop: "618.281.300-87",   ieCoop: "287.456.987.114",   produto: "123245", produtoDesc: "FFALM 10 20 30",                  embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", nfProto: "—",       dataNf: "—",        precoVenda: "2.450,00", qtdProto: "300,00", qtdAgendada: "250,00", saldoAgendar: "50,00",  qtdFat: "50,00",  qtdAFat: "250,00" },
+  { protocolo: "M9W38747", status: "liberado",        statusLabel: "Liberado para agendar entregas",  contratoSap: "Q-20303", cotacao: "C-2025-002", filial: "Cefértil Cubatão",  cnpjFilial: "71.320.915/0006-37", cidadeFilial: "Cubatão",       ufFilial: "SP", cooperado: "BETO DOS SANTOS", cnpjCoop: "922.915.570-50",   ieCoop: "415.728.633.020",   produto: "123245", produtoDesc: "FFALM 10 20 30",                  embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", nfProto: "—",       dataNf: "—",        precoVenda: "2.450,00", qtdProto: "500,00", qtdAgendada: "0,00",   saldoAgendar: "500,00", qtdFat: "0,00",   qtdAFat: "500,00" },
+  { protocolo: "M9W38748", status: "em_agendamento",  statusLabel: "Em agendamento de entregas",      contratoSap: "Q-20385", cotacao: "C-2025-003", filial: "Cefértil Cubatão",  cnpjFilial: "71.320.915/0006-37", cidadeFilial: "Cubatão",       ufFilial: "SP", cooperado: "CARLOS ALVES",    cnpjCoop: "488.722.440-05",   ieCoop: "287.456.987.114",   produto: "245781", produtoDesc: "EXCLN 24 05 24 UR",               embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", nfProto: "NF-19238",  dataNf: "10/04/2026", precoVenda: "2.480,00", qtdProto: "800,00", qtdAgendada: "600,00", saldoAgendar: "200,00", qtdFat: "300,00", qtdAFat: "500,00" },
+  { protocolo: "M9W38749", status: "concluido",       statusLabel: "Concluído",                       contratoSap: "Q-20392", cotacao: "C-2025-004", filial: "Cefértil Bebedouro", cnpjFilial: "71.320.915/0007-15", cidadeFilial: "Bebedouro",     ufFilial: "SP", cooperado: "JORGE DOS ANJOS", cnpjCoop: "61.906.309/0001-30", ieCoop: "415.728.633.020", produto: "337120", produtoDesc: "MPANITRO 20 05 20 UR",             embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", nfProto: "NF-19305",  dataNf: "20/04/2026", precoVenda: "2.190,00", qtdProto: "400,00", qtdAgendada: "400,00", saldoAgendar: "0,00",   qtdFat: "400,00", qtdAFat: "0,00"   },
+  { protocolo: "M9W38750", status: "cancelado",       statusLabel: "Cancelado",                       contratoSap: "Q-38542", cotacao: "C-2025-005", filial: "Cefértil Limeira",  cnpjFilial: "71.320.915/0009-90", cidadeFilial: "Limeira",       ufFilial: "SP", cooperado: "RENATO CESAR",    cnpjCoop: "40.908.039/0001-26", ieCoop: "192.554.418.336", produto: "445812", produtoDesc: "FFALM 04 30 10",                  embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", nfProto: "—",       dataNf: "—",        precoVenda: "1.980,00", qtdProto: "200,00", qtdAgendada: "0,00",   saldoAgendar: "200,00", qtdFat: "0,00",   qtdAFat: "200,00" },
+  { protocolo: "M9W38751", status: "novo",            statusLabel: "Novo",                            contratoSap: "Q-85721", cotacao: "C-2025-006", filial: "Cefértil Cubatão",  cnpjFilial: "71.320.915/0006-37", cidadeFilial: "Cubatão",       ufFilial: "SP", cooperado: "TEREZA AKEMI",    cnpjCoop: "91.459.226/0001-00", ieCoop: "287.456.987.114", produto: "578102", produtoDesc: "STRAF 04 30 10 STR + 50 BMI2",     embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", nfProto: "—",       dataNf: "—",        precoVenda: "2.620,00", qtdProto: "1.000,00", qtdAgendada: "0,00", saldoAgendar: "1.000,00", qtdFat: "0,00", qtdAFat: "1.000,00" },
+  { protocolo: "M9W38752", status: "em_agendamento",  statusLabel: "Em agendamento de entregas",      contratoSap: "Q-39742", cotacao: "C-2025-007", filial: "Cefértil Alfenas",  cnpjFilial: "71.320.915/0011-50", cidadeFilial: "Alfenas",       ufFilial: "MG", cooperado: "MARCO ANTONIO",   cnpjCoop: "638.092.514-27",   ieCoop: "638.092.514.275",   produto: "612937", produtoDesc: "EXCLN 18 09 27 UR",               embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", nfProto: "NF-19412",  dataNf: "02/05/2026", precoVenda: "2.380,00", qtdProto: "640,00", qtdAgendada: "320,00", saldoAgendar: "320,00", qtdFat: "120,00", qtdAFat: "520,00" },
+  { protocolo: "M9W38753", status: "liberado",        statusLabel: "Liberado para agendar entregas",  contratoSap: "Q-20392", cotacao: "C-2025-008", filial: "Cefértil Bebedouro", cnpjFilial: "71.320.915/0007-15", cidadeFilial: "Bebedouro",     ufFilial: "SP", cooperado: "AGUINADO GOMES",  cnpjCoop: "618.281.300-87",   ieCoop: "287.456.987.114",   produto: "337120", produtoDesc: "MPANITRO 20 05 20 UR",             embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", nfProto: "—",       dataNf: "—",        precoVenda: "2.190,00", qtdProto: "750,00", qtdAgendada: "0,00",   saldoAgendar: "750,00", qtdFat: "0,00",   qtdAFat: "750,00" },
 ];
 
 const elBody    = document.getElementById("reportTableBody");
 const elEmpty   = document.getElementById("reportEmpty");
-const elSearch  = document.getElementById("filterSearch");
-const elFrom    = document.getElementById("filterFrom");
-const elTo      = document.getElementById("filterTo");
-const elStatus  = document.getElementById("filterStatus");
-const elTipo    = document.getElementById("filterTipo");
+const elSearch       = document.getElementById("filterSearch");
+const elStatus       = document.getElementById("filterStatus");
+const elCnpjFilial   = document.getElementById("filterCnpjFilial");
+const elFilial       = document.getElementById("filterFilial");
+const elCnpjCoop     = document.getElementById("filterCnpjCoop");
+const elNomeCoop     = document.getElementById("filterNomeCoop");
+const elIeCoop       = document.getElementById("filterIeCoop");
+const elProduto      = document.getElementById("filterProduto");
+const elNfProto      = document.getElementById("filterNfProto");
 
-function filteredRequests() {
+/* Popula picklists dinamicamente com valores unicos */
+function populatePicklist(el, key) {
+  if (!el) return;
+  const current = el.value;
+  const vals = [...new Set(PROTOCOLOS.map(p => p[key]).filter(v => v && v !== "—"))].sort();
+  el.innerHTML = `<option value="">Todos</option>` + vals.map(v => `<option value="${v}">${v}</option>`).join("");
+  el.value = current;
+}
+populatePicklist(elCnpjFilial, "cnpjFilial");
+populatePicklist(elFilial,     "filial");
+populatePicklist(elCnpjCoop,   "cnpjCoop");
+populatePicklist(elNomeCoop,   "cooperado");
+populatePicklist(elIeCoop,     "ieCoop");
+populatePicklist(elProduto,    "produtoDesc");
+populatePicklist(elNfProto,    "nfProto");
+
+function filteredProtocolos() {
   const q = (elSearch.value || "").trim().toLowerCase();
-  const status = elStatus.value || "";
-  const tipo = (elTipo.value || "").toLowerCase();
-  return REQUESTS.filter(r => {
+  return PROTOCOLOS.filter(p => {
     if (q) {
-      const hay = [r.sol, r.protocolo, r.so, r.contrato, r.item, r.produto, r.embalagem, r.frete, r.planta, r.enviarPara, r.cnpj, r.clienteFinal].join(" ").toLowerCase();
+      const hay = [p.protocolo, p.contratoSap, p.cotacao].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
     }
-    if (status && r.status !== status) return false;
-    if (tipo && r.tipo.toLowerCase() !== tipo) return false;
+    if (elStatus.value     && p.status      !== elStatus.value)     return false;
+    if (elCnpjFilial.value && p.cnpjFilial  !== elCnpjFilial.value) return false;
+    if (elFilial.value     && p.filial      !== elFilial.value)     return false;
+    if (elCnpjCoop.value   && p.cnpjCoop    !== elCnpjCoop.value)   return false;
+    if (elNomeCoop.value   && p.cooperado   !== elNomeCoop.value)   return false;
+    if (elIeCoop.value     && p.ieCoop      !== elIeCoop.value)     return false;
+    if (elProduto.value    && p.produtoDesc !== elProduto.value)    return false;
+    if (elNfProto.value    && p.nfProto     !== elNfProto.value)    return false;
     return true;
   });
 }
 
 function render() {
-  const list = filteredRequests();
+  const list = filteredProtocolos();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
-  elBody.innerHTML = list.map(r => `
+  elBody.innerHTML = list.map(p => `
     <tr>
-      <td class="cell-sol">${r.sol}</td>
-      <td><span class="tipo-tag tipo-tag--${r.tipo.toLowerCase()}">${r.tipo}</span></td>
-      <td>${r.protocolo}</td>
-      <td>${r.so}</td>
-      <td><span class="status-pill status-pill--${r.status}">${r.statusLabel}</span></td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.contrato}</span>
-          <span class="stack-secondary">Item ${r.item}</span>
-        </div>
-      </td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.produto}</span>
-          <span class="stack-secondary">${r.embalagem}</span>
-        </div>
-      </td>
-      <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.planta}</span>
-          <span class="stack-secondary">→ ${r.enviarPara}</span>
-        </div>
-      </td>
-      <td class="cell-mono">${r.cnpj}</td>
-      <td>${r.clienteFinal}</td>
-      <td class="vol-cell">${r.volSol}</td>
-      <td class="vol-cell vol-cell--conf">${r.volConf}</td>
-      <td class="vol-cell vol-cell--fat">${r.volFat}</td>
+      <td class="cell-sol">${p.protocolo}</td>
+      <td><span class="status-pill status-pill--${p.status}">${p.statusLabel}</span></td>
+      <td>${p.contratoSap}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td class="cell-mono">${p.cnpjFilial}</td>
+      <td>${p.cidadeFilial}/${p.ufFilial}</td>
+      <td>${p.cooperado}</td>
+      <td class="cell-mono">${p.cnpjCoop}</td>
+      <td class="cell-mono">${p.ieCoop}</td>
+      <td class="cell-mono">${p.produto}</td>
+      <td>${p.produtoDesc}</td>
+      <td>${p.embalagem}</td>
+      <td><span class="pill-frete ${p.frete.toLowerCase()}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      <td class="cell-mono">${p.nfProto}</td>
+      <td>${p.dataNf}</td>
+      <td class="vol-cell">R$ ${p.precoVenda}</td>
+      <td class="vol-cell">${p.qtdProto}</td>
+      <td class="vol-cell vol-cell--conf">${p.qtdAgendada}</td>
+      <td class="vol-cell">${p.saldoAgendar}</td>
+      <td class="vol-cell vol-cell--fat">${p.qtdFat}</td>
+      <td class="vol-cell">${p.qtdAFat}</td>
     </tr>
   `).join("");
 }
 
-[elSearch, elFrom, elTo, elStatus, elTipo].forEach(el => {
+[elSearch, elStatus, elCnpjFilial, elFilial, elCnpjCoop, elNomeCoop, elIeCoop, elProduto, elNfProto].forEach(el => {
+  if (!el) return;
   el.addEventListener("input", render);
   el.addEventListener("change", render);
 });
