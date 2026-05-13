@@ -1943,7 +1943,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 12.5px;
-    min-width: 4400px;
+    min-width: 2500px;
   }
   .report-table thead th {
     background: var(--bg-section);
@@ -2021,6 +2021,128 @@
   /* Subtle day-group separator: thin line at start of each day group */
   .report-table th.day-sep,
   .report-table td.day-sep { border-left: 1px solid var(--border-soft); }
+
+  /* Total summary cells (3 cols antes do chevron) */
+  .report-table .col-total th,
+  .report-table td.col-total {
+    background: rgba(0,106,77,0.04);
+    border-left: 1px solid var(--border);
+  }
+  .report-table tbody tr:nth-child(even) td.col-total { background: rgba(0,106,77,0.07); }
+  .report-table tbody tr:hover td.col-total           { background: rgba(0,106,77,0.10); }
+
+  /* Toggle (chevron) column */
+  .report-table th.col-toggle,
+  .report-table td.col-toggle {
+    width: 56px;
+    text-align: center;
+    border-left: 1px solid var(--border);
+  }
+  .row-toggle-btn {
+    width: 28px; height: 28px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    color: var(--text-2);
+    padding: 0;
+    transition: background-color 120ms, color 120ms, border-color 120ms;
+  }
+  .row-toggle-btn svg { transition: transform 220ms ease-out; }
+  .row-toggle-btn:hover { background: var(--bg-section); color: var(--text-1); border-color: var(--border-strong); }
+  .row-toggle-btn.is-open {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-color: var(--mosaic-green-800);
+  }
+  .row-toggle-btn.is-open svg { transform: rotate(90deg); }
+
+  /* Detail row — weekly breakdown panel */
+  .report-table tr.detail-row { display: none; }
+  .report-table tr.detail-row.is-open { display: table-row; }
+  .report-table tr.detail-row > td {
+    padding: 0;
+    background: #f4f6f4;
+    border-bottom: 2px solid var(--mosaic-green-800);
+    box-shadow: inset 0 1px 0 var(--border);
+  }
+  .detail-panel {
+    padding: 18px 28px 22px;
+    position: sticky;
+    left: 0;
+    width: min(1100px, calc(100vw - 140px));
+  }
+  .detail-panel-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .detail-panel-head h4 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .detail-panel-head .ctx {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .detail-panel-head .ctx strong { color: var(--text-2); font-weight: 800; }
+  .weekly-breakdown {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .weekly-breakdown th, .weekly-breakdown td {
+    padding: 9px 12px;
+    border-right: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .weekly-breakdown th:last-child, .weekly-breakdown td:last-child { border-right: none; }
+  .weekly-breakdown tr:last-child td { border-bottom: none; }
+  .weekly-breakdown thead th {
+    background: var(--bg-section);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    text-align: center;
+  }
+  .weekly-breakdown thead th.wb-corner { background: #fff; }
+  .weekly-breakdown thead th.wb-total {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-900);
+  }
+  .weekly-breakdown tbody th {
+    background: var(--bg-section);
+    text-align: left;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+    font-weight: 800;
+    width: 130px;
+  }
+  .weekly-breakdown td.wb-total {
+    background: rgba(0,106,77,0.06);
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .weekly-breakdown td.wb-zero { color: var(--text-3); }
+  .weekly-breakdown td.wb-pos  { color: var(--mosaic-green-700); font-weight: 800; }
+  .weekly-breakdown td.wb-neg  { color: var(--mosaic-red); font-weight: 800; }
+  .weekly-breakdown tr.wb-row-diff td { background: #fafaf6; }
+  .weekly-breakdown tr.wb-row-diff td.wb-total { background: rgba(0,106,77,0.08); }
 
   .report-empty {
     background: var(--bg-section);
@@ -2385,13 +2507,12 @@ function buildThead() {
     `<th class="${h.c || ""}" style="text-align:${h.a || "left"}">${h.l}</th>`
   ).join("");
 
-  /* Daily breakdown: 8 dias × (Plan, Real, Δ). Separador sutil no inicio de cada dia. */
-  DAY_LABELS.forEach((day, idx) => {
-    ["Plan", "Real", "Δ"].forEach((metric, mIdx) => {
-      const sep = mIdx === 0 ? "day-sep" : "";
-      html += `<th class="${sep}" style="text-align:right">${day} ${metric}</th>`;
-    });
-  });
+  /* Total summary (3 cols): Plan / Real / Δ totais da semana */
+  html += `<th class="col-total" style="text-align:right">Total Plan. (t)</th>`;
+  html += `<th class="col-total" style="text-align:right">Total Real. (t)</th>`;
+  html += `<th class="col-total" style="text-align:right">Δ Total (t)</th>`;
+  /* Chevron / toggle column */
+  html += `<th class="col-toggle" title="Expandir breakdown semanal">Detalhe</th>`;
 
   return html;
 }
@@ -2465,11 +2586,58 @@ function filteredRequests() {
 }
 
 /* ---- Render ---- */
+const DAY_FULL = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
+
+function buildWeeklyBreakdown(r) {
+  /* Header row: corner + Total + 7 dias */
+  let head = `<th class="wb-corner"></th><th class="wb-total">Total</th>`;
+  for (let d = 1; d < 8; d++) head += `<th>${DAY_LABELS[d]}</th>`;
+
+  const mkRow = (label, vals, rowClass) => {
+    let cells = `<th scope="row">${label}</th>`;
+    cells += `<td class="wb-total">${fmt(vals[0])}</td>`;
+    for (let d = 1; d < 8; d++) cells += `<td>${fmt(vals[d])}</td>`;
+    return `<tr class="${rowClass || ""}">${cells}</tr>`;
+  };
+
+  const diffRow = () => {
+    let cells = `<th scope="row">Diferença</th>`;
+    cells += `<td class="wb-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
+    for (let d = 1; d < 8; d++) {
+      const cls = r.diff[d] > 0 ? "wb-pos" : (r.diff[d] < 0 ? "wb-neg" : "wb-zero");
+      cells += `<td class="${cls}">${fmtDiff(r.diff[d])}</td>`;
+    }
+    return `<tr class="wb-row-diff">${cells}</tr>`;
+  };
+
+  return `
+    <div class="detail-panel">
+      <div class="detail-panel-head">
+        <h4>Breakdown semanal</h4>
+        <span class="ctx">
+          <strong>${r.sol}</strong> · Semana ${r.semana} · Contrato ${r.contrato} / Item ${r.itemContrato} · ${r.descProduto}
+        </span>
+      </div>
+      <table class="weekly-breakdown">
+        <thead><tr>${head}</tr></thead>
+        <tbody>
+          ${mkRow("Planejado", r.planned)}
+          ${mkRow("Realizado", r.realized)}
+          ${diffRow()}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
 function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
 
-  elBody.innerHTML = list.map(r => {
+  /* 23 main + 3 totals + 1 toggle = 27 cols (colspan da linha de detalhe) */
+  const COLSPAN = 27;
+
+  elBody.innerHTML = list.map((r, idx) => {
     let tds = "";
     tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
     tds += `<td class="cell-mono">${r.protocolo}</td>`;
@@ -2495,18 +2663,36 @@ function render() {
     tds += `<td class="vol-cell vol-cell--conf">${fmt(r.qtdConfirmadaOV)}</td>`;
     tds += `<td class="vol-cell vol-cell--fat">${fmt(r.qtdFaturada)}</td>`;
 
-    /* Daily breakdown: 8 dias × (Plan / Real / Δ) */
-    for (let d = 0; d < 8; d++) {
-      const p = r.planned[d];
-      const real = r.realized[d];
-      const diff = r.diff[d];
-      tds += `<td class="vol-cell day-sep">${fmt(p)}</td>`;
-      tds += `<td class="vol-cell">${fmt(real)}</td>`;
-      tds += `<td class="vol-cell ${diffCls(diff)}">${fmtDiff(diff)}</td>`;
-    }
+    /* Total summary (semana): Plan / Real / Δ */
+    tds += `<td class="vol-cell col-total">${fmt(r.planned[0])}</td>`;
+    tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
+    tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
 
-    return `<tr>${tds}</tr>`;
+    /* Toggle */
+    tds += `<td class="col-toggle">
+      <button type="button" class="row-toggle-btn" data-idx="${idx}" aria-label="Expandir breakdown semanal" aria-expanded="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </td>`;
+
+    return `
+      <tr>${tds}</tr>
+      <tr class="detail-row" data-detail-idx="${idx}">
+        <td colspan="${COLSPAN}">${buildWeeklyBreakdown(r)}</td>
+      </tr>
+    `;
   }).join("");
+
+  /* Toggle handlers */
+  elBody.querySelectorAll(".row-toggle-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = btn.getAttribute("data-idx");
+      const detail = elBody.querySelector(`tr.detail-row[data-detail-idx="${idx}"]`);
+      const open = btn.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      detail.classList.toggle("is-open", open);
+    });
+  });
 }
 
 /* ---- Init ---- */
