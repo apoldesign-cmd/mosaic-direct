@@ -1871,13 +1871,18 @@
 
   .filter-row {
     display: grid;
-    grid-template-columns: minmax(220px, 2fr) 130px 130px 1fr 1fr;
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px 14px;
     align-items: end;
     background: var(--bg-section);
     border: 1px solid var(--border-soft);
     padding: 14px 16px;
     margin-bottom: 16px;
+  }
+  .filter-row .filter-block--search { grid-column: span 4; }
+  @media (max-width: 1100px) {
+    .filter-row { grid-template-columns: 1fr 1fr; }
+    .filter-row .filter-block--search { grid-column: span 2; }
   }
   .filter-block { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .filter-block label {
@@ -1912,10 +1917,6 @@
     color: var(--text-2);
     pointer-events: none;
   }
-  @media (max-width: 1100px) {
-    .filter-row { grid-template-columns: 1fr 1fr; }
-  }
-
   .report-table-wrap {
     border: 1px solid var(--border-soft);
     background: #fff;
@@ -1926,7 +1927,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 12.5px;
-    min-width: 1700px;
+    min-width: 4400px;
   }
   .report-table thead th {
     background: var(--bg-section);
@@ -1966,8 +1967,9 @@
     padding: 2px 7px; border: 1.5px solid;
     letter-spacing: 0.06em; text-transform: uppercase;
   }
-  .tipo-tag--plan   { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
-  .tipo-tag--replan { color: var(--mosaic-orange); border-color: var(--mosaic-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
+  .tipo-tag--plan    { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
+  .tipo-tag--replan  { color: var(--mosaic-orange); border-color: var(--mosaic-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
+  .tipo-tag--adicao  { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
 
   .status-pill {
     display: inline-flex; align-items: center;
@@ -1976,12 +1978,33 @@
     border: 1.5px solid; letter-spacing: 0.02em;
     white-space: nowrap;
   }
-  .status-pill--confirmacao   { color: var(--status-orange); border-color: var(--status-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
-  .status-pill--confirmado    { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
-  .status-pill--faturamento   { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
-  .status-pill--faturado      { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
-  .status-pill--indisponivel  { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
-  .status-pill--acao_pendente { color: var(--text-1); border-color: var(--mosaic-yellow); background: var(--mosaic-yellow); }
+  /* 6 status valores (cliente) — BR Rel Status Agendamento */
+  .status-pill--em_analise      { color: var(--text-1); border-color: var(--mosaic-yellow); background: var(--mosaic-yellow); }
+  .status-pill--rejeitado       { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
+  .status-pill--aprovado        { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
+  .status-pill--em_carregamento { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
+  .status-pill--faturado        { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
+  .status-pill--cancelado       { color: var(--text-3); border-color: var(--border); background: var(--bg-section); }
+
+  /* Daily breakdown diff coloring */
+  .report-table .vol-cell--pos  { color: var(--mosaic-green-700); }
+  .report-table .vol-cell--neg  { color: var(--mosaic-red); }
+  .report-table .vol-cell--zero { color: var(--text-3); }
+  .report-table .vol-cell--muted { color: var(--text-3); font-weight: 600; }
+  /* Sticky first column for wide table */
+  .report-table th.col-sticky,
+  .report-table td.col-sticky {
+    position: sticky; left: 0;
+    background: #fff;
+    z-index: 2;
+    box-shadow: 1px 0 0 var(--border-soft);
+  }
+  .report-table thead th.col-sticky { background: var(--bg-section); z-index: 3; }
+  .report-table tbody tr:nth-child(even) td.col-sticky { background: #fafaf8; }
+  .report-table tbody tr:hover td.col-sticky { background: rgba(0,106,77,0.04); }
+  /* Subtle day-group separator: thin line at start of each day group */
+  .report-table th.day-sep,
+  .report-table td.day-sep { border-left: 1px solid var(--border-soft); }
 
   .report-empty {
     background: var(--bg-section);
@@ -2098,46 +2121,66 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega <strong>a semana ativa</strong> por padrão. Use os filtros abaixo para ajustar o período ou refinar por contrato, protocolo, produto e tipo. Tela <strong>read-only</strong> — não permite edição.</span>
+    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use os filtros para ajustar o período ou refinar por recebedor, produto, planta ou status. Tela <strong>read-only</strong> — não permite edição.</span>
   </div>
 
   <!-- Filter row -->
   <div class="filter-row">
     <div class="filter-block filter-block--search">
-      <label>Pesquisar contrato / protocolo / produto</label>
+      <label>Pesquisar Solicitação / Protocolo / Contrato / Cotação / OV / Pedido do Cliente</label>
       <div class="filter-search-wrap">
         <span class="icon-left" aria-hidden="true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </span>
-        <input type="text" id="filterSearch" placeholder="Ex.: Q-20303, EXCLN, MD-..." autocomplete="off" />
+        <input type="text" id="filterSearch" placeholder="Ex.: MD-00000123, Q-394874, 20084782, 123245..." autocomplete="off" />
       </div>
-    </div>
-    <div class="filter-block">
-      <label>Período · de</label>
-      <input type="text" id="filterFrom" placeholder="DD/MM/AAAA" />
-    </div>
-    <div class="filter-block">
-      <label>Período · até</label>
-      <input type="text" id="filterTo" placeholder="DD/MM/AAAA" />
     </div>
     <div class="filter-block">
       <label>Status</label>
       <select id="filterStatus">
         <option value="">Todos</option>
-        <option value="confirmacao">Aguardando confirmação</option>
-        <option value="confirmado">Confirmado</option>
-        <option value="faturamento">Aguardando faturamento</option>
+        <option value="em_analise">Em Análise</option>
+        <option value="rejeitado">Rejeitado</option>
+        <option value="aprovado">Aprovado</option>
+        <option value="em_carregamento">Em Carregamento</option>
         <option value="faturado">Faturado</option>
-        <option value="indisponivel">Indisponível</option>
-        <option value="acao_pendente">Ação pendente</option>
+        <option value="cancelado">Cancelado</option>
       </select>
     </div>
     <div class="filter-block">
-      <label>Tipo</label>
-      <select id="filterTipo">
+      <label>Semana (range)</label>
+      <select id="filterSemana">
+        <option value="">Todas</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>CPF/CNPJ do Emissor</label>
+      <select id="filterCnpjEmissor">
         <option value="">Todos</option>
-        <option value="plan">Plan</option>
-        <option value="replan">Replan</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Nome do Recebedor</label>
+      <select id="filterRecebedorNome">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>CPF/CNPJ do Recebedor</label>
+      <select id="filterRecebedorCnpj">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Produto</label>
+      <select id="filterProduto">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div class="filter-block">
+      <label>Planta</label>
+      <select id="filterPlanta">
+        <option value="">Todas</option>
       </select>
     </div>
   </div>
@@ -2146,21 +2189,8 @@
   <div class="report-table-wrap">
     <table class="report-table" id="reportTable">
       <thead>
-        <tr>
-          <th>Solicitação</th>
-          <th>Tipo</th>
-          <th>Protocolo</th>
-          <th>Ordem (SO)</th>
-          <th>Status</th>
-          <th>Contrato / Item</th>
-          <th>Produto / Embalagem</th>
-          <th>Frete</th>
-          <th>Planta / Enviar para</th>
-          <th>CNPJ Filial</th>
-          <th>Cliente Final</th>
-          <th style="text-align:right">Vol. Solicitado (t)</th>
-          <th style="text-align:right">Vol. Confirmado (t)</th>
-          <th style="text-align:right">Vol. Faturado (t)</th>
+        <tr id="reportThead">
+          <!-- Rendered by JS -->
         </tr>
       </thead>
       <tbody id="reportTableBody">
@@ -2177,82 +2207,300 @@
 
 <script>
 /* ============================================================
-   Mock data — scheduling requests por status no relatorio.
-   Cada linha = uma solicitacao de agendamento.
+   Template aplicado: BR Rel Status Agendamento
+   Estrutura: 23 colunas principais + 24 colunas de breakdown
+   diário (Total + 7 dias × Plan / Real / Δ).
    ============================================================ */
+
+/* Helper: linha de breakdown — recebe arrays length 8 */
+function mkRow(base, planned, realized) {
+  const diff = planned.map((p, i) => (realized[i] == null) ? null : (realized[i] - p));
+  return Object.assign({}, base, { planned, realized, diff });
+}
+
+const STATUS_LABELS = {
+  em_analise:      "Em Análise",
+  rejeitado:       "Rejeitado",
+  aprovado:        "Aprovado",
+  em_carregamento: "Em Carregamento",
+  faturado:        "Faturado",
+  cancelado:       "Cancelado",
+};
+
+const TIPO_LABELS = { plan: "Plan", replan: "Replan", adicao: "Adição" };
+
+/* ---- Mock data ---- */
+/* Cada linha = uma Solicitação. Os 3 primeiros registros mostram a
+   mesma Solicitação MD-00000123 em três variantes (Plan / Replan / Adição)
+   conforme o template CSV. Demais linhas exemplificam outros status. */
 const REQUESTS = [
-  { sol: "MD-00000123", tipo: "Plan",   protocolo: "—",      so: "—",          status: "confirmacao", statusLabel: "Aguardando confirmação", contrato: "Q-20303", item: "10", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Carlos Alves",     volSol: "100,00", volConf: "100,00", volFat: "—"     },
-  { sol: "MD-00000124", tipo: "Plan",   protocolo: "—",      so: "—",          status: "confirmacao", statusLabel: "Aguardando confirmação", contrato: "Q-20303", item: "20", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Renato Cesar",     volSol: "250,00", volConf: "250,00", volFat: "—"     },
-  { sol: "MD-00000125", tipo: "Replan", protocolo: "—",      so: "SO-9874512", status: "confirmado",  statusLabel: "Confirmado",             contrato: "Q-20303", item: "30", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Tereza Akemi",     volSol: "180,00", volConf: "175,00", volFat: "—"     },
-  { sol: "MD-00000126", tipo: "Plan",   protocolo: "PR-2031", so: "SO-9874513", status: "faturado",   statusLabel: "Faturado",               contrato: "Q-20392", item: "10", produto: "MPANITRO 20 05 20 UR",       embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP",   cnpj: "71.320.915/0006-37", clienteFinal: "Beto Dos Santos",  volSol: "300,00", volConf: "300,00", volFat: "300,00" },
-  { sol: "MD-00000127", tipo: "Plan",   protocolo: "—",      so: "SO-9874514", status: "faturamento", statusLabel: "Aguardando faturamento", contrato: "Q-20392", item: "20", produto: "MPANITRO 20 05 20 UR",       embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP",   cnpj: "71.320.915/0006-37", clienteFinal: "Jorge Dos Anjos",  volSol: "120,00", volConf: "120,00", volFat: "—"     },
-  { sol: "MD-00000128", tipo: "Replan", protocolo: "PR-2032", so: "—",          status: "indisponivel", statusLabel: "Indisponível",          contrato: "Q-85721", item: "10", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Aguinado Gomes",   volSol: "450,00", volConf: "—",     volFat: "—"     },
-  { sol: "MD-00000129", tipo: "Plan",   protocolo: "—",      so: "—",          status: "acao_pendente", statusLabel: "Ação pendente",        contrato: "Q-39742", item: "10", produto: "EXCLN 18 09 27 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG",     cnpj: "71.320.915/0006-37", clienteFinal: "Marco Antonio",    volSol: "80,00",  volConf: "—",     volFat: "—"     },
-  { sol: "MD-00000130", tipo: "Plan",   protocolo: "PR-2033", so: "SO-9874515", status: "faturado",   statusLabel: "Faturado",               contrato: "Q-20303", item: "40", produto: "EXCLN 24 05 24 UR",         embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", clienteFinal: "Carlos Alves",     volSol: "200,00", volConf: "200,00", volFat: "200,00" },
+  /* MD-00000123 — três variantes */
+  mkRow({
+    sol: "MD-00000123", protocolo: "M9W38746", tipo: "plan",   semana: "14/2026",
+    status: "em_analise", cotacao: "Q-394874", contrato: "20084782", itemContrato: "10",
+    ov: "—", pedidoCliente: "123245", codProduto: "—", descProduto: "FFALM 10 20 30",
+    embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Carlos Alves", recebedorCnpj: "71.320.915/0006-37", recebedorIe: "ISENTO",
+    cidade: "Sertãozinho", uf: "SP",
+    qtdSolicitada: 300, qtdConfirmadaOV: 150, qtdFaturada: 50,
+  },
+  [50, 50, 50, 50, 40, 40, 40, 30],   /* Planejado: total, seg..dom */
+  [50, 30, 20,  0,  0,  0,  0,  0]),  /* Realizado: total, seg..dom */
+
+  mkRow({
+    sol: "MD-00000123", protocolo: "M9W38746", tipo: "replan", semana: "15/2026",
+    status: "aprovado", cotacao: "Q-394874", contrato: "20084782", itemContrato: "10",
+    ov: "SO-9874513", pedidoCliente: "123245", codProduto: "—", descProduto: "FFALM 10 20 30",
+    embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Carlos Alves", recebedorCnpj: "71.320.915/0006-37", recebedorIe: "ISENTO",
+    cidade: "Sertãozinho", uf: "SP",
+    qtdSolicitada: 100, qtdConfirmadaOV: 100, qtdFaturada: 0,
+  },
+  [20, 20, 20, 15, 15, 10,  0,  0],
+  [20, 20, 20,  0,  0,  0,  0,  0]),
+
+  mkRow({
+    sol: "MD-00000123", protocolo: "M9W38746", tipo: "adicao", semana: "16/2026",
+    status: "em_analise", cotacao: "Q-394874", contrato: "20084782", itemContrato: "10",
+    ov: "—", pedidoCliente: "123245", codProduto: "—", descProduto: "FFALM 10 20 30",
+    embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Carlos Alves", recebedorCnpj: "71.320.915/0006-37", recebedorIe: "ISENTO",
+    cidade: "Sertãozinho", uf: "SP",
+    qtdSolicitada: 50, qtdConfirmadaOV: 0, qtdFaturada: 0,
+  },
+  [10, 10, 10, 10,  5,  5,  0,  0],
+  [ 0,  0,  0,  0,  0,  0,  0,  0]),
+
+  /* Outros casos para popular filtros e status */
+  mkRow({
+    sol: "MD-00000124", protocolo: "M9W38747", tipo: "plan", semana: "14/2026",
+    status: "em_carregamento", cotacao: "Q-394874", contrato: "20084782", itemContrato: "20",
+    ov: "SO-9874520", pedidoCliente: "123246", codProduto: "—", descProduto: "FFALM 10 20 30",
+    embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Renato Cesar", recebedorCnpj: "84.502.301/0001-22", recebedorIe: "123456789",
+    cidade: "Sertãozinho", uf: "SP",
+    qtdSolicitada: 250, qtdConfirmadaOV: 250, qtdFaturada: 100,
+  },
+  [50, 40, 40, 40, 30, 30, 20,  0],
+  [50, 40, 10,  0,  0,  0,  0,  0]),
+
+  mkRow({
+    sol: "MD-00000125", protocolo: "M9W38748", tipo: "plan", semana: "14/2026",
+    status: "faturado", cotacao: "Q-204953", contrato: "20084790", itemContrato: "10",
+    ov: "SO-9874501", pedidoCliente: "234521", codProduto: "—", descProduto: "MPANITRO 20 05 20 UR",
+    embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Beto Dos Santos", recebedorCnpj: "31.402.992/0001-04", recebedorIe: "ISENTO",
+    cidade: "Bebedouro", uf: "SP",
+    qtdSolicitada: 300, qtdConfirmadaOV: 300, qtdFaturada: 300,
+  },
+  [60, 50, 50, 50, 40, 30, 20,  0],
+  [60, 50, 50, 50, 40, 30, 20,  0]),
+
+  mkRow({
+    sol: "MD-00000126", protocolo: "M9W38749", tipo: "replan", semana: "14/2026",
+    status: "rejeitado", cotacao: "Q-859421", contrato: "20084801", itemContrato: "10",
+    ov: "—", pedidoCliente: "234522", codProduto: "—", descProduto: "STRAF 04 30 10 STR",
+    embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Planta Araxá — MG",
+    recebedorNome: "Aguinado Gomes", recebedorCnpj: "55.910.223/0001-66", recebedorIe: "ISENTO",
+    cidade: "Alfenas", uf: "MG",
+    qtdSolicitada: 450, qtdConfirmadaOV: 0, qtdFaturada: 0,
+  },
+  [60, 60, 60, 60, 60, 60, 60, 30],
+  [ 0,  0,  0,  0,  0,  0,  0,  0]),
+
+  mkRow({
+    sol: "MD-00000127", protocolo: "M9W38750", tipo: "plan", semana: "13/2026",
+    status: "cancelado", cotacao: "Q-204953", contrato: "20084790", itemContrato: "20",
+    ov: "—", pedidoCliente: "234523", codProduto: "—", descProduto: "MPANITRO 20 05 20 UR",
+    embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil — Cubatão",
+    recebedorNome: "Tereza Akemi", recebedorCnpj: "44.230.118/0001-87", recebedorIe: "987654321",
+    cidade: "Bebedouro", uf: "SP",
+    qtdSolicitada: 120, qtdConfirmadaOV: 0, qtdFaturada: 0,
+  },
+  [20, 20, 20, 20, 20, 20,  0,  0],
+  [ 0,  0,  0,  0,  0,  0,  0,  0]),
 ];
 
-const elBody    = document.getElementById("reportTableBody");
-const elEmpty   = document.getElementById("reportEmpty");
-const elSearch  = document.getElementById("filterSearch");
-const elFrom    = document.getElementById("filterFrom");
-const elTo      = document.getElementById("filterTo");
-const elStatus  = document.getElementById("filterStatus");
-const elTipo    = document.getElementById("filterTipo");
+/* Recalcula Total como soma de seg..dom (último elemento [0] já está) — manter consistente */
+REQUESTS.forEach(r => {
+  // Garante Total = soma dos 7 dias quando o índice 0 não bater
+  const sumPlan = r.planned.slice(1).reduce((a,b) => a + (b||0), 0);
+  const sumReal = r.realized.slice(1).reduce((a,b) => a + (b||0), 0);
+  r.planned[0]  = sumPlan;
+  r.realized[0] = sumReal;
+  r.diff = r.planned.map((p, i) => (r.realized[i] - p));
+});
 
+/* ---- Column definitions ---- */
+const DAY_LABELS = ["Total", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+
+/* Build thead */
+function buildThead() {
+  const main = [
+    { l: "Solicitação", c: "col-sticky" },
+    { l: "Protocolo" },
+    { l: "Tipo Agend." },
+    { l: "Semana" },
+    { l: "Status" },
+    { l: "Cotação" },
+    { l: "Contrato SAP" },
+    { l: "Item Contrato" },
+    { l: "OV" },
+    { l: "Pedido Cliente" },
+    { l: "Cód. Produto" },
+    { l: "Descrição Produto" },
+    { l: "Embalagem" },
+    { l: "Frete" },
+    { l: "Planta" },
+    { l: "Nome Recebedor" },
+    { l: "CPF/CNPJ Recebedor" },
+    { l: "IE Recebedor" },
+    { l: "Cidade" },
+    { l: "UF" },
+    { l: "Qtd Solicitada (t)", a: "right" },
+    { l: "Qtd Confirmada OV (t)", a: "right" },
+    { l: "Qtd Faturada (t)", a: "right" },
+  ];
+
+  let html = main.map(h =>
+    `<th class="${h.c || ""}" style="text-align:${h.a || "left"}">${h.l}</th>`
+  ).join("");
+
+  /* Daily breakdown: 8 dias × (Plan, Real, Δ). Separador sutil no inicio de cada dia. */
+  DAY_LABELS.forEach((day, idx) => {
+    ["Plan", "Real", "Δ"].forEach((metric, mIdx) => {
+      const sep = mIdx === 0 ? "day-sep" : "";
+      html += `<th class="${sep}" style="text-align:right">${day} ${metric}</th>`;
+    });
+  });
+
+  return html;
+}
+
+/* ---- Filter populating ---- */
+function uniqueSorted(arr) { return [...new Set(arr.filter(Boolean))].sort(); }
+
+function populateFilters() {
+  const fill = (sel, values) => {
+    const current = sel.value;
+    sel.innerHTML = `<option value="">${sel.options[0] ? sel.options[0].textContent : "Todos"}</option>` +
+      values.map(v => `<option value="${v}">${v}</option>`).join("");
+    if (values.includes(current)) sel.value = current;
+  };
+  fill(elSemana,          uniqueSorted(REQUESTS.map(r => r.semana)));
+  fill(elCnpjEmissor,     uniqueSorted(REQUESTS.map(r => r.recebedorCnpj)));   /* emissor coincide com filial; aqui usamos um único CNPJ Mosaic na vida real, mas o filtro existe — populamos com base no recebedor pra mock */
+  fill(elRecebedorNome,   uniqueSorted(REQUESTS.map(r => r.recebedorNome)));
+  fill(elRecebedorCnpj,   uniqueSorted(REQUESTS.map(r => r.recebedorCnpj)));
+  fill(elProduto,         uniqueSorted(REQUESTS.map(r => r.descProduto)));
+  fill(elPlanta,          uniqueSorted(REQUESTS.map(r => r.planta)));
+}
+
+/* ---- Formatters ---- */
+const fmt = (n) => {
+  if (n == null || n === "") return "—";
+  if (n === 0) return "0";
+  return Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+};
+const fmtDiff = (n) => {
+  if (n == null) return "—";
+  if (n === 0) return "0";
+  return (n > 0 ? "+" : "") + Number(n).toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+};
+const diffCls = (n) => {
+  if (n == null) return "vol-cell--muted";
+  if (n > 0) return "vol-cell--pos";
+  if (n < 0) return "vol-cell--neg";
+  return "vol-cell--zero";
+};
+
+/* ---- DOM refs ---- */
+const elHead          = document.getElementById("reportThead");
+const elBody          = document.getElementById("reportTableBody");
+const elEmpty         = document.getElementById("reportEmpty");
+const elSearch        = document.getElementById("filterSearch");
+const elStatus        = document.getElementById("filterStatus");
+const elSemana        = document.getElementById("filterSemana");
+const elCnpjEmissor   = document.getElementById("filterCnpjEmissor");
+const elRecebedorNome = document.getElementById("filterRecebedorNome");
+const elRecebedorCnpj = document.getElementById("filterRecebedorCnpj");
+const elProduto       = document.getElementById("filterProduto");
+const elPlanta        = document.getElementById("filterPlanta");
+
+/* ---- Filtering ---- */
 function filteredRequests() {
   const q = (elSearch.value || "").trim().toLowerCase();
-  const status = elStatus.value || "";
-  const tipo = (elTipo.value || "").toLowerCase();
   return REQUESTS.filter(r => {
     if (q) {
-      const hay = [r.sol, r.protocolo, r.so, r.contrato, r.item, r.produto, r.embalagem, r.frete, r.planta, r.enviarPara, r.cnpj, r.clienteFinal].join(" ").toLowerCase();
+      const hay = [r.sol, r.protocolo, r.cotacao, r.contrato, r.ov, r.pedidoCliente].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
     }
-    if (status && r.status !== status) return false;
-    if (tipo && r.tipo.toLowerCase() !== tipo) return false;
+    if (elStatus.value        && r.status        !== elStatus.value)        return false;
+    if (elSemana.value        && r.semana        !== elSemana.value)        return false;
+    if (elCnpjEmissor.value   && r.recebedorCnpj !== elCnpjEmissor.value)   return false;
+    if (elRecebedorNome.value && r.recebedorNome !== elRecebedorNome.value) return false;
+    if (elRecebedorCnpj.value && r.recebedorCnpj !== elRecebedorCnpj.value) return false;
+    if (elProduto.value       && r.descProduto   !== elProduto.value)       return false;
+    if (elPlanta.value        && r.planta        !== elPlanta.value)        return false;
     return true;
   });
 }
 
+/* ---- Render ---- */
 function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
-  elBody.innerHTML = list.map(r => `
-    <tr>
-      <td class="cell-sol">${r.sol}</td>
-      <td><span class="tipo-tag tipo-tag--${r.tipo.toLowerCase()}">${r.tipo}</span></td>
-      <td>${r.protocolo}</td>
-      <td>${r.so}</td>
-      <td><span class="status-pill status-pill--${r.status}">${r.statusLabel}</span></td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.contrato}</span>
-          <span class="stack-secondary">Item ${r.item}</span>
-        </div>
-      </td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.produto}</span>
-          <span class="stack-secondary">${r.embalagem}</span>
-        </div>
-      </td>
-      <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
-      <td>
-        <div class="cell-stack">
-          <span class="stack-primary">${r.planta}</span>
-          <span class="stack-secondary">→ ${r.enviarPara}</span>
-        </div>
-      </td>
-      <td class="cell-mono">${r.cnpj}</td>
-      <td>${r.clienteFinal}</td>
-      <td class="vol-cell">${r.volSol}</td>
-      <td class="vol-cell vol-cell--conf">${r.volConf}</td>
-      <td class="vol-cell vol-cell--fat">${r.volFat}</td>
-    </tr>
-  `).join("");
+
+  elBody.innerHTML = list.map(r => {
+    let tds = "";
+    tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
+    tds += `<td class="cell-mono">${r.protocolo}</td>`;
+    tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
+    tds += `<td class="cell-mono">${r.semana}</td>`;
+    tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
+    tds += `<td class="cell-mono">${r.cotacao}</td>`;
+    tds += `<td class="cell-mono">${r.contrato}</td>`;
+    tds += `<td class="cell-mono">${r.itemContrato}</td>`;
+    tds += `<td class="cell-mono">${r.ov}</td>`;
+    tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
+    tds += `<td class="cell-mono">${r.codProduto}</td>`;
+    tds += `<td>${r.descProduto}</td>`;
+    tds += `<td>${r.embalagem}</td>`;
+    tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
+    tds += `<td>${r.planta}</td>`;
+    tds += `<td>${r.recebedorNome}</td>`;
+    tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
+    tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
+    tds += `<td>${r.cidade}</td>`;
+    tds += `<td>${r.uf}</td>`;
+    tds += `<td class="vol-cell">${fmt(r.qtdSolicitada)}</td>`;
+    tds += `<td class="vol-cell vol-cell--conf">${fmt(r.qtdConfirmadaOV)}</td>`;
+    tds += `<td class="vol-cell vol-cell--fat">${fmt(r.qtdFaturada)}</td>`;
+
+    /* Daily breakdown: 8 dias × (Plan / Real / Δ) */
+    for (let d = 0; d < 8; d++) {
+      const p = r.planned[d];
+      const real = r.realized[d];
+      const diff = r.diff[d];
+      tds += `<td class="vol-cell day-sep">${fmt(p)}</td>`;
+      tds += `<td class="vol-cell">${fmt(real)}</td>`;
+      tds += `<td class="vol-cell ${diffCls(diff)}">${fmtDiff(diff)}</td>`;
+    }
+
+    return `<tr>${tds}</tr>`;
+  }).join("");
 }
 
-[elSearch, elFrom, elTo, elStatus, elTipo].forEach(el => {
+/* ---- Init ---- */
+elHead.innerHTML = buildThead();
+populateFilters();
+
+/* Pré-filtro: carrega semana vigente (mockada como 14/2026 — primeira da lista atual) */
+const semanaVigente = "14/2026";
+if ([...elSemana.options].some(o => o.value === semanaVigente)) {
+  elSemana.value = semanaVigente;
+}
+
+[elSearch, elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("input", render);
   el.addEventListener("change", render);
 });
