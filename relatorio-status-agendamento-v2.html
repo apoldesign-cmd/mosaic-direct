@@ -2017,7 +2017,9 @@
   }
   .report-table thead th.col-sticky { background: var(--bg-section); z-index: 3; }
   .report-table tbody tr:nth-child(even) td.col-sticky { background: #fafaf8; }
-  .report-table tbody tr:hover td.col-sticky { background: rgba(0,106,77,0.04); }
+  /* Hover precisa ser OPACO para nao deixar vazar o conteudo das colunas atras */
+  .report-table tbody tr:hover td.col-sticky,
+  .report-table tbody tr:nth-child(even):hover td.col-sticky { background: #ecf3ef; }
   /* Subtle day-group separator: thin line at start of each day group */
   .report-table th.day-sep,
   .report-table td.day-sep { border-left: 1px solid var(--border-soft); }
@@ -2313,10 +2315,9 @@
     align-items: center; justify-content: center;
     padding: 0;
     flex-shrink: 0;
-    transition: background-color 120ms, border-color 120ms, transform 120ms;
+    transition: background-color 120ms, border-color 120ms;
   }
-  .btn-export-xls:hover { background: var(--bg-section); border-color: var(--border-strong); transform: translateY(-1px); }
-  .btn-export-xls:active { transform: translateY(0); }
+  .btn-export-xls:hover { background: var(--bg-section); border-color: var(--mosaic-green-700); }
 
   /* Advanced filter panel (expanded) */
   .advanced-filter {
@@ -2972,8 +2973,6 @@
         <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
         <a href="relatorio-status-agendamento-v2.html" class="current">Relatório de Status Agendamento · V2</a>
         <a href="relatorio-status-agendamento-v3.html">Relatório de Status Agendamento · V3</a>
-        <a href="#">Relatório Planejado vs Realizado</a>
-        <a href="#">Relatório de Embarques</a>
       </div>
     </span>
     <a href="#" class="navitem has-dropdown">Faturamento</a>
@@ -3005,42 +3004,11 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Versão <strong>V2</strong>: comece <strong>selecionando um contrato</strong> para visualizar as solicitações de agendamento daquele contrato. Tela <strong>read-only</strong> — não permite edição.</span>
+    <span>Versão <strong>V2</strong>: lista todas as solicitações de agendamento, com filtros, autocomplete e exportação. Tela <strong>read-only</strong> — não permite edição.</span>
   </div>
 
-  <!-- Empty state: aguardando seleção de contrato -->
-  <div class="picker-empty" id="pickerEmpty">
-    <svg class="picker-empty-icon" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-      <path d="M14 3v6h6"/>
-      <path d="M8 13h8M8 17h5"/>
-    </svg>
-    <h2>Selecione um contrato para começar</h2>
-    <p>Você verá todas as solicitações de agendamento vinculadas ao contrato escolhido, com o status atualizado em tempo real.</p>
-    <button type="button" class="btn btn-primary btn-with-icon" id="btnOpenPickerEmpty">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      Selecionar Contrato
-    </button>
-  </div>
-
-  <!-- Selected contract chip + change button -->
-  <div class="selected-contract-bar is-hidden" id="selectedContractBar">
-    <div class="selected-contract-info">
-      <span class="selected-contract-label">Contrato selecionado</span>
-      <div class="selected-contract-id">
-        <span id="selectedContractCode">—</span>
-        <span class="selected-contract-sep">·</span>
-        <span id="selectedContractRef" class="selected-contract-ref">—</span>
-      </div>
-    </div>
-    <button type="button" class="btn btn-secondary btn-with-icon" id="btnChangeContract">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/></svg>
-      Trocar contrato
-    </button>
-  </div>
-
-  <!-- Report content (filters + table) — only after contract selected -->
-  <div id="reportContent" class="is-hidden">
+  <!-- Report content (filters + table) -->
+  <div id="reportContent">
     <!-- Search + advanced-filter trigger + export -->
     <div class="search-bar">
       <div class="filter-search-wrap search-bar-input">
@@ -3172,40 +3140,6 @@
 </main>
 
 <!-- Contract picker drawer -->
-<div class="drawer-backdrop" id="pickerBackdrop"></div>
-<aside class="drawer" id="pickerDrawer" aria-hidden="true">
-  <header class="drawer-header">
-    <div class="modal-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
-    </div>
-    <div class="titles">
-      <h3>Selecionar contrato</h3>
-      <div class="subtitle">Escolha o contrato para visualizar o status de agendamento</div>
-    </div>
-    <button class="close-x" type="button" id="pickerCloseBtn" aria-label="Fechar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </header>
-  <div class="drawer-search">
-    <div class="drawer-search-wrap" id="pickerSearchWrap">
-      <span class="icon-left" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span>
-      <input type="text" id="pickerSearch" placeholder="Buscar por contrato SAP, cotação ou referência..." autocomplete="off" />
-      <button type="button" class="clear-btn" id="pickerClearBtn" aria-label="Limpar busca">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-  </div>
-  <div class="drawer-list" id="pickerList"></div>
-  <div class="drawer-footer">
-    <div class="count" id="pickerCount">Nenhum contrato selecionado</div>
-    <div class="actions">
-      <button type="button" class="btn btn-secondary" id="pickerCancelBtn">Cancelar</button>
-      <button type="button" class="btn btn-primary" id="pickerConfirmBtn" disabled>Selecionar</button>
-    </div>
-  </div>
-</aside>
 
 <script>
 /* ============================================================
@@ -3452,12 +3386,9 @@ function currentWeekRange() {
 }
 const SEMANA_VIGENTE_RANGE = currentWeekRange();
 
-/* ---- Filtering (escopado pelo contrato selecionado em V2) ---- */
-let selectedContract = null; /* { code, ref, cotacao, ... } */
-
+/* ---- Filtering (sem seleção de contrato — mostra todas as solicitações) ---- */
 function scopedRequests() {
-  if (!selectedContract) return [];
-  return REQUESTS.filter(r => r.contrato === selectedContract.code);
+  return REQUESTS;
 }
 
 function filteredRequests() {
@@ -3705,209 +3636,18 @@ elHead.innerHTML = buildThead();
   el.addEventListener("change", render);
 });
 
-/* ===========================================================
-   V2 — Contract picker
-   =========================================================== */
-
-/* Catálogo de contratos disponíveis para o cliente logado.
-   Apenas contratos com solicitações em REQUESTS aparecem com volume real;
-   os demais são mostrados para enriquecer o picker. */
-const CONTRACTS = [
-  {
-    code: "20084782", ref: "CN-2026-001", cotacao: "Q-394874",
-    produto: "FFALM 10 20 30", embalagem: "BagOneWay Liner 1,40", frete: "FOB",
-    vigencia: "01/01/2026 — 31/12/2026", saldo: 850, vencido: false,
-  },
-  {
-    code: "20084790", ref: "CN-2026-002", cotacao: "Q-204953",
-    produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF",
-    vigencia: "01/02/2026 — 31/08/2026", saldo: 420, vencido: false,
-  },
-  {
-    code: "20084801", ref: "CN-2026-003", cotacao: "Q-859421",
-    produto: "STRAF 04 30 10 STR", embalagem: "BagOneWay Liner 1,40", frete: "CIF",
-    vigencia: "01/03/2026 — 30/11/2026", saldo: 1200, vencido: false,
-  },
-  {
-    code: "20083920", ref: "CN-2025-178", cotacao: "Q-732001",
-    produto: "MPANITRO 20 05 20 UR", embalagem: "BigBag 600 kg", frete: "FOB",
-    vigencia: "01/06/2025 — 31/12/2025", saldo: 0, vencido: true,
-  },
-  {
-    code: "20084055", ref: "CN-2026-019", cotacao: "Q-841200",
-    produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB",
-    vigencia: "15/01/2026 — 15/10/2026", saldo: 540, vencido: false,
-  },
-];
-
-const elPickerBackdrop = document.getElementById("pickerBackdrop");
-const elPickerDrawer   = document.getElementById("pickerDrawer");
-const elPickerList     = document.getElementById("pickerList");
-const elPickerSearch   = document.getElementById("pickerSearch");
-const elPickerSearchWrap = document.getElementById("pickerSearchWrap");
-const elPickerClear    = document.getElementById("pickerClearBtn");
-const elPickerCancel   = document.getElementById("pickerCancelBtn");
-const elPickerConfirm  = document.getElementById("pickerConfirmBtn");
-const elPickerClose    = document.getElementById("pickerCloseBtn");
-const elPickerCount    = document.getElementById("pickerCount");
-
-const elBtnOpenEmpty   = document.getElementById("btnOpenPickerEmpty");
-const elBtnChange      = document.getElementById("btnChangeContract");
-const elEmptyState     = document.getElementById("pickerEmpty");
-const elReportContent  = document.getElementById("reportContent");
-const elSelectedBar    = document.getElementById("selectedContractBar");
-const elSelCode        = document.getElementById("selectedContractCode");
-const elSelRef         = document.getElementById("selectedContractRef");
-
-let pickerPending = null; /* contrato candidato dentro do drawer (antes do Selecionar) */
-
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 }
-function highlight(text, q) {
-  if (!q) return escapeHtml(text);
-  const safe = escapeHtml(text);
-  const re = new RegExp("(" + q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
-  return safe.replace(re, "<mark>$1</mark>");
-}
 
-function renderPickerList() {
-  const q = (elPickerSearch.value || "").trim().toLowerCase();
-  const list = CONTRACTS.filter(c => {
-    if (!q) return true;
-    return [c.code, c.ref, c.cotacao, c.produto].join(" ").toLowerCase().includes(q);
-  });
-
-  if (!list.length) {
-    elPickerList.innerHTML = `<div class="drawer-empty">Nenhum contrato encontrado para "${escapeHtml(q)}".</div>`;
-    return;
-  }
-
-  elPickerList.innerHTML = list.map(c => {
-    const isSel = pickerPending && pickerPending.code === c.code;
-    return `
-      <div class="drawer-item ${isSel ? "is-selected" : ""}" data-code="${c.code}">
-        <span class="picker-radio" aria-hidden="true"></span>
-        <div class="drawer-item-body">
-          <div class="drawer-item-line1">
-            <span class="drawer-item-contract">${highlight(c.code, q)}</span>
-            <span class="drawer-item-ref">${highlight(c.ref, q)}</span>
-            <span class="pill-frete ${c.frete.toLowerCase()}">${c.frete}</span>
-          </div>
-          <div class="drawer-item-product">${highlight(c.produto, q)}</div>
-          <div class="drawer-item-meta">
-            <span><strong>Cotação:</strong> ${highlight(c.cotacao, q)}</span>
-            <span><strong>Vigência:</strong> ${c.vigencia}</span>
-            <span><strong>Embalagem:</strong> ${c.embalagem}</span>
-          </div>
-        </div>
-        <div class="drawer-item-saldo">
-          ${c.vencido ? '<span style="color:var(--mosaic-red); font-size:11px; font-weight:800;">VENCIDO</span>' : c.saldo.toLocaleString("pt-BR")}
-          ${!c.vencido ? '<span class="unit">t</span>' : ''}
-        </div>
-      </div>
-    `;
-  }).join("");
-
-  /* Click handlers */
-  elPickerList.querySelectorAll(".drawer-item").forEach(el => {
-    el.addEventListener("click", () => {
-      const code = el.getAttribute("data-code");
-      pickerPending = CONTRACTS.find(c => c.code === code);
-      updatePickerFooter();
-      renderPickerList();
-    });
-  });
-}
-
-function updatePickerFooter() {
-  if (pickerPending) {
-    elPickerCount.innerHTML = `Selecionado: <strong>${pickerPending.code}</strong>`;
-    elPickerConfirm.disabled = false;
-  } else {
-    elPickerCount.textContent = "Nenhum contrato selecionado";
-    elPickerConfirm.disabled = true;
-  }
-}
-
-function openPicker() {
-  pickerPending = selectedContract ? CONTRACTS.find(c => c.code === selectedContract.code) || null : null;
-  elPickerSearch.value = "";
-  elPickerSearchWrap.classList.remove("has-value");
-  renderPickerList();
-  updatePickerFooter();
-  elPickerBackdrop.classList.add("is-open");
-  elPickerDrawer.classList.add("is-open");
-  elPickerDrawer.setAttribute("aria-hidden", "false");
-  setTimeout(() => elPickerSearch.focus(), 200);
-}
-
-function closePicker() {
-  elPickerBackdrop.classList.remove("is-open");
-  elPickerDrawer.classList.remove("is-open");
-  elPickerDrawer.setAttribute("aria-hidden", "true");
-}
-
-function applySelection(contract) {
-  selectedContract = contract;
-  elSelCode.textContent = contract.code;
-  elSelRef.textContent  = `${contract.ref} · ${contract.produto}`;
-
-  elEmptyState.classList.add("is-hidden");
-  elSelectedBar.classList.remove("is-hidden");
-  elReportContent.classList.remove("is-hidden");
-
-  /* Repopulate os filtros com base apenas nas solicitações deste contrato */
+/* Inicialização: popula filtros, pré-carrega semana vigente e renderiza */
+function initReport() {
   populateFilters(scopedRequests());
-
-  /* Reset filtros (mantém apenas o escopo do contrato) */
-  elSearch.value = "";
-  elStatus.value = "";
-  elCnpjEmissor.value = "";
-  elRecebedorNome.value = "";
-  elRecebedorCnpj.value = "";
-  elProduto.value = "";
-  elPlanta.value = "";
-
-  /* Pré-carrega a semana vigente (Seg → Dom) se ela existir nas opções */
   const hasCurrentWeek = [...elSemana.options].some(o => o.value === SEMANA_VIGENTE_RANGE);
   elSemana.value = hasCurrentWeek ? SEMANA_VIGENTE_RANGE : "";
-
-  /* Colapsa o painel de filtro avançado ao trocar de contrato */
-  elAdvancedPanel.classList.add("is-hidden");
-  elBtnToggleAdv.setAttribute("aria-expanded", "false");
-
   updateActiveFilterCount();
   render();
 }
-
-/* Wire up */
-elBtnOpenEmpty.addEventListener("click", openPicker);
-elBtnChange.addEventListener("click", openPicker);
-elPickerClose.addEventListener("click", closePicker);
-elPickerCancel.addEventListener("click", closePicker);
-elPickerBackdrop.addEventListener("click", closePicker);
-
-elPickerSearch.addEventListener("input", () => {
-  elPickerSearchWrap.classList.toggle("has-value", !!elPickerSearch.value);
-  renderPickerList();
-});
-elPickerClear.addEventListener("click", () => {
-  elPickerSearch.value = "";
-  elPickerSearchWrap.classList.remove("has-value");
-  renderPickerList();
-  elPickerSearch.focus();
-});
-
-elPickerConfirm.addEventListener("click", () => {
-  if (!pickerPending) return;
-  applySelection(pickerPending);
-  closePicker();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && elPickerDrawer.classList.contains("is-open")) closePicker();
-});
 
 /* ===========================================================
    V2 — Advanced filter panel + active filter count
@@ -4064,6 +3804,9 @@ elViewToggles.forEach(btn => {
   btn.addEventListener("click", () => setView(btn.getAttribute("data-view")));
 });
 
+/* Inicializa relatório (sem seleção de contrato) */
+initReport();
+
 /* ===========================================================
    V2 — Export CSV (respeita filtros aplicados)
    =========================================================== */
@@ -4115,10 +3858,9 @@ function exportCSV() {
   const url  = URL.createObjectURL(blob);
 
   const today = new Date().toISOString().slice(0, 10);
-  const contractCode = selectedContract ? selectedContract.code : "todos";
   const a = document.createElement("a");
   a.href = url;
-  a.download = `relatorio-status-agendamento_${contractCode}_${today}.csv`;
+  a.download = `relatorio-status-agendamento_${today}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
