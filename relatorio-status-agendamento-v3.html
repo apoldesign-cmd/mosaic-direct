@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Status de Agendamento</title>
+<title>Mosaic Direct — Relatório de Status de Agendamento · V3 (dias inline)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1933,199 +1933,6 @@
     color: var(--text-2);
     pointer-events: none;
   }
-
-  /* ================================================================
-     Search bar + Advanced filter + Export icon
-     ================================================================ */
-  .search-bar {
-    display: flex;
-    align-items: stretch;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .search-bar-input { flex: 1; min-width: 0; }
-  .search-bar-input input {
-    width: 100%;
-    height: 46px;
-    padding: 0 48px 0 44px;
-    font-size: 14px;
-    font-weight: 600;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    outline: none;
-    font-family: inherit;
-    transition: border-color 120ms, box-shadow 120ms;
-  }
-  .search-bar-input input::placeholder { color: var(--text-3); font-weight: 500; }
-  .search-bar-input input:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .search-bar-input .icon-left {
-    position: absolute; left: 14px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-2);
-    pointer-events: none;
-  }
-  .search-bar-input .search-clear {
-    position: absolute; right: 10px; top: 50%;
-    transform: translateY(-50%);
-    width: 26px; height: 26px;
-    background: transparent;
-    border: none;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center; justify-content: center;
-  }
-  .search-bar-input .search-clear:hover { color: var(--text-1); background: var(--bg-section); }
-  .search-bar-input .search-clear.is-hidden { display: none !important; }
-
-  .search-suggestions {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0; right: 0;
-    background: #fff;
-    border: 1.5px solid var(--border);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    max-height: 360px;
-    overflow-y: auto;
-    z-index: 50;
-  }
-  .search-suggestions.is-hidden { display: none !important; }
-  .search-suggestion {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 16px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border-soft);
-    transition: background-color 120ms;
-  }
-  .search-suggestion:last-child { border-bottom: none; }
-  .search-suggestion:hover,
-  .search-suggestion.is-active { background: rgba(0,106,77,0.06); }
-  .search-suggestion .ss-field {
-    display: inline-flex;
-    padding: 2px 8px;
-    font-size: 9px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--text-2);
-    background: var(--bg-section);
-    border: 1px solid var(--border-soft);
-    min-width: 78px;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .search-suggestion .ss-value {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-1);
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .search-suggestion .ss-value mark {
-    background: rgba(240,192,32,0.45);
-    color: inherit;
-    font-weight: 800;
-    padding: 0 1px;
-  }
-  .search-suggestion .ss-meta {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .btn-advanced-filter {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    height: 46px;
-    padding: 0 16px;
-    background: #fff;
-    border: 1.5px solid var(--border);
-    color: var(--text-1);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 120ms, border-color 120ms;
-    flex-shrink: 0;
-  }
-  .btn-advanced-filter:hover { background: var(--bg-section); border-color: var(--border-strong); }
-  .btn-advanced-filter[aria-expanded="true"] {
-    background: var(--mosaic-green-800);
-    color: #fff;
-    border-color: var(--mosaic-green-800);
-  }
-  .btn-advanced-filter[aria-expanded="true"] svg { color: #fff; }
-  .btn-advanced-filter .adv-count {
-    display: inline-flex;
-    align-items: center; justify-content: center;
-    min-width: 22px; height: 22px;
-    padding: 0 6px;
-    background: var(--mosaic-yellow);
-    color: var(--text-1);
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 800;
-    margin-left: -2px;
-  }
-  .btn-advanced-filter[aria-expanded="true"] .adv-count {
-    background: #fff;
-    color: var(--mosaic-green-900);
-  }
-  .btn-advanced-filter .adv-count.is-hidden { display: none !important; }
-  .btn-advanced-filter .adv-chev { transition: transform 220ms; flex-shrink: 0; }
-  .btn-advanced-filter[aria-expanded="true"] .adv-chev { transform: rotate(180deg); }
-
-  .btn-export-xls {
-    width: 46px; height: 46px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center; justify-content: center;
-    padding: 0;
-    flex-shrink: 0;
-    transition: background-color 120ms, border-color 120ms;
-  }
-  .btn-export-xls:hover { background: var(--bg-section); border-color: var(--mosaic-green-700); }
-
-  .advanced-filter {
-    background: var(--bg-section);
-    border: 1px solid var(--border-soft);
-    padding: 14px 16px;
-    margin-bottom: 12px;
-    animation: filterSlide 200ms ease-out;
-  }
-  .advanced-filter.is-hidden { display: none !important; }
-  @keyframes filterSlide {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .filter-block--actions { align-self: end; }
-  .btn-clear-filters {
-    height: 36px;
-    padding: 0 14px;
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--text-2);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 120ms, border-color 120ms, color 120ms;
-  }
-  .btn-clear-filters:hover { background: #fff; border-color: var(--mosaic-red); color: var(--mosaic-red); }
-
   .report-table-wrap {
     border: 1px solid var(--border-soft);
     background: #fff;
@@ -2136,7 +1943,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: 12.5px;
-    min-width: 2500px;
+    min-width: 3500px;
   }
   .report-table thead th {
     background: var(--bg-section);
@@ -2339,6 +2146,454 @@
   .weekly-breakdown tr.wb-row-diff td { background: #fafaf6; }
   .weekly-breakdown tr.wb-row-diff td.wb-total { background: rgba(0,106,77,0.08); }
 
+  /* ================================================================
+     V2 — Search bar + Advanced filter + Export icon
+     ================================================================ */
+  .search-bar {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .search-bar-input { flex: 1; min-width: 0; }
+  .search-bar-input input {
+    width: 100%;
+    height: 46px;
+    padding: 0 48px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .search-bar-input input::placeholder { color: var(--text-3); font-weight: 500; }
+  .search-bar-input input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .search-bar-input .icon-left {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+  .search-bar-input .search-clear {
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    width: 26px; height: 26px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+  }
+  .search-bar-input .search-clear:hover { color: var(--text-1); background: var(--bg-section); }
+  .search-bar-input .search-clear.is-hidden { display: none !important; }
+
+  /* Autocomplete dropdown */
+  .search-suggestions {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    max-height: 360px;
+    overflow-y: auto;
+    z-index: 50;
+  }
+  .search-suggestions.is-hidden { display: none !important; }
+  .search-suggestion {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-soft);
+    transition: background-color 120ms;
+  }
+  .search-suggestion:last-child { border-bottom: none; }
+  .search-suggestion:hover,
+  .search-suggestion.is-active {
+    background: rgba(0,106,77,0.06);
+  }
+  .search-suggestion .ss-field {
+    display: inline-flex;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-2);
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    min-width: 78px;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .search-suggestion .ss-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .search-suggestion .ss-value mark {
+    background: rgba(240,192,32,0.45);
+    color: inherit;
+    font-weight: 800;
+    padding: 0 1px;
+  }
+  .search-suggestion .ss-meta {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* Advanced-filter trigger button */
+  .btn-advanced-filter {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    padding: 0 16px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    color: var(--text-1);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 120ms, border-color 120ms;
+    flex-shrink: 0;
+  }
+  .btn-advanced-filter:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .btn-advanced-filter[aria-expanded="true"] {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-color: var(--mosaic-green-800);
+  }
+  .btn-advanced-filter[aria-expanded="true"] svg { color: #fff; }
+  .btn-advanced-filter .adv-count {
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    min-width: 22px; height: 22px;
+    padding: 0 6px;
+    background: var(--mosaic-yellow);
+    color: var(--text-1);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    margin-left: -2px;
+  }
+  .btn-advanced-filter[aria-expanded="true"] .adv-count {
+    background: #fff;
+    color: var(--mosaic-green-900);
+  }
+  .btn-advanced-filter .adv-count.is-hidden { display: none !important; }
+  .btn-advanced-filter .adv-chev {
+    transition: transform 220ms;
+    flex-shrink: 0;
+  }
+  .btn-advanced-filter[aria-expanded="true"] .adv-chev { transform: rotate(180deg); }
+
+  /* Export icon button */
+  .btn-export-xls {
+    width: 46px; height: 46px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center; justify-content: center;
+    padding: 0;
+    flex-shrink: 0;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .btn-export-xls:hover { background: var(--bg-section); border-color: var(--mosaic-green-700); }
+
+  /* Advanced filter panel (expanded) */
+  .advanced-filter {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    animation: filterSlide 200ms ease-out;
+  }
+  .advanced-filter.is-hidden { display: none !important; }
+  @keyframes filterSlide {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .filter-block--actions { align-self: end; }
+  .btn-clear-filters {
+    height: 36px;
+    padding: 0 14px;
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-2);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 120ms, border-color 120ms, color 120ms;
+  }
+  .btn-clear-filters:hover { background: #fff; border-color: var(--mosaic-red); color: var(--mosaic-red); }
+
+  /* ================================================================
+     V2 — View toolbar (toggle tabela/grade + export)
+     ================================================================ */
+  .view-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .view-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .view-toolbar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+  }
+  .view-toolbar-count {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .view-toggle {
+    display: inline-flex;
+    background: #fff;
+    border: 1.5px solid var(--border);
+  }
+  .view-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-2);
+    transition: background-color 120ms, color 120ms;
+  }
+  .view-toggle-btn:hover { background: var(--bg-section); color: var(--text-1); }
+  .view-toggle-btn + .view-toggle-btn { border-left: 1.5px solid var(--border); }
+  .view-toggle-btn.is-active {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .view-toggle-btn.is-active:hover { background: var(--mosaic-green-900); }
+  .view-toolbar .btn { height: 38px; padding: 0 16px; font-size: 13px; }
+
+  /* ================================================================
+     V2 — Grid view (cards)
+     ================================================================ */
+  .report-grid-wrap { width: 100%; }
+  .report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 14px;
+  }
+  .grid-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-left: 4px solid var(--mosaic-green-800);
+    display: flex;
+    flex-direction: column;
+  }
+  .grid-card-head {
+    padding: 14px 18px 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .grid-card-head-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+  .grid-card-sol {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .grid-card-sol .tipo-tag { font-size: 9px; }
+  .grid-card-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 10px;
+  }
+  .grid-card-meta strong { color: var(--text-2); font-weight: 800; }
+  .grid-card-body {
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .grid-card-product {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-1);
+  }
+  .grid-card-product-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .grid-card-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12.5px;
+    color: var(--text-2);
+  }
+  .grid-card-rows .grid-card-row { display: flex; gap: 6px; }
+  .grid-card-rows .grid-card-row strong {
+    color: var(--text-3);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 800;
+    min-width: 88px;
+    padding-top: 1px;
+  }
+  .grid-card-rows .grid-card-row span { color: var(--text-1); font-weight: 600; }
+
+  .grid-card-qty {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border-soft);
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .grid-card-qty .qty-cell {
+    background: #fafaf8;
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .grid-card-qty .qty-cell .qty-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .grid-card-qty .qty-cell .qty-value {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .grid-card-qty .qty-cell .qty-value .unit {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    margin-left: 2px;
+  }
+  .grid-card-qty .qty-cell--conf .qty-value { color: var(--mosaic-green-700); }
+  .grid-card-qty .qty-cell--fat  .qty-value { color: var(--mosaic-green-900); }
+
+  .grid-card-week {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: var(--border-soft);
+  }
+  .grid-card-week .wk-cell {
+    background: rgba(0,106,77,0.04);
+    padding: 10px 12px;
+    text-align: center;
+  }
+  .grid-card-week .wk-cell .wk-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .grid-card-week .wk-cell .wk-value {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    font-variant-numeric: tabular-nums;
+  }
+  .grid-card-week .wk-cell .wk-value.wb-pos  { color: var(--mosaic-green-700); }
+  .grid-card-week .wk-cell .wk-value.wb-neg  { color: var(--mosaic-red); }
+  .grid-card-week .wk-cell .wk-value.wb-zero { color: var(--text-3); }
+
+  .grid-card-foot {
+    padding: 10px 18px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #fafafa;
+  }
+  .grid-card-foot .grid-card-detail-btn {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    padding: 6px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .grid-card-foot .grid-card-detail-btn:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .grid-card-foot .grid-card-detail-btn svg { transition: transform 220ms; }
+  .grid-card-foot .grid-card-detail-btn.is-open svg { transform: rotate(180deg); }
+
+  .grid-card-detail {
+    border-top: 1px solid var(--border);
+    background: #f4f6f4;
+    padding: 14px 18px 18px;
+    display: none;
+  }
+  .grid-card-detail.is-open { display: block; }
+  .grid-card-detail .weekly-breakdown { font-size: 12px; }
+  .grid-card-detail .detail-panel { padding: 0; width: auto; position: static; }
+  .grid-card-detail .detail-panel-head h4 { font-size: 13px; }
+
   .report-empty {
     background: var(--bg-section);
     border: 1px dashed var(--border);
@@ -2349,6 +2604,301 @@
   }
   .report-empty strong { color: var(--text-1); display: block; margin-bottom: 6px; }
   .report-empty.is-hidden { display: none; }
+
+  /* ================================================================
+     V2 — Picker empty state + selected-contract bar
+     ================================================================ */
+  .is-hidden { display: none !important; }
+
+  .picker-empty {
+    margin-top: 12px;
+    padding: 64px 32px 72px;
+    background: var(--bg-section);
+    border: 1px dashed var(--border);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+  .picker-empty .picker-empty-icon {
+    color: var(--mosaic-green-700);
+    opacity: 0.85;
+  }
+  .picker-empty h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.01em;
+  }
+  .picker-empty p {
+    margin: 0;
+    max-width: 520px;
+    color: var(--text-2);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .picker-empty .btn { margin-top: 8px; }
+
+  .selected-contract-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    border: 1.5px solid var(--mosaic-green-700);
+    border-left-width: 4px;
+    margin-bottom: 16px;
+  }
+  .selected-contract-info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .selected-contract-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+  }
+  .selected-contract-id {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    flex-wrap: wrap;
+  }
+  .selected-contract-sep { color: var(--text-3); font-weight: 600; }
+  .selected-contract-ref { color: var(--text-2); font-weight: 700; font-size: 14px; }
+
+  /* ================================================================
+     V2 — Drawer (reusa padrão V5)
+     ================================================================ */
+  .drawer-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease-out;
+  }
+  .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: min(560px, 100%);
+    background: #fff;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .drawer.is-open { transform: translateX(0); }
+  .drawer-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    flex-shrink: 0;
+  }
+  .drawer-header .modal-icon {
+    width: 40px; height: 40px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .titles { flex: 1; min-width: 0; }
+  .drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .drawer-header .subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .drawer-header .close-x {
+    width: 32px; height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 120ms, color 120ms;
+  }
+  .drawer-header .close-x:hover { background: var(--bg-section); color: var(--text-1); }
+
+  .drawer-search {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .drawer-search-wrap { position: relative; }
+  .drawer-search-wrap input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .drawer-search-wrap input::placeholder { color: var(--text-3); font-weight: 500; }
+  .drawer-search-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .drawer-search-wrap .icon-left {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+  .drawer-search-wrap .clear-btn {
+    position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: none;
+    align-items: center; justify-content: center;
+  }
+  .drawer-search-wrap .clear-btn:hover { color: var(--text-1); }
+  .drawer-search-wrap.has-value .clear-btn { display: inline-flex; }
+
+  .drawer-list { flex: 1; overflow-y: auto; }
+  .drawer-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
+  }
+
+  .drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background-color 120ms;
+    user-select: none;
+  }
+  .drawer-item:hover { background: rgba(0, 106, 77, 0.04); }
+  .drawer-item.is-selected {
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
+  }
+  .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+
+  .picker-radio {
+    width: 20px; height: 20px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 50%;
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    position: relative;
+    transition: border-color 120ms;
+  }
+  .drawer-item.is-selected .picker-radio { border-color: var(--mosaic-green-800); }
+  .drawer-item.is-selected .picker-radio::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: var(--mosaic-green-800);
+    border-radius: 50%;
+  }
+
+  .drawer-item-body { flex: 1; min-width: 0; }
+  .drawer-item-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .drawer-item-contract {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--text-1);
+  }
+  .drawer-item-ref {
+    font-weight: 700;
+    color: var(--text-3);
+    font-size: 12px;
+  }
+  .drawer-item-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 14px;
+  }
+  .drawer-item-meta strong {
+    color: var(--text-2);
+    font-weight: 800;
+  }
+  .drawer-item-saldo {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+    margin-top: 2px;
+    text-align: right;
+  }
+  .drawer-item-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .drawer-item mark {
+    background: rgba(240, 192, 32, 0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
+
+  .drawer-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-footer .count {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .drawer-footer .count strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .drawer-footer .actions { display: flex; gap: 12px; }
 
 </style>
 <!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
@@ -2420,10 +2970,9 @@
       <div class="submenu">
         <a href="agendar-contrato-normal-v5.html">Agendar Contrato Normal</a>
         <a href="agendar-protocolo.html">Agendar Protocolo</a>
-        <a href="relatorio-status-agendamento.html" class="current">Relatório de Status Agendamento</a>
+        <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
         <a href="relatorio-status-agendamento-v2.html">Relatório de Status Agendamento · V2</a>
-        <a href="relatorio-status-agendamento-v3.html">Relatório de Status Agendamento · V3</a>
-        <a href="#">Relatório de Embarques</a>
+        <a href="relatorio-status-agendamento-v3.html" class="current">Relatório de Status Agendamento · V3</a>
       </div>
     </span>
     <a href="#" class="navitem has-dropdown">Faturamento</a>
@@ -2449,120 +2998,148 @@
     <span class="sep">›</span>
     <a href="#">Agendamento</a>
     <span class="sep">›</span>
-    <span class="current">Relatório de Status de Agendamento</span>
+    <span class="current">Relatório de Status de Agendamento · V3</span>
   </div>
   <h1 class="page-title">Relatório de Status de Agendamento</h1>
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use os filtros para ajustar o período ou refinar por recebedor, produto, planta ou status. Tela <strong>read-only</strong> — não permite edição.</span>
+    <span>Versão <strong>V3</strong>: igual à V2, mas com os <strong>dias da semana (Seg → Dom)</strong> visíveis na própria linha da tabela — sem chevron de expansão.</span>
   </div>
 
-  <!-- Search bar + advanced-filter trigger + export -->
-  <div class="search-bar">
-    <div class="filter-search-wrap search-bar-input">
-      <span class="icon-left" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span>
-      <input type="text" id="filterSearch" placeholder="Buscar Solicitação, Protocolo, Cotação, Contrato SAP, OV ou Pedido do Cliente..." autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions" />
-      <button type="button" class="search-clear is-hidden" id="searchClearBtn" aria-label="Limpar busca">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  <!-- Report content (filters + table) -->
+  <div id="reportContent">
+    <!-- Search + advanced-filter trigger + export -->
+    <div class="search-bar">
+      <div class="filter-search-wrap search-bar-input">
+        <span class="icon-left" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </span>
+        <input type="text" id="filterSearch" placeholder="Buscar Solicitação, Protocolo, Cotação, Contrato SAP, OV ou Pedido do Cliente..." autocomplete="off" aria-autocomplete="list" aria-controls="searchSuggestions" />
+        <button type="button" class="search-clear is-hidden" id="searchClearBtn" aria-label="Limpar busca">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div class="search-suggestions is-hidden" id="searchSuggestions" role="listbox"></div>
+      </div>
+      <button type="button" class="btn-advanced-filter" id="btnToggleAdvanced" aria-expanded="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+        Filtro avançado
+        <span class="adv-count is-hidden" id="advCount">0</span>
+        <svg class="adv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <div class="search-suggestions is-hidden" id="searchSuggestions" role="listbox"></div>
+      <button type="button" class="btn-export-xls" id="btnExport" title="Exportar relatório (XLSX/CSV)" aria-label="Exportar relatório">
+        <svg width="28" height="34" viewBox="0 0 28 34" aria-hidden="true">
+          <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
+          <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
+          <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Manrope, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
+        </svg>
+      </button>
     </div>
-    <button type="button" class="btn-advanced-filter" id="btnToggleAdvanced" aria-expanded="false">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
-      Filtro avançado
-      <span class="adv-count is-hidden" id="advCount">0</span>
-      <svg class="adv-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-    </button>
-    <button type="button" class="btn-export-xls" id="btnExport" title="Exportar relatório (XLSX/CSV)" aria-label="Exportar relatório">
-      <svg width="28" height="34" viewBox="0 0 28 34" aria-hidden="true">
-        <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
-        <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
-        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Manrope, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
-      </svg>
-    </button>
-  </div>
 
-  <!-- Advanced filter panel (colapsado por default) -->
-  <div class="advanced-filter is-hidden" id="advancedFilter">
-    <div class="filter-row">
-      <div class="filter-block">
-        <label>Status</label>
-        <select id="filterStatus">
-          <option value="">Todos</option>
-          <option value="em_analise">Em Análise</option>
-          <option value="rejeitado">Rejeitado</option>
-          <option value="aprovado">Aprovado</option>
-          <option value="em_carregamento">Em Carregamento</option>
-          <option value="faturado">Faturado</option>
-          <option value="cancelado">Cancelado</option>
-        </select>
-      </div>
-      <div class="filter-block">
-        <label>Semana (Seg → Dom)</label>
-        <div class="filter-locked" id="filterSemanaDisplay" title="Período fixado na semana vigente conforme regra do relatório (SMDP-137 AC #1).">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
-          <span id="filterSemanaText">Semana vigente</span>
+    <!-- Advanced filter panel (colapsado por default) -->
+    <div class="advanced-filter is-hidden" id="advancedFilter">
+      <div class="filter-row">
+        <div class="filter-block">
+          <label>Status</label>
+          <select id="filterStatus">
+            <option value="">Todos</option>
+            <option value="em_analise">Em Análise</option>
+            <option value="rejeitado">Rejeitado</option>
+            <option value="aprovado">Aprovado</option>
+            <option value="em_carregamento">Em Carregamento</option>
+            <option value="faturado">Faturado</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
         </div>
-        <select id="filterSemana" hidden></select>
-      </div>
-      <div class="filter-block">
-        <label>CPF/CNPJ do Emissor</label>
-        <select id="filterCnpjEmissor">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="filter-block">
-        <label>Nome do Recebedor</label>
-        <select id="filterRecebedorNome">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="filter-block">
-        <label>CPF/CNPJ do Recebedor</label>
-        <select id="filterRecebedorCnpj">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="filter-block">
-        <label>Produto</label>
-        <select id="filterProduto">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div class="filter-block">
-        <label>Planta</label>
-        <select id="filterPlanta">
-          <option value="">Todas</option>
-        </select>
-      </div>
-      <div class="filter-block filter-block--actions">
-        <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
+        <div class="filter-block">
+          <label>Semana (Seg → Dom)</label>
+          <select id="filterSemana">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <label>CPF/CNPJ do Emissor</label>
+          <select id="filterCnpjEmissor">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <label>Nome do Recebedor</label>
+          <select id="filterRecebedorNome">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <label>CPF/CNPJ do Recebedor</label>
+          <select id="filterRecebedorCnpj">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <label>Produto</label>
+          <select id="filterProduto">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="filter-block">
+          <label>Planta</label>
+          <select id="filterPlanta">
+            <option value="">Todas</option>
+          </select>
+        </div>
+        <div class="filter-block filter-block--actions">
+          <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Table -->
-  <div class="report-table-wrap">
-    <table class="report-table" id="reportTable">
-      <thead>
-        <tr id="reportThead">
+    <!-- View toolbar: toggle de visualização + contador -->
+    <div class="view-toolbar">
+      <div class="view-toolbar-left">
+        <span class="view-toolbar-label">Visualização</span>
+        <div class="view-toggle" role="tablist" aria-label="Selecionar visualização">
+          <button type="button" class="view-toggle-btn is-active" data-view="table" role="tab" aria-selected="true">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="3" y1="16" x2="21" y2="16"/><line x1="9" y1="4" x2="9" y2="20"/></svg>
+            Tabela
+          </button>
+          <button type="button" class="view-toggle-btn" data-view="grid" role="tab" aria-selected="false">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></svg>
+            Grade
+          </button>
+        </div>
+        <span class="view-toolbar-count" id="resultCount">0 solicitações</span>
+      </div>
+    </div>
+
+    <!-- Table view -->
+    <div class="report-table-wrap" id="tableView">
+      <table class="report-table" id="reportTable">
+        <thead>
+          <tr id="reportThead">
+            <!-- Rendered by JS -->
+          </tr>
+        </thead>
+        <tbody id="reportTableBody">
           <!-- Rendered by JS -->
-        </tr>
-      </thead>
-      <tbody id="reportTableBody">
-        <!-- Rendered by JS -->
-      </tbody>
-    </table>
-  </div>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="report-empty is-hidden" id="reportEmpty">
-    <strong>Nenhum resultado encontrado.</strong>
-    Ajuste os filtros ou amplie o período.
+    <!-- Grid view (cards) -->
+    <div class="report-grid-wrap is-hidden" id="gridView">
+      <div class="report-grid" id="reportGrid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+
+    <div class="report-empty is-hidden" id="reportEmpty">
+      <strong>Nenhum resultado encontrado.</strong>
+      Ajuste os filtros para ver mais solicitações deste contrato.
+    </div>
   </div>
 </main>
+
+<!-- Contract picker drawer -->
 
 <script>
 /* ============================================================
@@ -2693,7 +3270,10 @@ REQUESTS.forEach(r => {
 /* ---- Column definitions ---- */
 const DAY_LABELS = ["Total", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
-/* Build thead */
+/* Build thead — colunas agrupadas conforme PO:
+   - "Cotação até OV" em 1 célula (Cotação · Contrato SAP · Item · OV)
+   - "Produto" agrupa Cód. + Desc. + Embalagem
+   - "Recebedor" agrupa Nome + CPF/CNPJ + IE + Cidade/UF */
 function buildThead() {
   const main = [
     { l: "Solicitação", c: "col-sticky" },
@@ -2701,21 +3281,12 @@ function buildThead() {
     { l: "Tipo Agend." },
     { l: "Semana" },
     { l: "Status" },
-    { l: "Cotação" },
-    { l: "Contrato SAP" },
-    { l: "Item Contrato" },
-    { l: "OV" },
+    { l: "Cotação · Contrato · Item · OV" },
     { l: "Pedido Cliente" },
-    { l: "Cód. Produto" },
-    { l: "Descrição Produto" },
-    { l: "Embalagem" },
+    { l: "Produto · Descrição · Embalagem" },
     { l: "Frete" },
     { l: "Planta" },
-    { l: "Nome Recebedor" },
-    { l: "CPF/CNPJ Recebedor" },
-    { l: "IE Recebedor" },
-    { l: "Cidade" },
-    { l: "UF" },
+    { l: "Recebedor · CPF/CNPJ · IE · Cidade/UF" },
     { l: "Qtd Solicitada (t)", a: "right" },
     { l: "Qtd Confirmada OV (t)", a: "right" },
     { l: "Qtd Faturada (t)", a: "right" },
@@ -2729,8 +3300,14 @@ function buildThead() {
   html += `<th class="col-total" style="text-align:right">Total Plan. (t)</th>`;
   html += `<th class="col-total" style="text-align:right">Total Real. (t)</th>`;
   html += `<th class="col-total" style="text-align:right">Δ Total (t)</th>`;
-  /* Chevron / toggle column */
-  html += `<th class="col-toggle" title="Expandir breakdown semanal">Detalhe</th>`;
+
+  /* V3: 7 dias × (Plan / Real / Δ) inline, com separador sutil entre dias */
+  const DAY_LBL_SHORT = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
+  DAY_LBL_SHORT.forEach((day, i) => {
+    html += `<th class="day-sep day-head" style="text-align:right">${day} Plan.</th>`;
+    html += `<th style="text-align:right">${day} Real.</th>`;
+    html += `<th style="text-align:right">${day} Δ</th>`;
+  });
 
   return html;
 }
@@ -2738,19 +3315,20 @@ function buildThead() {
 /* ---- Filter populating ---- */
 function uniqueSorted(arr) { return [...new Set(arr.filter(Boolean))].sort(); }
 
-function populateFilters() {
-  const fill = (sel, values) => {
+function populateFilters(scope) {
+  const src = scope || REQUESTS;
+  const fill = (sel, values, placeholder) => {
     const current = sel.value;
-    sel.innerHTML = `<option value="">${sel.options[0] ? sel.options[0].textContent : "Todos"}</option>` +
+    sel.innerHTML = `<option value="">${placeholder || "Todos"}</option>` +
       values.map(v => `<option value="${v}">${v}</option>`).join("");
     if (values.includes(current)) sel.value = current;
   };
-  /* Semana vigente fica travada via UI (SMDP-137 AC #1) — não populamos picklist */
-  fill(elCnpjEmissor,     uniqueSorted(REQUESTS.map(r => r.recebedorCnpj)));   /* emissor coincide com filial; aqui usamos um único CNPJ Mosaic na vida real, mas o filtro existe — populamos com base no recebedor pra mock */
-  fill(elRecebedorNome,   uniqueSorted(REQUESTS.map(r => r.recebedorNome)));
-  fill(elRecebedorCnpj,   uniqueSorted(REQUESTS.map(r => r.recebedorCnpj)));
-  fill(elProduto,         uniqueSorted(REQUESTS.map(r => r.descProduto)));
-  fill(elPlanta,          uniqueSorted(REQUESTS.map(r => r.planta)));
+  fill(elSemana,          uniqueSorted(src.map(r => r.semana)), "Todas");
+  fill(elCnpjEmissor,     uniqueSorted(src.map(r => r.recebedorCnpj)));
+  fill(elRecebedorNome,   uniqueSorted(src.map(r => r.recebedorNome)));
+  fill(elRecebedorCnpj,   uniqueSorted(src.map(r => r.recebedorCnpj)));
+  fill(elProduto,         uniqueSorted(src.map(r => r.descProduto)));
+  fill(elPlanta,          uniqueSorted(src.map(r => r.planta)), "Todas");
 }
 
 /* ---- Formatters ---- */
@@ -2784,10 +3362,44 @@ const elRecebedorCnpj = document.getElementById("filterRecebedorCnpj");
 const elProduto       = document.getElementById("filterProduto");
 const elPlanta        = document.getElementById("filterPlanta");
 
-/* ---- Filtering ---- */
+/* View-toolbar refs (V2) */
+const elTableView     = document.getElementById("tableView");
+const elGridView      = document.getElementById("gridView");
+const elReportGrid    = document.getElementById("reportGrid");
+const elResultCount   = document.getElementById("resultCount");
+const elBtnExport     = document.getElementById("btnExport");
+const elViewToggles   = document.querySelectorAll(".view-toggle-btn");
+const elBtnToggleAdv  = document.getElementById("btnToggleAdvanced");
+const elAdvancedPanel = document.getElementById("advancedFilter");
+const elAdvCount      = document.getElementById("advCount");
+const elBtnClearFilt  = document.getElementById("btnClearFilters");
+const elSearchClearBtn = document.getElementById("searchClearBtn");
+const elSearchSuggest  = document.getElementById("searchSuggestions");
+let currentView = "table";
+
+/* Semana atual: Segunda → Domingo da data corrente */
+function currentWeekRange() {
+  const today = new Date();
+  const day = today.getDay();              /* 0 = Domingo, 1 = Segunda ... */
+  const diffToMonday = (day === 0 ? -6 : 1 - day);
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diffToMonday);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+  return `${fmt(monday)} — ${fmt(sunday)}`;
+}
+const SEMANA_VIGENTE_RANGE = currentWeekRange();
+
+/* ---- Filtering (sem seleção de contrato — mostra todas as solicitações) ---- */
+function scopedRequests() {
+  return REQUESTS;
+}
+
 function filteredRequests() {
   const q = (elSearch.value || "").trim().toLowerCase();
-  return REQUESTS.filter(r => {
+  return scopedRequests().filter(r => {
     if (q) {
       const hay = [r.sol, r.protocolo, r.cotacao, r.contrato, r.ov, r.pedidoCliente].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
@@ -2807,15 +3419,14 @@ function filteredRequests() {
 const DAY_FULL = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
 
 function buildWeeklyBreakdown(r) {
-  /* Header row: corner + Total + 7 dias */
   let head = `<th class="wb-corner"></th><th class="wb-total">Total</th>`;
   for (let d = 1; d < 8; d++) head += `<th>${DAY_LABELS[d]}</th>`;
 
-  const mkRow = (label, vals, rowClass) => {
+  const mkRow = (label, vals) => {
     let cells = `<th scope="row">${label}</th>`;
     cells += `<td class="wb-total">${fmt(vals[0])}</td>`;
     for (let d = 1; d < 8; d++) cells += `<td>${fmt(vals[d])}</td>`;
-    return `<tr class="${rowClass || ""}">${cells}</tr>`;
+    return `<tr>${cells}</tr>`;
   };
 
   const diffRow = () => {
@@ -2848,13 +3459,108 @@ function buildWeeklyBreakdown(r) {
   `;
 }
 
+function buildGridCard(r, idx) {
+  const wkPlan = r.planned[0];
+  const wkReal = r.realized[0];
+  const wkDiff = r.diff[0];
+  const diffClass = wkDiff > 0 ? "wb-pos" : (wkDiff < 0 ? "wb-neg" : "wb-zero");
+
+  return `
+    <article class="grid-card" data-card-idx="${idx}">
+      <header class="grid-card-head">
+        <div class="grid-card-head-left">
+          <div class="grid-card-sol">
+            ${r.sol}
+            <span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span>
+          </div>
+          <div class="grid-card-meta">
+            <span><strong>Protocolo:</strong> ${r.protocolo}</span>
+            <span><strong>Semana:</strong> ${r.semana}</span>
+            <span><strong>Item:</strong> ${r.itemContrato}</span>
+          </div>
+        </div>
+        <span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span>
+      </header>
+      <div class="grid-card-body">
+        <div>
+          <div class="grid-card-product">${r.descProduto}</div>
+          <div class="grid-card-product-sub">${r.embalagem} · <span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></div>
+        </div>
+        <div class="grid-card-rows">
+          <div class="grid-card-row"><strong>Recebedor</strong><span>${r.recebedorNome} · ${r.recebedorCnpj}</span></div>
+          <div class="grid-card-row"><strong>Cidade/UF</strong><span>${r.cidade} / ${r.uf}</span></div>
+          <div class="grid-card-row"><strong>Planta</strong><span>${r.planta}</span></div>
+          <div class="grid-card-row"><strong>OV / Pedido</strong><span>${r.ov} · ${r.pedidoCliente}</span></div>
+        </div>
+      </div>
+      <div class="grid-card-qty">
+        <div class="qty-cell">
+          <span class="qty-label">Solicitada</span>
+          <span class="qty-value">${fmt(r.qtdSolicitada)}<span class="unit">t</span></span>
+        </div>
+        <div class="qty-cell qty-cell--conf">
+          <span class="qty-label">Confirmada OV</span>
+          <span class="qty-value">${fmt(r.qtdConfirmadaOV)}<span class="unit">t</span></span>
+        </div>
+        <div class="qty-cell qty-cell--fat">
+          <span class="qty-label">Faturada</span>
+          <span class="qty-value">${fmt(r.qtdFaturada)}<span class="unit">t</span></span>
+        </div>
+      </div>
+      <div class="grid-card-week">
+        <div class="wk-cell">
+          <span class="wk-label">Total Plan.</span>
+          <span class="wk-value">${fmt(wkPlan)}<span class="unit"> t</span></span>
+        </div>
+        <div class="wk-cell">
+          <span class="wk-label">Total Real.</span>
+          <span class="wk-value">${fmt(wkReal)}<span class="unit"> t</span></span>
+        </div>
+        <div class="wk-cell">
+          <span class="wk-label">Δ Semana</span>
+          <span class="wk-value ${diffClass}">${fmtDiff(wkDiff)}<span class="unit"> t</span></span>
+        </div>
+      </div>
+      <footer class="grid-card-foot">
+        <span style="font-size:11px; color:var(--text-3); font-weight:700;">Cotação ${r.cotacao} · Contrato ${r.contrato}</span>
+        <button type="button" class="grid-card-detail-btn" data-card-toggle="${idx}" aria-expanded="false">
+          Ver breakdown semanal
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </footer>
+      <div class="grid-card-detail" data-card-detail="${idx}">
+        ${buildWeeklyBreakdown(r)}
+      </div>
+    </article>
+  `;
+}
+
 function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
 
-  /* 23 main + 3 totals + 1 toggle = 27 cols (colspan da linha de detalhe) */
-  const COLSPAN = 27;
+  /* Count chip */
+  if (elResultCount) {
+    elResultCount.textContent = list.length === 1
+      ? "1 solicitação"
+      : `${list.length} solicitações`;
+  }
 
+  /* Grid view */
+  if (elReportGrid) {
+    elReportGrid.innerHTML = list.map((r, idx) => buildGridCard(r, idx)).join("");
+    elReportGrid.querySelectorAll("[data-card-toggle]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const idx = btn.getAttribute("data-card-toggle");
+        const detail = elReportGrid.querySelector(`[data-card-detail="${idx}"]`);
+        const open = btn.classList.toggle("is-open");
+        btn.setAttribute("aria-expanded", open ? "true" : "false");
+        detail.classList.toggle("is-open", open);
+      });
+    });
+  }
+
+  /* V3: 14 main + 3 totais + 21 daily = 38 cols (sem chevron) */
   elBody.innerHTML = list.map((r, idx) => {
     let tds = "";
     tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
@@ -2862,21 +3568,33 @@ function render() {
     tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
     tds += `<td class="cell-mono">${r.semana}</td>`;
     tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
-    tds += `<td class="cell-mono">${r.cotacao}</td>`;
-    tds += `<td class="cell-mono">${r.contrato}</td>`;
-    tds += `<td class="cell-mono">${r.itemContrato}</td>`;
-    tds += `<td class="cell-mono">${r.ov}</td>`;
+
+    tds += `<td>
+      <div class="cell-stack">
+        <span class="stack-primary cell-mono">${r.cotacao} · ${r.contrato} / ${r.itemContrato}</span>
+        <span class="stack-secondary">OV: ${r.ov}</span>
+      </div>
+    </td>`;
+
     tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
-    tds += `<td class="cell-mono">${r.codProduto}</td>`;
-    tds += `<td>${r.descProduto}</td>`;
-    tds += `<td>${r.embalagem}</td>`;
+
+    tds += `<td>
+      <div class="cell-stack">
+        <span class="stack-primary">${r.descProduto}</span>
+        <span class="stack-secondary">Cód.: ${r.codProduto} · ${r.embalagem}</span>
+      </div>
+    </td>`;
+
     tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
     tds += `<td>${r.planta}</td>`;
-    tds += `<td>${r.recebedorNome}</td>`;
-    tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
-    tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
-    tds += `<td>${r.cidade}</td>`;
-    tds += `<td>${r.uf}</td>`;
+
+    tds += `<td>
+      <div class="cell-stack">
+        <span class="stack-primary">${r.recebedorNome}</span>
+        <span class="stack-secondary">${r.recebedorCnpj} · IE ${r.recebedorIe} · ${r.cidade}/${r.uf}</span>
+      </div>
+    </td>`;
+
     tds += `<td class="vol-cell">${fmt(r.qtdSolicitada)}</td>`;
     tds += `<td class="vol-cell vol-cell--conf">${fmt(r.qtdConfirmadaOV)}</td>`;
     tds += `<td class="vol-cell vol-cell--fat">${fmt(r.qtdFaturada)}</td>`;
@@ -2886,74 +3604,47 @@ function render() {
     tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
     tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
 
-    /* Toggle */
-    tds += `<td class="col-toggle">
-      <button type="button" class="row-toggle-btn" data-idx="${idx}" aria-label="Expandir breakdown semanal" aria-expanded="false">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
-    </td>`;
+    /* V3: 7 dias × (Plan / Real / Δ) inline */
+    for (let d = 1; d < 8; d++) {
+      const p = r.planned[d];
+      const real = r.realized[d];
+      const diff = r.diff[d];
+      tds += `<td class="vol-cell day-sep">${fmt(p)}</td>`;
+      tds += `<td class="vol-cell">${fmt(real)}</td>`;
+      tds += `<td class="vol-cell ${diffCls(diff)}">${fmtDiff(diff)}</td>`;
+    }
 
-    return `
-      <tr>${tds}</tr>
-      <tr class="detail-row" data-detail-idx="${idx}">
-        <td colspan="${COLSPAN}">${buildWeeklyBreakdown(r)}</td>
-      </tr>
-    `;
+    return `<tr>${tds}</tr>`;
   }).join("");
-
-  /* Toggle handlers */
-  elBody.querySelectorAll(".row-toggle-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const idx = btn.getAttribute("data-idx");
-      const detail = elBody.querySelector(`tr.detail-row[data-detail-idx="${idx}"]`);
-      const open = btn.classList.toggle("is-open");
-      btn.setAttribute("aria-expanded", open ? "true" : "false");
-      detail.classList.toggle("is-open", open);
-    });
-  });
 }
 
-/* ---- Init ---- */
+/* ---- Init: thead + listeners ---- */
 elHead.innerHTML = buildThead();
-populateFilters();
 
-/* Semana vigente travada (SMDP-137 AC #1) — Seg -> Dom da data corrente, range DD/MM/AAAA */
-function currentWeekRange() {
-  const today = new Date();
-  const day = today.getDay();
-  const diffToMonday = (day === 0 ? -6 : 1 - day);
-  const monday = new Date(today);
-  monday.setDate(today.getDate() + diffToMonday);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  const pad = (n) => String(n).padStart(2, "0");
-  const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-  return `${fmt(monday)} — ${fmt(sunday)}`;
-}
-const SEMANA_VIGENTE = currentWeekRange();
-elSemana.innerHTML = `<option value="${SEMANA_VIGENTE}" selected>${SEMANA_VIGENTE}</option>`;
-elSemana.value = SEMANA_VIGENTE;
-const elSemanaText = document.getElementById("filterSemanaText");
-if (elSemanaText) elSemanaText.textContent = `Semana vigente · ${SEMANA_VIGENTE}`;
-
-[elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+/* Render listener apenas pros filtros do painel avançado (search tem handler proprio com autocomplete) */
+[elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", render);
 });
 
-/* ===========================================================
-   V1 — Advanced filter panel + active filter count
-   =========================================================== */
-const elBtnToggleAdv  = document.getElementById("btnToggleAdvanced");
-const elAdvancedPanel = document.getElementById("advancedFilter");
-const elAdvCount      = document.getElementById("advCount");
-const elBtnClearFilt  = document.getElementById("btnClearFilters");
-const elSearchClearBtn = document.getElementById("searchClearBtn");
-const elSearchSuggest  = document.getElementById("searchSuggestions");
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
 
+/* Inicialização: popula filtros, pré-carrega semana vigente e renderiza */
+function initReport() {
+  populateFilters(scopedRequests());
+  const hasCurrentWeek = [...elSemana.options].some(o => o.value === SEMANA_VIGENTE_RANGE);
+  elSemana.value = hasCurrentWeek ? SEMANA_VIGENTE_RANGE : "";
+  updateActiveFilterCount();
+  render();
+}
+
+/* ===========================================================
+   V2 — Advanced filter panel + active filter count
+   =========================================================== */
 function activeFilterCount() {
   let n = 0;
-  /* Semana e fixa nesta tela, nao conta */
-  [elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+  [elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
     if (el && el.value) n++;
   });
   return n;
@@ -2970,6 +3661,7 @@ elBtnToggleAdv.addEventListener("click", () => {
 });
 elBtnClearFilt.addEventListener("click", () => {
   elStatus.value = "";
+  elSemana.value = "";
   elCnpjEmissor.value = "";
   elRecebedorNome.value = "";
   elRecebedorCnpj.value = "";
@@ -2978,16 +3670,13 @@ elBtnClearFilt.addEventListener("click", () => {
   updateActiveFilterCount();
   render();
 });
-[elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+[elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", updateActiveFilterCount);
 });
 
 /* ===========================================================
-   V1 — Search autocomplete (Solicitação, Protocolo, Cotação, Contrato, OV, Pedido)
+   V2 — Search autocomplete (sugestões tipo Google)
    =========================================================== */
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-}
 const SEARCH_FIELDS = [
   { key: "sol",            label: "Solicitação" },
   { key: "protocolo",      label: "Protocolo"   },
@@ -3004,7 +3693,7 @@ function buildSuggestions(q) {
   const lc = q.toLowerCase();
   const seen = new Set();
   const out = [];
-  REQUESTS.forEach(r => {
+  scopedRequests().forEach(r => {
     SEARCH_FIELDS.forEach(f => {
       const val = String(r[f.key] || "").trim();
       if (!val || val === "—") return;
@@ -3089,7 +3778,27 @@ elSearchClearBtn.addEventListener("click", () => {
 });
 
 /* ===========================================================
-   V1 — Export (CSV simples, respeita filtros)
+   V2 — View toggle (tabela / grade)
+   =========================================================== */
+function setView(view) {
+  currentView = view;
+  elViewToggles.forEach(btn => {
+    const isActive = btn.getAttribute("data-view") === view;
+    btn.classList.toggle("is-active", isActive);
+    btn.setAttribute("aria-selected", isActive ? "true" : "false");
+  });
+  elTableView.classList.toggle("is-hidden", view !== "table");
+  elGridView.classList.toggle("is-hidden",  view !== "grid");
+}
+elViewToggles.forEach(btn => {
+  btn.addEventListener("click", () => setView(btn.getAttribute("data-view")));
+});
+
+/* Inicializa relatório (sem seleção de contrato) */
+initReport();
+
+/* ===========================================================
+   V2 — Export CSV (respeita filtros aplicados)
    =========================================================== */
 function csvEscape(v) {
   if (v == null) return "";
@@ -3097,33 +3806,47 @@ function csvEscape(v) {
   if (/[",\n;]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
   return s;
 }
-document.getElementById("btnExport").addEventListener("click", () => {
+function exportCSV() {
   const list = filteredRequests();
-  const DAYS = ["Seg","Ter","Qua","Qui","Sex","Sab","Dom"];
+  if (!list.length) {
+    alert("Não há solicitações para exportar com os filtros atuais.");
+    return;
+  }
+
+  /* Header: 23 main + 3 totals + 21 daily breakdown (7 dias × Plan/Real/Δ) */
+  const dayShort = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab", "Dom"];
   const header = [
-    "Solicitacao","Protocolo","Tipo","Semana","Status",
-    "Cotacao","Contrato","Item","OV","Pedido Cliente",
-    "Cod Produto","Descricao","Embalagem","Frete","Planta",
-    "Recebedor","CPF/CNPJ","IE","Cidade","UF",
+    "Solicitacao","Protocolo","Tipo Agendamento","Semana","Status",
+    "Cotacao","Contrato SAP","Item Contrato","OV","Pedido Cliente",
+    "Codigo Produto","Descricao Produto","Embalagem","Frete","Planta",
+    "Nome Recebedor","CPF/CNPJ Recebedor","IE Recebedor","Cidade","UF",
     "Qtd Solicitada (t)","Qtd Confirmada OV (t)","Qtd Faturada (t)",
     "Total Planejado (t)","Total Realizado (t)","Delta Total (t)",
   ];
-  DAYS.forEach(d => header.push(`${d} Planejado (t)`, `${d} Realizado (t)`, `${d} Delta (t)`));
+  dayShort.forEach(d => {
+    header.push(`${d} Planejado (t)`, `${d} Realizado (t)`, `${d} Delta (t)`);
+  });
+
   const rows = list.map(r => {
-    const cells = [
-      r.sol, r.protocolo, r.tipo, r.semana, r.status,
+    const row = [
+      r.sol, r.protocolo, TIPO_LABELS[r.tipo], r.semana, STATUS_LABELS[r.status],
       r.cotacao, r.contrato, r.itemContrato, r.ov, r.pedidoCliente,
       r.codProduto, r.descProduto, r.embalagem, r.frete, r.planta,
       r.recebedorNome, r.recebedorCnpj, r.recebedorIe, r.cidade, r.uf,
       r.qtdSolicitada, r.qtdConfirmadaOV, r.qtdFaturada,
       r.planned[0], r.realized[0], r.diff[0],
     ];
-    for (let d = 1; d < 8; d++) cells.push(r.planned[d], r.realized[d], r.diff[d]);
-    return cells.map(csvEscape).join(";");
+    for (let d = 1; d < 8; d++) {
+      row.push(r.planned[d], r.realized[d], r.diff[d]);
+    }
+    return row;
   });
-  const csv = [header.map(csvEscape).join(";"), ...rows].join("\n");
+
+  const csv = [header, ...rows].map(r => r.map(csvEscape).join(";")).join("\r\n");
+  /* BOM pra Excel ler UTF-8 corretamente */
   const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
+  const url  = URL.createObjectURL(blob);
+
   const today = new Date().toISOString().slice(0, 10);
   const a = document.createElement("a");
   a.href = url;
@@ -3131,11 +3854,9 @@ document.getElementById("btnExport").addEventListener("click", () => {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-});
-
-updateActiveFilterCount();
-render();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+elBtnExport.addEventListener("click", exportCSV);
 </script>
 
 </body>

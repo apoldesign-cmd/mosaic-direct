@@ -24,8 +24,8 @@
     --text-1:           #15201b;
     --text-2:           #3b4642;
     --text-3:           #6b7570;
-    --shadow-card:      0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
-    --shadow-hover:     0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --shadow-card:      0 1px 2px rgba(0,0,0,0.04), 0 3px 8px rgba(0,0,0,0.05);
+    --shadow-hover:     0 6px 20px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
   }
   *, *::before, *::after { box-sizing: border-box; }
   html, body {
@@ -38,96 +38,67 @@
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
   }
   a { color: var(--mosaic-green-700); text-decoration: none; }
   a:hover { color: var(--mosaic-green-800); }
 
-  /* Top mini-bar (colado no teto, apenas neste hub) */
+  /* Top mini-bar */
   .topbar-mini {
-    position: sticky;
-    top: 0;
-    left: 0;
-    right: 0;
+    position: sticky; top: 0; left: 0; right: 0;
     width: 100%;
     background: var(--mosaic-green-900);
     color: #fff;
     z-index: 200;
     height: 40px;
-    display: flex;
-    align-items: center;
+    display: flex; align-items: center;
     padding: 0 56px;
     box-shadow: 0 1px 4px rgba(0,0,0,0.12);
   }
   .topbar-mini-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    display: inline-flex; align-items: center; gap: 10px;
     color: #fff;
-    font-family: "Manrope", sans-serif;
-    font-weight: 800;
-    font-size: 14px;
+    font-weight: 800; font-size: 14px;
     letter-spacing: 0.01em;
-    text-decoration: none;
   }
   .topbar-mini-brand:hover { color: var(--mosaic-yellow); }
   .topbar-mini-brand sup { font-size: 9px; font-weight: 700; margin-left: 1px; vertical-align: super; }
-  .topbar-mini-divider {
-    width: 1px;
-    height: 18px;
-    background: rgba(255,255,255,0.2);
-    margin: 0 14px;
-  }
-  .topbar-mini-meta {
-    font-size: 11.5px;
-    color: rgba(255,255,255,0.7);
-    font-weight: 600;
-  }
+  .topbar-mini-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); margin: 0 14px; }
+  .topbar-mini-meta { font-size: 11.5px; color: rgba(255,255,255,0.7); font-weight: 600; }
   @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } .topbar-mini-meta { display: none; } }
 
-  /* Hero header */
+  /* Hero */
   .hero-header {
     max-width: 1320px;
     margin: 0 auto;
-    padding: 64px 56px 32px;
+    padding: 48px 56px 24px;
   }
   .hero-eyebrow {
-    font-size: 11px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.16em;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.16em;
     color: var(--mosaic-green-700);
-    margin-bottom: 14px;
+    margin-bottom: 10px;
   }
   .hero-title {
-    font-size: 44px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.015em;
-    margin: 0 0 16px;
+    font-size: 36px; font-weight: 800;
+    line-height: 1.1; letter-spacing: -0.015em;
+    margin: 0 0 12px;
     color: var(--text-1);
   }
   .hero-lede {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 15px; line-height: 1.6;
     color: var(--text-2);
     max-width: 720px;
     margin: 0;
     font-weight: 500;
   }
   .hero-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 22px;
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 18px;
   }
   .meta-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 700;
     color: var(--text-2);
     background: #fff;
     border: 1px solid var(--border-soft);
@@ -142,61 +113,52 @@
     margin: 0 auto;
     padding: 16px 56px 80px;
   }
-  .section {
-    margin-top: 48px;
-  }
+  .section { margin-top: 36px; }
   .section:first-of-type { margin-top: 16px; }
   .section-head {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 20px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+    margin-bottom: 18px;
     border-bottom: 1px solid var(--border-soft);
-    padding-bottom: 14px;
+    padding-bottom: 12px;
   }
   .section-head h2 {
     margin: 0;
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 20px; font-weight: 800;
     letter-spacing: -0.005em;
     color: var(--text-1);
   }
   .section-head .lede {
     color: var(--text-3);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 12.5px; font-weight: 600;
   }
 
-  /* Grid + cards */
+  /* Grid — 3 columns */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
-    gap: 18px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
   }
+  @media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 720px)  { .grid { grid-template-columns: 1fr; } }
 
+  /* Card (compacto) */
   .task-card {
     background: var(--bg-card);
     border: 1px solid var(--border-soft);
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
+    display: flex; flex-direction: column;
     color: inherit;
-    transition: transform 220ms cubic-bezier(0.2, 0.8, 0.3, 1),
-                box-shadow 220ms, border-color 220ms;
+    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 200ms, border-color 200ms;
     box-shadow: var(--shadow-card);
     position: relative;
     overflow: hidden;
-  }
-  .task-card.is-active {
     cursor: pointer;
   }
-  .task-card.is-active:hover {
-    transform: translateY(-3px);
+  .task-card:hover {
+    transform: translateY(-2px);
     box-shadow: var(--shadow-hover);
     border-color: var(--mosaic-green-700);
   }
-  .task-card.is-active::before {
+  .task-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -204,170 +166,105 @@
     background: var(--mosaic-green-700);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 240ms ease-out;
+    transition: transform 220ms ease-out;
   }
-  .task-card.is-active:hover::before { transform: scaleX(1); }
-  .task-card.is-locked {
-    background: linear-gradient(180deg, #fafaf8 0%, #f5f4ef 100%);
-    cursor: not-allowed;
-    opacity: 0.92;
-  }
-  .task-card.is-locked::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--mosaic-orange);
-  }
+  .task-card:hover::before { transform: scaleX(1); }
+  .task-card--variant::before { background: var(--text-3); }
+  .task-card--variant:hover { border-color: var(--text-2); }
 
   .task-head {
-    padding: 18px 22px 10px;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
+    padding: 14px 16px 6px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
   }
   .task-jira {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    font-weight: 800;
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 10px; font-weight: 800;
     color: var(--text-3);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+    text-transform: uppercase; letter-spacing: 0.06em;
   }
   .task-jira-id {
     color: var(--text-1);
     background: var(--bg-section);
-    padding: 2px 7px;
+    padding: 2px 6px;
+    font-size: 10px;
   }
   .task-jira-id--epic { color: var(--mosaic-green-800); }
   .task-status-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 4px 9px;
+    display: inline-flex; align-items: center;
+    font-size: 9.5px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.07em;
+    padding: 3px 7px;
     border: 1.5px solid;
   }
-  .task-status-chip--done {
+  .task-status-chip--final {
     color: var(--mosaic-green-700);
     border-color: var(--mosaic-green-700);
     background: rgba(0,106,77,0.06);
   }
-  .task-status-chip--dev {
-    color: var(--mosaic-orange);
-    border-color: var(--mosaic-orange);
-    background: rgba(213,107,26,0.08);
+  .task-status-chip--variant {
+    color: var(--text-3);
+    border-color: var(--border);
+    background: var(--bg-section);
   }
 
   .task-title {
-    padding: 0 22px 8px;
-    font-size: 18px;
-    font-weight: 800;
+    padding: 0 16px 4px;
+    font-size: 15px; font-weight: 800;
     color: var(--text-1);
-    letter-spacing: -0.01em;
-    line-height: 1.3;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
   }
   .task-desc {
-    padding: 0 22px 16px;
-    font-size: 13px;
+    padding: 0 16px 12px;
+    font-size: 12.5px;
     color: var(--text-2);
-    line-height: 1.55;
+    line-height: 1.5;
     flex: 1;
     font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .task-features {
-    padding: 0 22px 16px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  .feature-pill {
-    font-size: 10.5px;
-    font-weight: 700;
-    color: var(--text-3);
-    background: var(--bg-section);
-    padding: 3px 9px;
-    border: 1px solid var(--border-soft);
-    border-radius: 999px;
-  }
-
-  .task-dates {
-    padding: 12px 22px;
-    background: var(--bg-section);
-    border-top: 1px solid var(--border-soft);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .task-date {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  .task-date-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-3);
-    font-weight: 800;
-  }
-  .task-date-value {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--text-1);
-    font-variant-numeric: tabular-nums;
-  }
-  .task-date-value--orange { color: var(--mosaic-orange); }
 
   .task-foot {
-    padding: 14px 22px;
+    padding: 10px 16px;
     border-top: 1px solid var(--border-soft);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 12.5px;
-    font-weight: 700;
+    background: var(--bg-section);
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11.5px; font-weight: 700;
     color: var(--mosaic-green-800);
   }
-  .task-foot--locked {
-    color: var(--text-3);
-    font-style: italic;
-    font-weight: 600;
-  }
+  .task-card--variant .task-foot { color: var(--text-2); }
   .task-foot svg { transition: transform 200ms; }
-  .task-card.is-active:hover .task-foot svg { transform: translateX(4px); }
-  .lock-icon {
-    color: var(--mosaic-orange);
+  .task-card:hover .task-foot svg { transform: translateX(4px); }
+  .task-foot-meta {
+    font-size: 10.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
   }
 
   /* Footer */
   .page-footer {
     max-width: 1320px;
     margin: 0 auto;
-    padding: 32px 56px 60px;
+    padding: 28px 56px 56px;
     color: var(--text-3);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 12px; font-weight: 600;
     border-top: 1px solid var(--border-soft);
   }
 
   @media (max-width: 720px) {
     .hero-header, .container, .page-footer { padding-left: 20px; padding-right: 20px; }
-    .hero-title { font-size: 32px; }
-    .grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 28px; }
   }
 </style>
 </head>
 <body>
 
-<!-- Top mini-bar (logo no teto) -->
+<!-- Top mini-bar -->
 <div class="topbar-mini">
   <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -385,12 +282,11 @@
   <h1 class="hero-title">Hub de telas em desenvolvimento</h1>
   <p class="hero-lede">
     Protótipos HTML interativos do portal Mosaic Direct (agribusiness BR).
-    Cada card abaixo representa uma User Story (US) do Jira, com a tela
-    navegável correspondente, datas de início e entrega, e o status atual.
+    Cada card é uma User Story do Jira, com a tela navegável correspondente.
   </p>
   <div class="hero-meta">
-    <span class="meta-chip"><strong>5</strong> telas entregues</span>
-    <span class="meta-chip">Próxima entrega · a definir</span>
+    <span class="meta-chip"><strong>5</strong> telas principais</span>
+    <span class="meta-chip"><strong>6</strong> variantes</span>
     <span class="meta-chip">Ambiente Vercel · auto-deploy</span>
   </div>
 </header>
@@ -398,178 +294,233 @@
 <main class="container">
 
   <!-- ============================================================
-       SECTION 1 — Entregues
+       SECTION 1 — Telas principais (versões recomendadas)
        ============================================================ -->
   <section class="section">
     <div class="section-head">
-      <h2>Telas entregues</h2>
-      <span class="lede">Disponíveis para uso e revisão</span>
+      <h2>Telas principais</h2>
+      <span class="lede">Versões recomendadas para validação com PO</span>
     </div>
 
     <div class="grid">
 
-      <!-- SMDP-238 / SMDP-70 — Cadastro de Cooperado -->
-      <a href="criar-protocolo.html#cadastrar-cooperado" class="task-card is-active">
+      <!-- Cadastro de Cooperado -->
+      <a href="criar-protocolo.html#cadastrar-cooperado" class="task-card">
         <div class="task-head">
           <div class="task-jira">
             <span class="task-jira-id task-jira-id--epic">SMDP-70</span>
             <span>/</span>
             <span class="task-jira-id">SMDP-238</span>
           </div>
-          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+          <span class="task-status-chip task-status-chip--final">✓ Final</span>
         </div>
-        <div class="task-title">[UX] Cadastro de Cooperado</div>
+        <div class="task-title">Cadastro de Cooperado</div>
         <div class="task-desc">
-          Drawer lateral V5-style para registrar novo cooperado (Pessoa Física
-          ou Jurídica) sem sair do fluxo de criação de protocolo. Status
-          "Pendente" por 10 min após cadastro, depois "Ativo". Máscaras pt-BR
-          em CPF/CNPJ, CEP, IE. Autofill via ViaCEP. Volta automática para o
-          picker preservando as linhas já preenchidas.
-        </div>
-        <div class="task-features">
-          <span class="feature-pill">Side-drawer V5</span>
-          <span class="feature-pill">Status Pendente/Ativo</span>
-          <span class="feature-pill">Máscaras pt-BR</span>
-          <span class="feature-pill">CEP autofill</span>
-          <span class="feature-pill">Preserva linhas</span>
-        </div>
-        <div class="task-dates">
-          <div class="task-date">
-            <span class="task-date-label">Início</span>
-            <span class="task-date-value">05/05/2026</span>
-          </div>
-          <div class="task-date">
-            <span class="task-date-label">Entrega</span>
-            <span class="task-date-value">12/05/2026</span>
-          </div>
+          Drawer V5-style para registrar novo cooperado (PF ou PJ) sem sair do fluxo de protocolo. Máscaras pt-BR, autofill ViaCEP, retorno preservando linhas.
         </div>
         <div class="task-foot">
-          <span>Abrir tela</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <span class="task-foot-meta">Drawer · criar-protocolo</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
 
-      <!-- SMDP-237 / SMDP-131 — Criação de Agendamento - Contrato Normal -->
-      <a href="agendar-contrato-normal-v5.html" class="task-card is-active">
+      <!-- Agendar Contrato Normal V5 -->
+      <a href="agendar-contrato-normal-v5.html" class="task-card">
         <div class="task-head">
           <div class="task-jira">
             <span class="task-jira-id task-jira-id--epic">SMDP-131</span>
             <span>/</span>
             <span class="task-jira-id">SMDP-237</span>
           </div>
-          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+          <span class="task-status-chip task-status-chip--final">✓ Final · V5</span>
         </div>
-        <div class="task-title">[UX] Criação de Agendamento — Contrato Normal</div>
+        <div class="task-title">Agendar Contrato Normal</div>
         <div class="task-desc">
-          Fluxo completo de agendamento de contratos normais (V5). Cards
-          agrupados por contrato com itens dentro. Drawer de seleção com
-          Ref. Cliente, CNPJ Filial, IE, Preço/Ton e Status (bloqueio
-          visual de cancelados/sem assinatura). Validações de Volume
-          individual e agregado por contrato. Datepicker bloqueia datas
-          passadas.
-        </div>
-        <div class="task-features">
-          <span class="feature-pill">Cards multi-item</span>
-          <span class="feature-pill">Drawer filtros</span>
-          <span class="feature-pill">Volume ≤ Saldo</span>
-          <span class="feature-pill">Status bloqueado</span>
-          <span class="feature-pill">Sort por Vigência</span>
-        </div>
-        <div class="task-dates">
-          <div class="task-date">
-            <span class="task-date-label">Início</span>
-            <span class="task-date-value">02/05/2026</span>
-          </div>
-          <div class="task-date">
-            <span class="task-date-label">Entrega</span>
-            <span class="task-date-value">12/05/2026</span>
-          </div>
+          Fluxo de agendamento de contratos normais. Cards multi-item, drawer de seleção com Ref. Cliente/CNPJ/IE/Preço/Status, validações de volume agregado por contrato.
         </div>
         <div class="task-foot">
-          <span>Abrir tela</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <span class="task-foot-meta">agendar-contrato-normal-v5</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
 
-      <!-- SMDP-233 / SMDP-167 — Criação de Protocolo -->
-      <a href="criar-protocolo.html" class="task-card is-active">
+      <!-- Criar Protocolo -->
+      <a href="criar-protocolo.html" class="task-card">
         <div class="task-head">
           <div class="task-jira">
             <span class="task-jira-id task-jira-id--epic">SMDP-167</span>
             <span>/</span>
             <span class="task-jira-id">SMDP-233</span>
           </div>
-          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+          <span class="task-status-chip task-status-chip--final">✓ Final</span>
         </div>
-        <div class="task-title">[UX] Criação de Protocolo</div>
+        <div class="task-title">Criar Protocolo</div>
         <div class="task-desc">
-          Fluxo de criação de protocolos a partir de contratos selecionados.
-          Toggle Cards/Tabela. Cooperado picker com cadastro inline. Máscaras
-          em Volume (t), Preço (R$), CPF/CNPJ, CEP, IE. Validação de
-          consistência NF (Número + Data + Preço como grupo). Datepickers
-          bloqueiam datas inválidas (futura para NF, passada para Semana).
-          Auto-scroll horizontal entre campos. Colunas Status + Contrato +
-          Produto fixas (sticky).
-        </div>
-        <div class="task-features">
-          <span class="feature-pill">Cards form-style</span>
-          <span class="feature-pill">Toggle Cards/Tabela</span>
-          <span class="feature-pill">Cadastro inline</span>
-          <span class="feature-pill">Sticky columns</span>
-          <span class="feature-pill">Validações</span>
-        </div>
-        <div class="task-dates">
-          <div class="task-date">
-            <span class="task-date-label">Início</span>
-            <span class="task-date-value">03/05/2026</span>
-          </div>
-          <div class="task-date">
-            <span class="task-date-label">Entrega</span>
-            <span class="task-date-value">12/05/2026</span>
-          </div>
+          Criação de protocolos a partir de contratos. Toggle Cards/Tabela, cooperado picker com cadastro inline, máscaras, validações de NF, sticky columns.
         </div>
         <div class="task-foot">
-          <span>Abrir tela</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <span class="task-foot-meta">criar-protocolo</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
 
-      <!-- SMDP-235 — Agendar Protocolo (entregue) -->
-      <a href="agendar-protocolo.html" class="task-card is-active">
+      <!-- Agendar Protocolo -->
+      <a href="agendar-protocolo.html" class="task-card">
         <div class="task-head">
           <div class="task-jira">
             <span class="task-jira-id task-jira-id--epic">SMDP-168</span>
             <span>/</span>
             <span class="task-jira-id">SMDP-235</span>
           </div>
-          <span class="task-status-chip task-status-chip--done">✓ Entregue</span>
+          <span class="task-status-chip task-status-chip--final">✓ Final</span>
         </div>
-        <div class="task-title">[UX] Agendamento de Protocolo</div>
+        <div class="task-title">Agendar Protocolo</div>
         <div class="task-desc">
-          Fluxo de agendamento de protocolos já criados. Cards agrupados
-          por contrato. Tabela compacta otimizada (Volume / Semana /
-          Roteiro logo após Vigência). Confirmação V5 + hint pulse no
-          empty state. Datepicker Semana bloqueia datas passadas.
-        </div>
-        <div class="task-features">
-          <span class="feature-pill">Cards V5</span>
-          <span class="feature-pill">Tabela compacta</span>
-          <span class="feature-pill">Hint pulse empty</span>
-          <span class="feature-pill">Confirmar V5</span>
-        </div>
-        <div class="task-dates">
-          <div class="task-date">
-            <span class="task-date-label">Início</span>
-            <span class="task-date-value">04/05/2026</span>
-          </div>
-          <div class="task-date">
-            <span class="task-date-label">Entrega</span>
-            <span class="task-date-value">10/05/2026</span>
-          </div>
+          Agendamento de protocolos já criados. Cards agrupados por contrato, tabela compacta com Volume/Semana/Roteiro, hint pulse no empty, confirmação V5.
         </div>
         <div class="task-foot">
-          <span>Abrir tela</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          <span class="task-foot-meta">agendar-protocolo</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Relatório de Status de Agendamento -->
+      <a href="relatorio-status-agendamento.html" class="task-card">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id task-jira-id--epic">SMDP-137</span>
+          </div>
+          <span class="task-status-chip task-status-chip--final">✓ Final</span>
+        </div>
+        <div class="task-title">Relatório de Status de Agendamento</div>
+        <div class="task-desc">
+          Listagem read-only de todas as solicitações de agendamento, filtros avançados colapsáveis, autocomplete na busca, exportação XLS, breakdown semanal.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">relatorio-status-agendamento</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — Iterações / variantes (histórico de comparação)
+       ============================================================ -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Iterações e variantes</h2>
+      <span class="lede">Versões alternativas mantidas para comparação histórica</span>
+    </div>
+
+    <div class="grid">
+
+      <!-- Agendar Contrato Normal V1 -->
+      <a href="agendar-contrato-normal.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-237</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V1</span>
+        </div>
+        <div class="task-title">Agendar Contrato Normal · V1</div>
+        <div class="task-desc">
+          Versão inicial baseada em tabela + modal. Mantida para histórico — usar V5 para validação com PO.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">agendar-contrato-normal</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Agendar Contrato Normal V2 cards -->
+      <a href="agendar-contrato-normal-v2-cards.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-237</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
+        </div>
+        <div class="task-title">Agendar Contrato Normal · V2 Cards</div>
+        <div class="task-desc">
+          Iteração com cards e drawer lateral. Etapa intermediária no caminho até a V5.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">agendar-contrato-normal-v2-cards</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Agendar Contrato Normal V3 -->
+      <a href="agendar-contrato-normal-v3.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-237</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V3</span>
+        </div>
+        <div class="task-title">Agendar Contrato Normal · V3</div>
+        <div class="task-desc">
+          Iteração com toggle Cards/Tabela. Substituída pela V5 (somente lista).
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">agendar-contrato-normal-v3</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Criar Protocolo V2 -->
+      <a href="criar-protocolo-v2.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-233</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
+        </div>
+        <div class="task-title">Criar Protocolo · V2</div>
+        <div class="task-desc">
+          Iteração V2 do fluxo de criação de protocolo. Mantida para comparar layout e interações.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">criar-protocolo-v2</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Relatório Status Agendamento V2 -->
+      <a href="relatorio-status-agendamento-v2.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-137</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
+        </div>
+        <div class="task-title">Relatório de Status · V2</div>
+        <div class="task-desc">
+          Iteração com agrupamento de colunas (Cotação+Contrato, Produto, Recebedor) e detalhe semanal expansível por chevron.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">relatorio-status-agendamento-v2</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </div>
+      </a>
+
+      <!-- Relatório Status Agendamento V3 -->
+      <a href="relatorio-status-agendamento-v3.html" class="task-card task-card--variant">
+        <div class="task-head">
+          <div class="task-jira">
+            <span class="task-jira-id">SMDP-137</span>
+          </div>
+          <span class="task-status-chip task-status-chip--variant">Variante · V3</span>
+        </div>
+        <div class="task-title">Relatório de Status · V3</div>
+        <div class="task-desc">
+          Iteração com os 7 dias da semana (Seg→Dom) inline na própria linha — sem chevron de expansão.
+        </div>
+        <div class="task-foot">
+          <span class="task-foot-meta">relatorio-status-agendamento-v3</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </div>
       </a>
 
