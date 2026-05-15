@@ -6,26 +6,33 @@
 <title>Mosaic Direct — Protótipos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --mosaic-green-900: #003e2a;
-    --mosaic-green-800: #00583d;
-    --mosaic-green-700: #006a4d;
-    --mosaic-yellow:    #f0c020;
-    --mosaic-orange:    #d56b1a;
-    --mosaic-red:       #b9202a;
-    --mosaic-teal:      #2c8b78;
-    --bg-page:          #fafaf8;
-    --bg-card:          #ffffff;
-    --bg-section:       #f4f4f4;
-    --border-soft:      #e1e1e1;
-    --border:           #cdcdcd;
-    --text-1:           #15201b;
-    --text-2:           #3b4642;
-    --text-3:           #6b7570;
-    --shadow-card:      0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06);
-    --shadow-hover:     0 8px 28px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+    --mosaic-green-900:   #003e2a;
+    --mosaic-green-800:   #00583d;
+    --mosaic-green-700:   #006a4d;
+    --mosaic-green-600:   #0a7f5e;
+    --mosaic-yellow:      #f0c020;
+    --mosaic-orange:      #d56b1a;
+    --mosaic-red:         #b9202a;
+    --mosaic-teal:        #2c8b78;
+
+    --bg-page:            #ffffff;
+    --bg-section:         #f5f5f3;
+    --bg-info:            #ecf1ee;
+    --bg-footer:          #f4f4f2;
+    --bg-input:           #ffffff;
+    --bg-hover:           #fafaf8;
+
+    --border-soft:        #e8e8e6;
+    --border:             #d4d4d2;
+    --border-strong:      #b8b8b6;
+
+    --text-1:             #1a2421;
+    --text-2:             #3b4642;
+    --text-3:             #6b7570;
+    --text-link:          #006a4d;
   }
   *, *::before, *::after { box-sizing: border-box; }
   html, body {
@@ -33,151 +40,284 @@
     padding: 0;
     background: var(--bg-page);
     color: var(--text-1);
-    font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
+    font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 400;
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
-  .hero-bg {
-    position: relative;
-    background: linear-gradient(135deg, var(--mosaic-green-900) 0%, var(--mosaic-green-800) 60%, var(--mosaic-green-700) 100%);
-    color: #fff;
-    padding: 56px 56px 80px;
-    overflow: hidden;
+  /* ============================================================
+     HEADER MOSAIC — branco com logo + search + user + nav
+     ============================================================ */
+  .mosaic-header {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
   }
-  .hero-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image:
-      radial-gradient(circle at 18% 22%, rgba(240,192,32,0.10) 0%, transparent 30%),
-      radial-gradient(circle at 80% 60%, rgba(44,139,120,0.18) 0%, transparent 35%),
-      radial-gradient(circle at 50% 90%, rgba(213,107,26,0.06) 0%, transparent 40%);
-    pointer-events: none;
-  }
-  .hero-inner {
+  .mosaic-header-inner {
     max-width: 1320px;
     margin: 0 auto;
-    position: relative;
+    padding: 18px 32px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 32px;
   }
-  .brand {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    font-size: 22px;
-    font-weight: 800;
-    letter-spacing: -0.01em;
-    margin-bottom: 36px;
-  }
-  .brand sup { font-size: 11px; font-weight: 600; opacity: 0.7; }
-  .brand-shapes {
-    display: inline-flex;
-    gap: 3px;
-    margin-left: 6px;
-    align-self: center;
-  }
-  .brand-shapes span {
-    width: 12px; height: 12px;
-    border-radius: 1px;
-  }
-  .brand-shapes .y { background: var(--mosaic-yellow); }
-  .brand-shapes .o { background: var(--mosaic-orange); }
-  .brand-shapes .r { background: var(--mosaic-red); }
-  .brand-shapes .t { background: var(--mosaic-teal); }
 
-  .label-eyebrow {
-    font-size: 11px;
+  /* Logo */
+  .mosaic-logo {
+    display: inline-flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .mosaic-logo .logo-text {
+    font-family: "Barlow", sans-serif;
     font-weight: 800;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    color: #15201b;
+    line-height: 1;
+  }
+  .mosaic-logo .logo-text sup {
+    font-size: 10px;
+    font-weight: 500;
+    vertical-align: super;
+    margin-left: 1px;
+  }
+  .mosaic-logo .logo-shapes {
+    display: inline-flex;
+    gap: 2px;
+  }
+  .mosaic-logo .logo-shapes span {
+    width: 14px;
+    height: 6px;
+  }
+  .mosaic-logo .logo-shapes .y { background: var(--mosaic-yellow); }
+  .mosaic-logo .logo-shapes .o { background: var(--mosaic-orange); }
+  .mosaic-logo .logo-shapes .r { background: var(--mosaic-red); }
+  .mosaic-logo .logo-shapes .t { background: var(--mosaic-teal); }
+
+  /* Search */
+  .mosaic-search {
+    position: relative;
+    max-width: 560px;
+    width: 100%;
+    justify-self: center;
+  }
+  .mosaic-search input {
+    width: 100%;
+    height: 42px;
+    border: 1px solid var(--border);
+    background: #fff;
+    padding: 0 44px 0 16px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text-1);
+  }
+  .mosaic-search input::placeholder { color: var(--text-3); }
+  .mosaic-search input:focus {
+    outline: none;
+    border-color: var(--mosaic-green-700);
+  }
+  .mosaic-search-btn {
+    position: absolute;
+    right: 0; top: 0;
+    height: 42px;
+    width: 44px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* User area */
+  .mosaic-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+  }
+  .lang-btn {
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--border);
+    background: #fff;
+    font: 700 12px "Barlow", sans-serif;
+    color: var(--text-1);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .lang-btn:hover { border-color: var(--mosaic-green-700); }
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.15;
+  }
+  .user-info .user-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .user-info .user-org {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
     text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--mosaic-yellow);
+    letter-spacing: 0.04em;
+  }
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+  .icon-btn:hover { background: var(--mosaic-green-800); }
+  .icon-btn.is-light {
+    background: transparent;
+    color: var(--text-2);
+  }
+  .icon-btn.is-light:hover { color: var(--mosaic-green-700); }
+
+  /* Nav */
+  .mosaic-nav {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .mosaic-nav-inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    gap: 36px;
+    justify-content: center;
+  }
+  .mosaic-nav a {
+    color: var(--mosaic-green-800);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 16px 4px;
+    border-bottom: 3px solid transparent;
+    transition: border-color 120ms;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mosaic-nav a:hover { border-bottom-color: var(--mosaic-green-700); }
+  .mosaic-nav a.is-active {
+    border-bottom-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-900);
+  }
+
+  /* ============================================================
+     MAIN
+     ============================================================ */
+  .main-wrap {
+    flex: 1;
+    max-width: 1320px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px 32px 48px;
+  }
+  .breadcrumb {
+    font-size: 13px;
+    color: var(--text-2);
     margin-bottom: 12px;
   }
-  h1.page-title {
-    font-size: 44px;
-    font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.015em;
-    margin: 0 0 12px;
+  .breadcrumb a {
+    color: var(--text-link);
+    text-decoration: none;
   }
-  .lede {
-    font-size: 16px;
-    line-height: 1.55;
-    color: rgba(255,255,255,0.82);
-    max-width: 680px;
-    margin: 0;
-  }
-  .meta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-top: 28px;
-    color: rgba(255,255,255,0.65);
-    font-size: 12px;
-    font-weight: 600;
-  }
-  .meta-row span { display: inline-flex; align-items: center; gap: 6px; }
-  .meta-row strong { color: #fff; font-weight: 800; }
+  .breadcrumb a:hover { text-decoration: underline; }
+  .breadcrumb .sep { margin: 0 6px; color: var(--text-3); }
 
-  /* Content area */
-  .container {
-    max-width: 1320px;
-    margin: -48px auto 0;
-    padding: 0 56px 80px;
-    position: relative;
+  .page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+    margin: 0 0 24px;
+    letter-spacing: -0.005em;
   }
+
+  .info-banner {
+    background: var(--bg-info);
+    padding: 14px 18px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--text-2);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .info-banner svg {
+    color: var(--mosaic-green-700);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .info-banner strong { color: var(--text-1); font-weight: 700; }
 
   .section-title {
     display: flex;
     align-items: baseline;
-    gap: 14px;
-    margin: 36px 0 18px;
+    gap: 12px;
+    margin: 28px 0 14px;
   }
+  .section-title:first-of-type { margin-top: 0; }
   .section-title h2 {
     margin: 0;
-    font-size: 22px;
-    font-weight: 800;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--text-1);
-    letter-spacing: -0.005em;
   }
   .section-title .count {
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-3);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
-  .section-title:first-of-type { margin-top: 0; }
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
   }
 
   .proto-card {
-    background: var(--bg-card);
+    background: #fff;
     border: 1px solid var(--border-soft);
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
-    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1),
-                box-shadow 200ms,
-                border-color 200ms;
+    transition: border-color 200ms, box-shadow 200ms, transform 200ms;
     position: relative;
-    overflow: hidden;
     cursor: pointer;
-    box-shadow: var(--shadow-card);
   }
   .proto-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-hover);
     border-color: var(--mosaic-green-700);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    transform: translateY(-2px);
   }
   .proto-card::before {
     content: '';
@@ -190,72 +330,61 @@
     transition: transform 240ms ease-out;
   }
   .proto-card:hover::before { transform: scaleX(1); }
-
   .card-head {
-    padding: 20px 22px 14px;
+    padding: 16px 20px 10px;
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
-  }
-  .card-tag {
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--mosaic-green-800);
-    background: rgba(0,106,77,0.08);
-    padding: 3px 8px;
-    flex-shrink: 0;
-  }
-  .card-tag--latest {
-    background: var(--mosaic-yellow);
-    color: var(--text-1);
-  }
-  .card-tag--new {
-    background: var(--mosaic-green-800);
-    color: #fff;
+    gap: 10px;
   }
   .card-id {
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10.5px;
+    font-weight: 700;
     color: var(--text-3);
     text-transform: uppercase;
     letter-spacing: 0.08em;
   }
+  .card-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.08);
+    padding: 3px 8px;
+  }
+  .card-tag--latest { background: var(--mosaic-yellow); color: var(--text-1); }
+  .card-tag--new    { background: var(--mosaic-green-800); color: #fff; }
   .card-title {
-    padding: 0 22px 8px;
-    font-size: 18px;
-    font-weight: 800;
+    padding: 0 20px 8px;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--text-1);
-    letter-spacing: -0.01em;
-    line-height: 1.25;
+    line-height: 1.3;
   }
   .card-desc {
-    padding: 0 22px 16px;
+    padding: 0 20px 14px;
     font-size: 13px;
     color: var(--text-2);
     line-height: 1.5;
     flex: 1;
-    font-weight: 500;
   }
   .card-features {
-    padding: 0 22px 16px;
+    padding: 0 20px 14px;
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
   }
   .feature-pill {
     font-size: 10.5px;
-    font-weight: 700;
+    font-weight: 600;
     color: var(--text-3);
     background: var(--bg-section);
-    padding: 3px 8px;
+    padding: 2px 8px;
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
   }
   .card-foot {
-    padding: 14px 22px;
+    padding: 12px 20px;
     background: var(--bg-section);
     border-top: 1px solid var(--border-soft);
     display: flex;
@@ -264,242 +393,154 @@
     font-size: 12px;
     font-weight: 700;
     color: var(--mosaic-green-800);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
-  .card-foot svg {
-    transition: transform 200ms;
-  }
+  .card-foot svg { transition: transform 200ms; }
   .proto-card:hover .card-foot svg { transform: translateX(4px); }
 
-  /* Notes section */
-  .notes {
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    padding: 28px 32px;
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+  .mosaic-footer {
+    background: var(--bg-footer);
+    border-top: 1px solid var(--border-soft);
+    padding: 32px 32px 24px;
     margin-top: 32px;
+  }
+  .mosaic-footer-inner {
+    max-width: 1320px;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
     gap: 32px;
   }
-  .notes h3 {
-    margin: 0 0 12px;
+  .mosaic-footer-inner .mosaic-logo .logo-text { font-size: 32px; }
+  .mosaic-footer-inner .mosaic-logo .logo-shapes span { width: 17px; height: 8px; }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    justify-content: center;
     font-size: 13px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-1);
   }
-  .notes ul {
-    margin: 0;
-    padding-left: 18px;
-    font-size: 13px;
-    line-height: 1.7;
-    color: var(--text-2);
-  }
-  .notes li { margin-bottom: 6px; }
-  .notes strong { color: var(--text-1); font-weight: 800; }
-  .notes code {
-    background: var(--bg-section);
-    padding: 1px 6px;
-    font-size: 11.5px;
-    font-family: "SF Mono", Monaco, Consolas, monospace;
+  .footer-links a {
     color: var(--mosaic-green-800);
+    text-decoration: underline;
+    text-decoration-color: var(--mosaic-green-700);
+    text-underline-offset: 3px;
   }
-
-  .footer {
-    text-align: center;
-    padding: 48px 56px 32px;
-    color: var(--text-3);
+  .footer-links a:hover { color: var(--mosaic-green-900); }
+  .footer-copyright {
     font-size: 12px;
-    font-weight: 600;
-  }
-  .footer .mark {
-    font-weight: 800;
-    color: var(--text-2);
+    color: var(--text-3);
+    font-weight: 500;
   }
 
-  @media (max-width: 720px) {
-    .hero-bg { padding: 32px 24px 64px; }
-    h1.page-title { font-size: 32px; }
-    .container { padding: 0 24px 40px; }
-    .notes {
-      grid-template-columns: 1fr;
-      padding: 20px 22px;
-    }
+  @media (max-width: 980px) {
+    .mosaic-header-inner { grid-template-columns: auto 1fr; gap: 16px; }
+    .mosaic-search { grid-column: 1 / -1; order: 3; }
+    .mosaic-nav-inner { justify-content: flex-start; overflow-x: auto; }
+    .mosaic-footer-inner { grid-template-columns: 1fr; text-align: center; }
+  }
+  @media (max-width: 600px) {
+    .mosaic-header-inner { padding: 14px 16px; }
+    .main-wrap { padding: 16px; }
+    .user-info { display: none; }
+    .lang-btn { display: none; }
   }
 </style>
 </head>
 <body>
 
-<div class="hero-bg">
-  <div class="hero-inner">
-    <div class="brand">
-      Mosaic<sup>®</sup> Direct
-      <span class="brand-shapes" aria-hidden="true">
+<header class="mosaic-header" role="banner">
+  <div class="mosaic-header-inner">
+    <a class="mosaic-logo" href="index.html" aria-label="Mosaic Direct - Página inicial">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
         <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
       </span>
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <button class="mosaic-search-btn" type="button" aria-label="Pesquisar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
     </div>
-    <div class="label-eyebrow">Protótipos · SAM 2026</div>
-    <h1 class="page-title">Telas em prototipação</h1>
-    <p class="lede">
-      Coleção de mockups interativos para o portal Mosaic Direct.
-      Cada tela é navegável, com dados de exemplo e fluxos completos.
-      Use o menu flutuante "Protótipos" no canto inferior esquerdo de qualquer tela
-      para alternar entre elas.
-    </p>
-    <div class="meta-row">
-      <span><strong>6</strong> telas</span>
-      <span><strong>3</strong> fluxos</span>
-      <span>Atualizado em <strong>maio · 2026</strong></span>
+    <div class="mosaic-user">
+      <button class="lang-btn" type="button">EN <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="user-info">
+        <span class="user-name">Victor Dias</span>
+        <span class="user-org">COOPERCITRUS</span>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Trocar empresa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 13h.01M9 17h.01"/></svg>
+      </button>
+      <button class="icon-btn" type="button" aria-label="Carrinho">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
     </div>
   </div>
-</div>
+  <nav class="mosaic-nav" role="navigation" aria-label="Menu principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="is-active">HOME</a>
+      <a href="#">CONTRACTS <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+      <a href="#">ORDER</a>
+      <a href="#">DOCUMENTS</a>
+      <a href="#">MY ACCOUNT</a>
+    </div>
+  </nav>
+</header>
 
-<div class="container">
+<main class="main-wrap">
 
-  <div class="section-title">
-    <h2>Agendar Contratos Normais</h2>
-    <span class="count">4 versões</span>
+  <div class="breadcrumb">
+    <a href="index.html">Página inicial</a>
+    <span class="sep">&gt;</span>
+    <span>Protótipos</span>
   </div>
 
-  <div class="grid">
+  <h1 class="page-title">Protótipos Mosaic Direct</h1>
 
-    <a href="agendar-contrato-normal-v5.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">Final</span>
-        <span class="card-tag card-tag--latest">Versão final</span>
-      </div>
-      <div class="card-title">Cards compactos com múltiplos itens</div>
-      <div class="card-desc">
-        Versão consolidada do fluxo. Cada card representa um contrato e
-        agrupa todos os itens daquele contrato. Layout horizontal compacto:
-        header em uma linha (Contrato · Ref · Vigência), itens em uma linha
-        (produto · embalagem · rota · saldo · campos). Botão inline para
-        adicionar mais itens do mesmo contrato.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Agrupamento por contrato</span>
-        <span class="feature-pill">Layout compacto</span>
-        <span class="feature-pill">Popover de itens</span>
-        <span class="feature-pill">Multi-item</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal-v3.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V3</span>
-        <span class="card-tag">Cards / Tabela</span>
-      </div>
-      <div class="card-title">Cards / Tabela com toggle</div>
-      <div class="card-desc">
-        Versão consolidada com chave seletora entre visualização em cards e tabela.
-        Cards têm sub-modos Lista e Grid. Toggle no canto superior direito alinhado ao título.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Cards · Tabela</span>
-        <span class="feature-pill">Lista · Grid</span>
-        <span class="feature-pill">Roteiro drawer</span>
-        <span class="feature-pill">Saldo destacado</span>
-        <span class="feature-pill">Auto-expand</span>
-        <span class="feature-pill">Datepicker smart</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal-v2-cards.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V2</span>
-        <span class="card-tag">Cards</span>
-      </div>
-      <div class="card-title">Cards verticais com accordion</div>
-      <div class="card-desc">
-        Iteração intermediária focada em cards. Drawer lateral para seleção de
-        contratos, accordion automático (primeiro aberto, próximo expande ao
-        completar), datepicker custom, modais redesenhados.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Cards</span>
-        <span class="feature-pill">Side drawer</span>
-        <span class="feature-pill">Click anywhere toggle</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
-    <a href="agendar-contrato-normal.html" class="proto-card">
-      <div class="card-head">
-        <span class="card-id">V1</span>
-        <span class="card-tag">Versão inicial</span>
-      </div>
-      <div class="card-title">Versão simplificada (base)</div>
-      <div class="card-desc">
-        Primeira iteração e ponto de partida do projeto. Tabela tradicional
-        com modal centralizado para seleção de contratos. Busca por todos os
-        campos com highlight em amarelo, multi-select, edição inline de
-        Volume / Semana / Roteiro. Útil como referência da abordagem mais enxuta.
-      </div>
-      <div class="card-features">
-        <span class="feature-pill">Tabela</span>
-        <span class="feature-pill">Modal</span>
-        <span class="feature-pill">Multi-select</span>
-      </div>
-      <div class="card-foot">
-        <span>Abrir protótipo</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </div>
-    </a>
-
+  <div class="info-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
+    <span>Coleção de mockups interativos do portal Mosaic Direct. Cada tela é navegável com dados de exemplo. A versão anterior dos protótipos (Manrope, dashboard) continua disponível em <a href="v2/index.html" style="color: var(--text-link)">/v2/</a>.</span>
   </div>
 
   <div class="section-title">
-    <h2>Agendamento</h2>
+    <h2>Relatório</h2>
     <span class="count">1 tela</span>
   </div>
-
   <div class="grid">
-
-    <a href="agendar-protocolo.html" class="proto-card">
+    <a href="relatorio-status-agendamento.html" class="proto-card">
       <div class="card-head">
-        <span class="card-id">Novo</span>
-        <span class="card-tag card-tag--new">Recém-adicionada</span>
+        <span class="card-id">Relatório</span>
+        <span class="card-tag card-tag--new">Identidade nova</span>
       </div>
-      <div class="card-title">Agendar Protocolo(s)</div>
+      <div class="card-title">Relatório de Status de Agendamento</div>
       <div class="card-desc">
-        Fluxo paralelo ao Agendar Contrato Normal: o usuário seleciona protocolos
-        já criados (dropdown de recentes + busca avançada com 12 colunas) e
-        preenche Volume, Semana e Roteiro por linha. Cards horizontais com 3
-        níveis (protocolo · recebedor · item), datepicker custom, drawer de
-        roteiro pré-preenchido.
+        Lista de solicitações da semana com filtros (Status, Recebedor, Produto, Planta).
+        Tabela tradicional alinhada ao padrão Mosaic real.
       </div>
       <div class="card-features">
-        <span class="feature-pill">Dropdown recentes</span>
-        <span class="feature-pill">Busca avançada</span>
-        <span class="feature-pill">Multi-protocolo</span>
-        <span class="feature-pill">Roteiro pré-preenchido</span>
+        <span class="feature-pill">Filtros</span>
+        <span class="feature-pill">Read-only</span>
+        <span class="feature-pill">Exportação XLS</span>
+        <span class="feature-pill">Semana vigente</span>
       </div>
       <div class="card-foot">
         <span>Abrir protótipo</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </div>
     </a>
-
   </div>
 
   <div class="section-title">
     <h2>Contratos</h2>
     <span class="count">1 tela</span>
   </div>
-
   <div class="grid">
-
     <a href="criar-protocolo.html" class="proto-card">
       <div class="card-head">
         <span class="card-id">Protocolo</span>
@@ -508,50 +549,86 @@
       <div class="card-title">Criar Protocolo(s)</div>
       <div class="card-desc">
         Fluxo de criação de protocolos a partir de contratos selecionados.
-        Cooperado picker, cadastro inline de novo cooperado (PF/PJ + endereço),
-        embalagem, NF venda, preço/ton, semana desejada.
+        Cooperado picker, cadastro inline, embalagem, NF venda, preço/ton, semana desejada.
       </div>
       <div class="card-features">
         <span class="feature-pill">Cooperado picker</span>
         <span class="feature-pill">Cadastrar cooperado</span>
         <span class="feature-pill">9 campos por linha</span>
-        <span class="feature-pill">Embalagem dropdown</span>
       </div>
       <div class="card-foot">
         <span>Abrir protótipo</span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
       </div>
     </a>
-
   </div>
 
-  <div class="notes">
-    <div>
-      <h3>Como navegar</h3>
-      <ul>
-        <li>Cada card abre o protótipo correspondente em uma nova janela do mesmo link.</li>
-        <li>Em qualquer tela, use o botão flutuante <strong>🧪 Protótipos</strong> no canto inferior esquerdo para alternar.</li>
-        <li>O botão atual fica destacado em verde no menu.</li>
-        <li>Pressione <code>Esc</code> ou clique fora para fechar o menu.</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Sobre os mockups</h3>
-      <ul>
-        <li>Todos os dados são <strong>fictícios</strong> e servem só para ilustrar o fluxo.</li>
-        <li>Os contratos disponíveis (Q-20303, Q-20385, Q-20392, Q-38542, Q-85721, Q-39742) repetem entre as telas para consistência.</li>
-        <li>Tipografia <strong>Manrope</strong>, paleta oficial Mosaic.</li>
-        <li>Layout calibrado para <strong>1320px</strong> de largura útil.</li>
-      </ul>
-    </div>
+  <div class="section-title">
+    <h2>Agendamento</h2>
+    <span class="count">2 telas</span>
+  </div>
+  <div class="grid">
+    <a href="agendar-contrato-normal.html" class="proto-card">
+      <div class="card-head">
+        <span class="card-id">Contrato</span>
+        <span class="card-tag">Cards compactos</span>
+      </div>
+      <div class="card-title">Agendar Contrato Normal</div>
+      <div class="card-desc">
+        Versão consolidada do fluxo. Cards representam contratos e agrupam itens.
+        Layout horizontal compacto: header (Contrato · Ref · Vigência), itens (produto · embalagem · rota · saldo · campos).
+      </div>
+      <div class="card-features">
+        <span class="feature-pill">Agrupamento por contrato</span>
+        <span class="feature-pill">Layout compacto</span>
+        <span class="feature-pill">Multi-item</span>
+      </div>
+      <div class="card-foot">
+        <span>Abrir protótipo</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+    </a>
+    <a href="agendar-protocolo.html" class="proto-card">
+      <div class="card-head">
+        <span class="card-id">Protocolo</span>
+        <span class="card-tag">Multi-protocolo</span>
+      </div>
+      <div class="card-title">Agendar Protocolo(s)</div>
+      <div class="card-desc">
+        Fluxo paralelo ao Agendar Contrato Normal: o usuário seleciona protocolos
+        já criados e preenche Volume, Semana e Roteiro por linha.
+      </div>
+      <div class="card-features">
+        <span class="feature-pill">Dropdown recentes</span>
+        <span class="feature-pill">Busca avançada</span>
+        <span class="feature-pill">Multi-protocolo</span>
+      </div>
+      <div class="card-foot">
+        <span>Abrir protótipo</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </div>
+    </a>
   </div>
 
-</div>
+</main>
 
-<div class="footer">
-  <div class="mark">Mosaic Direct</div>
-  Protótipos não-vinculantes — somente para fins de validação de UX e fluxo.
-</div>
+<footer class="mosaic-footer" role="contentinfo">
+  <div class="mosaic-footer-inner">
+    <a class="mosaic-logo" href="index.html" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
+        <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
+      </span>
+    </a>
+    <div class="footer-links">
+      <a href="#">política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
 
 </body>
 </html>
