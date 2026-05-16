@@ -1468,77 +1468,461 @@
     display: block;
     margin-bottom: 2px;
   }
+
+
+/* ================================================================
+   MOSAIC OVERRIDES — identidade visual Mosaic real
+   (Barlow + bordas arredondadas + header/footer)
+   Injetado depois do CSS original p/ ter precedência via cascata.
+   ================================================================ */
+
+:root {
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --radius-card: 12px;
+  --radius-pill: 999px;
+
+  --bg-info-mosaic:    #ecf1ee;
+  --bg-footer-mosaic:  #f4f4f2;
+  --bg-table-head:     #f7f7f5;
+  --bg-hover-mosaic:   #fafaf8;
+
+  --shadow-soft: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+}
+
+html, body {
+  font-family: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+}
+
+/* ===== HEADER ===== */
+.mosaic-header {
+  background: #fff;
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.mosaic-header-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 18px 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+}
+.mosaic-logo {
+  display: inline-flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.mosaic-logo .logo-text {
+  font-family: "Barlow", sans-serif;
+  font-weight: 800;
+  font-size: 26px;
+  letter-spacing: -0.01em;
+  color: #15201b;
+  line-height: 1;
+}
+.mosaic-logo .logo-text sup {
+  font-size: 10px;
+  font-weight: 500;
+  vertical-align: super;
+  margin-left: 1px;
+}
+.mosaic-logo .logo-shapes { display: inline-flex; gap: 2px; }
+.mosaic-logo .logo-shapes span {
+  width: 14px; height: 6px;
+  border-radius: 1px;
+}
+.mosaic-logo .logo-shapes .y { background: var(--mosaic-yellow); }
+.mosaic-logo .logo-shapes .o { background: var(--mosaic-orange); }
+.mosaic-logo .logo-shapes .r { background: var(--mosaic-red); }
+.mosaic-logo .logo-shapes .t { background: var(--mosaic-teal); }
+
+.mosaic-search {
+  position: relative;
+  max-width: 560px; width: 100%;
+  justify-self: center;
+}
+.mosaic-search input {
+  width: 100%; height: 42px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  padding: 0 44px 0 16px;
+  font: 400 14px "Barlow", sans-serif;
+  color: var(--text-1);
+}
+.mosaic-search input::placeholder { color: var(--text-3); }
+.mosaic-search input:focus {
+  outline: none;
+  border-color: var(--mosaic-green-700);
+  box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+}
+.mosaic-search-btn {
+  position: absolute; right: 0; top: 0;
+  height: 42px; width: 44px;
+  border: none; background: transparent;
+  color: var(--text-2); cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-md);
+}
+
+.mosaic-user { display: inline-flex; align-items: center; gap: 14px; flex-shrink: 0; }
+.lang-btn {
+  height: 32px; padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font: 700 12px "Barlow", sans-serif;
+  color: var(--text-1); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.lang-btn:hover { border-color: var(--mosaic-green-700); }
+.user-info { display: flex; flex-direction: column; line-height: 1.15; }
+.user-info .user-name { font-size: 14px; font-weight: 700; color: var(--text-1); }
+.user-info .user-org {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.icon-btn {
+  width: 36px; height: 36px;
+  border: none;
+  background: var(--mosaic-green-700);
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: background-color 120ms;
+}
+.icon-btn:hover { background: var(--mosaic-green-800); }
+
+/* ===== NAV ===== */
+.mosaic-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--border-soft);
+}
+.mosaic-nav-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  gap: 36px;
+  justify-content: center;
+}
+.mosaic-nav-inner > a,
+.mosaic-nav-inner > .mosaic-nav-item > a {
+  color: var(--mosaic-green-800);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 16px 4px;
+  border-bottom: 3px solid transparent;
+  transition: border-color 120ms;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.mosaic-nav-inner > a:hover,
+.mosaic-nav-inner > .mosaic-nav-item > a:hover {
+  border-bottom-color: var(--mosaic-green-700);
+}
+.mosaic-nav-inner > a.is-active,
+.mosaic-nav-inner > .mosaic-nav-item > a.is-active {
+  border-bottom-color: var(--mosaic-green-700);
+  color: var(--mosaic-green-900);
+}
+.mosaic-nav-item { position: relative; }
+.mosaic-submenu {
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 6px 0;
+  min-width: 240px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms, transform 160ms;
+  z-index: 60;
+}
+.mosaic-nav-item:hover .mosaic-submenu,
+.mosaic-nav-item:focus-within .mosaic-submenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.mosaic-submenu a {
+  display: block;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.mosaic-submenu a:hover {
+  background: var(--bg-section);
+  color: var(--mosaic-green-700);
+}
+
+/* ===== Reset / overrides do hero antigo ===== */
+.hero,
+header.topbar,
+nav.mainnav { display: none !important; }
+
+/* ===== MAIN container — manter limites, mas garantir padding ===== */
+.page,
+main.page {
+  max-width: 1320px;
+  margin: 24px auto 0;
+  padding: 0 32px 40px;
+}
+
+/* ===== PAGE TITLE ===== */
+.page-title {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: var(--mosaic-green-800) !important;
+  letter-spacing: -0.005em !important;
+  margin: 0 0 16px !important;
+  text-transform: none !important;
+}
+
+/* ===== INFO BANNER ===== */
+.info-banner {
+  background: var(--bg-info-mosaic) !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  padding: 14px 18px !important;
+}
+
+/* ===== BORDAS ARREDONDADAS GERAIS ===== */
+/* Cards / containers */
+.report-table-wrap,
+.advanced-filter,
+.filter-bar,
+.grid-card,
+.detail-panel,
+.search-suggestions,
+.export-popover,
+.weekly-breakdown {
+  border-radius: var(--radius-card) !important;
+}
+
+/* Inputs / selects */
+.input,
+.input-search,
+.select,
+input[type="text"],
+input[type="search"],
+input[type="date"],
+input[type="number"],
+select,
+.filter-input,
+.filter-select,
+.search-input,
+.advanced-input,
+.advanced-select {
+  border-radius: var(--radius-md) !important;
+}
+
+/* Buttons */
+button,
+.btn,
+.btn-primary,
+.btn-secondary,
+.btn-export,
+.btn-clear-filters,
+.btn-advanced-filter,
+.btn-toggle-view,
+.btn-search,
+.btn-apply,
+.row-toggle-btn {
+  border-radius: var(--radius-md) !important;
+}
+
+/* Pills / tags */
+.status-pill,
+.tipo-tag,
+.pill,
+.pill-frete,
+.feature-pill,
+.adv-count {
+  border-radius: var(--radius-pill) !important;
+}
+
+/* ===== TABELA refresh visual ===== */
+.report-table-wrap {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  overflow: auto;
+}
+.report-table thead th {
+  background: var(--bg-table-head) !important;
+  border-bottom: 1px solid var(--border) !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  color: var(--text-1) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+.report-table tbody td {
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+.report-table tbody tr:hover td {
+  background: var(--bg-hover-mosaic) !important;
+}
+
+/* Cabeçalho sticky precisa coincidir com header sticky offset */
+.report-table thead th { top: 0 !important; }
+
+/* ===== BARRA DE FILTRO (filter-bar) ===== */
+.filter-bar,
+.filter-bar-row {
+  background: #fff !important;
+  border: 1px solid var(--border-soft) !important;
+}
+
+/* ===== ADVANCED FILTER PANEL ===== */
+.advanced-filter {
+  background: #fff !important;
+  border: 1px solid var(--border-soft) !important;
+  box-shadow: var(--shadow-soft) !important;
+}
+
+/* ===== TYPOGRAPHY de info-banner / textos ===== */
+.info-banner,
+.report-empty,
+.filter-bar,
+.advanced-filter,
+.detail-panel,
+.report-table,
+.grid-card {
+  font-family: "Barlow", sans-serif !important;
+}
+
+/* ===== STATUS PILLS — refinar contraste com identidade Mosaic ===== */
+.status-pill,
+.tipo-tag,
+.pill-frete {
+  font-family: "Barlow", sans-serif !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.02em !important;
+  text-transform: capitalize !important;
+  padding: 3px 12px !important;
+  font-size: 12px !important;
+}
+
+/* ===== ROW TOGGLE BUTTON (chevron expansão) ===== */
+.row-toggle-btn {
+  border-radius: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+}
+
+/* ===== FOOTER ===== */
+.mosaic-footer {
+  background: var(--bg-footer-mosaic);
+  border-top: 1px solid var(--border-soft);
+  padding: 32px 32px 24px;
+  margin-top: 48px;
+}
+.mosaic-footer-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+}
+.mosaic-footer-inner .mosaic-logo .logo-text { font-size: 32px; }
+.mosaic-footer-inner .mosaic-logo .logo-shapes span { width: 17px; height: 8px; }
+.footer-links {
+  display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; font-size: 13px;
+}
+.footer-links a {
+  color: var(--mosaic-green-800);
+  text-decoration: underline;
+  text-decoration-color: var(--mosaic-green-700);
+  text-underline-offset: 3px;
+}
+.footer-links a:hover { color: var(--mosaic-green-900); }
+.footer-copyright { font-size: 12px; color: var(--text-3); font-weight: 500; }
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 980px) {
+  .mosaic-header-inner { grid-template-columns: auto 1fr; gap: 16px; }
+  .mosaic-search { grid-column: 1 / -1; order: 3; }
+  .mosaic-nav-inner { justify-content: flex-start; overflow-x: auto; }
+  .mosaic-footer-inner { grid-template-columns: 1fr; text-align: center; }
+}
+@media (max-width: 600px) {
+  .mosaic-header-inner { padding: 14px 16px; }
+  .page, main.page { padding: 16px; }
+  .user-info { display: none; }
+  .lang-btn { display: none; }
+}
+
 </style>
 </head>
 <body>
 
 <!-- Top header ==================================================== -->
-<header class="topbar">
-  <div class="logo" aria-label="Mosaic">
-    <span class="wordmark">Mosaic<sup>®</sup></span>
-    <span class="shapes" aria-hidden="true">
-      <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
-    </span>
-  </div>
-  <div class="global-search">
-    <input type="text" placeholder="Pesquisar..." aria-label="Pesquisar" />
-    <span class="icon-search" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </span>
-  </div>
-  <div class="user-cluster">
-    <div class="lang-select">
-      EN
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+<header class="mosaic-header" role="banner">
+  <div class="mosaic-header-inner">
+    <a class="mosaic-logo" href="index.html" aria-label="Mosaic Direct - Página inicial">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
+        <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
+      </span>
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <button class="mosaic-search-btn" type="button" aria-label="Pesquisar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
     </div>
-    <div class="user-info">
-      <div class="name">Alyssa Harris</div>
-      <div class="org">MAR JAC POULT...</div>
-    </div>
-    <div class="icon-pill" aria-label="Calendário">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <div class="mosaic-user">
+      <button class="lang-btn" type="button">EN <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="user-info">
+        <span class="user-name">Victor Dias</span>
+        <span class="user-org">COOPERCITRUS</span>
+      </div>
+      <button class="icon-btn" type="button" aria-label="Trocar empresa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4M9 9h.01M9 13h.01M9 17h.01"/></svg>
+      </button>
+      <button class="icon-btn" type="button" aria-label="Carrinho">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
     </div>
   </div>
+  <nav class="mosaic-nav" role="navigation" aria-label="Menu principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html">HOME</a>
+      <span class="mosaic-nav-item has-dropdown">
+        <a href="#" class="is-active">CONTRACTS <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></a>
+        <div class="mosaic-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="agendar-contrato-normal.html">Agendar Contrato Normal</a>
+          <a href="agendar-protocolo.html" class="is-active">Agendar Protocolo</a>
+        </div>
+      </span>
+      <a href="#">ORDER</a>
+      <a href="relatorio-status-agendamento.html">DOCUMENTS</a>
+      <a href="#">MY ACCOUNT</a>
+    </div>
+  </nav>
 </header>
-
-<!-- Main nav ====================================================== -->
-<nav class="mainnav">
-  <div class="mainnav-inner">
-    <a href="#" class="navitem">Home</a>
-    <a href="#" class="navitem has-dropdown">Produtos</a>
-    <a href="#" class="navitem has-dropdown">Cotações</a>
-    <span class="navitem has-dropdown" id="navContratos">
-      Contratos
-      <div class="submenu">
-        <a href="#">Meus contratos</a>
-        <a href="criar-protocolo.html">Criar Protocolo</a>
-      </div>
-    </span>
-    <span class="navitem has-dropdown" id="navAgendamento">
-      Agendamento
-      <div class="submenu">
-        <a href="agendar-contrato-normal-v5.html">Agendar Contrato Normal</a>
-        <a href="agendar-protocolo.html" class="current">Agendar Protocolo</a>
-        <a href="#">Relatório de Status Agendamento</a>
-        <a href="#">Relatório Planejado vs Realizado</a>
-        <a href="#">Relatório de Embarques</a>
-      </div>
-    </span>
-    <a href="#" class="navitem has-dropdown">Faturamento</a>
-    <a href="#" class="navitem">Documentos</a>
-    <a href="#" class="navitem has-dropdown">Financeiro</a>
-    <a href="#" class="navitem has-dropdown">Suporte</a>
-  </div>
-</nav>
-
-<!-- Hero ========================================================== -->
-<div class="hero">
-  <div class="mosaic-overlay">
-    <div class="logo logo--hero" aria-hidden="true">
-      <span class="wordmark">Mosaic<sup>®</sup></span>
-    </div>
-  </div>
-</div>
 
 <!-- Page ========================================================== -->
 <main class="page">
@@ -2505,6 +2889,24 @@ document.querySelectorAll(".modal-backdrop").forEach(bd => {
 /* ---------- Init ------------------------------------------------- */
 render();
 </script>
+
+<footer class="mosaic-footer" role="contentinfo">
+  <div class="mosaic-footer-inner">
+    <a class="mosaic-logo" href="index.html" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
+        <span class="y"></span><span class="o"></span><span class="r"></span><span class="t"></span>
+      </span>
+    </a>
+    <div class="footer-links">
+      <a href="#">política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
 
 </body>
 </html>

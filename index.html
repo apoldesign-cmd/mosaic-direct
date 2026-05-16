@@ -115,6 +115,7 @@
     width: 100%;
     height: 42px;
     border: 1px solid var(--border);
+    border-radius: 6px;
     background: #fff;
     padding: 0 44px 0 16px;
     font-family: inherit;
@@ -125,6 +126,7 @@
   .mosaic-search input:focus {
     outline: none;
     border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
   }
   .mosaic-search-btn {
     position: absolute;
@@ -149,8 +151,9 @@
   }
   .lang-btn {
     height: 32px;
-    padding: 0 8px;
+    padding: 0 10px;
     border: 1px solid var(--border);
+    border-radius: 6px;
     background: #fff;
     font: 700 12px "Barlow", sans-serif;
     color: var(--text-1);
@@ -261,6 +264,7 @@
   .info-banner {
     background: var(--bg-info);
     padding: 14px 18px;
+    border-radius: 6px;
     margin-bottom: 28px;
     display: flex;
     align-items: flex-start;
@@ -306,6 +310,7 @@
   .proto-card {
     background: #fff;
     border: 1px solid var(--border-soft);
+    border-radius: 12px;
     text-decoration: none;
     color: inherit;
     display: flex;
@@ -313,6 +318,7 @@
     transition: border-color 200ms, box-shadow 200ms, transform 200ms;
     position: relative;
     cursor: pointer;
+    overflow: hidden;
   }
   .proto-card:hover {
     border-color: var(--mosaic-green-700);
@@ -351,7 +357,8 @@
     letter-spacing: 0.08em;
     color: var(--mosaic-green-800);
     background: rgba(0,106,77,0.08);
-    padding: 3px 8px;
+    padding: 3px 10px;
+    border-radius: 999px;
   }
   .card-tag--latest { background: var(--mosaic-yellow); color: var(--text-1); }
   .card-tag--new    { background: var(--mosaic-green-800); color: #fff; }
@@ -380,8 +387,9 @@
     font-weight: 600;
     color: var(--text-3);
     background: var(--bg-section);
-    padding: 2px 8px;
+    padding: 2px 10px;
     border: 1px solid var(--border-soft);
+    border-radius: 999px;
   }
   .card-foot {
     padding: 12px 20px;
