@@ -43,7 +43,6 @@
   top: 0;
   z-index: var(--z-header);
   background: #fff;
-  border-bottom: 1px solid var(--border-soft);
 }
 
 .mosaic-header-top {
@@ -195,7 +194,7 @@
    ========================================================================== */
 
 .mosaic-nav {
-  border-top: 1px solid var(--border-soft);
+  /* sem divisores em volta — só o item ativo recebe sublinhado verde */
 }
 .mosaic-nav-inner {
   max-width: var(--container-max);
