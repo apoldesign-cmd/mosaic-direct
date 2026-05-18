@@ -696,28 +696,26 @@
 .report-table tbody td {
   padding: 18px !important;
 }
+/* Sort arrows: esconde o texto original (↑↓↕) e mostra triângulo filled
+   via ::after (Salesforce-style). Default ▲ (asc available); desc mostra ▼ */
 .report-table .sort-arrow,
 .data-table .sort-arrow {
-  font-size: 0 !important;       /* esconde texto ↑↓↕ */
+  font-size: 0 !important;
   color: transparent !important;
-  width: 10px;
-  height: 12px;
   display: inline-block;
   margin-left: 6px;
-  vertical-align: -2px;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+  vertical-align: middle;
+  line-height: 1;
 }
-.report-table th.sort-asc .sort-arrow,
-.data-table th.sort-asc .sort-arrow {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+.report-table .sort-arrow::after,
+.data-table .sort-arrow::after {
+  content: '▲';
+  font-size: 9px !important;
+  color: var(--text-1) !important;
+  letter-spacing: 0;
 }
-.report-table th.sort-desc .sort-arrow,
-.data-table th.sort-desc .sort-arrow {
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 11l4-6H1z'/></svg>");
-}
+.report-table th.sort-desc .sort-arrow::after,
+.data-table th.sort-desc .sort-arrow::after { content: '▼'; }
 
 /* ==========================================================================
    11. STATUS PILLS
