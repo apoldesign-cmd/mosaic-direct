@@ -79,10 +79,8 @@ def new_header_html(active_nav: str) -> str:
       <span class="nav-item" tabindex="0">
         Agendamento<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html"{' class="is-active"' if active_nav=="agendar-contrato" else ""}>Agendar Contrato Normal</a>
-          <a href="agendar-protocolo.html"{' class="is-active"' if active_nav=="agendar-protocolo" else ""}>Agendar Protocolo</a>
-          <a href="relatorio-status-agendamento.html"{' class="is-active"' if active_nav=="relatorio" else ""}>Relatório de Status Agendamento</a>
-          <a href="#">Relatório de Embarques</a>
+          <a href="agendar-contrato-normal.html"{' class="is-active"' if active_nav=="agendar-contrato" else ""}>Agendar Contratos Normais</a>
+          <a href="relatorio-status-agendamento.html"{' class="is-active"' if active_nav=="relatorio" else ""}>Relatório de Status de Agendamento</a>
         </div>
       </span>
       <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>

@@ -69,7 +69,7 @@
 .mosaic-logo .logo-text {
   font-family: var(--font-family-base);
   font-weight: 800;
-  font-size: 26px;
+  font-size: 36px;
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--text-1);
@@ -83,11 +83,12 @@
 }
 .mosaic-logo .logo-shapes {
   display: block;
-  margin-top: 2px;
-  height: 22px;
+  margin-top: 3px;
+  height: 32px;
   width: auto;
 }
-.mosaic-footer .mosaic-logo .logo-shapes { height: 28px; }
+.mosaic-footer .mosaic-logo .logo-text { font-size: 42px; }
+.mosaic-footer .mosaic-logo .logo-shapes { height: 38px; }
 
 /* --- Search bar --- */
 .mosaic-search {
@@ -219,20 +220,19 @@
   text-transform: uppercase;
   color: var(--mosaic-green-800);
   text-decoration: none;
-  border-bottom: 3px solid transparent;
   cursor: pointer;
   white-space: nowrap;
-  transition: color var(--ease-fast), border-color var(--ease-fast);
+  transition: color var(--ease-fast);
 }
 .nav-item:hover {
   color: var(--mosaic-green-900);
-  border-bottom-color: var(--mosaic-green-700);
   text-decoration: none;
 }
+/* Active = laranja (matches Salesforce print: "DOCUMENTS" em orange) */
 .nav-item.is-active {
-  color: var(--mosaic-green-900);
-  border-bottom-color: var(--mosaic-green-700);
+  color: var(--mosaic-orange);
 }
+/* Chevron só aparece no hover/focus (Salesforce pattern) */
 .nav-item .chev {
   width: 9px;
   height: 9px;
@@ -240,6 +240,12 @@
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(45deg) translate(-1px, -1px);
+  opacity: 0;
+  transition: opacity var(--ease-fast);
+}
+.nav-item:hover .chev,
+.nav-item:focus-within .chev {
+  opacity: 1;
 }
 
 /* Submenu */
