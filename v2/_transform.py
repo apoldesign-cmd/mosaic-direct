@@ -182,6 +182,21 @@ def transform(src_file: Path, dst_file: Path, active_nav: str) -> dict:
     report["hero_removal"] = n
     txt = txt2
 
+    # 5b. Strip Hotjar + GA tracking scripts (placeholders that throw at runtime)
+    txt2, n_ga = re.subn(
+        r"<!--\s*Google Analytics[^>]*-->\s*<script[^>]*googletagmanager[^<]*</script>\s*<script>[\s\S]*?gtag\('config'[^)]*\);\s*</script>",
+        "",
+        txt,
+    )
+    txt2, n_hj = re.subn(
+        r"<!--\s*Hotjar[^>]*-->\s*<script>\s*\(function\(h,o,t,j,a,r\)[\s\S]*?hotjar[\s\S]*?</script>",
+        "",
+        txt2,
+    )
+    report["ga_strip"] = n_ga
+    report["hotjar_strip"] = n_hj
+    txt = txt2
+
     # 6a. Replace old <footer class="page-footer">...</footer> with new footer (if exists)
     txt2, n = re.subn(
         r'<footer class="page-footer">.*?</footer>',
