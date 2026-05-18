@@ -287,8 +287,9 @@
   color: var(--mosaic-green-700);
 }
 .nav-submenu a.is-active {
-  color: var(--mosaic-green-700);
+  color: var(--mosaic-orange);
   background: var(--bg-section);
+  font-weight: 700;
 }
 
 /* ==========================================================================
