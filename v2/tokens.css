@@ -80,8 +80,8 @@
      -------------------------------------------------------------------- */
 
   --radius-sm:     4px;   /* Tags, chips */
-  --radius-md:     6px;   /* Inputs, selects, buttons */
-  --radius-lg:     10px;  /* Cards de filtro */
+  --radius-md:     10px;  /* Inputs, selects, buttons (Salesforce-rounded) */
+  --radius-lg:     14px;  /* Cards de filtro */
   --radius-card:   12px;  /* Cards de protótipo, tabela wrap */
   --radius-pill:   999px; /* Pills, status badges */
   --radius-circle: 50%;   /* Icon buttons, avatars */

@@ -666,6 +666,35 @@
 }
 
 /* --------------------------------------------------------------------
+   Salesforce-style ROUNDED inputs & buttons nas telas transpostas
+   (inline CSS define border-radius: 0; forçamos 10px global).
+   -------------------------------------------------------------------- */
+.search-bar-input input,
+.btn-advanced-filter,
+.btn-clear,
+.btn-buscar-compact,
+input[type="text"]:not(.no-radius),
+input[type="search"]:not(.no-radius),
+input[type="date"]:not(.no-radius),
+input[type="number"]:not(.no-radius),
+select:not(.no-radius),
+.btn,
+button.btn-primary,
+button.btn-secondary,
+.action-row .btn-primary,
+.action-row .btn,
+.summary-footer button,
+.modal-footer button,
+.drawer-footer button {
+  border-radius: var(--radius-md) !important;
+}
+/* Buttons "pill" style que devem continuar pill */
+.status-pill,
+.lang-switch.is-pill {
+  border-radius: var(--radius-pill) !important;
+}
+
+/* --------------------------------------------------------------------
    Full-bleed gray sections nas telas V5 (agendar-contrato-normal,
    criar-protocolo, agendar-protocolo) — .action-row e .cards-empty
    estendem até a borda do .page container (1320px), conteúdo refilado
