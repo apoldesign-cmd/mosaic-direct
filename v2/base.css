@@ -666,8 +666,9 @@
 }
 
 /* --------------------------------------------------------------------
-   Salesforce-style ROUNDED inputs & buttons nas telas transpostas
-   (inline CSS define border-radius: 0; forçamos 10px global).
+   Salesforce-style: inputs & buttons MAIORES (52px) + ROUNDED (10px)
+   - height: 52px alinha com o padrão visual do portal real
+   - border-radius: 10px (token --radius-md já atualizado)
    -------------------------------------------------------------------- */
 .search-bar-input input,
 .btn-advanced-filter,
@@ -687,6 +688,12 @@ button.btn-secondary,
 .modal-footer button,
 .drawer-footer button {
   border-radius: var(--radius-md) !important;
+}
+.search-bar-input input,
+.btn-advanced-filter,
+.btn-buscar-compact {
+  height: 52px !important;
+  font-size: 14px !important;
 }
 /* Buttons "pill" style que devem continuar pill */
 .status-pill,
@@ -752,16 +759,18 @@ button.btn-secondary,
      adicionamos via ::after no próprio <th>.
    - Para .data-table que tem .sort-arrow span, escondemos texto e
      mostramos triângulo via ::after no span. */
+/* Sort arrows estilo Salesforce: line up/down arrow (↑↓) ao invés de
+   triângulo filled — visual mais leve e fiel ao print do portal real */
 .report-table thead th::after {
-  content: '▲';
-  font-size: 9px;
-  color: var(--text-1);
+  content: '↑';
+  font-size: 14px;
+  color: var(--text-2);
   margin-left: 6px;
-  vertical-align: middle;
+  vertical-align: -1px;
   line-height: 1;
   font-weight: 400;
 }
-.report-table thead th.sort-desc::after { content: '▼'; }
+.report-table thead th.sort-desc::after { content: '↓'; }
 
 .data-table .sort-arrow {
   font-size: 0 !important;
@@ -772,11 +781,12 @@ button.btn-secondary,
   line-height: 1;
 }
 .data-table .sort-arrow::after {
-  content: '▲';
-  font-size: 9px !important;
-  color: var(--text-1) !important;
+  content: '↑';
+  font-size: 14px !important;
+  color: var(--text-2) !important;
+  font-weight: 400;
 }
-.data-table th.sort-desc .sort-arrow::after { content: '▼'; }
+.data-table th.sort-desc .sort-arrow::after { content: '↓'; }
 
 /* ==========================================================================
    11. STATUS PILLS
