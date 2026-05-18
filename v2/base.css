@@ -666,6 +666,28 @@
 }
 
 /* --------------------------------------------------------------------
+   Full-bleed gray sections nas telas V5 (agendar-contrato-normal,
+   criar-protocolo, agendar-protocolo) — .action-row e .cards-empty
+   estendem até a borda do .page container (1320px), conteúdo refilado
+   alinhando com breadcrumb/título acima.
+   -------------------------------------------------------------------- */
+.page > .action-row,
+.page > .cards-empty,
+.page > .cards-container > .cards-empty {
+  margin-left: calc(-1 * var(--container-pad-x, 56px));
+  margin-right: calc(-1 * var(--container-pad-x, 56px));
+  padding-left: var(--container-pad-x, 56px);
+  padding-right: var(--container-pad-x, 56px);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+/* O .page no V5 tem padding lateral 56px, então força via fallback */
+.page > .action-row { margin-left: -56px; margin-right: -56px; padding-left: 56px; padding-right: 56px; }
+.page > .cards-empty,
+.page > .cards-container > .cards-empty { margin-left: -56px; margin-right: -56px; padding-left: 56px; padding-right: 56px; }
+
+/* --------------------------------------------------------------------
    Overrides para classes específicas do relatório transposto
    (.report-table, .search-bar, .info-banner svg) — alinha ao padrão
    Salesforce sem mexer no inline CSS da tela.
