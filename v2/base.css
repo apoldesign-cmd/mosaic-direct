@@ -370,28 +370,28 @@
 .info-banner {
   display: flex;
   gap: var(--space-3);
-  align-items: flex-start;
+  align-items: center;
   background: var(--bg-info);
-  padding: 14px 18px;
-  border-radius: var(--radius-md);
-  font-size: 13.5px;
+  padding: 18px 24px;
+  border-radius: 2px;
+  font-size: var(--fs-body);
   color: var(--text-1);
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
 }
 .info-banner .info-icon {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: var(--radius-circle);
-  background: var(--mosaic-green-700);
+  background: var(--text-1);
   color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 800;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 14px;
   font-style: italic;
-  font-family: Georgia, serif;
+  font-family: Georgia, "Times New Roman", serif;
 }
 
 /* ==========================================================================
@@ -399,24 +399,25 @@
    ========================================================================== */
 
 .filter-card {
-  background: #fff;
-  border: 1px solid var(--border-soft);
-  border-radius: var(--radius-card);
+  border: none;
+  border-radius: 2px;
   margin-bottom: var(--space-5);
   overflow: hidden;
 }
 .filter-card-head {
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--border-soft);
-  font-size: var(--fs-body);
+  background: var(--bg-section);
+  padding: 18px 24px;
+  border-bottom: none;
+  font-size: var(--fs-subtitle);
   font-weight: 700;
   color: var(--text-1);
 }
 .filter-card-body {
-  padding: 18px 20px;
+  background: #fff;
+  padding: 24px;
   display: grid;
   grid-template-columns: repeat(4, 1fr) auto auto;
-  gap: 16px;
+  gap: 20px;
   align-items: end;
 }
 
@@ -585,7 +586,7 @@
 .data-table-wrap {
   background: #fff;
   border: 1px solid var(--border-soft);
-  border-radius: var(--radius-card);
+  border-radius: 2px;
   overflow: auto;
 }
 .data-table {
@@ -593,14 +594,16 @@
   border-collapse: collapse;
   font-size: var(--fs-body);
 }
+.data-table thead {
+  background: var(--bg-section);
+}
 .data-table thead th {
-  background: var(--bg-table-head);
-  padding: 14px 16px;
+  padding: 18px 20px;
   text-align: left;
   font-weight: 700;
-  font-size: var(--fs-body-sm);
+  font-size: var(--fs-body);
   color: var(--text-1);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-soft);
   white-space: nowrap;
 }
 .data-table thead th.sortable {
@@ -609,13 +612,28 @@
   transition: color var(--ease-fast);
 }
 .data-table thead th.sortable:hover { color: var(--mosaic-green-700); }
+/* Sort arrows: SVG inline via background-image */
 .data-table thead th .sort-arrow {
   display: inline-block;
-  margin-left: 4px;
-  opacity: 0.7;
+  width: 10px;
+  height: 12px;
+  margin-left: 6px;
+  vertical-align: -2px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.85;
+}
+.data-table thead th .sort-arrow.asc,
+.data-table thead th.sortable:not(.sort-desc) .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+}
+.data-table thead th .sort-arrow.desc,
+.data-table thead th.sort-desc .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 11l4-6H1z'/></svg>");
 }
 .data-table tbody td {
-  padding: 14px 16px;
+  padding: 20px;
   border-bottom: 1px solid var(--border-soft);
   color: var(--text-1);
   vertical-align: middle;
@@ -635,15 +653,70 @@
   width: 32px;
   height: 32px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-circle);
   background: #fff;
   color: var(--text-2);
   cursor: pointer;
-  transition: border-color var(--ease-fast), color var(--ease-fast);
+  transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
 }
 .row-action:hover {
   border-color: var(--mosaic-green-700);
   color: var(--mosaic-green-700);
+  background: var(--bg-section);
+}
+
+/* --------------------------------------------------------------------
+   Overrides para classes específicas do relatório transposto
+   (.report-table, .search-bar, .info-banner svg) — alinha ao padrão
+   Salesforce sem mexer no inline CSS da tela.
+   -------------------------------------------------------------------- */
+
+/* info-banner ícone: SVG dentro vira fundo escuro (mais Salesforce-like) */
+.info-banner svg {
+  background: var(--text-1);
+  color: #fff !important;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+/* Tabela do relatório: thead bege, padding maior, sort arrows com SVG */
+.report-table thead {
+  background: var(--bg-section);
+}
+.report-table thead th {
+  background: var(--bg-section) !important;
+  padding: 16px 18px !important;
+  font-size: var(--fs-body) !important;
+  color: var(--text-1) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+.report-table tbody td {
+  padding: 18px !important;
+}
+.report-table .sort-arrow,
+.data-table .sort-arrow {
+  font-size: 0 !important;       /* esconde texto ↑↓↕ */
+  color: transparent !important;
+  width: 10px;
+  height: 12px;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: -2px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+}
+.report-table th.sort-asc .sort-arrow,
+.data-table th.sort-asc .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+}
+.report-table th.sort-desc .sort-arrow,
+.data-table th.sort-desc .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 11l4-6H1z'/></svg>");
 }
 
 /* ==========================================================================

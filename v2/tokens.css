@@ -35,10 +35,10 @@
 
   /* Backgrounds */
   --bg-page:       #ffffff;   /* Fundo da página */
-  --bg-section:    #f5f5f3;   /* Seções, footers de card */
-  --bg-info:       #ecf1ee;   /* Banner informativo */
+  --bg-section:    #dde6e0;   /* Seções/cards (banner + filter head) — Salesforce */
+  --bg-info:       #dde6e0;   /* Banner informativo (mesmo tom do filter head) */
   --bg-footer:     #f4f4f2;   /* Footer da página */
-  --bg-table-head: #f7f7f5;   /* Cabeçalho de tabela */
+  --bg-table-head: #ffffff;   /* Cabeçalho de tabela (Salesforce: branco) */
   --bg-hover:      #fafaf8;   /* Hover de linha em tabela */
   --bg-input:      #ffffff;
 
