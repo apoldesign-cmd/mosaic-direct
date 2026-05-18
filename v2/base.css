@@ -83,19 +83,12 @@
   color: var(--text-1);
 }
 .mosaic-logo .logo-shapes {
-  display: inline-flex;
-  gap: 1px;
-  margin-top: 1px;
+  display: block;
+  margin-top: 2px;
+  height: 22px;
+  width: auto;
 }
-.mosaic-logo .logo-shapes span {
-  display: inline-block;
-  width: 14px;
-  height: 6px;
-}
-.mosaic-logo .logo-shapes .s-yellow { background: var(--mosaic-yellow); }
-.mosaic-logo .logo-shapes .s-orange { background: var(--mosaic-orange); }
-.mosaic-logo .logo-shapes .s-red    { background: var(--mosaic-red); }
-.mosaic-logo .logo-shapes .s-teal   { background: var(--mosaic-teal); }
+.mosaic-footer .mosaic-logo .logo-shapes { height: 28px; }
 
 /* --- Search bar --- */
 .mosaic-search {

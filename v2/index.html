@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct — Protótipos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  .hub-hero {
+    padding: var(--space-6) 0 var(--space-5);
+  }
+  .hub-eyebrow {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mosaic-green-700);
+    margin-bottom: var(--space-2);
+  }
+  .hub-lede {
+    font-size: 15px;
+    color: var(--text-2);
+    max-width: 720px;
+    margin: var(--space-2) 0 0;
+    line-height: 1.6;
+  }
+
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    margin-top: var(--space-5);
+  }
+  @media (max-width: 720px) { .grid-cards { grid-template-columns: 1fr; } }
+
+  .proto-card {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast), transform var(--ease-base);
+  }
+  .proto-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--mosaic-green-700);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--ease-base);
+  }
+  .proto-card:hover {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-hover);
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+  .proto-card:hover::before { transform: scaleX(1); }
+
+  .proto-card-head {
+    padding: 14px 18px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .proto-id {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .proto-id-chip {
+    background: var(--bg-section);
+    color: var(--text-1);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+  .proto-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--mosaic-green-700);
+    border: 1.5px solid var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+  }
+  .proto-title {
+    padding: 0 18px 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+    line-height: 1.3;
+  }
+  .proto-desc {
+    padding: 0 18px 14px;
+    font-size: var(--fs-body-sm);
+    color: var(--text-2);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .proto-foot {
+    padding: 10px 18px;
+    background: var(--bg-section);
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+  }
+  .proto-foot-meta {
+    font-size: 10.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .proto-foot-arrow { transition: transform var(--ease-fast); display: flex; }
+  .proto-card:hover .proto-foot-arrow { transform: translateX(4px); }
+
+  .section-block { margin-top: var(--space-6); }
+  .section-block-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-soft);
+    padding-bottom: 12px;
+  }
+  .section-block-head h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .section-block-head .lede {
+    color: var(--text-3);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item is-active">Home</a>
+      <a href="#" class="nav-item">Produtos<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Cotações<span class="chev" aria-hidden="true"></span></a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="#">Meus contratos</a>
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contrato Normal</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
+          <a href="#">Relatório de Embarques</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Suporte<span class="chev" aria-hidden="true"></span></a>
+    </div>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main>
+  <div class="container container-main">
+
+    <div class="hub-hero">
+      <div class="hub-eyebrow">Mosaic Direct · Protótipos 2.0</div>
+      <h1 class="page-title">Hub de telas</h1>
+      <p class="hub-lede">
+        Protótipos navegáveis do portal Mosaic Direct com a nova identidade visual
+        (Barlow, header de 2 linhas, footer Mosaic). Use para validação com PO.
+      </p>
+    </div>
+
+    <section class="section-block">
+      <div class="section-block-head">
+        <h2>Telas principais</h2>
+        <span class="lede">Versões recomendadas para validação</span>
+      </div>
+
+      <div class="grid-cards">
+
+        <a href="criar-protocolo.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-70</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-238</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
+          </div>
+          <div class="proto-title">Criar Protocolo</div>
+          <div class="proto-desc">
+            Criação de protocolos a partir de contratos. Cooperado picker com cadastro
+            inline, máscaras pt-BR, validações de NF, sticky columns.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">criar-protocolo</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="agendar-contrato-normal.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-131</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-237</span>
+            </div>
+            <span class="proto-tag">✓ Final · V5</span>
+          </div>
+          <div class="proto-title">Agendar Contrato Normal</div>
+          <div class="proto-desc">
+            Cards multi-item, drawer de seleção com Ref. Cliente/CNPJ/IE/Preço/Status,
+            validações de volume agregado por contrato.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">agendar-contrato-normal</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="agendar-protocolo.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-168</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-235</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
+          </div>
+          <div class="proto-title">Agendar Protocolo</div>
+          <div class="proto-desc">
+            Agendamento de protocolos já criados. Cards agrupados por contrato, tabela
+            compacta com Volume/Semana/Roteiro, confirmação multi-step.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">agendar-protocolo</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="relatorio-status-agendamento.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-137</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
+          </div>
+          <div class="proto-title">Relatório de Status de Agendamento</div>
+          <div class="proto-desc">
+            Listagem read-only de todas as solicitações. Filtros, autocomplete, exportação
+            XLS, breakdown semanal expansível.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">relatorio-status-agendamento</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+</body>
+</html>

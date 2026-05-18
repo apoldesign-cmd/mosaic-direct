@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Agendar Protocolo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  /* ================================================================
+     Design tokens (V5 parity)
+     ================================================================ */
+  :root {
+    --mosaic-green-900: #003e2a;
+    --mosaic-green-800: #00583d;
+    --mosaic-green-700: #006a4d;
+    --mosaic-green-600: #0a7a5a;
+    --mosaic-green-500: #16a37a;
+
+    --mosaic-yellow:  #f0c020;
+    --mosaic-orange:  #d56b1a;
+    --mosaic-red:     #b9202a;
+    --mosaic-teal:    #2c8b78;
+
+    --status-orange:    #c76814;
+    --status-orange-bg: #fff5ec;
+    --warning-yellow:   #e6c84a;
+    --warning-yellow-d: #c8aa28;
+
+    --bg-page:        #ffffff;
+    --bg-section:     #f4f4f4;
+    --bg-section-2:   #ebebeb;
+    --bg-row-alt:     #f9f9f9;
+    --bg-overlay:     rgba(35, 45, 40, 0.55);
+
+    --border-soft:    #e1e1e1;
+    --border:         #cdcdcd;
+    --border-strong:  #9c9c9c;
+
+    --text-1:         #15201b;
+    --text-2:         #3b4642;
+    --text-3:         #6b7570;
+    --text-disabled:  #a8aeab;
+    --text-on-green:  #ffffff;
+    --link-green:     #006a4d;
+
+    --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-modal:  0 18px 60px rgba(0,0,0,0.22), 0 6px 18px rgba(0,0,0,0.12);
+    --shadow-popup:  0 4px 16px rgba(0,0,0,0.10), 0 1px 4px rgba(0,0,0,0.08);
+
+    --input-h: 44px;       /* unified input/button height across the page */
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-page);
+    color: var(--text-1);
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button { font-family: inherit; cursor: pointer; }
+  input, select, textarea { font-family: inherit; }
+  a { color: var(--link-green); }
+
+  /* ================================================================
+     Topbar
+     ================================================================ */
+  .topbar {
+    background: #fff;
+    padding: 18px 56px 12px;
+    display: grid;
+    grid-template-columns: 220px 1fr 320px;
+    gap: 32px;
+    align-items: center;
+  }
+  .logo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    line-height: 1;
+  }
+  .logo .wordmark {
+    font-family: "Barlow", sans-serif;
+    font-style: italic;
+    font-weight: 800;
+    font-size: 36px;
+    letter-spacing: -0.01em;
+    color: #0a0a0a;
+    line-height: 0.9;
+  }
+  .logo .wordmark sup {
+    font-size: 11px;
+    font-weight: 700;
+    font-style: normal;
+    margin-left: 1px;
+    vertical-align: super;
+  }
+  .logo .shapes {
+    width: 96px;
+    height: auto;
+    margin-top: -2px;
+    margin-left: 6px;
+    display: block;
+  }
+  .logo--hero .wordmark { color: #fff; }
+
+  .global-search {
+    position: relative;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .global-search input {
+    width: 100%;
+    height: 46px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 0 48px 0 20px;
+    font-size: 15px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .global-search input:focus { border-color: var(--mosaic-green-700); }
+  .global-search .icon-search {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+
+  .user-cluster {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    justify-content: flex-end;
+  }
+  .lang-select {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    height: 38px;
+    padding: 0 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-size: 13px;
+  }
+  .user-info {
+    line-height: 1.15;
+    text-align: right;
+  }
+  .user-info .name {
+    font-weight: 800;
+    font-size: 15px;
+    color: var(--text-1);
+  }
+  .user-info .org {
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .icon-pill {
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ================================================================
+     Mainnav with Contratos + Agendamento submenus
+     ================================================================ */
+  .mainnav {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
+    padding: 0 56px;
+  }
+  .mainnav-inner {
+    display: flex;
+    gap: 0;
+    justify-content: center;
+    align-items: center;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+  .mainnav a, .mainnav .navitem {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 22px;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-1);
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  .mainnav .navitem.has-dropdown::after {
+    content: "";
+    width: 8px; height: 8px;
+    border-right: 2px solid var(--text-1);
+    border-bottom: 2px solid var(--text-1);
+    transform: rotate(45deg);
+    margin-top: -3px;
+    margin-left: 2px;
+  }
+  .mainnav .navitem.is-active { background: #f0f0f0; }
+  .mainnav .navitem .submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #fff;
+    box-shadow: var(--shadow-popup);
+    border: 1px solid var(--border-soft);
+    min-width: 280px;
+    padding: 8px 0;
+    z-index: 60;
+    display: none;
+  }
+  .mainnav .navitem.is-active .submenu,
+  .mainnav .navitem.has-dropdown:hover .submenu { display: block; }
+  .mainnav .navitem.has-dropdown:hover { background: #f6f6f6; }
+  .mainnav .submenu a {
+    display: block;
+    padding: 12px 22px;
+    font-weight: 700;
+    color: var(--text-1);
+    text-decoration: none;
+  }
+  .mainnav .submenu a.current {
+    color: var(--link-green);
+    text-decoration: underline;
+  }
+  .mainnav .submenu a:hover { background: var(--bg-section); }
+
+  /* ================================================================
+     Hero
+     ================================================================ */
+  .hero {
+    height: 200px;
+    background:
+      linear-gradient(95deg,
+        rgba(0,80,55,0.55) 0%,
+        rgba(0,80,55,0.20) 35%,
+        rgba(0,0,0,0.0) 70%),
+      linear-gradient(180deg, #4a7236 0%, #6f9242 35%, #b78b3a 75%, #c47a39 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before, .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 5% 65%, rgba(60,90,40,0.85) 0 14%, transparent 30%),
+      radial-gradient(ellipse at 18% 85%, rgba(40,70,30,0.85) 0 10%, transparent 25%),
+      radial-gradient(ellipse at 92% 70%, rgba(80,120,55,0.9) 0 18%, transparent 35%),
+      radial-gradient(ellipse at 70% 90%, rgba(50,80,35,0.7) 0 12%, transparent 28%),
+      radial-gradient(circle at 80% 25%, rgba(255,200,80,0.6) 0 8%, transparent 30%);
+    pointer-events: none;
+  }
+  .hero .mosaic-overlay {
+    position: absolute;
+    left: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    z-index: 2;
+  }
+  .hero .mosaic-overlay .wordmark {
+    font-size: 38px;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+  .hero .mosaic-overlay .wordmark sup { font-size: 14px; opacity: 0.85; }
+
+  /* ================================================================
+     Page container
+     ================================================================ */
+  .page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px 56px 140px;
+  }
+  .breadcrumbs {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+  .breadcrumbs a {
+    color: var(--link-green);
+    text-decoration: none;
+  }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 8px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+  }
+
+  /* ================================================================
+     Buttons (unified height)
+     ================================================================ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: var(--input-h);
+    padding: 0 22px;
+    border: 1.5px solid transparent;
+    background: #fff;
+    color: var(--text-1);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 120ms, border-color 120ms, color 120ms, transform 80ms;
+    user-select: none;
+    text-decoration: none;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--mosaic-green-900); }
+  .btn-primary:disabled,
+  .btn-primary.is-disabled {
+    background: #c8d2cd;
+    color: #fff;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .btn-yellow {
+    background: var(--mosaic-yellow);
+    color: var(--text-1);
+  }
+  .btn-yellow:hover { background: var(--warning-yellow-d); }
+  .btn-with-icon svg { flex-shrink: 0; }
+
+  /* ================================================================
+     Action row + view toggle
+     ================================================================ */
+  .action-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 22px;
+  }
+  .action-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .action-help {
+    font-size: 13px;
+    color: var(--text-3);
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .view-toggle {
+    display: inline-flex;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    transition: background-color 120ms, color 120ms;
+  }
+  .view-toggle button:hover:not(.is-active) {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+  .view-toggle button.is-active {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .view-toggle button + button {
+    border-left: 1.5px solid var(--border);
+  }
+  .view-toggle button.is-active + button,
+  .view-toggle button + button.is-active {
+    border-left-color: var(--mosaic-green-800);
+  }
+
+  /* ================================================================
+     Empty state
+     ================================================================ */
+  .empty-state {
+    border: 1px dashed var(--border);
+    background: var(--bg-row-alt);
+    padding: 56px 24px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .empty-state strong {
+    display: block;
+    color: var(--text-2);
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+  .empty-state.is-hidden { display: none; }
+
+  /* ================================================================
+     Hint pulse — calls attention to the primary action when empty
+     ================================================================ */
+  @keyframes pulse-hint {
+    0%   { box-shadow: 0 0 0 0   rgba(0, 106, 77, 0.50); }
+    70%  { box-shadow: 0 0 0 14px rgba(0, 106, 77, 0.00); }
+    100% { box-shadow: 0 0 0 0   rgba(0, 106, 77, 0.00); }
+  }
+  @keyframes hint-fadein { to { opacity: 1; } }
+  .hint-pulse {
+    position: relative;
+    animation: pulse-hint 1800ms ease-out infinite;
+    border-radius: 2px;
+  }
+  .hint-pulse::after {
+    content: attr(data-hint);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% + 14px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    white-space: nowrap;
+    z-index: 70;
+    pointer-events: none;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  .hint-pulse::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 7px);
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--mosaic-green-800);
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  .hint-pulse[data-hint-pos="bottom"]::after {
+    bottom: auto;
+    top: calc(100% + 14px);
+  }
+  .hint-pulse[data-hint-pos="bottom"]::before {
+    bottom: auto;
+    top: calc(100% + 7px);
+  }
+
+  /* ================================================================
+     Protocol cards (list mode) — V5-aligned
+     ================================================================ */
+  .proto-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .proto-list.is-hidden { display: none; }
+
+  .proto-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+  .proto-card-head {
+    background: var(--mosaic-green-900);
+    color: #fff;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .proto-card-head .pcode {
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .proto-card-head .pmeta {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    font-weight: 600;
+  }
+  .proto-card-head .pmeta strong {
+    color: #fff;
+    font-weight: 800;
+    margin-right: 4px;
+  }
+  .proto-card-head .head-actions {
+    margin-left: auto;
+    display: inline-flex;
+    gap: 4px;
+  }
+  .proto-card-head .head-actions button {
+    background: rgba(255,255,255,0.10);
+    border: none;
+    color: #fff;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 120ms;
+  }
+  .proto-card-head .head-actions button:hover { background: rgba(255,255,255,0.22); }
+  .proto-card-head .head-actions button.danger:hover { background: var(--mosaic-red); }
+
+  .proto-card-recv {
+    background: var(--bg-section);
+    padding: 12px 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 12.5px;
+  }
+  .recv-field { display: inline-flex; flex-direction: column; gap: 2px; }
+  .recv-field .lbl {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .recv-field .val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+
+  .proto-card-item {
+    padding: 16px 18px;
+    display: grid;
+    grid-template-columns: 1.6fr 0.7fr 1.2fr 1.2fr 0.9fr 0.9fr 1.1fr 1.5fr 0.6fr;
+    gap: 14px;
+    align-items: end;
+  }
+  .proto-card-item + .proto-card-item {
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .item-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .item-field .lbl {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .item-field .val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    height: var(--input-h);
+    display: flex;
+    align-items: center;
+  }
+  .item-field .val.saldo {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .item-field .val.saldo .unit {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+
+  .pill-frete {
+    display: inline-flex;
+    align-items: center;
+    height: 22px;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    border: 1.5px solid;
+  }
+  .pill-frete.fob { background: rgba(0,106,77,0.06); color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
+  .pill-frete.cif { background: var(--status-orange-bg); color: var(--status-orange); border-color: var(--status-orange); }
+
+  /* ================================================================
+     Inputs (unified height) — Volume / Date / Roteiro
+     ================================================================ */
+  .field-input,
+  .row-input {
+    width: 100%;
+    height: var(--input-h);
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .field-input:focus,
+  .row-input:focus { border-color: var(--mosaic-green-700); }
+  .field-input::placeholder,
+  .row-input::placeholder { color: var(--text-disabled); font-weight: 500; }
+
+  .vol-wrap { position: relative; }
+  .vol-wrap .row-input {
+    padding-right: 30px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .vol-wrap .suffix {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    pointer-events: none;
+  }
+
+  .date-wrap { position: relative; }
+  .date-wrap .row-input {
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .date-wrap .cal-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+
+  .roteiro-btn {
+    width: 100%;
+    height: var(--input-h);
+    padding: 0 14px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color 120ms;
+    overflow: hidden;
+  }
+  .roteiro-btn:hover { border-color: var(--mosaic-green-700); }
+  .roteiro-btn .icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-btn .label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .roteiro-btn.has-value {
+    border-color: var(--mosaic-green-700);
+    color: var(--text-1);
+  }
+  .roteiro-btn.has-value .icon { color: var(--mosaic-green-700); }
+  .roteiro-btn:not(.has-value) .label { color: var(--text-3); font-weight: 500; }
+
+  .row-actions {
+    display: inline-flex;
+    gap: 4px;
+    justify-content: flex-end;
+    align-items: center;
+    height: var(--input-h);
+  }
+  .row-actions button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 120ms, color 120ms, border-color 120ms;
+  }
+  .row-actions button:hover {
+    background: var(--bg-section);
+    color: var(--text-1);
+    border-color: var(--border);
+  }
+  .row-actions button.danger:hover {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+
+  /* ================================================================
+     Protocol table view
+     ================================================================ */
+  .proto-table-wrap {
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+  }
+  .proto-table-wrap.is-hidden { display: none; }
+  .proto-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    min-width: 1200px;
+  }
+  .proto-table .cell-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .proto-table .cell-stack .stack-primary {
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1.25;
+  }
+  .proto-table .cell-stack .stack-secondary {
+    font-size: 10.5px;
+    color: var(--text-3);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .proto-table .cell-stack .stack-secondary strong {
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .proto-table thead th {
+    background: var(--bg-section);
+    text-align: left;
+    padding: 12px 12px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .proto-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 600;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .proto-table tbody tr:hover td { background: var(--bg-row-alt); }
+  .proto-table .saldo-cell {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .proto-table .pcode-cell {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .proto-table td.input-cell { padding: 6px 8px; }
+
+  /* ================================================================
+     Footer fixed action bar
+     ================================================================ */
+  .summary-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    padding: 14px 56px;
+    z-index: 50;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+  }
+  .summary-actions {
+    max-width: 1320px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+  }
+  .summary-actions .summary-info {
+    margin-right: auto;
+    font-size: 13px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .summary-actions .summary-info strong {
+    color: var(--text-1);
+    font-weight: 800;
+  }
+
+  /* ================================================================
+     Side drawer (V5 pattern)
+     ================================================================ */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease-out;
+  }
+  .drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
+    background: #fff;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .drawer.is-open { transform: translateX(0); }
+
+  .drawer-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    flex-shrink: 0;
+  }
+  .drawer-header .modal-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .titles { flex: 1; }
+  .drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .drawer-header .subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .drawer-header .close-x {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 120ms, color 120ms;
+  }
+  .drawer-header .close-x:hover {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+
+  .drawer-search {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .drawer-search-wrap {
+    position: relative;
+  }
+  .drawer-search-wrap input {
+    width: 100%;
+    height: var(--input-h);
+    padding: 0 44px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .drawer-search-wrap input::placeholder {
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .drawer-search-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .drawer-search-wrap .icon-left {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+  .drawer-search-wrap .clear-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .drawer-search-wrap .clear-btn:hover { color: var(--text-1); }
+  .drawer-search-wrap.has-value .clear-btn { display: inline-flex; }
+
+  .drawer-meta {
+    padding: 12px 28px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .drawer-meta .selected-count {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .drawer-meta .selected-count.is-zero { color: var(--text-3); }
+  .drawer-meta .select-all {
+    background: transparent;
+    border: none;
+    color: var(--link-green);
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .drawer-meta .select-all:hover { text-decoration: underline; }
+
+  .drawer-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .drawer-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
+  }
+  .drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background-color 120ms;
+    user-select: none;
+  }
+  .drawer-item:hover { background: rgba(0, 106, 77, 0.04); }
+  .drawer-item.is-selected {
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
+  }
+  .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+  .drawer-item.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border-strong);
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .drawer-item.is-selected .checkbox {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .checkbox svg { opacity: 0; transition: opacity 120ms; }
+  .drawer-item.is-selected .checkbox svg { opacity: 1; }
+
+  .drawer-item-body { flex: 1; min-width: 0; }
+  .drawer-item-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .drawer-item-pcode {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--mosaic-green-900);
+    letter-spacing: 0.01em;
+  }
+  .drawer-item-contract {
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: 12.5px;
+  }
+  .drawer-item-frete {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .drawer-item-frete--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .drawer-item-frete--cif {
+    color: var(--status-orange);
+    border-color: var(--status-orange);
+    background: var(--status-orange-bg);
+  }
+  .drawer-item-product {
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 13px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .drawer-item-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .drawer-item-meta strong {
+    color: var(--text-2);
+    font-weight: 800;
+  }
+  .drawer-item-saldo {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .drawer-item-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .drawer-item mark {
+    background: rgba(240, 192, 32, 0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
+
+  .drawer-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-footer .count {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .drawer-footer .count strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .drawer-footer .actions { display: flex; gap: 12px; }
+
+  /* ================================================================
+     Modal — base + confirm/success variants
+     ================================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 130;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.is-open { display: flex; }
+  .modal {
+    background: #fff;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: var(--shadow-modal);
+    transform: translateY(8px);
+    transition: transform 200ms ease-out;
+    overflow: hidden;
+  }
+  .modal-backdrop.is-open .modal { transform: translateY(0); }
+
+  .modal-confirm .confirm-header {
+    padding: 22px 28px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .modal-confirm .confirm-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .modal-confirm .close-x {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-confirm .close-x:hover { color: var(--text-1); }
+  .modal-confirm .confirm-body {
+    padding: 18px 28px 28px;
+    text-align: center;
+  }
+  .modal-confirm .confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    margin: 8px auto 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-confirm .confirm-icon.info {
+    background: rgba(240,192,32,0.16);
+    color: var(--status-orange);
+  }
+  .modal-confirm .confirm-icon.success {
+    background: rgba(0,106,77,0.14);
+    color: var(--mosaic-green-700);
+  }
+  .modal-confirm .confirm-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-1);
+    line-height: 1.5;
+    margin: 0 0 22px;
+  }
+  .modal-confirm .confirm-text strong {
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .modal-confirm .confirm-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .modal-confirm .confirm-actions.stack {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .modal-confirm .confirm-actions .btn { flex: 1; }
+
+  /* ================================================================
+     Roteiro side drawer (smaller, slides in same as main drawer)
+     ================================================================ */
+  .roteiro-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease-out;
+  }
+  .roteiro-drawer-backdrop.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .roteiro-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(480px, 100%);
+    background: #fff;
+    z-index: 111;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -8px 0 32px rgba(0,0,0,0.18);
+  }
+  .roteiro-drawer.is-open { transform: translateX(0); }
+  .roteiro-drawer-header {
+    padding: 22px 26px 14px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .roteiro-drawer-header .titles {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .roteiro-drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+  }
+  .roteiro-drawer-header .subtitle {
+    margin-top: 4px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .roteiro-drawer-header .subtitle strong {
+    color: var(--text-1);
+    font-weight: 800;
+    margin-right: 4px;
+  }
+  .roteiro-drawer-header .close-x {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roteiro-drawer-header .close-x:hover { color: var(--text-1); }
+  .roteiro-drawer-body {
+    flex: 1;
+    padding: 20px 26px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .roteiro-drawer-body label {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .roteiro-drawer-body .opt-tag {
+    background: var(--bg-section);
+    color: var(--text-3);
+    padding: 1px 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-left: 6px;
+    text-transform: none;
+  }
+  .roteiro-drawer-body textarea {
+    flex: 1;
+    min-height: 220px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-1);
+    line-height: 1.5;
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+  }
+  .roteiro-drawer-body textarea:focus { border-color: var(--mosaic-green-700); }
+  .roteiro-drawer-footer {
+    padding: 16px 26px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* ================================================================
+     Datepicker popup (custom)
+     ================================================================ */
+  .dp-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-popup);
+    z-index: 70;
+    width: 280px;
+    padding: 12px;
+    display: none;
+  }
+  .dp-popup.is-open { display: block; }
+  .dp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 8px;
+  }
+  .dp-head .month {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--text-1);
+  }
+  .dp-head button {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    cursor: pointer;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dp-head button:hover { background: var(--bg-section); color: var(--text-1); }
+  .dp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .dp-grid .dow {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: center;
+    padding: 4px 0;
+  }
+  .dp-grid .day {
+    aspect-ratio: 1;
+    border: none;
+    background: transparent;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-1);
+    cursor: pointer;
+    transition: background-color 80ms, color 80ms;
+  }
+  .dp-grid .day:hover { background: var(--bg-section); }
+  .dp-grid .day.is-other { color: var(--text-disabled); }
+  .dp-grid .day.is-disabled {
+    color: var(--text-disabled);
+    cursor: not-allowed;
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  .dp-grid .day.is-disabled:hover { background: transparent; }
+  .dp-grid .day.is-today {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+  .dp-grid .day.is-selected {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-weight: 800;
+  }
+
+  /* ================================================================
+     Proto-nav (cross-prototype floating menu)
+     ================================================================ */
+  .proto-nav {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    z-index: 90;
+    font-family: var(--font-sans);
+  }
+  .proto-nav-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #15201b;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+    transition: background-color 120ms;
+    letter-spacing: 0.02em;
+  }
+  .proto-nav-trigger:hover { background: #003e2a; }
+  .proto-nav-trigger .chev { margin-left: 4px; transition: transform 200ms; }
+  .proto-nav.is-open .proto-nav-trigger .chev { transform: rotate(180deg); }
+  .proto-nav-panel {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    width: 320px;
+    background: #fff;
+    border: 1px solid #cdcdcd;
+    box-shadow: 0 18px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .proto-nav.is-open .proto-nav-panel { display: block; }
+  .proto-nav-header {
+    background: #003e2a;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    letter-spacing: 0.02em;
+  }
+  .proto-nav-header span {
+    font-size: 9px;
+    color: rgba(255,255,255,0.65);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .proto-nav-section-title {
+    background: #f4f4f4;
+    padding: 8px 16px;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6b7570;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+  }
+  .proto-nav-link {
+    display: block;
+    padding: 10px 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #15201b;
+    text-decoration: none;
+    border-bottom: 1px solid #e1e1e1;
+    transition: background-color 120ms;
+  }
+  .proto-nav-link:last-child { border-bottom: none; }
+  .proto-nav-link:hover { background: rgba(0,106,77,0.06); color: #003e2a; }
+  .proto-nav-link.is-current {
+    background: rgba(0,106,77,0.10);
+    color: #003e2a;
+    font-weight: 800;
+    border-left: 3px solid #006a4d;
+    padding-left: 13px;
+  }
+  .proto-nav-link .label-id {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: #6b7570;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ================================================================
+     V5-style — confirmation modals (.modal-confirm-v2)
+     ================================================================ */
+  .modal-confirm-v2 {
+    max-width: 540px;
+    padding: 0;
+    overflow: hidden;
+    border-top: none;
+  }
+  .confirm-v2-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .confirm-v2-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .confirm-v2-close {
+    width: 32px; height: 32px;
+    border: none; background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: background-color 120ms;
+  }
+  .confirm-v2-close:hover { background: rgba(0,0,0,0.05); color: var(--mosaic-green-900); }
+  .confirm-v2-body {
+    padding: 28px 28px 24px;
+    background: #fff;
+    text-align: left;
+  }
+  .confirm-v2-icon {
+    width: 56px; height: 56px;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 999px;
+  }
+  .confirm-v2-icon--info    { background: rgba(0,106,77,0.10); color: var(--mosaic-green-700); }
+  .confirm-v2-icon--success { background: rgba(0,106,77,0.10); color: var(--mosaic-green-700); }
+  .confirm-v2-icon--warn    { background: rgba(199,104,20,0.12); color: var(--status-orange); }
+  .confirm-v2-text {
+    margin: 0 0 22px;
+    font-size: 15px; line-height: 1.55;
+    color: var(--text-1); font-weight: 500;
+    text-align: left;
+  }
+  .confirm-v2-text strong { font-weight: 800; }
+  .confirm-v2-actions { display: flex; justify-content: flex-end; gap: 12px; }
+
+  /* ================================================================
+     V5-style — grouped cards by contract (ported from agendar-contrato-normal-v5)
+     ================================================================ */
+  .v5-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+  .v5-card.is-progress  { border-left: 3px solid var(--mosaic-yellow); }
+  .v5-card.is-complete  { border-left: 3px solid var(--mosaic-green-700); }
+  .v5-card.is-incomplete { border-left: 3px solid var(--border-strong); }
+  .v5-level-tag {
+    display: inline-flex; align-items: center;
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.1em;
+    color: #fff; background: var(--mosaic-green-800);
+    padding: 3px 7px; line-height: 1;
+    flex-shrink: 0;
+  }
+  .v5-level-tag--item { background: var(--mosaic-green-700); }
+  .v5-card-head {
+    display: flex; flex-direction: row;
+    align-items: center; gap: 10px;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border);
+    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
+    flex-wrap: wrap;
+  }
+  .v5-card-head .card-contract {
+    font-size: 16px; font-weight: 800;
+    color: var(--text-1); letter-spacing: -0.005em;
+    flex-shrink: 0;
+  }
+  .v5-head-divider { width: 1px; height: 16px; background: var(--border); flex-shrink: 0; }
+  .v5-head-inline {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-2); font-weight: 600;
+    white-space: nowrap;
+  }
+  .v5-head-inline strong { color: var(--text-1); font-weight: 800; }
+  .v5-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
+  .v5-meta-label {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-3); font-weight: 800; margin-right: 1px;
+  }
+  .v5-item-count {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    font-weight: 800; color: var(--text-3);
+    background: var(--bg-section);
+    padding: 3px 8px;
+    margin-left: auto; flex-shrink: 0;
+  }
+  .v5-items-list { display: flex; flex-direction: column; }
+  .v5-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
+    gap: 14px;
+    padding: 12px 16px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+    border-left: 3px solid transparent;
+    transition: background-color 120ms, border-left-color 200ms;
+  }
+  .v5-item-row.is-incomplete { border-left-color: var(--border-strong); }
+  .v5-item-row.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
+  }
+  .v5-item-row.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 25%);
+  }
+  .v5-item-row:last-of-type { border-bottom: none; }
+  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+  .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+  .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
+  .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
+  .v5-item-line .badge { font-size: 9px; padding: 2px 7px; }
+  .badge {
+    display: inline-flex; align-items: center;
+    border: 1.5px solid; font-weight: 800;
+    font-size: 10px; letter-spacing: 0.08em;
+    padding: 2px 8px;
+  }
+  .badge--fob { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
+  .badge--cif { color: var(--status-orange); border-color: var(--status-orange); background: var(--status-orange-bg); }
+  .v5-item-product {
+    font-size: 13px; font-weight: 800; color: var(--text-1);
+    line-height: 1.3;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    min-width: 0; flex: 1;
+  }
+  .v5-item-meta-piece { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+  .v5-item-meta-piece strong { color: var(--text-1); font-weight: 800; }
+  .v5-meta-sep { color: var(--border); font-weight: 800; }
+  .v5-item-line--bottom .arrow { color: var(--mosaic-green-700); font-weight: 800; margin: 0 1px; }
+  .v5-item-saldo {
+    font-size: 14px; font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .v5-item-saldo .unit {
+    font-size: 10px; color: var(--text-2);
+    font-weight: 700; margin-left: 2px;
+    letter-spacing: 0.04em;
+  }
+  /* Form fields V5: Volume + Semana + Roteiro, all 32px */
+  .v5-item-fields {
+    display: grid;
+    grid-template-columns: 110px 130px minmax(180px, 240px);
+    gap: 8px;
+    align-items: end;
+  }
+  .v5-item-fields .field-block { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .v5-item-fields .field-block label {
+    font-size: 9px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-3); font-weight: 700;
+    margin-bottom: 0; height: 14px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .v5-item-fields .field-block label .req { color: var(--mosaic-red); }
+  .v5-item-fields .field-block label .opt-tag { font-size: 8px; }
+  .v5-item-fields .input-with-suffix,
+  .v5-item-fields .v5-date-wrap,
+  .v5-item-fields .roteiro-toggle-btn {
+    height: 32px !important; box-sizing: border-box;
+  }
+  .v5-item-fields .input-with-suffix {
+    position: relative; display: block;
+  }
+  .v5-item-fields .input-with-suffix input,
+  .v5-item-fields .v5-date-wrap input {
+    width: 100%;
+    height: 32px !important; line-height: 32px;
+    border: 1.5px solid var(--border); background: #fff;
+    color: var(--text-1); font-family: inherit; font-weight: 600;
+    font-size: 12.5px;
+    padding: 0 22px 0 10px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 120ms;
+  }
+  .v5-item-fields .input-with-suffix input:focus,
+  .v5-item-fields .v5-date-wrap input:focus { border-color: var(--mosaic-green-700); }
+  .v5-item-fields .input-with-suffix .suffix {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    font-size: 11px; color: var(--text-3); font-weight: 700;
+    pointer-events: none;
+  }
+  .v5-item-fields .v5-date-wrap { position: relative; display: block; }
+  .v5-item-fields .v5-date-wrap input { padding-right: 28px; cursor: pointer; }
+  .v5-item-fields .v5-date-wrap .cal-trigger {
+    position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+    width: 22px; height: 22px;
+    background: transparent; border: none;
+    color: var(--text-3); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .v5-item-fields .v5-date-wrap .cal-trigger:hover { color: var(--mosaic-green-700); }
+
+  /* Roteiro toggle button (replaces inline textarea) */
+  .roteiro-toggle-btn {
+    display: inline-flex; align-items: center; justify-content: space-between;
+    gap: 6px; width: 100%; height: 32px; padding: 0 10px;
+    border: 1.5px dashed var(--border); background: #fff;
+    color: var(--text-3); font-family: inherit;
+    font-size: 12px; font-weight: 600;
+    text-align: left; cursor: pointer;
+    transition: all 120ms;
+    box-sizing: border-box; line-height: 32px;
+  }
+  .roteiro-toggle-btn:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.03);
+  }
+  .roteiro-toggle-btn.has-value {
+    border-style: solid; color: var(--text-1); background: #fff;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-text {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-weight: 600;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
+  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+
+  .v5-item-actions { display: flex; gap: 4px; align-items: center; }
+  .v5-item-actions button {
+    width: 28px; height: 28px;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-2); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all 120ms;
+  }
+  .v5-item-actions button:hover { color: var(--mosaic-green-800); border-color: var(--mosaic-green-700); }
+  .v5-item-actions button.danger:hover { color: var(--mosaic-red); border-color: var(--mosaic-red); }
+
+  .v5-card .card-status {
+    border-top: 1px solid var(--border-soft);
+    padding: 8px 16px;
+    font-size: 11.5px; font-weight: 700;
+    color: var(--text-3);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .v5-card .card-status--complete   { color: var(--mosaic-green-700); }
+  .v5-card .card-status--incomplete { color: var(--text-3); }
+
+
+  /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
+  .proto-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
+
+
+  /* Banner hero removido — layout limpo (so top-nav). */
+  .hero, .hero-bg {
+    display: none !important;
+  }
+
+
+</style>
+<!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
+
+<!-- Hotjar Tracking Code — substituir HOTJAR_SITE_ID -->
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:HOTJAR_SITE_ID,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+</head>
+<body>
+
+<!-- Top header ==================================================== -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Cotações<span class="chev" aria-hidden="true"></span></a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="#">Meus contratos</a>
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contrato Normal</a>
+          <a href="agendar-protocolo.html" class="is-active">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
+          <a href="#">Relatório de Embarques</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Suporte<span class="chev" aria-hidden="true"></span></a>
+    </div>
+  </nav>
+</header>
+
+
+</div>
+
+<!-- Page ========================================================== -->
+<main class="page">
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <a href="#">Agendamento</a>
+    <span class="sep">›</span>
+    <span class="current">Agendar Protocolo</span>
+  </div>
+  <h1 class="page-title">Agendar Protocolo(s)</h1>
+
+  <!-- Action row: label/help on left + select button + view toggle -->
+  <div class="action-row">
+    <div>
+      <div class="action-label">Selecionar protocolo(s)</div>
+      <div class="action-help">Clique no botão ao lado para escolher os protocolos que deseja agendar.</div>
+    </div>
+
+    <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Selecionar protocolo(s)
+    </button>
+
+    <div class="view-toggle" role="tablist" aria-label="Visualização">
+      <button data-view="cards" class="is-active" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="7"/><rect x="3" y="14" width="18" height="7"/></svg>
+        Cards
+      </button>
+      <button data-view="table" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        Tabela
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div class="empty-state" id="emptyState">
+    <strong>Nenhum protocolo selecionado.</strong>
+    Use o botão "Selecionar protocolo(s)" acima para começar.
+  </div>
+
+  <!-- Cards (list mode) -->
+  <div class="proto-list is-hidden" id="protoList"></div>
+
+  <!-- Table view -->
+  <div class="proto-table-wrap is-hidden" id="protoTableWrap">
+    <table class="proto-table">
+      <thead>
+        <tr>
+          <th>Protocolo</th>
+          <th>Contrato / Item</th>
+          <th>Vigência</th>
+          <th>Volume (t) *</th>
+          <th>Semana *</th>
+          <th>Roteiro</th>
+          <th style="text-align:right">Saldo (t)</th>
+          <th>Recebedor</th>
+          <th>Produto / Frete</th>
+          <th>Planta / Filial</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="protoTableBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Footer fixo ==================================================== -->
+<div class="summary-footer">
+  <div class="summary-actions">
+    <div class="summary-info" id="summaryInfo">Selecione protocolos para começar.</div>
+    <button class="btn btn-secondary" id="cancelBtn" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="agendarBtn" type="button" disabled>Agendar</button>
+  </div>
+</div>
+
+<!-- Side drawer: Selecionar protocolos ============================ -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="protocolDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-header">
+    <span class="modal-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </span>
+    <div class="titles">
+      <h3 id="drawerTitle">Selecionar protocolos</h3>
+      <div class="subtitle">Escolha um ou mais protocolos para adicionar ao agendamento.</div>
+    </div>
+    <button class="close-x" data-close-drawer aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-search">
+    <div class="drawer-search-wrap" id="drawerSearchWrap">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="drawerSearch" placeholder="Buscar por protocolo, contrato, recebedor, produto..." autocomplete="off" />
+      <button class="clear-btn" id="drawerClearBtn" type="button" aria-label="Limpar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="drawer-meta">
+    <span><span id="drawerCount">0</span> resultado(s)</span>
+    <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
+    <span class="selected-count is-zero" id="drawerSelectedCount" hidden>0 selecionados</span>
+  </div>
+
+  <div class="drawer-list" id="drawerList"></div>
+
+  <div class="drawer-footer">
+    <div class="count" id="drawerFooterCount">Nenhum protocolo selecionado</div>
+    <div class="actions">
+      <button class="btn btn-secondary" data-close-drawer>Cancelar</button>
+      <button class="btn btn-primary" id="drawerAddBtn" disabled>Adicionar selecionados</button>
+    </div>
+  </div>
+</aside>
+
+<!-- Modal: confirmar (V5 .modal-confirm-v2) ===================== -->
+<div class="modal-backdrop" id="confirmModal">
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="confirmTitle" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3 id="confirmTitle">Confirmar agendamento</h3>
+      <button class="confirm-v2-close" type="button" data-close="confirmModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <p class="confirm-v2-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolo(s). Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" type="button" data-close="confirmModal">Voltar</button>
+        <button class="btn btn-primary" id="confirmYes" type="button">Confirmar e enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: sucesso (V5 .modal-confirm-v2) ====================== -->
+<div class="modal-backdrop" id="successModal">
+  <div class="modal modal-confirm-v2" role="dialog" aria-labelledby="successTitle" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3 id="successTitle">Agendamentos enviados</h3>
+      <button class="confirm-v2-close" type="button" data-close="successModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--success" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" stroke-width="1.8"/><polyline points="8 12.5 11 15.5 16 9.5"/></svg>
+      </div>
+      <p class="confirm-v2-text"><strong>Seus protocolos foram agendados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar mais protocolos</button>
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Roteiro side drawer =========================================== -->
+<div class="roteiro-drawer-backdrop" id="roteiroBackdrop"></div>
+<aside class="roteiro-drawer" id="roteiroDrawer" role="dialog" aria-hidden="true" aria-labelledby="roteiroTitle">
+  <div class="roteiro-drawer-header">
+    <div class="titles">
+      <div>
+        <h3 id="roteiroTitle">Roteiro do protocolo</h3>
+        <div class="subtitle" id="roteiroSubtitle"></div>
+      </div>
+      <button class="close-x" id="roteiroClose" type="button" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="roteiro-drawer-body">
+    <label id="roteiroLabel">Descrição <span class="opt-tag">Pré-preenchido com o protocolo</span></label>
+    <textarea id="roteiroText" placeholder="Adicione observações de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
+  </div>
+  <div class="roteiro-drawer-footer">
+    <button class="btn btn-secondary" id="roteiroCancel" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="roteiroSave" type="button">Salvar</button>
+  </div>
+</aside>
+
+<!-- Datepicker popup container -->
+<div class="dp-popup" id="dpPopup" role="dialog" aria-hidden="true"></div>
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+</body>
+</html>
