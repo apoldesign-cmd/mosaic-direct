@@ -701,26 +701,31 @@ button.btn-secondary,
 }
 
 /* --------------------------------------------------------------------
-   Full-bleed gray sections nas telas V5 (agendar-contrato-normal,
-   criar-protocolo, agendar-protocolo) — .action-row e .cards-empty
-   estendem até a borda do .page container (1320px), conteúdo refilado
-   alinhando com breadcrumb/título acima.
+   Unificação de margem horizontal: header usa 32px (.container), mas
+   .page do V5/criar-protocolo/etc usa 56px. Forçamos .page a usar 32px
+   pra TODO conteúdo (breadcrumb, título, action-row, cards, tabela)
+   ficar alinhado com logo, menu e itens do header.
    -------------------------------------------------------------------- */
+.page {
+  padding-left: var(--container-pad-x) !important;  /* 32px */
+  padding-right: var(--container-pad-x) !important;
+}
+
+/* Full-bleed gray sections (apenas action-row e empty state) —
+   estendem até a borda do container, conteúdo refilado com 32px pra
+   alinhar com header. Cards/tabela ficam em normal-flow respeitando
+   o padding 32px do .page. */
 .page > .action-row,
 .page > .cards-empty,
 .page > .cards-container > .cards-empty {
-  margin-left: calc(-1 * var(--container-pad-x, 56px));
-  margin-right: calc(-1 * var(--container-pad-x, 56px));
-  padding-left: var(--container-pad-x, 56px);
-  padding-right: var(--container-pad-x, 56px);
+  margin-left: calc(-1 * var(--container-pad-x));
+  margin-right: calc(-1 * var(--container-pad-x));
+  padding-left: var(--container-pad-x);
+  padding-right: var(--container-pad-x);
   border-left: none;
   border-right: none;
   border-radius: 0;
 }
-/* O .page no V5 tem padding lateral 56px, então força via fallback */
-.page > .action-row { margin-left: -56px; margin-right: -56px; padding-left: 56px; padding-right: 56px; }
-.page > .cards-empty,
-.page > .cards-container > .cards-empty { margin-left: -56px; margin-right: -56px; padding-left: 56px; padding-right: 56px; }
 
 /* --------------------------------------------------------------------
    Overrides para classes específicas do relatório transposto
