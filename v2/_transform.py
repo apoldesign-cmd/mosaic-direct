@@ -23,9 +23,10 @@ V2 = Path(__file__).parent           # DEV/v2/
 
 # Map: source filename at repo root → destination filename inside v2/
 TARGETS = {
-    "agendar-contrato-normal-v5.html": "agendar-contrato-normal.html",
-    "criar-protocolo.html":            "criar-protocolo.html",
-    "agendar-protocolo.html":          "agendar-protocolo.html",
+    "agendar-contrato-normal-v5.html":   "agendar-contrato-normal.html",
+    "criar-protocolo.html":              "criar-protocolo.html",
+    "agendar-protocolo.html":            "agendar-protocolo.html",
+    "relatorio-status-agendamento.html": "relatorio-status-agendamento.html",
 }
 
 # ---------------------------------------------------------------------------
@@ -193,9 +194,16 @@ def transform(src_file: Path, dst_file: Path, active_nav: str) -> dict:
     txt = txt2
 
     # 6b. If no footer existed, inject new footer right before </body>
+    # SKIP injection if the page has a real summary-footer ELEMENT (not just
+    # CSS leftover). Those screens already have a functional action bar.
     if n == 0:
-        txt, n = re.subn(r"</body>", FOOTER_HTML + "\n</body>", txt, count=1)
-        report["footer_injected"] = n
+        has_action_bar = bool(re.search(r'class="summary-footer"', txt))
+        report["has_action_bar"] = has_action_bar
+        if not has_action_bar:
+            txt, n = re.subn(r"</body>", FOOTER_HTML + "\n</body>", txt, count=1)
+            report["footer_injected"] = n
+        else:
+            report["footer_injected"] = "skipped (has summary-footer action bar)"
 
     dst_file.write_text(txt, encoding="utf-8")
     report["bytes_in"] = src_file.stat().st_size
@@ -208,9 +216,10 @@ def main():
         src = ROOT / src_name
         dst = V2 / dst_name
         active = {
-            "agendar-contrato-normal-v5.html": "agendar-contrato",
-            "criar-protocolo.html":            "criar-protocolo",
-            "agendar-protocolo.html":          "agendar-protocolo",
+            "agendar-contrato-normal-v5.html":   "agendar-contrato",
+            "criar-protocolo.html":              "criar-protocolo",
+            "agendar-protocolo.html":            "agendar-protocolo",
+            "relatorio-status-agendamento.html": "relatorio",
         }[src_name]
         r = transform(src, dst, active)
         print(f"\n=== {src_name} → v2/{dst_name} ({active}) ===")
