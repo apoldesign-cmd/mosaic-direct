@@ -119,8 +119,9 @@ def transform(src_file: Path, dst_file: Path, active_nav: str) -> dict:
     report["font_link_swaps"] = n
     txt = txt2
 
-    # 2. Swap inline `font-family: "Manrope"` → Barlow
-    txt2, n = re.subn(r'"Manrope"', '"Barlow"', txt)
+    # 2. Swap any Manrope reference → Barlow (handles quoted, unquoted,
+    #    SVG font-family attributes, etc.)
+    txt2, n = re.subn(r'\bManrope\b', 'Barlow', txt)
     report["font_family_swaps"] = n
     txt = txt2
 
