@@ -764,19 +764,30 @@ button.btn-secondary,
      adicionamos via ::after no próprio <th>.
    - Para .data-table que tem .sort-arrow span, escondemos texto e
      mostramos triângulo via ::after no span. */
-/* Sort arrows estilo Salesforce: line up/down arrow (↑↓) ao invés de
-   triângulo filled — visual mais leve e fiel ao print do portal real */
+/* Tabela header padrão Salesforce: TEXTO E SETAS verde-800
+   - Coluna labels em verde escuro (mais hierarquia)
+   - Sort arrows ↑↓ na mesma cor verde
+   - Font weight 600 pra match do print */
+.report-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+}
 .report-table thead th::after {
   content: '↑';
-  font-size: 14px;
-  color: var(--text-2);
+  font-size: 16px;
+  color: var(--mosaic-green-800);
   margin-left: 6px;
-  vertical-align: -1px;
+  vertical-align: -2px;
   line-height: 1;
   font-weight: 400;
 }
 .report-table thead th.sort-desc::after { content: '↓'; }
 
+.data-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+}
 .data-table .sort-arrow {
   font-size: 0 !important;
   color: transparent !important;
@@ -787,11 +798,115 @@ button.btn-secondary,
 }
 .data-table .sort-arrow::after {
   content: '↑';
-  font-size: 14px !important;
-  color: var(--text-2) !important;
+  font-size: 16px !important;
+  color: var(--mosaic-green-800) !important;
   font-weight: 400;
 }
 .data-table th.sort-desc .sort-arrow::after { content: '↓'; }
+
+/* --------------------------------------------------------------------
+   TOAST — Padrão de mensagem flutuante (erro vermelho, sucesso verde,
+   info azul, warning amarelo).
+   Uso: <div class="toast toast--error">[icon] mensagem [×]</div>
+   Posicionar via .toast-container (fixed no topo).
+   -------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 0; right: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  padding: 0 var(--container-pad-x);
+}
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 320px;
+  max-width: 720px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+}
+.toast__icon { flex-shrink: 0; display: flex; }
+.toast__msg { flex: 1; }
+.toast__close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.75;
+  padding: 4px;
+  display: inline-flex;
+  border-radius: var(--radius-circle);
+  transition: opacity var(--ease-fast), background var(--ease-fast);
+}
+.toast__close:hover { opacity: 1; background: rgba(255,255,255,0.15); }
+.toast--error   { background: var(--mosaic-red); color: #fff; }
+.toast--success { background: var(--mosaic-green-800); color: #fff; }
+.toast--info    { background: #1e6091; color: #fff; }
+.toast--warning { background: var(--mosaic-yellow); color: var(--text-1); }
+.toast--warning .toast__close:hover { background: rgba(0,0,0,0.08); }
+
+/* --------------------------------------------------------------------
+   MODAL pattern (override pra unificar com Salesforce):
+   - Header bege #e9efee com title + X
+   - Body branco
+   - Radius 10px nas pontas
+   -------------------------------------------------------------------- */
+.modal,
+.modal-content {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+.modal-header,
+.modal .modal-head,
+.drawer-header {
+  background: var(--bg-section) !important;
+  padding: 16px 24px !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+
+/* --------------------------------------------------------------------
+   CONTRASTE de botões: garante text:#fff em primary, mesmo quando
+   inline CSS define cor diferente (problema relatado no "Cadastrar
+   Cooperado" e similares).
+   -------------------------------------------------------------------- */
+.btn-primary,
+button.btn-primary,
+a.btn-primary,
+.btn-with-icon.btn-primary {
+  background: var(--mosaic-green-800) !important;
+  color: #fff !important;
+  border-color: var(--mosaic-green-800) !important;
+}
+.btn-primary:hover,
+button.btn-primary:hover {
+  background: var(--mosaic-green-700) !important;
+  border-color: var(--mosaic-green-700) !important;
+}
+.btn-primary svg,
+button.btn-primary svg,
+.btn-with-icon.btn-primary svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+.btn-primary[disabled],
+.btn-primary:disabled {
+  background: var(--mosaic-green-800) !important;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 
 /* ==========================================================================
    11. STATUS PILLS
