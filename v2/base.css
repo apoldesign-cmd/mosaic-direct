@@ -696,9 +696,22 @@
 .report-table tbody td {
   padding: 18px !important;
 }
-/* Sort arrows: esconde o texto original (↑↓↕) e mostra triângulo filled
-   via ::after (Salesforce-style). Default ▲ (asc available); desc mostra ▼ */
-.report-table .sort-arrow,
+/* Sort arrows estilo Salesforce: triângulo filled em TODO th (asc default)
+   - Headers do .report-table não têm span .sort-arrow no HTML, então
+     adicionamos via ::after no próprio <th>.
+   - Para .data-table que tem .sort-arrow span, escondemos texto e
+     mostramos triângulo via ::after no span. */
+.report-table thead th::after {
+  content: '▲';
+  font-size: 9px;
+  color: var(--text-1);
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1;
+  font-weight: 400;
+}
+.report-table thead th.sort-desc::after { content: '▼'; }
+
 .data-table .sort-arrow {
   font-size: 0 !important;
   color: transparent !important;
@@ -707,14 +720,11 @@
   vertical-align: middle;
   line-height: 1;
 }
-.report-table .sort-arrow::after,
 .data-table .sort-arrow::after {
   content: '▲';
   font-size: 9px !important;
   color: var(--text-1) !important;
-  letter-spacing: 0;
 }
-.report-table th.sort-desc .sort-arrow::after,
 .data-table th.sort-desc .sort-arrow::after { content: '▼'; }
 
 /* ==========================================================================
