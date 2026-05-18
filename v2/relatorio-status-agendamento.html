@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct — Relatório de Status de Agendamento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+</head>
+<body>
+
+<!-- =======================================================================
+     HEADER: top bar (logo · search · lang · user · icons) + nav
+     ======================================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+
+    <!-- Logo -->
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
+        <span class="s-yellow"></span>
+        <span class="s-orange"></span>
+        <span class="s-red"></span>
+        <span class="s-teal"></span>
+      </span>
+    </a>
+
+    <!-- Search -->
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+
+    <!-- User cluster -->
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" aria-label="Idioma" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Nav -->
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="#" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Cotações<span class="chev" aria-hidden="true"></span></a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="#">Meus contratos</a>
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contrato Normal</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html" class="is-active">Relatório de Status Agendamento</a>
+          <a href="#">Relatório de Embarques</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Suporte<span class="chev" aria-hidden="true"></span></a>
+    </div>
+  </nav>
+</header>
+
+<!-- =======================================================================
+     MAIN PAGE
+     ======================================================================= -->
+<main>
+  <div class="container container-main">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="index.html">Página inicial</a>
+      <span class="sep">›</span>
+      <a href="#">Agendamento</a>
+      <span class="sep">›</span>
+      <span class="current">Relatório de Status de Agendamento</span>
+    </nav>
+
+    <h1 class="page-title">Relatório de Status de Agendamento</h1>
+
+    <div class="info-banner">
+      <span class="info-icon" aria-hidden="true">i</span>
+      <span>Consulte a lista de solicitações de agendamento para visualizar status, planejado, realizado e detalhamento semanal por contrato.</span>
+    </div>
+
+    <!-- Filtros -->
+    <section class="filter-card" aria-label="Filtros">
+      <div class="filter-card-head">Filtros de pesquisa</div>
+      <div class="filter-card-body">
+
+        <div class="field">
+          <label class="field-label" for="f-busca">Buscar</label>
+          <div class="field-search-wrap">
+            <input id="f-busca" class="field-input" type="text" placeholder="Contrato, produto, recebedor..." />
+            <span class="search-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="f-status">Status</label>
+          <select id="f-status" class="field-select">
+            <option>Todos</option>
+            <option>Em Análise</option>
+            <option>Aprovado</option>
+            <option>Em Carregamento</option>
+            <option>Faturado</option>
+            <option>Rejeitado</option>
+            <option>Cancelado</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="f-de"><span class="required">*</span>De</label>
+          <div class="field-date-wrap">
+            <input id="f-de" class="field-input" type="text" placeholder="DD/MM/AAAA" />
+            <span class="cal-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="f-para"><span class="required">*</span>Para</label>
+          <div class="field-date-wrap">
+            <input id="f-para" class="field-input" type="text" placeholder="DD/MM/AAAA" />
+            <span class="cal-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button">Pesquisa</button>
+        <a class="btn-link" href="#" role="button">Limpar</a>
+
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="toolbar-counter">
+        <strong>238</strong> solicitações encontradas
+      </div>
+      <button class="btn btn-secondary" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        Exportar XLS
+      </button>
+    </div>
+
+    <!-- Table (representative subset) -->
+    <div class="data-table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="sortable">Solicitação <span class="sort-arrow">↕</span></th>
+            <th class="sortable">Contrato</th>
+            <th class="sortable">Produto</th>
+            <th class="sortable">Recebedor</th>
+            <th class="sortable cell-num">Volume (t)</th>
+            <th class="sortable">Vigência</th>
+            <th class="sortable">Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="cell-mono">SOL-000310848</td>
+            <td>CT-2026-0142</td>
+            <td>MAP 11-52</td>
+            <td>Fazenda Boa Esperança</td>
+            <td class="cell-num cell-strong">320</td>
+            <td>19/03/2026</td>
+            <td><span class="status-pill status-aprovado">Aprovado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310392</td>
+            <td>CT-2026-0098</td>
+            <td>KCl 60% Granulado</td>
+            <td>Cooperativa MarJac</td>
+            <td class="cell-num cell-strong">1.450</td>
+            <td>11/03/2026</td>
+            <td><span class="status-pill status-carregando">Em Carregamento</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310391</td>
+            <td>CT-2026-0098</td>
+            <td>Ureia 45%</td>
+            <td>Cooperativa MarJac</td>
+            <td class="cell-num cell-strong">880</td>
+            <td>11/03/2026</td>
+            <td><span class="status-pill status-analise">Em Análise</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310317</td>
+            <td>CT-2026-0076</td>
+            <td>NPK 04-30-10</td>
+            <td>Fazenda São João</td>
+            <td class="cell-num cell-strong">560</td>
+            <td>10/03/2026</td>
+            <td><span class="status-pill status-faturado">Faturado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310166</td>
+            <td>CT-2026-0042</td>
+            <td>SSP Pó</td>
+            <td>Agropecuária Vale Verde</td>
+            <td class="cell-num cell-strong">240</td>
+            <td>06/03/2026</td>
+            <td><span class="status-pill status-rejeitado">Rejeitado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310187</td>
+            <td>CT-2026-0033</td>
+            <td>MAP 11-52</td>
+            <td>Sítio Recanto</td>
+            <td class="cell-num cell-strong">120</td>
+            <td>06/03/2026</td>
+            <td><span class="status-pill status-cancelado">Cancelado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000310188</td>
+            <td>CT-2026-0033</td>
+            <td>KCl 60% Granulado</td>
+            <td>Sítio Recanto</td>
+            <td class="cell-num cell-strong">180</td>
+            <td>06/03/2026</td>
+            <td><span class="status-pill status-aprovado">Aprovado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000309822</td>
+            <td>CT-2026-0014</td>
+            <td>Ureia 45%</td>
+            <td>Fazenda Boa Esperança</td>
+            <td class="cell-num cell-strong">2.100</td>
+            <td>26/02/2026</td>
+            <td><span class="status-pill status-faturado">Faturado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000309719</td>
+            <td>CT-2026-0008</td>
+            <td>NPK 20-10-20</td>
+            <td>Cooperativa MarJac</td>
+            <td class="cell-num cell-strong">720</td>
+            <td>23/02/2026</td>
+            <td><span class="status-pill status-carregando">Em Carregamento</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+          <tr>
+            <td class="cell-mono">SOL-000309925</td>
+            <td>CT-2026-0008</td>
+            <td>SSP Granulado</td>
+            <td>Cooperativa MarJac</td>
+            <td class="cell-num cell-strong">340</td>
+            <td>28/02/2026</td>
+            <td><span class="status-pill status-aprovado">Aprovado</span></td>
+            <td><button class="row-action" aria-label="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav class="pagination" aria-label="Paginação">
+      <button class="pag-btn" aria-label="Página anterior" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="pag-btn is-active">1</button>
+      <button class="pag-btn">2</button>
+      <button class="pag-btn" aria-label="Próxima página">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </nav>
+
+  </div>
+</main>
+
+<!-- =======================================================================
+     FOOTER
+     ======================================================================= -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <span class="logo-shapes" aria-hidden="true">
+        <span class="s-yellow"></span>
+        <span class="s-orange"></span>
+        <span class="s-red"></span>
+        <span class="s-teal"></span>
+      </span>
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+</body>
+</html>
