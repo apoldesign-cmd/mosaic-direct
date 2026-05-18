@@ -592,8 +592,13 @@
 .data-table-wrap {
   background: #fff;
   border: 1px solid var(--border-soft);
-  border-radius: 2px;
-  overflow: auto;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+/* Garante que o header da tabela respeite o radius do wrap */
+.data-table-wrap .data-table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
 }
 .data-table {
   width: 100%;
@@ -736,6 +741,22 @@ button.btn-secondary,
 }
 
 /* --------------------------------------------------------------------
+   Tabela do relatório: wrap arredondado nas pontas (print 3 do Salesforce)
+   -------------------------------------------------------------------- */
+.report-table-wrap {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+/* Como thead tem bg cinza-teal e ocupa toda a largura, o top corners do
+   wrap precisam ser herdados pelo thead pra ficar arredondado de verdade */
+.report-table thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+.report-table thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------
    Overrides para classes específicas do relatório transposto
    (.report-table, .search-bar, .info-banner svg) — alinha ao padrão
    Salesforce sem mexer no inline CSS da tela.
@@ -771,14 +792,18 @@ button.btn-secondary,
      adicionamos via ::after no próprio <th>.
    - Para .data-table que tem .sort-arrow span, escondemos texto e
      mostramos triângulo via ::after no span. */
-/* Tabela header padrão Salesforce: TEXTO E SETAS verde-800
-   - Coluna labels em verde escuro (mais hierarquia)
-   - Sort arrows ↑↓ na mesma cor verde
-   - Font weight 600 pra match do print */
+/* Tabela header padrão Salesforce: TEXTO mixed-case (NÃO uppercase),
+   TEXTO E SETAS verde-800, font 14px weight 600 */
 .report-table thead th {
   color: var(--mosaic-green-800) !important;
   font-weight: 600 !important;
   font-size: 14px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+.data-table thead th {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
 }
 .report-table thead th::after {
   content: '↑';
