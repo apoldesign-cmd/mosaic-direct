@@ -197,7 +197,9 @@ def transform(src_file: Path, dst_file: Path, active_nav: str) -> dict:
     # SKIP injection if the page has a real summary-footer ELEMENT (not just
     # CSS leftover). Those screens already have a functional action bar.
     if n == 0:
-        has_action_bar = bool(re.search(r'class="summary-footer"', txt))
+        # Match any class attribute containing "summary-footer" as a whole token
+        # (handles variants like "summary-footer summary-footer--centered")
+        has_action_bar = bool(re.search(r'class="[^"]*\bsummary-footer\b[^"]*"', txt))
         report["has_action_bar"] = has_action_bar
         if not has_action_bar:
             txt, n = re.subn(r"</body>", FOOTER_HTML + "\n</body>", txt, count=1)
