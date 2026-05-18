@@ -709,6 +709,7 @@ button.btn-secondary,
 .page {
   padding-left: var(--container-pad-x) !important;  /* 32px */
   padding-right: var(--container-pad-x) !important;
+  width: 100% !important;  /* body é flex column; sem isso .page shrinka pra content size */
 }
 
 /* Full-bleed gray sections (apenas action-row e empty state) —
