@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Relatório de Protocolos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ================================================================
+     Status badges — Relatório de Protocolos
+     ================================================================ */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .status-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-novo        { background: var(--status-aprovado-bg);   color: var(--status-aprovado-fg);   }
+  .status-novo .dot   { background: var(--status-aprovado-fg); }
+  .status-liberado    { background: var(--status-carregando-bg); color: var(--status-carregando-fg); }
+  .status-liberado .dot { background: var(--status-carregando-fg); }
+  .status-agendamento { background: var(--status-analise-bg);    color: var(--status-analise-fg);    }
+  .status-agendamento .dot { background: var(--status-analise-fg); }
+  .status-concluido   { background: var(--status-faturado-bg);   color: var(--status-faturado-fg);   }
+  .status-concluido .dot { background: var(--status-faturado-fg); }
+  .status-cancelado   { background: var(--status-cancelado-bg);  color: var(--status-cancelado-fg);  }
+  .status-cancelado .dot { background: var(--status-cancelado-fg); }
+  .status-sap         { background: #f4f4f2; color: var(--text-3); border: 1px solid var(--border); }
+  .status-sap .dot    { background: var(--text-3); }
+
+  /* ================================================================
+     Wide table wrap (overflow-x: scroll + radius)
+     ================================================================ */
+  .wide-table-wrap {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .wide-table {
+    width: 100%;
+    min-width: 2200px;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  /* Apply the unified thead pattern via base.css .report-table rules */
+  .wide-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-md); }
+  .wide-table thead tr:first-child th:last-child  { border-top-right-radius: var(--radius-md); }
+  .wide-table thead th {
+    background: var(--bg-section) !important;
+    color: var(--mosaic-green-800) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    padding: 13px 14px !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+    white-space: nowrap;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .wide-table thead th.num { text-align: right; }
+  .wide-table thead th .th-hint {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-3);
+    margin-top: 1px;
+    letter-spacing: 0;
+    white-space: normal;
+    max-width: 140px;
+    line-height: 1.3;
+  }
+  .wide-table tbody td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .wide-table tbody tr:last-child td { border-bottom: none; }
+  .wide-table tbody tr:hover td { background: var(--bg-hover); }
+  .wide-table tbody td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .wide-table tbody td.num.highlight {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+  }
+  .wide-table tbody td.muted { color: var(--text-3); }
+  .wide-table tbody td.proto-id {
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+    font-size: 13px;
+  }
+  .cell-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-circle);
+    color: var(--text-3);
+    cursor: pointer;
+    background: #fff;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .cell-action:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-700);
+  }
+
+  /* ================================================================
+     Toolbar (results count + export)
+     ================================================================ */
+  .results-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .results-count {
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .results-count strong { color: var(--text-1); font-weight: 700; }
+
+  /* ================================================================
+     Advanced filter panel
+     ================================================================ */
+  .advanced-filter {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .advanced-filter.is-hidden { display: none; }
+  .filter-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .filter-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .filter-block label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .filter-block input,
+  .filter-block select {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast);
+  }
+  .filter-block input:focus,
+  .filter-block select:focus { border-color: var(--mosaic-green-700); }
+  .filter-block--actions {
+    align-self: end;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-clear-filters {
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-clear-filters:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+
+  /* search-bar (reuses base.css pattern) */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .search-bar-input {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+  .search-bar-input input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .search-bar-input input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .search-bar-input input::placeholder { color: var(--text-3); }
+  .search-bar-input .icon-left {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    display: flex;
+  }
+  .search-bar-input .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    padding: 4px;
+    color: var(--text-3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: color var(--ease-fast), background var(--ease-fast);
+  }
+  .search-bar-input .search-clear:hover { color: var(--text-1); background: var(--bg-section); }
+  .search-bar-input .search-clear.is-hidden { display: none !important; }
+
+  .btn-advanced-filter {
+    height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-advanced-filter:hover,
+  .btn-advanced-filter[aria-expanded="true"] {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+  .adv-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .adv-count.is-hidden { display: none; }
+
+  .btn-export-xls {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    opacity: 0.85;
+    transition: opacity var(--ease-fast);
+  }
+  .btn-export-xls:hover { opacity: 1; }
+
+  /* breadcrumb + page-title */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    padding-top: 24px;
+  }
+  .breadcrumbs a { color: var(--mosaic-green-700); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 4px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+  }
+
+  .info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .page-btn:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); }
+  .page-btn.is-active {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+</style>
+</head>
+<body>
+
+<!-- HEADER ========================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item is-active" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html" class="is-active">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
+    </div>
+  </nav>
+</header>
+
+<!-- PAGE =========================================================== -->
+<main class="page">
+
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <span>Contratos</span>
+    <span class="sep">›</span>
+    <span class="current">Relatório de Protocolos</span>
+  </div>
+  <h1 class="page-title">Relatório de Protocolos</h1>
+
+  <div class="info-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Tela <strong>read-only</strong> — use os filtros para refinar. Busca por <strong>Protocolo, Contrato SAP ou Cotação</strong>.</span>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <div class="search-bar-input">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="filterSearch" placeholder="Buscar Protocolo, Contrato SAP ou Cotação..." autocomplete="off" />
+      <button type="button" class="search-clear is-hidden" id="searchClearBtn" aria-label="Limpar busca">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <button type="button" class="btn-advanced-filter" id="btnToggleAdvanced" aria-expanded="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      Filtros
+      <span class="adv-count is-hidden" id="advCount">0</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <button type="button" class="btn-export-xls" id="btnExport" title="Exportar (CSV)" aria-label="Exportar relatório">
+      <svg width="26" height="32" viewBox="0 0 28 34" aria-hidden="true">
+        <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
+        <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
+        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Barlow, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Advanced filter panel -->
+  <div class="advanced-filter is-hidden" id="advancedFilter">
+    <div class="filter-row">
+      <div class="filter-block">
+        <label>Status</label>
+        <select id="filterStatus">
+          <option value="">Todos</option>
+          <option value="Novo">Novo</option>
+          <option value="Liberado para agendar">Liberado para agendar</option>
+          <option value="Em agendamento">Em agendamento</option>
+          <option value="Concluído">Concluído</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>CPF/CNPJ da Filial</label>
+        <select id="filterCnpjFilial">
+          <option value="">Todos</option>
+          <option>12.345.678/0001-90</option>
+          <option>23.456.789/0001-12</option>
+          <option>34.567.890/0001-34</option>
+          <option>45.678.901/0001-56</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>Filial do Cliente</label>
+        <select id="filterFilial">
+          <option value="">Todas</option>
+          <option>Filial São Paulo</option>
+          <option>Filial Curitiba</option>
+          <option>Filial Porto Alegre</option>
+          <option>Filial Londrina</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>CPF/CNPJ do Cooperado</label>
+        <select id="filterCnpjCoop">
+          <option value="">Todos</option>
+          <option>123.456.789-00</option>
+          <option>234.567.890-00</option>
+          <option>345.678.901-00</option>
+          <option>456.789.012-00</option>
+          <option>567.890.123-00</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>Nome do Cooperado</label>
+        <select id="filterCoop">
+          <option value="">Todos</option>
+          <option>CARLOS ALVES</option>
+          <option>AGUINALDO GOMES</option>
+          <option>TEREZA AKEMI</option>
+          <option>BETO DOS SANTOS</option>
+          <option>RENATO CESAR</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>IE do Cooperado</label>
+        <select id="filterIe">
+          <option value="">Todos</option>
+          <option>123456789</option>
+          <option>234567890</option>
+          <option>345678901</option>
+          <option>456789012</option>
+          <option>567890123</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>Descrição Produto</label>
+        <select id="filterProduto">
+          <option value="">Todos</option>
+          <option>FFALM 10 20 30</option>
+          <option>FFALM 20 20 00</option>
+          <option>MAP 11-52-00</option>
+          <option>KCl</option>
+          <option>FFALM 15 30 00</option>
+        </select>
+      </div>
+      <div class="filter-block">
+        <label>NF do Protocolo</label>
+        <select id="filterNf">
+          <option value="">Todos</option>
+          <option>NF-2024-001</option>
+          <option>NF-2024-089</option>
+        </select>
+      </div>
+      <div class="filter-block filter-block--actions">
+        <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results count + table -->
+  <div class="results-toolbar">
+    <span class="results-count"><strong id="resultCount">5</strong> protocolos encontrados</span>
+  </div>
+
+  <div class="wide-table-wrap">
+    <table class="wide-table" id="mainTable">
+      <thead>
+        <tr>
+          <th>Protocolo</th>
+          <th>Status</th>
+          <th>Contrato SAP</th>
+          <th>Cotação</th>
+          <th>Filial do Cliente</th>
+          <th>CPF/CNPJ da Filial</th>
+          <th>Cidade da Filial</th>
+          <th>UF</th>
+          <th>Cooperado</th>
+          <th>CPF/CNPJ do Cooperado</th>
+          <th>IE do Cooperado</th>
+          <th>Produto</th>
+          <th>Descrição Produto</th>
+          <th>Embalagem</th>
+          <th>Frete</th>
+          <th>Planta</th>
+          <th>NF Protocolo</th>
+          <th>Data NF</th>
+          <th class="num">Preço (unit.)</th>
+          <th class="num">Qtd. Protocolo
+            <span class="th-hint">Total contratado</span>
+          </th>
+          <th class="num">Qtd. Agendada
+            <span class="th-hint">Agendada + Request + OV</span>
+          </th>
+          <th class="num">Saldo Agendar
+            <span class="th-hint">Protocolo − Agendada</span>
+          </th>
+          <th class="num">Qtd. Faturada
+            <span class="th-hint">Soma de invoices</span>
+          </th>
+          <th class="num">Qtd. a Faturar
+            <span class="th-hint">Protocolo − Faturada</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- rows rendered by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="results-count" id="paginationInfo">Exibindo 1–5 de 5 protocolos</span>
+    <div class="pagination-pages">
+      <button class="page-btn" disabled aria-label="Anterior">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="page-btn is-active">1</button>
+      <button class="page-btn" disabled aria-label="Próxima">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER ========================================================= -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   Data
+   ================================================================ */
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    status: "Novo",
+    contrato: "C-001-2024",
+    cotacao: "Q-12345",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "CARLOS ALVES",
+    cnpjCoop: "123.456.789-00",
+    ie: "123456789",
+    produto: "123245",
+    descProduto: "FFALM 10 20 30",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.450,00",
+    qtdProtocolo: 300,
+    qtdAgendada: 250,
+    saldo: 50,
+    qtdFaturada: 50,
+    qtdFaturar: 250,
+  },
+  {
+    id: "M9W47291",
+    status: "Em agendamento",
+    contrato: "C-002-2024",
+    cotacao: "Q-23456",
+    filial: "Filial Curitiba",
+    cnpjFilial: "23.456.789/0001-12",
+    cidade: "Curitiba",
+    uf: "PR",
+    cooperado: "AGUINALDO GOMES",
+    cnpjCoop: "234.567.890-00",
+    ie: "234567890",
+    produto: "123246",
+    descProduto: "FFALM 20 20 00",
+    embalagem: "Big Bag 1t",
+    frete: "FOB",
+    planta: "Cascavel",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.380,00",
+    qtdProtocolo: 500,
+    qtdAgendada: 200,
+    saldo: 300,
+    qtdFaturada: 0,
+    qtdFaturar: 500,
+  },
+  {
+    id: "M9W51038",
+    status: "Concluído",
+    contrato: "C-003-2024",
+    cotacao: "Q-34567",
+    filial: "Filial Porto Alegre",
+    cnpjFilial: "34.567.890/0001-34",
+    cidade: "Porto Alegre",
+    uf: "RS",
+    cooperado: "TEREZA AKEMI",
+    cnpjCoop: "345.678.901-00",
+    ie: "345678901",
+    produto: "123247",
+    descProduto: "MAP 11-52-00",
+    embalagem: "Saco 40kg",
+    frete: "CIF",
+    planta: "Três Lagoas",
+    nf: "NF-2024-089",
+    dataNf: "20/03/2025",
+    preco: "R$ 1.620,00",
+    qtdProtocolo: 200,
+    qtdAgendada: 200,
+    saldo: 0,
+    qtdFaturada: 200,
+    qtdFaturar: 0,
+  },
+  {
+    id: "M9W63847",
+    status: "Cancelado",
+    contrato: "C-004-2024",
+    cotacao: "Q-45678",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "BETO DOS SANTOS",
+    cnpjCoop: "456.789.012-00",
+    ie: "456789012",
+    produto: "123248",
+    descProduto: "KCl",
+    embalagem: "Granel",
+    frete: "FOB",
+    planta: "Paranaguá",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 890,00",
+    qtdProtocolo: 150,
+    qtdAgendada: 30,
+    saldo: 120,
+    qtdFaturada: 0,
+    qtdFaturar: 150,
+  },
+  {
+    id: "M9W71205",
+    status: "Liberado para agendar",
+    contrato: "C-005-2024",
+    cotacao: "Q-56789",
+    filial: "Filial Londrina",
+    cnpjFilial: "45.678.901/0001-56",
+    cidade: "Londrina",
+    uf: "PR",
+    cooperado: "RENATO CESAR",
+    cnpjCoop: "567.890.123-00",
+    ie: "567890123",
+    produto: "123249",
+    descProduto: "FFALM 15 30 00",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.290,00",
+    qtdProtocolo: 400,
+    qtdAgendada: 0,
+    saldo: 400,
+    qtdFaturada: 0,
+    qtdFaturar: 400,
+  },
+];
+
+/* ================================================================
+   Status badge
+   ================================================================ */
+function statusBadge(s) {
+  const map = {
+    "Novo":                   "status-novo",
+    "Liberado para agendar":  "status-liberado",
+    "Em agendamento":         "status-agendamento",
+    "Concluído":              "status-concluido",
+    "Cancelado":              "status-cancelado",
+    "Enviar ao SAP":          "status-sap",
+  };
+  const cls = map[s] || "status-sap";
+  return `<span class="status-badge ${cls}"><span class="dot"></span>${s}</span>`;
+}
+
+function numCell(v, highlight) {
+  if (v === 0) return `<td class="num muted">—</td>`;
+  return `<td class="num${highlight ? " highlight" : ""}">${v.toLocaleString("pt-BR")}</td>`;
+}
+
+/* ================================================================
+   Render
+   ================================================================ */
+function render() {
+  const q      = (document.getElementById("filterSearch").value || "").trim().toLowerCase();
+  const status = document.getElementById("filterStatus").value;
+  const cnpjF  = document.getElementById("filterCnpjFilial").value;
+  const filial = document.getElementById("filterFilial").value;
+  const cnpjC  = document.getElementById("filterCnpjCoop").value;
+  const coop   = document.getElementById("filterCoop").value;
+  const ie     = document.getElementById("filterIe").value;
+  const prod   = document.getElementById("filterProduto").value;
+  const nf     = document.getElementById("filterNf").value;
+
+  const rows = PROTOCOLS.filter(p => {
+    if (q && ![p.id, p.contrato, p.cotacao].some(v => v.toLowerCase().includes(q))) return false;
+    if (status && p.status !== status) return false;
+    if (cnpjF  && p.cnpjFilial !== cnpjF) return false;
+    if (filial && p.filial !== filial)    return false;
+    if (cnpjC  && p.cnpjCoop !== cnpjC)  return false;
+    if (coop   && p.cooperado !== coop)   return false;
+    if (ie     && p.ie !== ie)            return false;
+    if (prod   && p.descProduto !== prod) return false;
+    if (nf     && p.nf !== nf)            return false;
+    return true;
+  });
+
+  document.getElementById("resultCount").textContent = rows.length;
+  document.getElementById("paginationInfo").textContent =
+    rows.length === 0 ? "Nenhum protocolo encontrado" :
+    `Exibindo 1–${rows.length} de ${rows.length} protocolo${rows.length !== 1 ? "s" : ""}`;
+
+  const body = document.getElementById("tableBody");
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = rows.map(p => `
+    <tr>
+      <td class="proto-id">${p.id}</td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      <td>${p.embalagem}</td>
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
+      <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
+      <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
+      ${numCell(p.qtdProtocolo, true)}
+      ${numCell(p.qtdAgendada, false)}
+      ${numCell(p.saldo, p.saldo > 0)}
+      ${numCell(p.qtdFaturada, false)}
+      ${numCell(p.qtdFaturar, false)}
+    </tr>
+  `).join("");
+}
+
+/* ================================================================
+   Events
+   ================================================================ */
+const elSearch = document.getElementById("filterSearch");
+const elClear  = document.getElementById("searchClearBtn");
+
+elSearch.addEventListener("input", () => {
+  elClear.classList.toggle("is-hidden", !elSearch.value);
+  render();
+});
+elClear.addEventListener("click", () => {
+  elSearch.value = "";
+  elClear.classList.add("is-hidden");
+  render();
+  elSearch.focus();
+});
+
+["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+ "filterCoop","filterIe","filterProduto","filterNf"].forEach(id => {
+  document.getElementById(id).addEventListener("change", () => {
+    updateAdvCount();
+    render();
+  });
+});
+
+/* Toggle filtros */
+document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
+  const btn = document.getElementById("btnToggleAdvanced");
+  const panel = document.getElementById("advancedFilter");
+  const isOpen = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  panel.classList.toggle("is-hidden", isOpen);
+});
+
+document.getElementById("btnClearFilters").addEventListener("click", () => {
+  ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+   "filterCoop","filterIe","filterProduto","filterNf"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  updateAdvCount();
+  render();
+});
+
+function updateAdvCount() {
+  const ids = ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+               "filterCoop","filterIe","filterProduto","filterNf"];
+  const n = ids.filter(id => document.getElementById(id).value).length;
+  const el = document.getElementById("advCount");
+  el.textContent = String(n);
+  el.classList.toggle("is-hidden", n === 0);
+}
+
+/* Export CSV */
+document.getElementById("btnExport").addEventListener("click", () => {
+  const headers = ["Protocolo","Status","Contrato SAP","Cotação","Filial do Cliente",
+    "CPF/CNPJ da Filial","Cidade da Filial","UF","Cooperado","CPF/CNPJ do Cooperado",
+    "IE do Cooperado","Produto","Descrição Produto","Embalagem","Tipo de Frete","Planta",
+    "NF Protocolo","Data NF Protocolo","Preço (unit.)","Qtd. Protocolo","Qtd. Agendada",
+    "Saldo Agendar","Qtd. Faturada","Qtd. a Faturar"];
+  const csvRows = [headers.join(";")];
+  PROTOCOLS.forEach(p => {
+    csvRows.push([p.id,p.status,p.contrato,p.cotacao,p.filial,p.cnpjFilial,p.cidade,p.uf,
+      p.cooperado,p.cnpjCoop,p.ie,p.produto,p.descProduto,p.embalagem,p.frete,p.planta,
+      p.nf,p.dataNf,p.preco,p.qtdProtocolo,p.qtdAgendada,p.saldo,p.qtdFaturada,p.qtdFaturar
+    ].join(";"));
+  });
+  const blob = new Blob(["﻿" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "relatorio-protocolos.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+render();
+</script>
+</body>
+</html>

@@ -37,7 +37,7 @@ def new_header_html(active_nav: str) -> str:
     # Top-level nav active markers (Salesforce: parent fica laranja quando
     # você está numa subpage)
     agendamento_active = active_nav in ("agendar-contrato", "agendar-protocolo", "relatorio")
-    contratos_active   = active_nav == "criar-protocolo"
+    contratos_active   = active_nav in ("criar-protocolo", "relatorio-protocolos")
     def active(name): return ' class="nav-item is-active"' if name == active_nav else ' class="nav-item"'
     def parent_cls(is_active):
         return 'nav-item is-active' if is_active else 'nav-item'
@@ -79,6 +79,7 @@ def new_header_html(active_nav: str) -> str:
         Contratos<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
           <a href="criar-protocolo.html"{' class="is-active"' if active_nav=="criar-protocolo" else ""}>Criar Protocolo</a>
+          <a href="relatorio-protocolos.html"{' class="is-active"' if active_nav=="relatorio-protocolos" else ""}>Relatório de Protocolos</a>
         </div>
       </span>
       <span class="{parent_cls(agendamento_active)}" tabindex="0">
