@@ -836,6 +836,72 @@ button.btn-secondary,
 }
 .data-table th.sort-desc .sort-arrow::after { content: '↓'; }
 
+/* ==========================================================================
+   MOSAIC TABLE PATTERN — unifica visual de todas as tabelas do projeto
+   ao padrão validado no Relatório de Status de Agendamento:
+     - wrap com border-radius 10px e cantos top arredondados via overflow
+     - thead bg --bg-section
+     - th: 14px/600, verde-800, mixed-case (NÃO uppercase), letter-spacing 0
+     - padding th: 16px 18px
+
+   PARA TELAS FUTURAS:
+     Use uma das classes abaixo na sua tabela e o pattern aplica sozinho.
+     Se criar classe nova (ex: .nova-table + .nova-table-wrap), adicione
+     o seletor às listas abaixo — uma única alteração propaga pra tudo.
+   ========================================================================== */
+
+/* WRAP — radius + corte de overflow.
+   .v3-table-wrap e .proto-table-wrap precisam de scroll horizontal interno
+   (tabelas com min-width: 1200-1500px), então aplicamos só border-radius
+   no wrap externo + overflow:hidden — o scroll horizontal continua via
+   overflow-x: auto que já existe na regra original (especificity menor). */
+.report-table-wrap,
+.results-table-wrap,
+.v3-table-wrap,
+.proto-table-wrap {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+/* Re-habilita scroll horizontal nos wraps de tabelas largas. Como
+   overflow:hidden acima corta os cantos, usamos um truque: deixamos
+   o wrap como container do radius e movemos o scroll pra dentro do
+   próprio thead/tbody via display table-layout. Solução mais simples
+   sem mexer no HTML: usar overflow-x: auto que sobrescreve hidden em X,
+   mantendo hidden em Y (necessário para cortar corners verticais). */
+.v3-table-wrap,
+.proto-table-wrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* TH — corners arredondados no primeiro/último th da primeira linha */
+.report-table thead tr:first-child th:first-child,
+.results-table thead tr:first-child th:first-child,
+.v3-table thead tr:first-child th:first-child,
+.proto-table thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+.report-table thead tr:first-child th:last-child,
+.results-table thead tr:first-child th:last-child,
+.v3-table thead tr:first-child th:last-child,
+.proto-table thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+/* TH — tipografia unificada (mixed-case, verde-800, 14px/600) */
+.report-table thead th,
+.results-table thead th,
+.v3-table thead th,
+.proto-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  padding: 16px 18px !important;
+  background: var(--bg-section) !important;
+}
+
 /* --------------------------------------------------------------------
    TOAST — Padrão de mensagem flutuante (erro vermelho, sucesso verde,
    info azul, warning amarelo).
