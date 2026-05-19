@@ -928,11 +928,14 @@ button.btn-secondary,
 .proto-table-wrap::-webkit-scrollbar-thumb:hover {
   background: var(--mosaic-green-800);
 }
-/* Garante overflow-y visible nos wraps wide (libera espaço pra scrollbar
-   sem cortar com border-radius). Cantos arredondados continuam via thead. */
+/* Garante overflow horizontal funcional + scroll vertical livre nos
+   wraps de tabelas largas. Cantos arredondados continuam via thead.
+   Importante: precisa de !important para vencer o "overflow: hidden
+   !important" da regra de border-radius mais acima (linhas 864-870). */
 .wide-table-wrap,
 .results-table-wrap,
 .report-table-wrap {
+  overflow-x: auto !important;
   overflow-y: visible !important;
 }
 
