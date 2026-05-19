@@ -168,18 +168,35 @@
   .cell-action-wrap[data-tooltip]:hover::after { opacity: 1; }
 
   /* ================================================================
-     Sticky columns (Ação + Protocolo)
+     Sticky columns (Checkbox + Ação + Protocolo)
      ================================================================ */
-  /* Column 1: action icon (40px) */
-  .wide-table th.col-action,
-  .wide-table td.col-action {
+  /* Column 0: checkbox (44px) */
+  .wide-table th.col-check,
+  .wide-table td.col-check {
     position: sticky;
     left: 0;
     z-index: 3;
-    width: 56px;
-    min-width: 56px;
-    max-width: 56px;
-    padding: 8px 10px !important;
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    padding: 8px 8px !important;
+    text-align: center;
+    background: #fff;
+  }
+  .wide-table thead th.col-check {
+    z-index: 4;
+    background: var(--bg-section) !important;
+  }
+  /* Column 1: action icon (52px) */
+  .wide-table th.col-action,
+  .wide-table td.col-action {
+    position: sticky;
+    left: 44px;
+    z-index: 3;
+    width: 52px;
+    min-width: 52px;
+    max-width: 52px;
+    padding: 8px 8px !important;
     text-align: center;
     background: #fff;
   }
@@ -191,20 +208,341 @@
   .wide-table th.col-proto,
   .wide-table td.col-proto {
     position: sticky;
-    left: 56px;
+    left: 96px;
     z-index: 3;
     background: #fff;
     box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
-    min-width: 140px;
+    min-width: 150px;
   }
   .wide-table thead th.col-proto {
     z-index: 4;
     background: var(--bg-section) !important;
   }
+  .wide-table td.col-proto a {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .wide-table td.col-proto a:hover {
+    color: var(--mosaic-green-700);
+    border-bottom-color: var(--mosaic-green-700);
+  }
   /* Hover keeps sticky cells on top of zebra hover */
+  .wide-table tbody tr:hover td.col-check,
   .wide-table tbody tr:hover td.col-action,
   .wide-table tbody tr:hover td.col-proto {
     background: var(--bg-hover);
+  }
+  /* Linha selecionada */
+  .wide-table tbody tr.is-selected td {
+    background: rgba(0,106,77,0.06) !important;
+  }
+  .wide-table tbody tr.is-selected td.col-proto {
+    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
+  }
+
+  /* Custom checkbox */
+  .check-mosaic {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border-strong);
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--ease-fast);
+    margin: 0;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
+  .check-mosaic:hover { border-color: var(--mosaic-green-700); }
+  .check-mosaic:checked,
+  .check-mosaic:indeterminate {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .check-mosaic:checked::after {
+    content: "";
+    width: 10px; height: 10px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .check-mosaic:indeterminate::after {
+    content: "";
+    width: 8px; height: 2px;
+    background: #fff;
+    border-radius: 1px;
+  }
+
+  /* ================================================================
+     Bulk-edit action bar (fixed bottom)
+     ================================================================ */
+  .bulk-bar {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--text-1);
+    color: #fff;
+    border-radius: var(--radius-md);
+    padding: 12px 14px 12px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    z-index: 80;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform var(--ease-base), opacity var(--ease-base);
+    min-width: 480px;
+    max-width: calc(100% - 32px);
+  }
+  .bulk-bar.is-visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .bulk-bar-count {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .bulk-bar-count strong {
+    font-size: 16px;
+    font-weight: 800;
+    color: #fff;
+    background: var(--mosaic-green-700);
+    border-radius: 999px;
+    padding: 2px 10px;
+    min-width: 28px;
+    text-align: center;
+  }
+  .bulk-bar-actions { display: flex; gap: 8px; margin-left: auto; }
+  .bulk-btn {
+    background: transparent;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    transition: background var(--ease-fast), border-color var(--ease-fast);
+  }
+  .bulk-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.5);
+  }
+  .bulk-btn.is-primary {
+    background: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .bulk-btn.is-primary:hover { background: var(--mosaic-green-800); border-color: var(--mosaic-green-800); }
+  .bulk-btn.is-clear {
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    padding: 8px 10px;
+  }
+  .bulk-btn.is-clear:hover { color: #fff; background: rgba(255,255,255,0.08); }
+
+  /* ================================================================
+     Bulk-edit MODAL
+     ================================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 250;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .modal-backdrop.is-open { display: flex; }
+  .bulk-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  }
+  .bulk-modal-head {
+    padding: 20px 24px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bulk-modal-head h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+  }
+  .bulk-modal-head .modal-x {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+  }
+  .bulk-modal-head .modal-x:hover { background: var(--bg-section); }
+  .bulk-modal-body { padding: 20px 24px; }
+  .bulk-modal-lede {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+  }
+  .bulk-modal-lede strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-field-group {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color var(--ease-fast);
+  }
+  .bulk-field-group.is-active {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .bulk-field-toggle {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-section);
+    cursor: pointer;
+    user-select: none;
+  }
+  .bulk-field-group.is-active .bulk-field-toggle {
+    background: rgba(0,106,77,0.06);
+  }
+  .bulk-field-toggle-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    flex: 1;
+  }
+  .bulk-field-toggle-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .bulk-field-body {
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--ease-base), padding var(--ease-base);
+  }
+  .bulk-field-group.is-active .bulk-field-body {
+    padding: 14px 16px 16px;
+    max-height: 220px;
+  }
+  .bulk-field-body label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 5px;
+  }
+  .bulk-field-body select,
+  .bulk-field-body input,
+  .bulk-field-body textarea {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .bulk-field-body textarea { height: 70px; padding: 10px 12px; resize: vertical; }
+  .bulk-field-body select:focus,
+  .bulk-field-body input:focus,
+  .bulk-field-body textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .bulk-modal-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafaf8;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+  }
+  .bulk-modal-foot-info {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .bulk-modal-foot-info strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-modal-foot-actions { display: flex; gap: 10px; }
+  .bulk-modal-foot-actions .btn {
+    height: 38px; padding: 0 16px; border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+    font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .bulk-modal-foot-actions .btn-primary { background: var(--mosaic-green-800); color: #fff; }
+  .bulk-modal-foot-actions .btn-primary:hover { background: var(--mosaic-green-700); }
+  .bulk-modal-foot-actions .btn-primary:disabled {
+    background: var(--bg-section); color: var(--text-3); cursor: not-allowed;
+  }
+  .bulk-modal-foot-actions .btn-secondary {
+    background: #fff; color: var(--text-1); border: 1px solid var(--border);
+  }
+  .bulk-modal-foot-actions .btn-secondary:hover { background: var(--bg-section); }
+
+  /* Success toast (bulk-edit) */
+  .bulk-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 300;
+    transition: transform var(--ease-base);
+    pointer-events: none;
+  }
+  .bulk-toast.is-visible {
+    transform: translateX(-50%) translateY(0);
   }
 
   /* ================================================================
@@ -678,6 +1016,9 @@
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
+          <th class="col-check" aria-label="Selecionar">
+            <input type="checkbox" class="check-mosaic" id="checkAll" aria-label="Selecionar todos visíveis" />
+          </th>
           <th class="col-action" aria-label="Ação"></th>
           <th class="col-proto">Protocolo</th>
           <th>Status</th>
@@ -736,6 +1077,138 @@
   </div>
 
 </main>
+
+<!-- BULK-EDIT ACTION BAR (fixed bottom, appears when >=1 selected) -->
+<div class="bulk-bar" id="bulkBar" role="status" aria-live="polite">
+  <div class="bulk-bar-count">
+    <strong id="bulkCount">0</strong>
+    <span>protocolo<span id="bulkPlural">s</span> selecionado<span id="bulkPlural2">s</span></span>
+  </div>
+  <div class="bulk-bar-actions">
+    <button class="bulk-btn is-clear" id="bulkClearBtn" type="button">Limpar seleção</button>
+    <button class="bulk-btn is-primary" id="bulkEditBtn" type="button">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Editar em massa
+    </button>
+  </div>
+</div>
+
+<!-- BULK-EDIT MODAL -->
+<div class="modal-backdrop" id="bulkModal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
+  <div class="bulk-modal">
+    <div class="bulk-modal-head">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mosaic-green-700)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <h2 id="bulkModalTitle">Editar em massa</h2>
+      <button class="modal-x" id="bulkModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="bulk-modal-body">
+      <p class="bulk-modal-lede">
+        As alterações serão aplicadas a <strong id="bulkModalCount">0</strong> protocolos selecionados.
+        Ative apenas os campos que deseja modificar — os demais permanecem com o valor original de cada linha.
+      </p>
+
+      <!-- Campo: Embalagem -->
+      <div class="bulk-field-group" data-field="embalagem">
+        <label class="bulk-field-toggle">
+          <input type="checkbox" class="check-mosaic bulk-field-check" />
+          <span class="bulk-field-toggle-label">Alterar Embalagem</span>
+          <span class="bulk-field-toggle-hint">Saco 50kg / Granel / Big Bag</span>
+        </label>
+        <div class="bulk-field-body">
+          <label>Nova embalagem</label>
+          <select>
+            <option>Saco 50kg</option>
+            <option>Saco 25kg</option>
+            <option>Big Bag 1000kg</option>
+            <option>Granel</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Campo: Frete -->
+      <div class="bulk-field-group" data-field="frete">
+        <label class="bulk-field-toggle">
+          <input type="checkbox" class="check-mosaic bulk-field-check" />
+          <span class="bulk-field-toggle-label">Alterar tipo de Frete</span>
+          <span class="bulk-field-toggle-hint">CIF · FOB</span>
+        </label>
+        <div class="bulk-field-body">
+          <label>Novo tipo de frete</label>
+          <select>
+            <option value="CIF">CIF · Por conta da Mosaic</option>
+            <option value="FOB">FOB · Por conta do cliente</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Campo: Planta -->
+      <div class="bulk-field-group" data-field="planta">
+        <label class="bulk-field-toggle">
+          <input type="checkbox" class="check-mosaic bulk-field-check" />
+          <span class="bulk-field-toggle-label">Alterar Planta de origem</span>
+          <span class="bulk-field-toggle-hint">Aplicado a todos os selecionados</span>
+        </label>
+        <div class="bulk-field-body">
+          <label>Nova planta</label>
+          <select>
+            <option>Limeira</option>
+            <option>Paranaguá</option>
+            <option>Cubatão</option>
+            <option>Rondonópolis</option>
+            <option>Uberaba</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Campo: Vigência -->
+      <div class="bulk-field-group" data-field="vigencia">
+        <label class="bulk-field-toggle">
+          <input type="checkbox" class="check-mosaic bulk-field-check" />
+          <span class="bulk-field-toggle-label">Alterar Vigência</span>
+          <span class="bulk-field-toggle-hint">Estende prazo dos protocolos</span>
+        </label>
+        <div class="bulk-field-body">
+          <label>Nova data limite (vigência fim)</label>
+          <input type="text" placeholder="dd/mm/aaaa" />
+        </div>
+      </div>
+
+      <!-- Campo: Observações -->
+      <div class="bulk-field-group" data-field="obs">
+        <label class="bulk-field-toggle">
+          <input type="checkbox" class="check-mosaic bulk-field-check" />
+          <span class="bulk-field-toggle-label">Adicionar Observação</span>
+          <span class="bulk-field-toggle-hint">Anexa nota interna em todos</span>
+        </label>
+        <div class="bulk-field-body">
+          <label>Observação</label>
+          <textarea placeholder="Texto que será adicionado às observações de cada protocolo selecionado..."></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="bulk-modal-foot">
+      <div class="bulk-modal-foot-info">
+        <strong id="bulkActiveFields">0</strong> de 5 campos selecionados para alteração
+      </div>
+      <div class="bulk-modal-foot-actions">
+        <button class="btn btn-secondary" id="bulkCancelBtn" type="button">Cancelar</button>
+        <button class="btn btn-primary" id="bulkApplyBtn" type="button" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Aplicar a <span id="bulkApplyCount">0</span> protocolos
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="bulk-toast" id="bulkToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="bulkToastText">Alterações aplicadas</span>
+</div>
 
 <!-- FOOTER ========================================================= -->
 <footer class="mosaic-footer">
@@ -944,6 +1417,47 @@ function actionCell(p) {
 }
 
 /* ================================================================
+   Seleção em massa
+   ================================================================ */
+const selectedIds = new Set();
+
+function getVisibleIds() {
+  return Array.from(document.querySelectorAll("#tableBody tr[data-proto-id]"))
+    .map(tr => tr.getAttribute("data-proto-id"));
+}
+
+function updateBulkBar() {
+  const bar = document.getElementById("bulkBar");
+  const n = selectedIds.size;
+  document.getElementById("bulkCount").textContent = n;
+  document.getElementById("bulkPlural").textContent = n === 1 ? "" : "s";
+  document.getElementById("bulkPlural2").textContent = n === 1 ? "" : "s";
+  bar.classList.toggle("is-visible", n > 0);
+
+  // Atualiza checkAll (indeterminate / checked / unchecked)
+  const checkAll = document.getElementById("checkAll");
+  const visible = getVisibleIds();
+  const visibleSelected = visible.filter(id => selectedIds.has(id)).length;
+  if (visibleSelected === 0) {
+    checkAll.checked = false;
+    checkAll.indeterminate = false;
+  } else if (visibleSelected === visible.length) {
+    checkAll.checked = true;
+    checkAll.indeterminate = false;
+  } else {
+    checkAll.checked = false;
+    checkAll.indeterminate = true;
+  }
+}
+
+function toggleSelect(id, on) {
+  if (on) selectedIds.add(id); else selectedIds.delete(id);
+  const tr = document.querySelector(`#tableBody tr[data-proto-id="${id}"]`);
+  if (tr) tr.classList.toggle("is-selected", on);
+  updateBulkBar();
+}
+
+/* ================================================================
    Render
    ================================================================ */
 function render() {
@@ -977,14 +1491,17 @@ function render() {
 
   const body = document.getElementById("tableBody");
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="25" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="26" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
     return;
   }
 
   body.innerHTML = rows.map(p => `
-    <tr>
+    <tr data-proto-id="${p.id}" class="${selectedIds.has(p.id) ? 'is-selected' : ''}">
+      <td class="col-check">
+        <input type="checkbox" class="check-mosaic row-check" data-id="${p.id}" ${selectedIds.has(p.id) ? 'checked' : ''} aria-label="Selecionar protocolo ${p.id}" />
+      </td>
       <td class="col-action">${actionCell(p)}</td>
-      <td class="col-proto proto-id">${p.id}</td>
+      <td class="col-proto"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Editar protocolo ${p.id}">${p.id}</a></td>
       <td>${statusBadge(p.status)}</td>
       <td>${p.contrato}</td>
       <td>${p.cotacao}</td>
@@ -1083,6 +1600,103 @@ document.getElementById("btnExport").addEventListener("click", () => {
   const a = document.createElement("a");
   a.href = url; a.download = "relatorio-protocolos.csv"; a.click();
   URL.revokeObjectURL(url);
+});
+
+/* ================================================================
+   Eventos de seleção (delegação)
+   ================================================================ */
+document.getElementById("tableBody").addEventListener("change", (e) => {
+  const cb = e.target;
+  if (!cb.classList.contains("row-check")) return;
+  toggleSelect(cb.dataset.id, cb.checked);
+});
+
+document.getElementById("checkAll").addEventListener("change", (e) => {
+  const on = e.target.checked;
+  getVisibleIds().forEach(id => {
+    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
+    if (cb) cb.checked = on;
+    toggleSelect(id, on);
+  });
+});
+
+document.getElementById("bulkClearBtn").addEventListener("click", () => {
+  Array.from(selectedIds).forEach(id => {
+    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
+    if (cb) cb.checked = false;
+  });
+  selectedIds.clear();
+  updateBulkBar();
+});
+
+/* ================================================================
+   Bulk-edit modal
+   ================================================================ */
+const bulkModal      = document.getElementById("bulkModal");
+const bulkEditBtn    = document.getElementById("bulkEditBtn");
+const bulkClose      = document.getElementById("bulkModalClose");
+const bulkCancel     = document.getElementById("bulkCancelBtn");
+const bulkApply      = document.getElementById("bulkApplyBtn");
+const bulkApplyCount = document.getElementById("bulkApplyCount");
+const bulkModalCount = document.getElementById("bulkModalCount");
+const bulkActive     = document.getElementById("bulkActiveFields");
+const bulkToast      = document.getElementById("bulkToast");
+const bulkToastText  = document.getElementById("bulkToastText");
+
+function openBulkModal() {
+  bulkModalCount.textContent = selectedIds.size;
+  bulkApplyCount.textContent = selectedIds.size;
+  // Reset campos
+  document.querySelectorAll(".bulk-field-group").forEach(g => g.classList.remove("is-active"));
+  document.querySelectorAll(".bulk-field-check").forEach(c => c.checked = false);
+  updateBulkActiveCount();
+  bulkModal.classList.add("is-open");
+}
+function closeBulkModal() { bulkModal.classList.remove("is-open"); }
+
+bulkEditBtn.addEventListener("click", openBulkModal);
+bulkClose.addEventListener("click", closeBulkModal);
+bulkCancel.addEventListener("click", closeBulkModal);
+bulkModal.addEventListener("click", (e) => {
+  if (e.target === bulkModal) closeBulkModal();
+});
+
+document.querySelectorAll(".bulk-field-check").forEach(cb => {
+  cb.addEventListener("change", () => {
+    cb.closest(".bulk-field-group").classList.toggle("is-active", cb.checked);
+    updateBulkActiveCount();
+  });
+});
+
+function updateBulkActiveCount() {
+  const active = document.querySelectorAll(".bulk-field-check:checked").length;
+  bulkActive.textContent = active;
+  bulkApply.disabled = active === 0;
+}
+
+bulkApply.addEventListener("click", () => {
+  const n = selectedIds.size;
+  const active = document.querySelectorAll(".bulk-field-check:checked").length;
+  closeBulkModal();
+  bulkToastText.textContent =
+    `${active} campo${active === 1 ? "" : "s"} alterado${active === 1 ? "" : "s"} em ${n} protocolo${n === 1 ? "" : "s"}`;
+  bulkToast.classList.add("is-visible");
+  setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
+
+  // Limpa seleção após aplicar (igual Gmail/Salesforce)
+  Array.from(selectedIds).forEach(id => {
+    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
+    if (cb) cb.checked = false;
+  });
+  selectedIds.clear();
+  updateBulkBar();
+});
+
+/* Esc fecha modal */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && bulkModal.classList.contains("is-open")) {
+    closeBulkModal();
+  }
 });
 
 render();
