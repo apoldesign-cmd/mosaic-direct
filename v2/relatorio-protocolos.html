@@ -122,11 +122,89 @@
     color: var(--text-3);
     cursor: pointer;
     background: #fff;
-    transition: border-color var(--ease-fast), color var(--ease-fast);
+    transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
+    text-decoration: none;
   }
   .cell-action:hover {
     border-color: var(--mosaic-green-700);
     color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+  }
+  /* "Agendar protocolo" action button — only on rows with saldo > 0 */
+  .action-agendar {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .action-agendar:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    border-color: var(--mosaic-green-700);
+    transform: scale(1.08);
+  }
+  /* Tooltip on the action button */
+  .cell-action-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+  .cell-action-wrap[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--text-1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-fast);
+    z-index: 10;
+  }
+  .cell-action-wrap[data-tooltip]:hover::after { opacity: 1; }
+
+  /* ================================================================
+     Sticky columns (Ação + Protocolo)
+     ================================================================ */
+  /* Column 1: action icon (40px) */
+  .wide-table th.col-action,
+  .wide-table td.col-action {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    width: 56px;
+    min-width: 56px;
+    max-width: 56px;
+    padding: 8px 10px !important;
+    text-align: center;
+    background: #fff;
+  }
+  .wide-table thead th.col-action {
+    z-index: 4;
+    background: var(--bg-section) !important;
+  }
+  /* Column 2: Protocolo (sticky too) */
+  .wide-table th.col-proto,
+  .wide-table td.col-proto {
+    position: sticky;
+    left: 56px;
+    z-index: 3;
+    background: #fff;
+    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
+    min-width: 140px;
+  }
+  .wide-table thead th.col-proto {
+    z-index: 4;
+    background: var(--bg-section) !important;
+  }
+  /* Hover keeps sticky cells on top of zebra hover */
+  .wide-table tbody tr:hover td.col-action,
+  .wide-table tbody tr:hover td.col-proto {
+    background: var(--bg-hover);
   }
 
   /* ================================================================
@@ -600,7 +678,8 @@
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
-          <th>Protocolo</th>
+          <th class="col-action" aria-label="Ação"></th>
+          <th class="col-proto">Protocolo</th>
           <th>Status</th>
           <th>Contrato SAP</th>
           <th>Cotação</th>
@@ -834,6 +913,37 @@ function numCell(v, highlight) {
 }
 
 /* ================================================================
+   Action cell — botão de "Agendar protocolo" só aparece em linhas
+   com saldo > 0 e status que permitam agendamento.
+   ================================================================ */
+const STATUS_PODE_AGENDAR = new Set([
+  "Novo",
+  "Liberado para agendar",
+  "Em agendamento",
+]);
+
+function actionCell(p) {
+  const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
+  if (!podeAgendar) return "";
+  const url = `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
+  return `
+    <span class="cell-action-wrap" data-tooltip="Agendar este protocolo">
+      <a class="cell-action action-agendar"
+         href="${url}"
+         aria-label="Agendar protocolo ${p.id}">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M12 14v4"/>
+          <path d="M10 16h4"/>
+        </svg>
+      </a>
+    </span>`;
+}
+
+/* ================================================================
    Render
    ================================================================ */
 function render() {
@@ -867,13 +977,14 @@ function render() {
 
   const body = document.getElementById("tableBody");
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="25" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
     return;
   }
 
   body.innerHTML = rows.map(p => `
     <tr>
-      <td class="proto-id">${p.id}</td>
+      <td class="col-action">${actionCell(p)}</td>
+      <td class="col-proto proto-id">${p.id}</td>
       <td>${statusBadge(p.status)}</td>
       <td>${p.contrato}</td>
       <td>${p.cotacao}</td>
