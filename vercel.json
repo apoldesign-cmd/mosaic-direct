@@ -1,0 +1,10 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "mosaicdirect.vercel.app" }],
+      "destination": "/v2/",
+      "permanent": false
+    }
+  ]
+}
