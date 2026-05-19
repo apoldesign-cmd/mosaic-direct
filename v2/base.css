@@ -247,6 +247,12 @@
 .nav-item:focus-within .chev {
   opacity: 1;
 }
+/* Chev só existe (visualmente) em items que TÊM submenu — esconde os
+   chevrons órfãos emitidos pelo transform em items sem dropdown
+   (Produtos, Cotações, Faturamento, Financeiro, Suporte). */
+.nav-item:not(:has(.nav-submenu)) .chev {
+  display: none !important;
+}
 
 /* Submenu */
 .nav-submenu {

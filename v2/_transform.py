@@ -73,8 +73,8 @@ def new_header_html(active_nav: str) -> str:
   <nav class="mosaic-nav" aria-label="Principal">
     <div class="mosaic-nav-inner">
       <a href="index.html"{active("home")}>Home</a>
-      <a href="#" class="nav-item">Produtos<span class="chev" aria-hidden="true"></span></a>
-      <a href="#" class="nav-item">Cotações<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
       <span class="{parent_cls(contratos_active)}" tabindex="0">
         Contratos<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
@@ -89,10 +89,10 @@ def new_header_html(active_nav: str) -> str:
           <a href="relatorio-status-agendamento.html"{' class="is-active"' if active_nav=="relatorio" else ""}>Relatório de Status de Agendamento</a>
         </div>
       </span>
-      <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Faturamento</a>
       <a href="#" class="nav-item">Documentos</a>
-      <a href="#" class="nav-item">Financeiro<span class="chev" aria-hidden="true"></span></a>
-      <a href="#" class="nav-item">Suporte<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
     </div>
   </nav>
 </header>'''
