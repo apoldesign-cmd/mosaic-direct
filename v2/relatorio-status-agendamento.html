@@ -2480,11 +2480,9 @@
       </div>
       <div class="filter-block">
         <label>Semana (Seg → Dom)</label>
-        <div class="filter-locked" id="filterSemanaDisplay" title="Período fixado na semana vigente conforme regra do relatório (SMDP-137 AC #1).">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
-          <span id="filterSemanaText">Semana vigente</span>
-        </div>
-        <select id="filterSemana" hidden></select>
+        <select id="filterSemana">
+          <!-- options populated by JS -->
+        </select>
       </div>
       <div class="filter-block">
         <label>CPF/CNPJ do Emissor</label>
@@ -2908,13 +2906,46 @@ function currentWeekRange() {
   const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
   return `${fmt(monday)} — ${fmt(sunday)}`;
 }
-const SEMANA_VIGENTE = currentWeekRange();
-elSemana.innerHTML = `<option value="${SEMANA_VIGENTE}" selected>${SEMANA_VIGENTE}</option>`;
-elSemana.value = SEMANA_VIGENTE;
-const elSemanaText = document.getElementById("filterSemanaText");
-if (elSemanaText) elSemanaText.textContent = `Semana vigente · ${SEMANA_VIGENTE}`;
+/* Gera 4 semanas anteriores + vigente + 4 próximas (rolling 9-week window) */
+function buildWeekRanges() {
+  const today = new Date();
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const baseMonday = new Date(today);
+  baseMonday.setDate(today.getDate() + diffToMonday);
+  baseMonday.setHours(0, 0, 0, 0);
 
-[elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+  const pad = (n) => String(n).padStart(2, "0");
+  const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+
+  const ranges = [];
+  for (let offset = -4; offset <= 4; offset++) {
+    const monday = new Date(baseMonday);
+    monday.setDate(baseMonday.getDate() + offset * 7);
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+    const label = `${fmt(monday)} — ${fmt(sunday)}`;
+    let prefix = "";
+    if (offset === 0) prefix = "Semana vigente · ";
+    else if (offset === -1) prefix = "Semana anterior · ";
+    else if (offset === 1) prefix = "Próxima semana · ";
+    ranges.push({ value: label, label: prefix + label, current: offset === 0 });
+  }
+  return ranges;
+}
+
+const SEMANA_RANGES = buildWeekRanges();
+const SEMANA_VIGENTE = SEMANA_RANGES.find(r => r.current).value;
+
+elSemana.innerHTML = `
+  <option value="">Todas as semanas</option>
+  ${SEMANA_RANGES.map(r =>
+    `<option value="${r.value}"${r.current ? " selected" : ""}>${r.label}</option>`
+  ).join("")}
+`;
+elSemana.value = SEMANA_VIGENTE;
+
+[elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", render);
 });
 
@@ -2930,7 +2961,8 @@ const elSearchSuggest  = document.getElementById("searchSuggestions");
 
 function activeFilterCount() {
   let n = 0;
-  /* Semana e fixa nesta tela, nao conta */
+  /* Conta semana só se mudou da vigente (filtro ativo) */
+  if (elSemana.value && elSemana.value !== SEMANA_VIGENTE) n++;
   [elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
     if (el && el.value) n++;
   });

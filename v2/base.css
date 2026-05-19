@@ -880,6 +880,62 @@ button.btn-secondary,
   overflow-y: hidden !important;
 }
 
+/* ============================================================
+   Scrollbar customizada (visível e grossa) para tabelas largas
+   ============================================================ */
+.wide-table-wrap,
+.report-table-wrap,
+.results-table-wrap,
+.v3-table-wrap,
+.proto-table-wrap {
+  /* Firefox */
+  scrollbar-width: auto;
+  scrollbar-color: var(--mosaic-green-700) #e9efee;
+}
+/* WebKit / Blink (Chrome, Safari, Edge) */
+.wide-table-wrap::-webkit-scrollbar,
+.report-table-wrap::-webkit-scrollbar,
+.results-table-wrap::-webkit-scrollbar,
+.v3-table-wrap::-webkit-scrollbar,
+.proto-table-wrap::-webkit-scrollbar {
+  height: 14px;
+  width: 14px;
+  background: #e9efee;
+  border-top: 1px solid var(--border-soft);
+}
+.wide-table-wrap::-webkit-scrollbar-track,
+.report-table-wrap::-webkit-scrollbar-track,
+.results-table-wrap::-webkit-scrollbar-track,
+.v3-table-wrap::-webkit-scrollbar-track,
+.proto-table-wrap::-webkit-scrollbar-track {
+  background: #e9efee;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.wide-table-wrap::-webkit-scrollbar-thumb,
+.report-table-wrap::-webkit-scrollbar-thumb,
+.results-table-wrap::-webkit-scrollbar-thumb,
+.v3-table-wrap::-webkit-scrollbar-thumb,
+.proto-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--mosaic-green-700);
+  border-radius: 8px;
+  border: 3px solid #e9efee;
+  min-width: 50px;
+}
+.wide-table-wrap::-webkit-scrollbar-thumb:hover,
+.report-table-wrap::-webkit-scrollbar-thumb:hover,
+.results-table-wrap::-webkit-scrollbar-thumb:hover,
+.v3-table-wrap::-webkit-scrollbar-thumb:hover,
+.proto-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--mosaic-green-800);
+}
+/* Garante overflow-y visible nos wraps wide (libera espaço pra scrollbar
+   sem cortar com border-radius). Cantos arredondados continuam via thead. */
+.wide-table-wrap,
+.results-table-wrap,
+.report-table-wrap {
+  overflow-y: visible !important;
+}
+
 /* TH — corners arredondados no primeiro/último th da primeira linha */
 .report-table thead tr:first-child th:first-child,
 .results-table thead tr:first-child th:first-child,
