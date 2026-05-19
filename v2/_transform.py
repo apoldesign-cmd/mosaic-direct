@@ -78,7 +78,6 @@ def new_header_html(active_nav: str) -> str:
       <span class="{parent_cls(contratos_active)}" tabindex="0">
         Contratos<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
-          <a href="#">Meus contratos</a>
           <a href="criar-protocolo.html"{' class="is-active"' if active_nav=="criar-protocolo" else ""}>Criar Protocolo</a>
         </div>
       </span>

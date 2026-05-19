@@ -894,6 +894,12 @@ button.btn-secondary,
   border-top-right-radius: var(--radius-md);
 }
 
+/* v3-table-wrap DENTRO de .contract-card: o card é o container visual,
+   o wrap não precisa de radius próprio (evita arco branco no canto). */
+.contract-card .v3-table-wrap {
+  border-radius: 0 !important;
+}
+
 /* TH — tipografia unificada (mixed-case, verde-800, 14px/600) */
 .report-table thead th,
 .results-table thead th,
