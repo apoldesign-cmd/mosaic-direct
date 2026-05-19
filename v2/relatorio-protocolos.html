@@ -359,7 +359,7 @@
   .bulk-btn.is-clear:hover { color: #fff; background: rgba(255,255,255,0.08); }
 
   /* ================================================================
-     Bulk-edit MODAL
+     Bulk-edit SIDENAV DRAWER (substitui o modal centralizado)
      ================================================================ */
   .modal-backdrop {
     position: fixed;
@@ -367,35 +367,56 @@
     background: rgba(0,0,0,0.45);
     z-index: 250;
     display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
   }
-  .modal-backdrop.is-open { display: flex; }
+  .modal-backdrop.is-open {
+    display: block;
+    opacity: 1;
+  }
   .bulk-modal {
-    background: #fff;
-    border-radius: var(--radius-md);
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
     width: 100%;
-    max-width: 640px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    max-width: 560px;
+    background: #fff;
+    box-shadow: -12px 0 32px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--ease-base);
+    z-index: 260;
+  }
+  .modal-backdrop.is-open .bulk-modal {
+    transform: translateX(0);
   }
   .bulk-modal-head {
-    padding: 20px 24px 14px;
+    padding: 18px 24px 14px;
     border-bottom: 1px solid var(--border-soft);
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .bulk-modal-head-text {
+    flex: 1;
+    min-width: 0;
   }
   .bulk-modal-head h2 {
     font-size: 18px;
     font-weight: 800;
     margin: 0;
     color: var(--text-1);
+    line-height: 1.2;
   }
+  .bulk-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .bulk-modal-head-sub strong { color: var(--mosaic-green-800); font-weight: 800; }
   .bulk-modal-head .modal-x {
-    margin-left: auto;
     background: transparent;
     border: none;
     color: var(--text-3);
@@ -406,15 +427,57 @@
     align-items: center;
     justify-content: center;
     transition: background var(--ease-fast);
+    flex-shrink: 0;
   }
   .bulk-modal-head .modal-x:hover { background: var(--bg-section); }
-  .bulk-modal-body { padding: 20px 24px; }
+
+  /* Tabs */
+  .bulk-tabs {
+    display: flex;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .bulk-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-3);
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 2px solid transparent;
+    transition: all var(--ease-fast);
+  }
+  .bulk-tab:hover { color: var(--text-1); }
+  .bulk-tab.is-active {
+    color: var(--mosaic-green-800);
+    background: #fff;
+    border-bottom-color: var(--mosaic-green-700);
+  }
+
+  .bulk-modal-body {
+    padding: 20px 24px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
   .bulk-modal-lede {
     font-size: 13px;
     color: var(--text-2);
     margin-bottom: 18px;
+    line-height: 1.5;
   }
   .bulk-modal-lede strong { color: var(--mosaic-green-800); font-weight: 800; }
+
+  .bulk-tab-pane { display: none; }
+  .bulk-tab-pane.is-active { display: block; }
   .bulk-field-group {
     border: 1px solid var(--border-soft);
     border-radius: var(--radius-md);
@@ -490,6 +553,243 @@
     border-color: var(--mosaic-green-700);
     box-shadow: var(--shadow-focus);
   }
+  /* ============== CSV UPLOAD ============== */
+  .csv-dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px 20px;
+    text-align: center;
+    background: #fafaf8;
+    transition: all var(--ease-fast);
+    cursor: pointer;
+    margin-bottom: 18px;
+  }
+  .csv-dropzone:hover,
+  .csv-dropzone.is-dragover {
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .csv-dropzone.has-file {
+    border-style: solid;
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+    text-align: left;
+    padding: 18px 20px;
+    cursor: default;
+  }
+  .csv-drop-icon {
+    width: 48px; height: 48px;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .csv-drop-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .csv-drop-hint {
+    font-size: 11.5px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .csv-drop-hint strong { color: var(--mosaic-green-700); }
+  .csv-file-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .csv-file-icon {
+    width: 36px; height: 36px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-file-info { flex: 1; min-width: 0; }
+  .csv-file-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .csv-file-meta {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .csv-file-meta strong { color: var(--mosaic-green-700); font-weight: 700; }
+  .csv-file-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--ease-fast);
+  }
+  .csv-file-remove:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .csv-template-section {
+    background: var(--bg-section);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .csv-template-icon {
+    width: 32px; height: 32px;
+    background: #fff;
+    border-radius: 8px;
+    color: var(--mosaic-green-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-template-content { flex: 1; min-width: 0; }
+  .csv-template-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 2px;
+  }
+  .csv-template-text {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .csv-template-btn {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    border: 1px solid var(--mosaic-green-700);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background var(--ease-fast);
+  }
+  .csv-template-btn:hover { background: var(--mosaic-green-800); color: #fff; }
+
+  .csv-fields-info {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .csv-fields-info-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .csv-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .csv-field-chip {
+    background: var(--bg-section);
+    color: var(--text-1);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .csv-field-chip.required {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-800);
+  }
+  .csv-fields-legend {
+    font-size: 10.5px;
+    color: var(--text-3);
+    margin-top: 8px;
+  }
+  .csv-fields-legend .req-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--mosaic-green-700);
+    border-radius: 2px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* Preview de CSV após upload */
+  .csv-preview {
+    margin-top: 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .csv-preview-head {
+    background: var(--bg-section);
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .csv-preview-head .csv-preview-badge {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .csv-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    overflow-x: auto;
+    display: block;
+  }
+  .csv-preview-table th,
+  .csv-preview-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    text-align: left;
+  }
+  .csv-preview-table th {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+    font-size: 10.5px;
+  }
+  .csv-preview-table td { color: var(--text-2); }
+  .csv-preview-table tbody tr:nth-child(even) td { background: #f7f9f8; }
+
   .bulk-modal-foot {
     padding: 14px 24px;
     border-top: 1px solid var(--border-soft);
@@ -497,7 +797,7 @@
     justify-content: space-between;
     align-items: center;
     background: #fafaf8;
-    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    flex-shrink: 0;
   }
   .bulk-modal-foot-info {
     font-size: 12px;
@@ -520,6 +820,11 @@
     background: #fff; color: var(--text-1); border: 1px solid var(--border);
   }
   .bulk-modal-foot-actions .btn-secondary:hover { background: var(--bg-section); }
+
+  /* Responsivo: em mobile o drawer ocupa tela toda */
+  @media (max-width: 600px) {
+    .bulk-modal { max-width: 100%; }
+  }
 
   /* Success toast (bulk-edit) */
   .bulk-toast {
@@ -1093,115 +1398,189 @@
   </div>
 </div>
 
-<!-- BULK-EDIT MODAL -->
+<!-- BULK-EDIT SIDENAV DRAWER -->
 <div class="modal-backdrop" id="bulkModal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
-  <div class="bulk-modal">
+  <aside class="bulk-modal">
     <div class="bulk-modal-head">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mosaic-green-700)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <h2 id="bulkModalTitle">Editar em massa</h2>
+      <div class="bulk-modal-head-text">
+        <h2 id="bulkModalTitle">Editar em massa</h2>
+        <div class="bulk-modal-head-sub"><strong id="bulkModalCount">0</strong> protocolos selecionados</div>
+      </div>
       <button class="modal-x" id="bulkModalClose" type="button" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
+
+    <!-- TABS -->
+    <div class="bulk-tabs" role="tablist">
+      <button class="bulk-tab is-active" data-tab="fields" type="button" role="tab">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Editar campos
+      </button>
+      <button class="bulk-tab" data-tab="csv" type="button" role="tab">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Upload CSV
+      </button>
+    </div>
+
     <div class="bulk-modal-body">
-      <p class="bulk-modal-lede">
-        As alterações serão aplicadas a <strong id="bulkModalCount">0</strong> protocolos selecionados.
-        Ative apenas os campos que deseja modificar — os demais permanecem com o valor original de cada linha.
-      </p>
 
-      <!-- Campo: Embalagem -->
-      <div class="bulk-field-group" data-field="embalagem">
-        <label class="bulk-field-toggle">
-          <input type="checkbox" class="check-mosaic bulk-field-check" />
-          <span class="bulk-field-toggle-label">Alterar Embalagem</span>
-          <span class="bulk-field-toggle-hint">Saco 50kg / Granel / Big Bag</span>
-        </label>
-        <div class="bulk-field-body">
-          <label>Nova embalagem</label>
-          <select>
-            <option>Saco 50kg</option>
-            <option>Saco 25kg</option>
-            <option>Big Bag 1000kg</option>
-            <option>Granel</option>
-          </select>
+      <!-- TAB PANE: EDITAR CAMPOS ============================================== -->
+      <div class="bulk-tab-pane is-active" data-pane="fields">
+        <p class="bulk-modal-lede">
+          Ative apenas os campos que deseja modificar — os demais permanecem com o valor original de cada linha.
+        </p>
+
+        <!-- Campo: Embalagem -->
+        <div class="bulk-field-group" data-field="embalagem">
+          <label class="bulk-field-toggle">
+            <input type="checkbox" class="check-mosaic bulk-field-check" />
+            <span class="bulk-field-toggle-label">Alterar Embalagem</span>
+            <span class="bulk-field-toggle-hint">Saco 50kg / Granel / Big Bag</span>
+          </label>
+          <div class="bulk-field-body">
+            <label>Nova embalagem</label>
+            <select>
+              <option>Saco 50kg</option>
+              <option>Saco 25kg</option>
+              <option>Big Bag 1000kg</option>
+              <option>Granel</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campo: Frete -->
+        <div class="bulk-field-group" data-field="frete">
+          <label class="bulk-field-toggle">
+            <input type="checkbox" class="check-mosaic bulk-field-check" />
+            <span class="bulk-field-toggle-label">Alterar tipo de Frete</span>
+            <span class="bulk-field-toggle-hint">CIF · FOB</span>
+          </label>
+          <div class="bulk-field-body">
+            <label>Novo tipo de frete</label>
+            <select>
+              <option value="CIF">CIF · Por conta da Mosaic</option>
+              <option value="FOB">FOB · Por conta do cliente</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campo: Planta -->
+        <div class="bulk-field-group" data-field="planta">
+          <label class="bulk-field-toggle">
+            <input type="checkbox" class="check-mosaic bulk-field-check" />
+            <span class="bulk-field-toggle-label">Alterar Planta de origem</span>
+            <span class="bulk-field-toggle-hint">Aplicado a todos os selecionados</span>
+          </label>
+          <div class="bulk-field-body">
+            <label>Nova planta</label>
+            <select>
+              <option>Limeira</option>
+              <option>Paranaguá</option>
+              <option>Cubatão</option>
+              <option>Rondonópolis</option>
+              <option>Uberaba</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campo: Vigência -->
+        <div class="bulk-field-group" data-field="vigencia">
+          <label class="bulk-field-toggle">
+            <input type="checkbox" class="check-mosaic bulk-field-check" />
+            <span class="bulk-field-toggle-label">Alterar Vigência</span>
+            <span class="bulk-field-toggle-hint">Estende prazo dos protocolos</span>
+          </label>
+          <div class="bulk-field-body">
+            <label>Nova data limite (vigência fim)</label>
+            <input type="text" placeholder="dd/mm/aaaa" />
+          </div>
+        </div>
+
+        <!-- Campo: Observações -->
+        <div class="bulk-field-group" data-field="obs">
+          <label class="bulk-field-toggle">
+            <input type="checkbox" class="check-mosaic bulk-field-check" />
+            <span class="bulk-field-toggle-label">Adicionar Observação</span>
+            <span class="bulk-field-toggle-hint">Anexa nota interna em todos</span>
+          </label>
+          <div class="bulk-field-body">
+            <label>Observação</label>
+            <textarea placeholder="Texto que será adicionado às observações de cada protocolo selecionado..."></textarea>
+          </div>
         </div>
       </div>
 
-      <!-- Campo: Frete -->
-      <div class="bulk-field-group" data-field="frete">
-        <label class="bulk-field-toggle">
-          <input type="checkbox" class="check-mosaic bulk-field-check" />
-          <span class="bulk-field-toggle-label">Alterar tipo de Frete</span>
-          <span class="bulk-field-toggle-hint">CIF · FOB</span>
-        </label>
-        <div class="bulk-field-body">
-          <label>Novo tipo de frete</label>
-          <select>
-            <option value="CIF">CIF · Por conta da Mosaic</option>
-            <option value="FOB">FOB · Por conta do cliente</option>
-          </select>
-        </div>
-      </div>
+      <!-- TAB PANE: UPLOAD CSV ============================================== -->
+      <div class="bulk-tab-pane" data-pane="csv">
+        <p class="bulk-modal-lede">
+          Edição em lote por planilha — atualize <strong>centenas de protocolos</strong> de uma só vez.
+          Baixe o template, preencha as colunas que deseja alterar e faça upload.
+        </p>
 
-      <!-- Campo: Planta -->
-      <div class="bulk-field-group" data-field="planta">
-        <label class="bulk-field-toggle">
-          <input type="checkbox" class="check-mosaic bulk-field-check" />
-          <span class="bulk-field-toggle-label">Alterar Planta de origem</span>
-          <span class="bulk-field-toggle-hint">Aplicado a todos os selecionados</span>
-        </label>
-        <div class="bulk-field-body">
-          <label>Nova planta</label>
-          <select>
-            <option>Limeira</option>
-            <option>Paranaguá</option>
-            <option>Cubatão</option>
-            <option>Rondonópolis</option>
-            <option>Uberaba</option>
-          </select>
+        <!-- Template download -->
+        <div class="csv-template-section">
+          <div class="csv-template-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="csv-template-content">
+            <div class="csv-template-title">Template de edição em massa</div>
+            <div class="csv-template-text">
+              Modelo CSV com cabeçalhos prontos. Mantenha a coluna <code>Protocolo</code> intacta e preencha apenas os campos que quer atualizar.
+            </div>
+            <button class="csv-template-btn" id="downloadTemplateBtn" type="button">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Baixar template CSV
+            </button>
+          </div>
         </div>
-      </div>
 
-      <!-- Campo: Vigência -->
-      <div class="bulk-field-group" data-field="vigencia">
-        <label class="bulk-field-toggle">
-          <input type="checkbox" class="check-mosaic bulk-field-check" />
-          <span class="bulk-field-toggle-label">Alterar Vigência</span>
-          <span class="bulk-field-toggle-hint">Estende prazo dos protocolos</span>
-        </label>
-        <div class="bulk-field-body">
-          <label>Nova data limite (vigência fim)</label>
-          <input type="text" placeholder="dd/mm/aaaa" />
+        <!-- Dropzone -->
+        <div class="csv-dropzone" id="csvDropzone">
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden />
+          <div class="csv-drop-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="csv-drop-title">Arraste sua planilha aqui</div>
+          <div class="csv-drop-hint">
+            ou <strong>clique para selecionar</strong> · Aceita .csv até 5 MB
+          </div>
         </div>
-      </div>
 
-      <!-- Campo: Observações -->
-      <div class="bulk-field-group" data-field="obs">
-        <label class="bulk-field-toggle">
-          <input type="checkbox" class="check-mosaic bulk-field-check" />
-          <span class="bulk-field-toggle-label">Adicionar Observação</span>
-          <span class="bulk-field-toggle-hint">Anexa nota interna em todos</span>
-        </label>
-        <div class="bulk-field-body">
-          <label>Observação</label>
-          <textarea placeholder="Texto que será adicionado às observações de cada protocolo selecionado..."></textarea>
+        <!-- Campos suportados -->
+        <div class="csv-fields-info">
+          <div class="csv-fields-info-title">Colunas reconhecidas no CSV</div>
+          <div class="csv-fields-list">
+            <span class="csv-field-chip required">Protocolo</span>
+            <span class="csv-field-chip">Embalagem</span>
+            <span class="csv-field-chip">Frete</span>
+            <span class="csv-field-chip">Planta</span>
+            <span class="csv-field-chip">Vigencia_Fim</span>
+            <span class="csv-field-chip">Observacao</span>
+          </div>
+          <div class="csv-fields-legend">
+            <span class="req-dot"></span>
+            Obrigatório · usado para identificar a linha. Os demais são opcionais — só atualizam se preenchidos.
+          </div>
         </div>
+
       </div>
 
     </div>
     <div class="bulk-modal-foot">
       <div class="bulk-modal-foot-info">
-        <strong id="bulkActiveFields">0</strong> de 5 campos selecionados para alteração
+        <span id="bulkFootInfo"><strong id="bulkActiveFields">0</strong> de 5 campos selecionados</span>
       </div>
       <div class="bulk-modal-foot-actions">
         <button class="btn btn-secondary" id="bulkCancelBtn" type="button">Cancelar</button>
         <button class="btn btn-primary" id="bulkApplyBtn" type="button" disabled>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          Aplicar a <span id="bulkApplyCount">0</span> protocolos
+          <span id="bulkApplyLabel">Aplicar a <span id="bulkApplyCount">0</span> protocolos</span>
         </button>
       </div>
     </div>
-  </div>
+  </aside>
 </div>
 
 <!-- TOAST -->
@@ -1643,12 +2022,20 @@ const bulkActive     = document.getElementById("bulkActiveFields");
 const bulkToast      = document.getElementById("bulkToast");
 const bulkToastText  = document.getElementById("bulkToastText");
 
+let currentTab = "fields"; // "fields" | "csv"
+let uploadedCsvFile = null; // { name, size, rows }
+
 function openBulkModal() {
   bulkModalCount.textContent = selectedIds.size;
   bulkApplyCount.textContent = selectedIds.size;
   // Reset campos
   document.querySelectorAll(".bulk-field-group").forEach(g => g.classList.remove("is-active"));
   document.querySelectorAll(".bulk-field-check").forEach(c => c.checked = false);
+  // Reset tab para fields
+  switchTab("fields");
+  // Reset CSV
+  uploadedCsvFile = null;
+  renderCsvDropzone();
   updateBulkActiveCount();
   bulkModal.classList.add("is-open");
 }
@@ -1661,6 +2048,22 @@ bulkModal.addEventListener("click", (e) => {
   if (e.target === bulkModal) closeBulkModal();
 });
 
+/* ============ TABS ============ */
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll(".bulk-tab").forEach(b => {
+    b.classList.toggle("is-active", b.dataset.tab === name);
+  });
+  document.querySelectorAll(".bulk-tab-pane").forEach(p => {
+    p.classList.toggle("is-active", p.dataset.pane === name);
+  });
+  updateBulkActiveCount();
+}
+document.querySelectorAll(".bulk-tab").forEach(btn => {
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+});
+
+/* ============ TAB: EDITAR CAMPOS ============ */
 document.querySelectorAll(".bulk-field-check").forEach(cb => {
   cb.addEventListener("change", () => {
     cb.closest(".bulk-field-group").classList.toggle("is-active", cb.checked);
@@ -1668,28 +2071,188 @@ document.querySelectorAll(".bulk-field-check").forEach(cb => {
   });
 });
 
+/* ============ TAB: UPLOAD CSV ============ */
+const csvDropzone   = document.getElementById("csvDropzone");
+const csvFileInput  = document.getElementById("csvFileInput");
+const downloadTplBtn = document.getElementById("downloadTemplateBtn");
+
+csvDropzone.addEventListener("click", () => {
+  if (!uploadedCsvFile) csvFileInput.click();
+});
+csvFileInput.addEventListener("change", (e) => {
+  if (e.target.files && e.target.files[0]) handleCsvFile(e.target.files[0]);
+});
+["dragenter", "dragover"].forEach(evt => {
+  csvDropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    csvDropzone.classList.add("is-dragover");
+  });
+});
+["dragleave", "drop"].forEach(evt => {
+  csvDropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    csvDropzone.classList.remove("is-dragover");
+  });
+});
+csvDropzone.addEventListener("drop", (e) => {
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (file) handleCsvFile(file);
+});
+
+function handleCsvFile(file) {
+  if (!file.name.toLowerCase().endsWith(".csv")) {
+    alert("Por favor, envie um arquivo .csv");
+    return;
+  }
+  // Parse simples — apenas para mostrar preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const rows = lines.slice(1); // exclui header
+    uploadedCsvFile = {
+      name: file.name,
+      size: file.size,
+      rowCount: rows.length,
+      header: lines[0] ? lines[0].split(",").map(h => h.trim()) : [],
+      preview: rows.slice(0, 3).map(l => l.split(",").map(c => c.trim())),
+    };
+    renderCsvDropzone();
+    updateBulkActiveCount();
+  };
+  reader.readAsText(file);
+}
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function renderCsvDropzone() {
+  // limpa o preview anterior
+  const existingPrev = document.querySelector(".csv-preview");
+  if (existingPrev) existingPrev.remove();
+
+  if (!uploadedCsvFile) {
+    csvDropzone.classList.remove("has-file");
+    csvDropzone.innerHTML = `
+      <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden />
+      <div class="csv-drop-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="csv-drop-title">Arraste sua planilha aqui</div>
+      <div class="csv-drop-hint">ou <strong>clique para selecionar</strong> · Aceita .csv até 5 MB</div>
+    `;
+    // re-bind input (foi recriado)
+    const newInput = document.getElementById("csvFileInput");
+    newInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) handleCsvFile(e.target.files[0]);
+    });
+  } else {
+    csvDropzone.classList.add("has-file");
+    csvDropzone.innerHTML = `
+      <div class="csv-file-row">
+        <div class="csv-file-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="csv-file-info">
+          <div class="csv-file-name">${uploadedCsvFile.name}</div>
+          <div class="csv-file-meta">${fmtSize(uploadedCsvFile.size)} · <strong>${uploadedCsvFile.rowCount}</strong> linha${uploadedCsvFile.rowCount === 1 ? '' : 's'} para atualizar</div>
+        </div>
+        <button class="csv-file-remove" type="button" id="csvRemoveBtn" aria-label="Remover arquivo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    `;
+    document.getElementById("csvRemoveBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      uploadedCsvFile = null;
+      renderCsvDropzone();
+      updateBulkActiveCount();
+    });
+
+    // Preview da tabela (até 3 linhas)
+    if (uploadedCsvFile.header.length) {
+      const preview = document.createElement("div");
+      preview.className = "csv-preview";
+      preview.innerHTML = `
+        <div class="csv-preview-head">
+          <span>Preview</span>
+          <span class="csv-preview-badge">${uploadedCsvFile.rowCount} linha${uploadedCsvFile.rowCount === 1 ? '' : 's'}</span>
+        </div>
+        <table class="csv-preview-table">
+          <thead><tr>${uploadedCsvFile.header.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>${uploadedCsvFile.preview.map(row => `<tr>${row.map(c => `<td>${c || '<span style="color:var(--text-3)">—</span>'}</td>`).join("")}</tr>`).join("")}</tbody>
+        </table>
+      `;
+      csvDropzone.insertAdjacentElement("afterend", preview);
+    }
+  }
+}
+
+downloadTplBtn.addEventListener("click", () => {
+  const header = "Protocolo,Embalagem,Frete,Planta,Vigencia_Fim,Observacao";
+  const samples = [
+    "M9W38746,Saco 50kg,CIF,Limeira,31/08/2026,Atualizado em lote",
+    "M9W47291,Granel,FOB,Paranaguá,,",
+    "M9W51038,,,Cubatão,30/09/2026,Estende prazo de entrega",
+  ];
+  const csv = "﻿" + [header, ...samples].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "template-edicao-em-massa.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ============ Footer count/apply ============ */
 function updateBulkActiveCount() {
-  const active = document.querySelectorAll(".bulk-field-check:checked").length;
-  bulkActive.textContent = active;
-  bulkApply.disabled = active === 0;
+  if (currentTab === "fields") {
+    const active = document.querySelectorAll(".bulk-field-check:checked").length;
+    bulkActive.textContent = active;
+    document.getElementById("bulkFootInfo").innerHTML =
+      `<strong>${active}</strong> de 5 campos selecionados`;
+    bulkApplyCount.textContent = selectedIds.size;
+    document.getElementById("bulkApplyLabel").innerHTML =
+      `Aplicar a <span id="bulkApplyCount">${selectedIds.size}</span> protocolos`;
+    bulkApply.disabled = active === 0 || selectedIds.size === 0;
+  } else {
+    const n = uploadedCsvFile ? uploadedCsvFile.rowCount : 0;
+    document.getElementById("bulkFootInfo").innerHTML = uploadedCsvFile
+      ? `<strong>${n}</strong> linha${n === 1 ? '' : 's'} prontas para aplicar`
+      : `Aguardando upload de planilha CSV`;
+    document.getElementById("bulkApplyLabel").innerHTML =
+      `Aplicar <span>${n}</span> alterações`;
+    bulkApply.disabled = !uploadedCsvFile;
+  }
 }
 
 bulkApply.addEventListener("click", () => {
-  const n = selectedIds.size;
-  const active = document.querySelectorAll(".bulk-field-check:checked").length;
-  closeBulkModal();
-  bulkToastText.textContent =
-    `${active} campo${active === 1 ? "" : "s"} alterado${active === 1 ? "" : "s"} em ${n} protocolo${n === 1 ? "" : "s"}`;
-  bulkToast.classList.add("is-visible");
-  setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
+  if (currentTab === "fields") {
+    const n = selectedIds.size;
+    const active = document.querySelectorAll(".bulk-field-check:checked").length;
+    closeBulkModal();
+    bulkToastText.textContent =
+      `${active} campo${active === 1 ? "" : "s"} alterado${active === 1 ? "" : "s"} em ${n} protocolo${n === 1 ? "" : "s"}`;
+    bulkToast.classList.add("is-visible");
+    setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
 
-  // Limpa seleção após aplicar (igual Gmail/Salesforce)
-  Array.from(selectedIds).forEach(id => {
-    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
-    if (cb) cb.checked = false;
-  });
-  selectedIds.clear();
-  updateBulkBar();
+    // Limpa seleção após aplicar
+    Array.from(selectedIds).forEach(id => {
+      const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
+      if (cb) cb.checked = false;
+    });
+    selectedIds.clear();
+    updateBulkBar();
+  } else {
+    const n = uploadedCsvFile.rowCount;
+    closeBulkModal();
+    bulkToastText.textContent =
+      `${n} protocolo${n === 1 ? "" : "s"} atualizado${n === 1 ? "" : "s"} via planilha`;
+    bulkToast.classList.add("is-visible");
+    setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
+  }
 });
 
 /* Esc fecha modal */

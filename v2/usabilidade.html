@@ -310,6 +310,33 @@
   }
   .ux-item-gain .ux-item-section-label { color: var(--mosaic-green-800); }
   .ux-item-gain .ux-item-section-text { color: var(--text-1); font-weight: 500; }
+  .ux-gain-list {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ux-gain-list li {
+    position: relative;
+    padding-left: 18px;
+    line-height: 1.5;
+    font-size: 13px;
+    color: var(--text-1);
+  }
+  .ux-gain-list li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+  }
+  .ux-gain-list strong {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+  }
   .ux-item-refs {
     display: flex;
     flex-wrap: wrap;
@@ -358,7 +385,7 @@
     justify-content: center;
     position: relative;
     overflow: hidden;
-    min-height: 320px;
+    min-height: 360px;
   }
   @media (max-width: 880px) {
     .ux-demo { border-left: none; border-top: 1px solid var(--border-soft); }
@@ -399,8 +426,9 @@
     border: 1px solid var(--border-soft);
     border-radius: 6px;
     padding: 12px;
-    height: 220px;
+    height: 280px;
     position: relative;
+    overflow: hidden;
   }
   .demo-page-bg-line {
     height: 8px;
@@ -1077,7 +1105,13 @@
           </div>
           <div class="ux-item-gain">
             <div class="ux-item-section-label">Ganho de UX</div>
-            <div class="ux-item-section-text">Menos carga cognitiva — o operador nunca perde o contexto da tarefa. Header e ações ficam sempre visíveis.</div>
+            <div class="ux-item-section-text">
+              <ul class="ux-gain-list">
+                <li><strong>Contexto preservado</strong> — o operador continua vendo a tela de fundo enquanto interage com o drawer. Sem precisar decorar.</li>
+                <li><strong>Ações sempre fixas no rodapé</strong> — botões primário/secundário ficam ancorados na barra inferior mesmo com scroll vertical interno. Ideal para drawers com conteúdo longo, onde o usuário não precisa rolar até o fim para confirmar.</li>
+                <li><strong>Organização hierárquica do conteúdo</strong> — header (título + close), body (conteúdo rolável) e footer (ações) são camadas visualmente separadas, criando ritmo de leitura previsível.</li>
+              </ul>
+            </div>
           </div>
           <div class="ux-item-refs">
             <span class="ux-ref-chip">Gmail compose</span>
