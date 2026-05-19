@@ -10,6 +10,109 @@
 <link rel="stylesheet" href="base.css" />
 <style>
   /* ============================================================
+     RESET — body limpo (sem header/footer Mosaic)
+     ============================================================ */
+  body {
+    display: block !important;
+    background: #fafaf8;
+  }
+
+  /* ============================================================
+     UX TOP BAR — minimal (substitui o header Mosaic)
+     ============================================================ */
+  .ux-topbar {
+    background: #15201b;
+    color: #fff;
+    padding: 12px 0;
+    border-bottom: 1px solid #003e2a;
+  }
+  .ux-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .ux-topbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.85);
+  }
+  .ux-topbar-brand-tag {
+    background: #7ad9b5;
+    color: #003e2a;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .ux-topbar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all var(--ease-fast);
+  }
+  .ux-topbar-back:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-color: rgba(255,255,255,0.35);
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     UX FOOTER — minimal
+     ============================================================ */
+  .ux-footer {
+    background: #15201b;
+    color: rgba(255,255,255,0.65);
+    padding: 28px 0;
+    border-top: 1px solid #003e2a;
+    margin-top: 0;
+  }
+  .ux-footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .ux-footer-brand {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+  }
+  .ux-footer-brand strong {
+    color: #fff;
+    font-weight: 800;
+  }
+  .ux-footer-links {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+  .ux-footer-links a {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color var(--ease-fast);
+  }
+  .ux-footer-links a:hover { color: #fff; text-decoration: none; }
+
+  /* ============================================================
      HERO
      ============================================================ */
   .ux-hero {
@@ -904,69 +1007,28 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="mosaic-header">
-  <div class="mosaic-header-top">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="mosaic-search">
-      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
-      <span class="search-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+<!-- UX TOP BAR (minimal — esta é uma página de UX, não do portal) -->
+<div class="ux-topbar">
+  <div class="container container-main">
+    <div class="ux-topbar-inner">
+      <span class="ux-topbar-brand">
+        <span class="ux-topbar-brand-tag">UX</span>
+        Mosaic Direct 2.0 · Documentação de usabilidade
       </span>
-    </div>
-    <div class="mosaic-user-cluster">
-      <button class="lang-switch" type="button">
-        PT
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="mosaic-user-info">
-        <span class="user-name">Alyssa Harris</span>
-        <span class="user-org">MAR JAC POULT...</span>
-      </div>
-      <button class="icon-btn" aria-label="Trocar empresa" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Carrinho" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </button>
+      <a href="index.html" class="ux-topbar-back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Voltar ao Hub
+      </a>
     </div>
   </div>
-  <nav class="mosaic-nav" aria-label="Principal">
-    <div class="mosaic-nav-inner">
-      <a href="index.html" class="nav-item">Home</a>
-      <a href="#" class="nav-item">Produtos</a>
-      <a href="#" class="nav-item">Cotações</a>
-      <span class="nav-item" tabindex="0">
-        Contratos<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="criar-protocolo.html">Criar Protocolo</a>
-          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
-        </div>
-      </span>
-      <span class="nav-item" tabindex="0">
-        Agendamento<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
-          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
-        </div>
-      </span>
-      <a href="#" class="nav-item">Faturamento</a>
-      <a href="#" class="nav-item">Documentos</a>
-      <a href="#" class="nav-item">Financeiro</a>
-      <a href="#" class="nav-item">Suporte</a>
-    </div>
-  </nav>
-</header>
+</div>
 
 <!-- HERO -->
 <section class="ux-hero">
   <div class="container container-main">
     <div class="ux-hero-inner">
       <div class="ux-hero-eyebrow">Mosaic Direct 2.0 · Usabilidade</div>
-      <h1 class="ux-hero-title">12 pontos de usabilidade<br/>implementados nos protótipos</h1>
+      <h1 class="ux-hero-title">9 pontos de usabilidade<br/>implementados nos protótipos</h1>
       <p class="ux-hero-lede">
         Componentes e decisões de UX aplicados no portal Mosaic Direct 2.0,
         com a defesa de ganho de cada um e referência onde aparece nas telas.
@@ -993,9 +1055,6 @@
       <a class="ux-toc-link" href="#item-7"><span class="ux-toc-num">07</span>Status borda</a>
       <a class="ux-toc-link" href="#item-8"><span class="ux-toc-num">08</span>Filtros</a>
       <a class="ux-toc-link" href="#item-9"><span class="ux-toc-num">09</span>Autocomplete</a>
-      <a class="ux-toc-link" href="#item-10"><span class="ux-toc-num">10</span>Mixed-case</a>
-      <a class="ux-toc-link" href="#item-11"><span class="ux-toc-num">11</span>Breadcrumb</a>
-      <a class="ux-toc-link" href="#item-12"><span class="ux-toc-num">12</span>Chevron</a>
     </div>
   </div>
 </div>
@@ -1028,7 +1087,6 @@
           <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
           <div class="demo-drawer-wrap" style="width:100%; max-width:360px;">
             <div class="demo-page-bg">
               <div class="demo-page-bg-line w-80"></div>
@@ -1078,7 +1136,6 @@
           <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
           <div class="demo-table-wrap" style="width:100%; max-width:380px;">
             <table class="demo-table">
               <thead><tr><th>Protocolo</th><th>Contrato</th><th>Volume</th></tr></thead>
@@ -1116,7 +1173,6 @@
           <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente · arraste →</span>
           <div class="demo-sticky-wrap" style="width:100%; max-width:380px;">
             <div class="demo-sticky-scroll">
               <table class="demo-sticky-table">
@@ -1159,7 +1215,6 @@
           <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Antes vs Depois</span>
           <div style="width:100%; max-width:420px;">
             <div class="demo-mc-label bad">Antes — 4 colunas</div>
             <div class="demo-compare-box" style="margin-bottom:14px;">
@@ -1212,7 +1267,6 @@
           <a href="agendar-protocolo.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
           <div class="demo-actionbar-wrap" style="width:100%; max-width:360px;">
             <div class="demo-actionbar-page">
               <div class="demo-page-bg-line w-80"></div>
@@ -1254,7 +1308,6 @@
           <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente · ao vivo</span>
           <div class="demo-hint-wrap">
             <div class="demo-hint-empty">Comece selecionando um contrato</div>
             <button class="demo-pulse-btn">+ Adicionar contrato</button>
@@ -1283,7 +1336,6 @@
           <a href="criar-protocolo.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
           <div class="demo-status-list" style="width:100%; max-width:340px;">
             <div class="demo-status-card incomplete">
               <span class="demo-status-name">Contrato 4521</span>
@@ -1326,7 +1378,6 @@
           <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente · clique</span>
           <div class="demo-filter-bar" id="demoFilterBar" style="width:100%; max-width:340px;">
             <div class="demo-filter-head" onclick="document.getElementById('demoFilterBar').classList.toggle('open')">
               <span class="demo-filter-title">Filtros avançados</span>
@@ -1365,7 +1416,6 @@
           <a href="criar-protocolo.html" class="ux-item-link">Ver na tela →</a>
         </div>
         <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
           <div class="demo-autocomplete" style="width:100%; max-width:340px;">
             <input class="demo-autocomplete-input" value="coop" readonly />
             <div class="demo-autocomplete-list">
@@ -1381,125 +1431,6 @@
                 <span><mark>Coop</mark>er Cuiabá</span>
                 <span class="demo-autocomplete-item-meta">14.528</span>
               </div>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- ITEM 10 — MIXED CASE -->
-      <article class="ux-item" id="item-10">
-        <div class="ux-item-body">
-          <div class="ux-item-number">10</div>
-          <h2 class="ux-item-title">Cabeçalhos em mixed-case (Title Case)</h2>
-          <span class="ux-item-component">font-weight: 600 · sem text-transform</span>
-          <div class="ux-item-section">
-            <div class="ux-item-section-label">Problema</div>
-            <div class="ux-item-section-text">UPPERCASE reduz a legibilidade em ~13%. Em tabelas com muitas colunas, aumenta o esforço cognitivo.</div>
-          </div>
-          <div class="ux-item-gain">
-            <div class="ux-item-section-label">Ganho de UX</div>
-            <div class="ux-item-section-text">Leitura mais natural e rápida. Visual refinado, consistente com SAP Fiori e Salesforce Lightning.</div>
-          </div>
-          <div class="ux-item-refs">
-            <span class="ux-ref-chip">SAP Fiori</span>
-            <span class="ux-ref-chip">Bringhurst</span>
-          </div>
-          <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
-        </div>
-        <div class="ux-demo">
-          <span class="ux-demo-label">Antes vs Depois</span>
-          <div style="width:100%; max-width:380px;">
-            <div class="demo-mc-label bad">Antes — UPPERCASE</div>
-            <table class="demo-mc-table before" style="margin-bottom:14px;">
-              <thead><tr><th>PROTOCOLO</th><th>STATUS</th><th>VOLUME</th></tr></thead>
-              <tbody>
-                <tr><td>PRT-001</td><td>Liberado</td><td>120 t</td></tr>
-                <tr><td>PRT-002</td><td>Novo</td><td>80 t</td></tr>
-              </tbody>
-            </table>
-            <div class="demo-mc-label good">Depois — Mixed-case</div>
-            <table class="demo-mc-table after">
-              <thead><tr><th>Protocolo</th><th>Status</th><th>Volume</th></tr></thead>
-              <tbody>
-                <tr><td>PRT-001</td><td>Liberado</td><td>120 t</td></tr>
-                <tr><td>PRT-002</td><td>Novo</td><td>80 t</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </article>
-
-      <!-- ITEM 11 — BREADCRUMB -->
-      <article class="ux-item" id="item-11">
-        <div class="ux-item-body">
-          <div class="ux-item-number">11</div>
-          <h2 class="ux-item-title">Breadcrumb de orientação hierárquica</h2>
-          <span class="ux-item-component">.page-breadcrumb · separador ›</span>
-          <div class="ux-item-section">
-            <div class="ux-item-section-label">Problema</div>
-            <div class="ux-item-section-text">Operadores que chegam via bookmark ou email não sabiam onde estavam na hierarquia.</div>
-          </div>
-          <div class="ux-item-gain">
-            <div class="ux-item-section-label">Ganho de UX</div>
-            <div class="ux-item-section-text">Orientação espacial imediata. Volta ao nível pai sem usar Voltar do browser. Reduz desorientação.</div>
-          </div>
-          <div class="ux-item-refs">
-            <span class="ux-ref-chip">Nielsen Heuristic #1</span>
-            <span class="ux-ref-chip">WCAG 2.4.8</span>
-          </div>
-          <a href="agendar-protocolo.html" class="ux-item-link">Ver na tela →</a>
-        </div>
-        <div class="ux-demo">
-          <span class="ux-demo-label">Componente</span>
-          <div style="width:100%; max-width:380px;">
-            <div class="demo-breadcrumb">
-              <a href="#">Home</a>
-              <span class="demo-breadcrumb-sep">›</span>
-              <a href="#">Contratos</a>
-              <span class="demo-breadcrumb-sep">›</span>
-              <a href="#">Protocolos</a>
-              <span class="demo-breadcrumb-sep">›</span>
-              <span class="demo-breadcrumb-current">Criar Protocolo</span>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <!-- ITEM 12 — CHEVRON -->
-      <article class="ux-item" id="item-12">
-        <div class="ux-item-body">
-          <div class="ux-item-number">12</div>
-          <h2 class="ux-item-title">Chevron apenas em itens com submenu</h2>
-          <span class="ux-item-component">CSS :has() · affordance condicional</span>
-          <div class="ux-item-section">
-            <div class="ux-item-section-label">Problema</div>
-            <div class="ux-item-section-text">Itens sem submenu exibiam chevron ▼, criando falsa expectativa de menu expansível. Ao clicar, nada acontecia.</div>
-          </div>
-          <div class="ux-item-gain">
-            <div class="ux-item-section-label">Ganho de UX</div>
-            <div class="ux-item-section-text">Affordance precisa — chevron só aparece onde há algo a expandir. Elimina cliques frustrados.</div>
-          </div>
-          <div class="ux-item-refs">
-            <span class="ux-ref-chip">Nielsen Heuristic #4</span>
-            <span class="ux-ref-chip">Apple HIG</span>
-          </div>
-        </div>
-        <div class="ux-demo">
-          <span class="ux-demo-label">Antes vs Depois</span>
-          <div style="width:100%; max-width:380px;">
-            <div class="demo-nav-row">
-              <div class="demo-nav-row-label bad">Antes — chevron em todo lado</div>
-              <span class="demo-nav-item demo-nav-chev">Home</span>
-              <span class="demo-nav-item has-menu demo-nav-chev">Contratos</span>
-              <span class="demo-nav-item demo-nav-chev">Produtos</span>
-              <span class="demo-nav-item demo-nav-chev">Documentos</span>
-            </div>
-            <div class="demo-nav-row">
-              <div class="demo-nav-row-label good">Depois — só onde tem submenu</div>
-              <span class="demo-nav-item">Home</span>
-              <span class="demo-nav-item has-menu demo-nav-chev">Contratos</span>
-              <span class="demo-nav-item">Produtos</span>
-              <span class="demo-nav-item">Documentos</span>
             </div>
           </div>
         </div>
@@ -1550,22 +1481,18 @@
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer class="mosaic-footer">
-  <div class="mosaic-footer-inner">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="footer-links">
-      <a href="index.html">Hub</a>
-      <a href="agendar-contrato-normal.html">Agendar Contratos</a>
-      <a href="criar-protocolo.html">Criar Protocolo</a>
-      <a href="agendar-protocolo.html">Agendar Protocolo</a>
-      <a href="relatorio-status-agendamento.html">Status Agendamento</a>
-      <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+<!-- UX FOOTER (minimal) -->
+<footer class="ux-footer">
+  <div class="container container-main">
+    <div class="ux-footer-inner">
+      <div class="ux-footer-brand">
+        <strong>Mosaic Direct 2.0</strong> · Documentação de usabilidade · KRON · 2026
+      </div>
+      <div class="ux-footer-links">
+        <a href="index.html">Hub de telas</a>
+        <a href="#top">Topo da página ↑</a>
+      </div>
     </div>
-    <div class="footer-copyright">Copyright © 2026 Mosaic · KRON</div>
   </div>
 </footer>
 
