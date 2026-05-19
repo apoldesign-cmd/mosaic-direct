@@ -892,12 +892,17 @@ button.btn-secondary,
   scrollbar-width: auto;
   scrollbar-color: var(--mosaic-green-700) #e9efee;
 }
-/* WebKit / Blink (Chrome, Safari, Edge) */
+/* WebKit / Blink (Chrome, Safari, Edge)
+   -webkit-appearance: none forca o navegador a abandonar o overlay
+   scrollbar nativo do macOS (que esconde automaticamente) e desenhar
+   a barra estilizada o tempo todo. */
 .wide-table-wrap::-webkit-scrollbar,
 .report-table-wrap::-webkit-scrollbar,
 .results-table-wrap::-webkit-scrollbar,
 .v3-table-wrap::-webkit-scrollbar,
 .proto-table-wrap::-webkit-scrollbar {
+  -webkit-appearance: none;
+  appearance: none;
   height: 14px;
   width: 14px;
   background: #e9efee;
@@ -928,14 +933,14 @@ button.btn-secondary,
 .proto-table-wrap::-webkit-scrollbar-thumb:hover {
   background: var(--mosaic-green-800);
 }
-/* Garante overflow horizontal funcional + scroll vertical livre nos
-   wraps de tabelas largas. Cantos arredondados continuam via thead.
-   Importante: precisa de !important para vencer o "overflow: hidden
-   !important" da regra de border-radius mais acima (linhas 864-870). */
+/* Scroll horizontal SEMPRE VISIVEL nos wraps de tabelas largas
+   (overflow-x: scroll garante a barra mesmo quando nao tem overflow
+   ativo, oferecendo affordance de "essa tabela rola"). Vence o
+   "overflow: hidden !important" da regra de border-radius mais acima. */
 .wide-table-wrap,
 .results-table-wrap,
 .report-table-wrap {
-  overflow-x: auto !important;
+  overflow-x: scroll !important;
   overflow-y: visible !important;
 }
 
