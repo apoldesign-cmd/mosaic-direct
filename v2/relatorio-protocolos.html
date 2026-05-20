@@ -130,6 +130,41 @@
     color: var(--mosaic-green-700);
     background: rgba(0,106,77,0.06);
   }
+  /* Cluster de 2 acoes lado a lado dentro de col-action */
+  .action-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+  }
+  .cell-action.action-edit {
+    border-color: var(--border);
+    color: var(--text-2);
+  }
+  .cell-action.action-edit:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+  }
+  .cell-action.action-save {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+  }
+  .cell-action.action-save:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    border-color: var(--mosaic-green-700);
+  }
+  .cell-action.action-cancel {
+    border-color: var(--border);
+    color: var(--mosaic-red);
+  }
+  .cell-action.action-cancel:hover {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
   /* "Agendar protocolo" action button — only on rows with saldo > 0 */
   .action-agendar {
     border-color: var(--mosaic-green-700);
@@ -142,6 +177,144 @@
     border-color: var(--mosaic-green-700);
     transform: scale(1.08);
   }
+
+  /* ================================================================
+     Inline edit — linha em modo edicao
+     ================================================================ */
+  .wide-table tbody tr.is-editing td,
+  .wide-table tbody tr.is-editing td.col-check,
+  .wide-table tbody tr.is-editing td.col-action,
+  .wide-table tbody tr.is-editing td.col-proto {
+    background: #fffbed !important; /* amarelo bem sutil */
+  }
+  .wide-table tbody tr.is-editing td.col-proto {
+    box-shadow: 4px 0 8px -4px rgba(240,192,32,0.40);
+  }
+  .inline-edit {
+    width: 100%;
+    min-width: 90px;
+    padding: 5px 8px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text-1);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .inline-edit:hover { border-color: var(--border-strong); }
+  .inline-edit:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 2px rgba(0,106,77,0.15);
+  }
+  .inline-edit.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  select.inline-edit {
+    padding-right: 24px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
+
+  /* ================================================================
+     Confirmation modal (descartar alteracoes)
+     ================================================================ */
+  .confirm-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open {
+    display: flex;
+    opacity: 1;
+  }
+  .confirm-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 24px 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open .confirm-modal { transform: scale(1); }
+  .confirm-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .confirm-modal-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(213,107,26,0.12);
+    color: var(--mosaic-orange);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .confirm-modal h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .confirm-modal-text {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .confirm-modal-text strong {
+    color: var(--text-1);
+    font-weight: 700;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .confirm-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .confirm-btn {
+    height: 36px; padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast), border-color var(--ease-fast);
+  }
+  .confirm-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .confirm-btn-secondary:hover { background: var(--bg-section); }
+  .confirm-btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+  }
+  .confirm-btn-danger:hover { background: #8a1820; }
   /* Tooltip on the action button */
   .cell-action-wrap {
     position: relative;
@@ -187,15 +360,15 @@
     z-index: 4;
     background: var(--bg-section) !important;
   }
-  /* Column 1: action icon (52px) */
+  /* Column 1: action cluster (2 icones lado a lado, ~84px) */
   .wide-table th.col-action,
   .wide-table td.col-action {
     position: sticky;
     left: 44px;
     z-index: 3;
-    width: 52px;
-    min-width: 52px;
-    max-width: 52px;
+    width: 88px;
+    min-width: 88px;
+    max-width: 88px;
     padding: 8px 8px !important;
     text-align: center;
     background: #fff;
@@ -208,7 +381,7 @@
   .wide-table th.col-proto,
   .wide-table td.col-proto {
     position: sticky;
-    left: 96px;
+    left: 132px;
     z-index: 3;
     background: #fff;
     box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
@@ -1583,6 +1756,29 @@
   </aside>
 </div>
 
+<!-- CONFIRM DISCARD MODAL -->
+<div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="confirm-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <h3>Descartar alterações?</h3>
+    </div>
+    <p class="confirm-modal-text">
+      Você está prestes a descartar as alterações feitas no protocolo
+      <strong id="confirmDiscardProto">—</strong>. Essa ação não pode ser desfeita.
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-btn confirm-btn-secondary" id="confirmDiscardNo" type="button">Voltar a editar</button>
+      <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="bulk-toast" id="bulkToast">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1765,34 +1961,43 @@ function numCell(v, highlight) {
 }
 
 /* ================================================================
-   Action cell — botão de "Agendar protocolo" só aparece em linhas
-   com saldo > 0 e status que permitam agendamento.
+   Edição inline — estado
    ================================================================ */
+let editingId = null;       // id do protocolo em edição (apenas 1 por vez)
+let editingSnapshot = null; // backup dos campos pra restaurar no cancelar
+
 const STATUS_PODE_AGENDAR = new Set([
   "Novo",
   "Liberado para agendar",
   "Em agendamento",
 ]);
 
+const SVG_EDIT   = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CHECK  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const SVG_X      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const SVG_CAL    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>`;
+
 function actionCell(p) {
+  const isEditing = editingId === p.id;
+
+  if (isEditing) {
+    return `
+      <div class="action-cluster">
+        <button class="cell-action action-save" data-act="save" data-id="${p.id}" type="button" title="Salvar alterações" aria-label="Salvar">${SVG_CHECK}</button>
+        <button class="cell-action action-cancel" data-act="cancel" data-id="${p.id}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X}</button>
+      </div>`;
+  }
+
   const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
-  if (!podeAgendar) return "";
-  const url = `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
+  const urlAgendar = `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
+
   return `
-    <span class="cell-action-wrap" data-tooltip="Agendar este protocolo">
-      <a class="cell-action action-agendar"
-         href="${url}"
-         aria-label="Agendar protocolo ${p.id}">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-          <path d="M12 14v4"/>
-          <path d="M10 16h4"/>
-        </svg>
-      </a>
-    </span>`;
+    <div class="action-cluster">
+      <button class="cell-action action-edit" data-act="edit" data-id="${p.id}" type="button" title="Editar protocolo" aria-label="Editar">${SVG_EDIT}</button>
+      ${podeAgendar
+        ? `<a class="cell-action action-agendar" href="${urlAgendar}" title="Agendar este protocolo" aria-label="Agendar protocolo ${p.id}">${SVG_CAL}</a>`
+        : ``}
+    </div>`;
 }
 
 /* ================================================================
@@ -1874,13 +2079,38 @@ function render() {
     return;
   }
 
-  body.innerHTML = rows.map(p => `
+  body.innerHTML = rows.map(p => renderRow(p)).join("");
+}
+
+/* ================================================================
+   Render — escolhe entre linha normal ou linha em edicao
+   ================================================================ */
+const STATUS_OPTIONS    = ["Novo", "Liberado para agendar", "Em agendamento", "Concluído", "Cancelado", "Enviar ao SAP"];
+const UF_OPTIONS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
+const EMBALAGEM_OPTIONS = ["Saco 50kg","Saco 25kg","Big Bag 1000kg","Granel"];
+const FRETE_OPTIONS     = ["CIF","FOB"];
+const PLANTA_OPTIONS    = ["Limeira","Paranaguá","Cubatão","Rondonópolis","Uberaba","Candeias"];
+
+function selOptions(list, current) {
+  return list.map(o => `<option value="${o}"${o===current?' selected':''}>${o}</option>`).join("");
+}
+function escAttr(v) {
+  return String(v ?? "").replace(/"/g, "&quot;");
+}
+
+function renderRow(p) {
+  if (editingId === p.id) return renderRowEditing(p);
+  return renderRowNormal(p);
+}
+
+function renderRowNormal(p) {
+  return `
     <tr data-proto-id="${p.id}" class="${selectedIds.has(p.id) ? 'is-selected' : ''}">
       <td class="col-check">
         <input type="checkbox" class="check-mosaic row-check" data-id="${p.id}" ${selectedIds.has(p.id) ? 'checked' : ''} aria-label="Selecionar protocolo ${p.id}" />
       </td>
       <td class="col-action">${actionCell(p)}</td>
-      <td class="col-proto"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Editar protocolo ${p.id}">${p.id}</a></td>
+      <td class="col-proto"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></td>
       <td>${statusBadge(p.status)}</td>
       <td>${p.contrato}</td>
       <td>${p.cotacao}</td>
@@ -1905,7 +2135,42 @@ function render() {
       ${numCell(p.qtdFaturada, false)}
       ${numCell(p.qtdFaturar, false)}
     </tr>
-  `).join("");
+  `;
+}
+
+function renderRowEditing(p) {
+  // Campos calculados ficam read-only: saldo (qtdProto - qtdAgendada), qtdFaturar (qtdProto - qtdFaturada),
+  // qtdAgendada e qtdFaturada vêm de outros sistemas (operações), então também são read-only aqui.
+  return `
+    <tr data-proto-id="${p.id}" class="is-editing">
+      <td class="col-check"><input type="checkbox" class="check-mosaic" disabled aria-label="Bloqueado durante edição" /></td>
+      <td class="col-action">${actionCell(p)}</td>
+      <td class="col-proto"><span style="font-weight:700;color:var(--mosaic-green-800)">${p.id}</span></td>
+      <td><select class="inline-edit" data-f="status">${selOptions(STATUS_OPTIONS, p.status)}</select></td>
+      <td><input class="inline-edit" data-f="contrato"    value="${escAttr(p.contrato)}" /></td>
+      <td><input class="inline-edit" data-f="cotacao"     value="${escAttr(p.cotacao)}" /></td>
+      <td><input class="inline-edit" data-f="filial"      value="${escAttr(p.filial)}" /></td>
+      <td><input class="inline-edit" data-f="cnpjFilial"  value="${escAttr(p.cnpjFilial)}" /></td>
+      <td><input class="inline-edit" data-f="cidade"      value="${escAttr(p.cidade)}" /></td>
+      <td><select class="inline-edit" data-f="uf">${selOptions(UF_OPTIONS, p.uf)}</select></td>
+      <td><input class="inline-edit" data-f="cooperado"   value="${escAttr(p.cooperado)}" /></td>
+      <td><input class="inline-edit" data-f="cnpjCoop"    value="${escAttr(p.cnpjCoop)}" /></td>
+      <td><input class="inline-edit" data-f="ie"          value="${escAttr(p.ie)}" /></td>
+      <td><input class="inline-edit" data-f="produto"     value="${escAttr(p.produto)}" /></td>
+      <td><input class="inline-edit" data-f="descProduto" value="${escAttr(p.descProduto)}" /></td>
+      <td><select class="inline-edit" data-f="embalagem">${selOptions(EMBALAGEM_OPTIONS, p.embalagem)}</select></td>
+      <td><select class="inline-edit" data-f="frete">${selOptions(FRETE_OPTIONS, p.frete)}</select></td>
+      <td><select class="inline-edit" data-f="planta">${selOptions(PLANTA_OPTIONS, p.planta)}</select></td>
+      <td><input class="inline-edit" data-f="nf"          value="${escAttr(p.nf === '—' ? '' : p.nf)}" placeholder="—" /></td>
+      <td><input class="inline-edit" data-f="dataNf"      value="${escAttr(p.dataNf === '—' ? '' : p.dataNf)}" placeholder="dd/mm/aaaa" /></td>
+      <td><input class="inline-edit num" data-f="preco"   value="${escAttr(p.preco)}" /></td>
+      <td><input class="inline-edit num" data-f="qtdProtocolo" type="number" min="0" value="${p.qtdProtocolo}" /></td>
+      <td class="num muted">${p.qtdAgendada.toLocaleString("pt-BR")}</td>
+      <td class="num muted">${p.saldo.toLocaleString("pt-BR")}</td>
+      <td class="num muted">${p.qtdFaturada.toLocaleString("pt-BR")}</td>
+      <td class="num muted">${p.qtdFaturar.toLocaleString("pt-BR")}</td>
+    </tr>
+  `;
 }
 
 /* ================================================================
@@ -1982,12 +2247,136 @@ document.getElementById("btnExport").addEventListener("click", () => {
 });
 
 /* ================================================================
-   Eventos de seleção (delegação)
+   Eventos de seleção + edição inline (delegação)
    ================================================================ */
 document.getElementById("tableBody").addEventListener("change", (e) => {
   const cb = e.target;
   if (!cb.classList.contains("row-check")) return;
   toggleSelect(cb.dataset.id, cb.checked);
+});
+
+document.getElementById("tableBody").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const act = btn.dataset.act;
+  if (act === "edit")    startEdit(id);
+  if (act === "save")    saveEdit(id);
+  if (act === "cancel")  requestCancelEdit(id);
+});
+
+/* ================================================================
+   Edição inline — operações
+   ================================================================ */
+function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+function startEdit(id) {
+  // Se ja tem alguem em edicao, descarta silenciosamente (so 1 por vez)
+  if (editingId && editingId !== id) {
+    const cur = findProto(editingId);
+    if (cur && editingSnapshot) Object.assign(cur, editingSnapshot);
+  }
+  const p = findProto(id);
+  if (!p) return;
+  editingId = id;
+  editingSnapshot = { ...p }; // shallow copy pra restaurar no cancelar
+  render();
+  // Foca o primeiro input editavel
+  const firstInput = document.querySelector(`tr[data-proto-id="${id}"] .inline-edit`);
+  if (firstInput) firstInput.focus();
+}
+
+function readEditedValues(id) {
+  const tr = document.querySelector(`tr[data-proto-id="${id}"]`);
+  if (!tr) return null;
+  const updates = {};
+  tr.querySelectorAll(".inline-edit").forEach(el => {
+    const f = el.dataset.f;
+    if (!f) return;
+    let v = el.value;
+    if (el.type === "number") v = v === "" ? 0 : Number(v);
+    updates[f] = v;
+  });
+  return updates;
+}
+
+function saveEdit(id) {
+  const p = findProto(id);
+  if (!p) return;
+  const updates = readEditedValues(id);
+  if (!updates) return;
+  Object.assign(p, updates);
+  // Recalcula campos derivados de qtdProtocolo
+  if ("qtdProtocolo" in updates) {
+    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  }
+  editingId = null;
+  editingSnapshot = null;
+  render();
+  showBulkToast(`Protocolo ${id} atualizado`);
+}
+
+function showBulkToast(msg) {
+  const toast = document.getElementById("bulkToast");
+  document.getElementById("bulkToastText").textContent = msg;
+  toast.classList.add("is-visible");
+  setTimeout(() => toast.classList.remove("is-visible"), 3000);
+}
+
+/* ============== Modal de confirmação de cancelar ============== */
+function requestCancelEdit(id) {
+  if (!editingId) return;
+  // Verifica se algo foi alterado (dirty check)
+  const updates = readEditedValues(id);
+  const snap = editingSnapshot || {};
+  let dirty = false;
+  for (const k in updates) {
+    if (String(updates[k]) !== String(snap[k] ?? "")) { dirty = true; break; }
+  }
+  if (!dirty) {
+    discardEdit(id);
+    return;
+  }
+  // Mostra modal
+  const modal = document.getElementById("confirmDiscardModal");
+  document.getElementById("confirmDiscardProto").textContent = id;
+  modal.dataset.protoId = id;
+  modal.classList.add("is-open");
+}
+
+function discardEdit(id) {
+  const p = findProto(id);
+  if (p && editingSnapshot) Object.assign(p, editingSnapshot);
+  editingId = null;
+  editingSnapshot = null;
+  render();
+}
+
+const confirmModal     = document.getElementById("confirmDiscardModal");
+const confirmYes       = document.getElementById("confirmDiscardYes");
+const confirmNo        = document.getElementById("confirmDiscardNo");
+
+confirmYes.addEventListener("click", () => {
+  const id = confirmModal.dataset.protoId;
+  confirmModal.classList.remove("is-open");
+  discardEdit(id);
+});
+confirmNo.addEventListener("click", () => {
+  confirmModal.classList.remove("is-open");
+});
+confirmModal.addEventListener("click", (e) => {
+  if (e.target === confirmModal) confirmModal.classList.remove("is-open");
+});
+
+/* Esc cancela edição (com confirmação) ou fecha modal de confirm */
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (confirmModal.classList.contains("is-open")) {
+    confirmModal.classList.remove("is-open");
+    return;
+  }
+  if (editingId) requestCancelEdit(editingId);
 });
 
 document.getElementById("checkAll").addEventListener("change", (e) => {
