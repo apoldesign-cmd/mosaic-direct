@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Protocols · Mosaic SalesCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+/* ============================================================
+   Salesforce Lightning — design tokens
+   Cores oficiais aproximadas do SLDS (Lightning Design System)
+   ============================================================ */
+:root {
+  --slds-blue:        #0176d3;
+  --slds-blue-hover:  #014486;
+  --slds-blue-light:  #cfe9fe;
+  --slds-navy:        #032e61;
+  --slds-header-bg:   #16325c;
+  --slds-border:      #c9c9c9;
+  --slds-border-soft: #e5e5e5;
+  --slds-bg-page:     #f3f3f3;
+  --slds-bg-section:  #f3f2f2;
+  --slds-bg-hover:    #f3f3f3;
+  --slds-bg-selected: #ecebea;
+  --slds-text-1:      #080707;
+  --slds-text-2:      #3e3e3c;
+  --slds-text-3:      #706e6b;
+  --slds-success:     #2e844a;
+  --slds-warning:     #fe9339;
+  --slds-error:       #ea001e;
+  --slds-text-link:   #0176d3;
+  --slds-orange:      #ff9a3c; /* tag de protocolo */
+
+  /* Mosaic accent (sub-marca) */
+  --mosaic-green:     #00583d;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Salesforce Sans", "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  background: var(--slds-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select, textarea { font-family: inherit; }
+
+/* ============================================================
+   GLOBAL HEADER (Lightning style — navy bar)
+   ============================================================ */
+.slds-header {
+  background: var(--slds-header-bg);
+  color: #fff;
+  padding: 0 16px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+  z-index: 50;
+}
+.slds-app-launcher {
+  width: 32px; height: 32px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.slds-app-launcher:hover { background: rgba(255,255,255,0.15); }
+.slds-app-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 12px;
+}
+.slds-app-brand-cloud {
+  background: linear-gradient(135deg, #009ddc 0%, #00a1e0 100%);
+  color: #fff;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 9px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.02em;
+}
+.slds-app-brand-cloud::before {
+  content: "";
+  width: 12px; height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.slds-app-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.01em;
+}
+.slds-app-name-tag {
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #b5d0ff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.slds-search {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+.slds-search input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 36px;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  outline: none;
+}
+.slds-search input:focus {
+  background: #fff;
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 3px var(--slds-blue);
+}
+.slds-search-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slds-text-3);
+  pointer-events: none;
+}
+.slds-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.slds-icon-btn {
+  width: 32px; height: 32px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.slds-icon-btn:hover { background: rgba(255,255,255,0.10); }
+.slds-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #f4b400;
+  color: var(--slds-text-1);
+  font-weight: 700;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* ============================================================
+   APP NAVIGATION BAR (white, Lightning tabs)
+   ============================================================ */
+.slds-app-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 16px;
+  height: 40px;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 40;
+}
+.slds-app-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.slds-app-tab:hover { color: var(--slds-blue); background: var(--slds-bg-hover); }
+.slds-app-tab.is-active {
+  color: var(--slds-text-1);
+  border-bottom-color: var(--slds-blue);
+}
+.slds-app-tab-more {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  color: var(--slds-text-3);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+/* ============================================================
+   INTERNAL BANNER — Acesso restrito
+   ============================================================ */
+.access-banner {
+  background: #fff7e6;
+  border-bottom: 1px solid #ffd591;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: #874d00;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.access-banner-icon {
+  width: 18px; height: 18px;
+  background: #fa8c16;
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.access-banner strong { color: #874d00; font-weight: 700; }
+
+/* ============================================================
+   PAGE HEADER (object header with list view selector)
+   ============================================================ */
+.page-header {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 14px 24px 0;
+}
+.page-header-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.page-header-icon {
+  width: 36px; height: 36px;
+  background: var(--slds-orange);
+  border-radius: 6px;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.page-header-meta { flex: 1; min-width: 0; }
+.page-header-objname {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-weight: 500;
+  margin-bottom: 1px;
+}
+.page-header-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+.page-header-listview {
+  background: transparent;
+  border: none;
+  color: var(--slds-text-1);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.page-header-listview:hover { background: var(--slds-bg-hover); }
+.page-header-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.slds-btn {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  border-radius: 4px;
+  color: var(--slds-blue);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.slds-btn:hover { background: var(--slds-bg-hover); }
+.slds-btn-brand {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.slds-btn-brand:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
+.slds-btn-icon {
+  width: 32px; padding: 0;
+  color: var(--slds-text-3);
+}
+.slds-btn-icon:hover { color: var(--slds-blue); }
+.page-header-counts {
+  padding: 8px 0;
+  font-size: 12px;
+  color: var(--slds-text-3);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.page-header-counts .count-label {
+  color: var(--slds-text-2);
+  font-weight: 500;
+}
+.page-header-counts strong {
+  color: var(--slds-text-1);
+  font-weight: 700;
+}
+.page-header-counts .sep { color: var(--slds-border); }
+
+/* Quick filters row */
+.quick-filters {
+  padding: 0 0 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.qf-search {
+  position: relative;
+  flex: 0 0 280px;
+}
+.qf-search input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px 0 30px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12.5px;
+  outline: none;
+}
+.qf-search input:focus { border-color: var(--slds-blue); box-shadow: 0 0 3px var(--slds-blue); }
+.qf-search-icon {
+  position: absolute;
+  left: 9px; top: 50%; transform: translateY(-50%);
+  color: var(--slds-text-3);
+  pointer-events: none;
+}
+.qf-pill {
+  height: 28px;
+  padding: 0 10px;
+  border: 1px solid var(--slds-border);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--slds-text-1);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.qf-pill:hover { background: var(--slds-bg-hover); }
+.qf-pill.is-active {
+  background: var(--slds-blue-light);
+  border-color: var(--slds-blue);
+  color: var(--slds-blue-hover);
+}
+.qf-pill .qf-count {
+  background: rgba(0,0,0,0.08);
+  color: inherit;
+  font-weight: 700;
+  font-size: 10.5px;
+  padding: 1px 6px;
+  border-radius: 999px;
+}
+.qf-pill.is-active .qf-count { background: rgba(1,118,211,0.20); }
+
+/* ============================================================
+   TABLE — Lightning list view (inline edit)
+   ============================================================ */
+.list-table-wrap {
+  background: #fff;
+  border-top: 1px solid var(--slds-border-soft);
+  border-bottom: 1px solid var(--slds-border-soft);
+  overflow-x: auto;
+}
+.list-table {
+  width: 100%;
+  min-width: 1800px;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.list-table thead th {
+  background: #fafaf9;
+  border-bottom: 1px solid var(--slds-border);
+  padding: 8px 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--slds-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 3;
+}
+.list-table thead th.num { text-align: right; }
+.list-table thead th .sort-arrow {
+  margin-left: 4px;
+  color: var(--slds-text-3);
+  display: inline-block;
+  font-size: 8px;
+}
+.list-table tbody td {
+  padding: 0;
+  border-bottom: 1px solid var(--slds-border-soft);
+  height: 36px;
+  vertical-align: middle;
+  position: relative;
+}
+.list-table tbody td .cell-content {
+  padding: 8px 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  cursor: default;
+  min-height: 36px;
+}
+.list-table tbody td.editable .cell-content {
+  cursor: text;
+  padding-right: 32px;
+}
+.list-table tbody td.num .cell-content {
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+.list-table tbody tr:hover td { background: var(--slds-bg-hover); }
+.list-table tbody tr.is-row-selected td { background: var(--slds-bg-selected); }
+
+/* Cell content text */
+.cell-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--slds-text-1);
+}
+.cell-text a { color: var(--slds-blue); text-decoration: none; font-weight: 500; }
+.cell-text a:hover { text-decoration: underline; }
+
+/* Edit pencil (inline edit affordance) */
+.cell-pencil {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px; height: 20px;
+  border: none;
+  background: transparent;
+  color: var(--slds-text-3);
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}
+.list-table tbody td.editable:hover .cell-pencil { display: inline-flex; }
+.cell-pencil:hover { background: rgba(0,0,0,0.06); color: var(--slds-blue); }
+
+/* Cell in editing state */
+.list-table tbody td.cell-editing {
+  background: #fff !important;
+  box-shadow: inset 0 0 0 2px var(--slds-blue);
+}
+.list-table tbody td.cell-editing .cell-content {
+  padding: 0;
+}
+.list-table tbody td.cell-editing input,
+.list-table tbody td.cell-editing select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-family: inherit;
+  color: var(--slds-text-1);
+  background: transparent;
+}
+.list-table tbody td.cell-editing.num input { text-align: right; }
+.list-table tbody td.cell-editing select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 26px;
+}
+
+/* Modified cell indicator (laranja triangulo no canto sup esq) */
+.list-table tbody td.cell-modified::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 0; height: 0;
+  border-top: 8px solid var(--slds-warning);
+  border-right: 8px solid transparent;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Status badge */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  border: 1px solid;
+}
+.status-pill::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.status-pill.novo        { background: #e3fcef; color: #1c6b5a; border-color: #b5e7c8; }
+.status-pill.novo::before { background: #1c6b5a; }
+.status-pill.liberado    { background: #d8eee6; color: #1c6b5a; border-color: #a8d8c8; }
+.status-pill.liberado::before { background: #1c6b5a; }
+.status-pill.em_agendamento { background: #fdf3d2; color: #8a6500; border-color: #f5e1a0; }
+.status-pill.em_agendamento::before { background: #8a6500; }
+.status-pill.concluido   { background: #cce0d4; color: #003e2a; border-color: #88b9a0; }
+.status-pill.concluido::before { background: #003e2a; }
+.status-pill.cancelado   { background: #ececea; color: #555; border-color: #c8c8c6; }
+.status-pill.cancelado::before { background: #555; }
+.status-pill.enviar_sap  { background: #f4f4f2; color: #706e6b; border-color: var(--slds-border); }
+.status-pill.enviar_sap::before { background: #706e6b; }
+
+/* Checkbox column */
+.col-check {
+  width: 36px;
+  min-width: 36px;
+  text-align: center;
+  padding: 0 !important;
+}
+.col-check .cell-content {
+  justify-content: center;
+  padding: 0;
+}
+.slds-check {
+  width: 16px; height: 16px;
+  border: 1px solid #706e6b;
+  border-radius: 2px;
+  background: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 80ms;
+  margin: 0;
+}
+.slds-check:checked,
+.slds-check:indeterminate {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+}
+.slds-check:checked::after {
+  content: "";
+  width: 10px; height: 10px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round'><polyline points='20 6 9 17 4 12'/></svg>");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.slds-check:indeterminate::after {
+  content: "";
+  width: 8px; height: 2px;
+  background: #fff;
+}
+
+/* ============================================================
+   PENDING CHANGES BAR (bottom, when there are unsaved cells)
+   ============================================================ */
+.pending-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: #fff;
+  border-top: 1px solid var(--slds-border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 -4px 14px rgba(0,0,0,0.06);
+  z-index: 80;
+  transform: translateY(100%);
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+.pending-bar.is-visible { transform: translateY(0); }
+.pending-bar-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  margin-right: auto;
+}
+.pending-bar-status .pending-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--slds-warning);
+}
+.pending-bar-status strong {
+  color: var(--slds-text-1);
+  font-weight: 700;
+}
+.pending-bar-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* ============================================================
+   CONFIRMATION MODAL
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,7,7,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.is-open { display: flex; }
+.slds-modal {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+}
+.slds-modal-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: var(--slds-bg-section);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slds-modal-head h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  margin: 0;
+}
+.slds-modal-body {
+  padding: 20px;
+  font-size: 13px;
+  color: var(--slds-text-2);
+  line-height: 1.5;
+}
+.slds-modal-body strong { color: var(--slds-text-1); font-weight: 700; }
+.slds-modal-foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--slds-border-soft);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--slds-bg-section);
+}
+.slds-btn-destructive {
+  background: var(--slds-error);
+  border-color: var(--slds-error);
+  color: #fff;
+}
+.slds-btn-destructive:hover {
+  background: #c70015;
+  border-color: #c70015;
+}
+
+/* Toast */
+.slds-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--slds-success);
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 220;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+}
+.slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
+
+/* Container padding for scroll */
+.list-content { padding-bottom: 80px; }
+</style>
+</head>
+<body>
+
+<!-- =================================================================
+     SALESFORCE HEADER (navy)
+     ================================================================= -->
+<header class="slds-header" role="banner">
+  <button class="slds-app-launcher" type="button" aria-label="App Launcher" title="App Launcher">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
+      <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+      <circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+    </svg>
+  </button>
+  <div class="slds-app-brand">
+    <span class="slds-app-brand-cloud">Sales Cloud</span>
+    <span class="slds-app-name">Mosaic <span class="slds-app-name-tag">Internal</span></span>
+  </div>
+  <div class="slds-search">
+    <span class="slds-search-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input type="search" placeholder="Search Salesforce…" aria-label="Search" />
+  </div>
+  <div class="slds-header-actions">
+    <button class="slds-icon-btn" type="button" aria-label="Favorites" title="Favorites">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Setup" title="Setup">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Notifications" title="Notifications">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <button class="slds-avatar" type="button" aria-label="Account">AH</button>
+  </div>
+</header>
+
+<!-- =================================================================
+     APP NAVIGATION TABS
+     ================================================================= -->
+<nav class="slds-app-nav" role="navigation">
+  <a href="#" class="slds-app-tab">Home</a>
+  <a href="#" class="slds-app-tab">Accounts</a>
+  <a href="#" class="slds-app-tab">Contracts</a>
+  <a href="#" class="slds-app-tab">Opportunities</a>
+  <a href="#" class="slds-app-tab is-active">Protocols</a>
+  <a href="#" class="slds-app-tab">Schedulings</a>
+  <a href="#" class="slds-app-tab">Reports</a>
+  <a href="#" class="slds-app-tab">Dashboards</a>
+  <button class="slds-app-tab-more" type="button" aria-label="More">More ▾</button>
+</nav>
+
+<!-- =================================================================
+     INTERNAL ACCESS BANNER
+     ================================================================= -->
+<div class="access-banner" role="status">
+  <span class="access-banner-icon">
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+  </span>
+  <span>
+    <strong>Acesso restrito · Time Mosaic.</strong>
+    Esta tela é exclusiva da equipe interna Mosaic para manutenção de protocolos.
+    Não é visível para cooperados ou parceiros externos.
+  </span>
+</div>
+
+<!-- =================================================================
+     PAGE HEADER (object header)
+     ================================================================= -->
+<div class="page-header">
+  <div class="page-header-top">
+    <span class="page-header-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </span>
+    <div class="page-header-meta">
+      <div class="page-header-objname">Protocols</div>
+      <h1 class="page-header-title">
+        <button class="page-header-listview" type="button">
+          All Active Protocols
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </h1>
+    </div>
+    <div class="page-header-actions">
+      <button class="slds-btn slds-btn-icon" type="button" aria-label="List view controls" title="List view controls">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </button>
+      <button class="slds-btn slds-btn-icon" type="button" aria-label="Refresh" title="Refresh">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      </button>
+      <button class="slds-btn slds-btn-icon" type="button" aria-label="Edit list" title="Edit list">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </button>
+      <button class="slds-btn" type="button">Import</button>
+      <button class="slds-btn slds-btn-brand" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New
+      </button>
+    </div>
+  </div>
+
+  <div class="page-header-counts">
+    <span><strong id="totalCount">5</strong> items <span class="count-label">· Sorted by Protocol Number · Filtered by My Team · Updated a few seconds ago</span></span>
+  </div>
+
+  <div class="quick-filters">
+    <div class="qf-search">
+      <span class="qf-search-icon">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+      <input id="quickSearch" type="search" placeholder="Search this list…" />
+    </div>
+    <button class="qf-pill is-active" type="button" data-filter="all">All <span class="qf-count" id="cntAll">5</span></button>
+    <button class="qf-pill" type="button" data-filter="novo">Novo <span class="qf-count" id="cntNovo">0</span></button>
+    <button class="qf-pill" type="button" data-filter="liberado">Liberado <span class="qf-count" id="cntLib">0</span></button>
+    <button class="qf-pill" type="button" data-filter="em_agendamento">Em Agend. <span class="qf-count" id="cntAg">0</span></button>
+    <button class="qf-pill" type="button" data-filter="concluido">Concluído <span class="qf-count" id="cntConc">0</span></button>
+    <button class="qf-pill" type="button" data-filter="cancelado">Cancelado <span class="qf-count" id="cntCanc">0</span></button>
+  </div>
+</div>
+
+<!-- =================================================================
+     LIST TABLE
+     ================================================================= -->
+<div class="list-content">
+  <div class="list-table-wrap">
+    <table class="list-table" id="listTable">
+      <thead>
+        <tr>
+          <th class="col-check">
+            <input type="checkbox" class="slds-check" id="checkAll" aria-label="Select all" />
+          </th>
+          <th>Protocol <span class="sort-arrow">▾</span></th>
+          <th>Status</th>
+          <th>Contrato SAP</th>
+          <th>Cotação</th>
+          <th>Cliente · Filial</th>
+          <th>CPF/CNPJ</th>
+          <th>Cidade · UF</th>
+          <th>Cooperado</th>
+          <th>Produto</th>
+          <th>Embalagem</th>
+          <th>Frete</th>
+          <th>Planta</th>
+          <th class="num">Qtd Protocolo (t)</th>
+          <th class="num">Saldo (t)</th>
+          <th>Owner</th>
+          <th>Última Modificação</th>
+        </tr>
+      </thead>
+      <tbody id="listBody"><!-- rendered by JS --></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- =================================================================
+     PENDING CHANGES BAR (bottom)
+     ================================================================= -->
+<div class="pending-bar" id="pendingBar" role="status" aria-live="polite">
+  <div class="pending-bar-status">
+    <span class="pending-dot"></span>
+    <span><strong id="pendingCount">0</strong> cell<span id="pendingPlural">s</span> modified · changes will be lost if you reload</span>
+  </div>
+  <div class="pending-bar-actions">
+    <button class="slds-btn" id="cancelAllBtn" type="button">Cancel</button>
+    <button class="slds-btn slds-btn-brand" id="applyAllBtn" type="button">Apply <span id="applyCount">0</span> updates</button>
+  </div>
+</div>
+
+<!-- =================================================================
+     CONFIRM DISCARD MODAL
+     ================================================================= -->
+<div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="slds-modal">
+    <div class="slds-modal-head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-warning)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <h2>Descartar alterações?</h2>
+    </div>
+    <div class="slds-modal-body">
+      Você está prestes a descartar <strong id="confirmModalCount">0</strong> alterações pendentes nesta lista. Essa ação não pode ser desfeita.
+    </div>
+    <div class="slds-modal-foot">
+      <button class="slds-btn" id="confirmNo" type="button">Voltar a editar</button>
+      <button class="slds-btn slds-btn-destructive" id="confirmYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="slds-toast" id="toast" role="status">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toastText">Updated</span>
+</div>
+
+<script>
+/* =================================================================
+   DATA — protocolos sample (mesma base do Relatorio de Protocolos)
+   ================================================================= */
+const PROTOCOLS = [
+  { id:"M9W38746", status:"novo",           contrato:"20084782", cotacao:"Q-394874",
+    filial:"Filial São Paulo",  cnpj:"12.345.678/0001-90", cidade:"São Paulo",  uf:"SP",
+    cooperado:"CARLOS ALVES",   produto:"FFALM 10 20 30",  embalagem:"Saco 50kg",
+    frete:"CIF", planta:"Limeira",       qtd:300, saldo:50,  owner:"Alyssa Harris", updated:"5 min" },
+  { id:"M9W47291", status:"em_agendamento", contrato:"20085391", cotacao:"Q-451220",
+    filial:"Filial Curitiba",   cnpj:"23.456.789/0001-01", cidade:"Curitiba",   uf:"PR",
+    cooperado:"BETO DOS SANTOS", produto:"DAP 18 46 00",   embalagem:"Granel",
+    frete:"FOB", planta:"Paranaguá",     qtd:500, saldo:300, owner:"Marcos Lima",   updated:"23 min" },
+  { id:"M9W51038", status:"concluido",      contrato:"20086112", cotacao:"Q-512883",
+    filial:"Filial Porto Alegre", cnpj:"34.567.890/0001-34", cidade:"Porto Alegre", uf:"RS",
+    cooperado:"TEREZA AKEMI",   produto:"MAP 11 52 00",    embalagem:"Big Bag 1000kg",
+    frete:"CIF", planta:"Cubatão",       qtd:200, saldo:0,   owner:"Patricia Vega", updated:"2h" },
+  { id:"M9W63847", status:"cancelado",      contrato:"20086901", cotacao:"Q-602114",
+    filial:"Filial Rio Verde",  cnpj:"45.678.901/0001-45", cidade:"Rio Verde",  uf:"GO",
+    cooperado:"JORGE DOS ANJOS", produto:"FFALM 10 20 30", embalagem:"Saco 50kg",
+    frete:"FOB", planta:"Rondonópolis",  qtd:150, saldo:150, owner:"Carlos Mendes", updated:"1d" },
+  { id:"M9W71205", status:"liberado",       contrato:"20087445", cotacao:"Q-712005",
+    filial:"Filial Londrina",   cnpj:"56.789.012/0001-56", cidade:"Londrina",   uf:"PR",
+    cooperado:"RENATO CESAR",   produto:"KCl Granulado",   embalagem:"Granel",
+    frete:"CIF", planta:"Paranaguá",     qtd:400, saldo:400, owner:"Alyssa Harris", updated:"3h" },
+];
+
+/* Pending changes registry: Map<protoId, {field: newValue}> */
+const PENDING = new Map();
+
+/* =================================================================
+   Field config — editable cells + options
+   ================================================================= */
+const STATUS_OPTS = {
+  novo: "Novo", liberado: "Liberado para agendar", em_agendamento: "Em agendamento",
+  concluido: "Concluído", cancelado: "Cancelado", enviar_sap: "Enviar ao SAP"
+};
+const EMBALAGEM_OPTS = ["Saco 50kg", "Saco 25kg", "Big Bag 1000kg", "Granel"];
+const FRETE_OPTS     = ["CIF", "FOB"];
+const PLANTA_OPTS    = ["Limeira", "Paranaguá", "Cubatão", "Rondonópolis", "Uberaba", "Candeias"];
+const UF_OPTS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
+
+/* Cells: which columns are editable + their type. */
+const FIELDS = [
+  { key:"protocol",  label:"Protocol",       editable:false },
+  { key:"status",    label:"Status",         editable:true, type:"select", opts:STATUS_OPTS },
+  { key:"contrato",  label:"Contrato SAP",   editable:true, type:"text" },
+  { key:"cotacao",   label:"Cotação",        editable:true, type:"text" },
+  { key:"filial",    label:"Cliente · Filial", editable:true, type:"text" },
+  { key:"cnpj",      label:"CPF/CNPJ",       editable:true, type:"text" },
+  { key:"cidade_uf", label:"Cidade · UF",    editable:false }, // composto
+  { key:"cooperado", label:"Cooperado",      editable:true, type:"text" },
+  { key:"produto",   label:"Produto",        editable:true, type:"text" },
+  { key:"embalagem", label:"Embalagem",      editable:true, type:"select-list", opts:EMBALAGEM_OPTS },
+  { key:"frete",     label:"Frete",          editable:true, type:"select-list", opts:FRETE_OPTS },
+  { key:"planta",    label:"Planta",         editable:true, type:"select-list", opts:PLANTA_OPTS },
+  { key:"qtd",       label:"Qtd Protocolo (t)", editable:true, type:"number", num:true },
+  { key:"saldo",     label:"Saldo (t)",      editable:false, num:true },
+  { key:"owner",     label:"Owner",          editable:true, type:"text" },
+  { key:"updated",   label:"Última Modificação", editable:false },
+];
+
+/* =================================================================
+   Render
+   ================================================================= */
+const tbody = document.getElementById("listBody");
+let currentFilter = "all";
+
+function getEffectiveValue(p, field) {
+  const pending = PENDING.get(p.id);
+  if (pending && field in pending) return pending[field];
+  return p[field];
+}
+
+function isModified(id, field) {
+  const pending = PENDING.get(id);
+  return pending && field in pending;
+}
+
+function statusBadge(s) {
+  const cls = s.replace(/[^a-z_]/g, "");
+  return `<span class="status-pill ${cls}">${STATUS_OPTS[s] || s}</span>`;
+}
+
+function fretePill(f) {
+  const color = f === "CIF" ? "background:#d8eee6;color:#1c6b5a;border:1px solid #a8d8c8"
+                            : "background:#fff5ec;color:#c76814;border:1px solid #ffd8b5";
+  return `<span class="status-pill" style="${color}">${f}</span>`;
+}
+
+function cellHTML(p, field, label, opts = {}) {
+  const v = getEffectiveValue(p, field);
+  const isEdit = opts.editable !== false;
+  const modCls = isModified(p.id, field) ? "cell-modified" : "";
+  const editCls = isEdit ? "editable" : "";
+  const numCls = opts.num ? "num" : "";
+
+  let content;
+  if (opts.render) {
+    content = opts.render(v);
+  } else {
+    content = `<span class="cell-text">${v == null || v === "" ? '<span style="color:var(--slds-text-3)">—</span>' : escapeHtml(String(v))}</span>`;
+  }
+
+  const pencil = isEdit ? `<button class="cell-pencil" type="button" tabindex="-1" aria-label="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>` : '';
+
+  return `
+    <td class="${editCls} ${modCls} ${numCls}" data-id="${p.id}" data-field="${field}">
+      <div class="cell-content">
+        ${content}
+        ${pencil}
+      </div>
+    </td>`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+
+function applyFilter() {
+  const q = (document.getElementById("quickSearch").value || "").trim().toLowerCase();
+  return PROTOCOLS.filter(p => {
+    if (currentFilter !== "all" && getEffectiveValue(p, "status") !== currentFilter) return false;
+    if (q) {
+      const hay = [p.id, p.contrato, p.cotacao, p.filial, p.cooperado, p.produto].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function render() {
+  const list = applyFilter();
+  document.getElementById("totalCount").textContent = list.length;
+
+  // Atualiza contadores das pills
+  const counts = { all: PROTOCOLS.length, novo: 0, liberado: 0, em_agendamento: 0, concluido: 0, cancelado: 0 };
+  PROTOCOLS.forEach(p => {
+    const s = getEffectiveValue(p, "status");
+    if (s in counts) counts[s]++;
+  });
+  document.getElementById("cntAll").textContent  = counts.all;
+  document.getElementById("cntNovo").textContent = counts.novo;
+  document.getElementById("cntLib").textContent  = counts.liberado;
+  document.getElementById("cntAg").textContent   = counts.em_agendamento;
+  document.getElementById("cntConc").textContent = counts.concluido;
+  document.getElementById("cntCanc").textContent = counts.cancelado;
+
+  tbody.innerHTML = list.map(p => `
+    <tr data-id="${p.id}">
+      <td class="col-check"><div class="cell-content"><input type="checkbox" class="slds-check row-check" data-id="${p.id}" aria-label="Select ${p.id}" /></div></td>
+      ${cellHTML(p, "id",        "Protocol",  { editable:false, render: v => `<span class="cell-text"><a href="#">${v}</a></span>` })}
+      ${cellHTML(p, "status",    "Status",    { render: v => `<span class="cell-text">${statusBadge(v)}</span>` })}
+      ${cellHTML(p, "contrato",  "Contrato")}
+      ${cellHTML(p, "cotacao",   "Cotação")}
+      ${cellHTML(p, "filial",    "Cliente")}
+      ${cellHTML(p, "cnpj",      "CPF/CNPJ")}
+      ${cellHTML(p, "cidade",    "Cidade", { editable:false, render: v => `<span class="cell-text">${v} · <strong>${getEffectiveValue(p,'uf')}</strong></span>` })}
+      ${cellHTML(p, "cooperado", "Cooperado")}
+      ${cellHTML(p, "produto",   "Produto")}
+      ${cellHTML(p, "embalagem", "Embalagem")}
+      ${cellHTML(p, "frete",     "Frete", { render: v => `<span class="cell-text">${fretePill(v)}</span>` })}
+      ${cellHTML(p, "planta",    "Planta")}
+      ${cellHTML(p, "qtd",       "Qtd", { num:true, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
+      ${cellHTML(p, "saldo",     "Saldo", { num:true, editable:false, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
+      ${cellHTML(p, "owner",     "Owner")}
+      ${cellHTML(p, "updated",   "Updated", { editable:false })}
+    </tr>
+  `).join("");
+}
+
+/* =================================================================
+   Inline edit (cell by cell, Lightning style)
+   ================================================================= */
+function startEditCell(td) {
+  if (td.classList.contains("cell-editing")) return;
+  if (!td.classList.contains("editable")) return;
+  const id = td.dataset.id;
+  const field = td.dataset.field;
+  const p = PROTOCOLS.find(x => x.id === id);
+  if (!p) return;
+  const v = getEffectiveValue(p, field);
+  const fieldDef = FIELDS.find(f => f.key === field) || { type: "text" };
+
+  let inputHTML = "";
+  if (fieldDef.type === "select") {
+    const opts = Object.entries(fieldDef.opts).map(([k, lbl]) =>
+      `<option value="${k}"${k===v?' selected':''}>${lbl}</option>`).join("");
+    inputHTML = `<select class="edit-input">${opts}</select>`;
+  } else if (fieldDef.type === "select-list") {
+    const opts = fieldDef.opts.map(o =>
+      `<option value="${o}"${o===v?' selected':''}>${o}</option>`).join("");
+    inputHTML = `<select class="edit-input">${opts}</select>`;
+  } else if (fieldDef.type === "number") {
+    inputHTML = `<input class="edit-input" type="number" min="0" value="${v}" />`;
+  } else {
+    inputHTML = `<input class="edit-input" type="text" value="${escapeHtml(String(v ?? ''))}" />`;
+  }
+
+  td.classList.add("cell-editing");
+  const content = td.querySelector(".cell-content");
+  content.innerHTML = inputHTML;
+  const input = content.querySelector(".edit-input");
+  input.focus();
+  if (input.select) input.select();
+
+  const commit = () => {
+    let newVal = input.value;
+    if (input.type === "number") newVal = newVal === "" ? 0 : Number(newVal);
+    const original = p[field];
+    if (String(newVal) === String(original)) {
+      // Voltou ao original — limpa pending
+      const pending = PENDING.get(id);
+      if (pending) {
+        delete pending[field];
+        if (Object.keys(pending).length === 0) PENDING.delete(id);
+      }
+    } else {
+      // Marca como pending
+      const pending = PENDING.get(id) || {};
+      pending[field] = newVal;
+      PENDING.set(id, pending);
+    }
+    cleanupEditing();
+    render();
+    updatePendingBar();
+  };
+  const cancel = () => {
+    cleanupEditing();
+    render();
+  };
+  const cleanupEditing = () => {
+    td.classList.remove("cell-editing");
+  };
+
+  input.addEventListener("blur", commit);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter")  { e.preventDefault(); input.blur(); }
+    if (e.key === "Escape") { e.preventDefault(); input.removeEventListener("blur", commit); cancel(); }
+    if (e.key === "Tab")    { /* deixa o blur disparar commit */ }
+  });
+}
+
+tbody.addEventListener("click", (e) => {
+  const td = e.target.closest("td.editable");
+  if (!td) return;
+  if (e.target.closest("a")) return; // não edita ao clicar em link (Protocol é não editável)
+  startEditCell(td);
+});
+
+/* =================================================================
+   Pending bar — apply / cancel
+   ================================================================= */
+const pendingBar    = document.getElementById("pendingBar");
+const pendingCount  = document.getElementById("pendingCount");
+const pendingPlural = document.getElementById("pendingPlural");
+const applyCountEl  = document.getElementById("applyCount");
+
+function countPending() {
+  let n = 0;
+  PENDING.forEach(obj => { n += Object.keys(obj).length; });
+  return n;
+}
+function updatePendingBar() {
+  const n = countPending();
+  pendingCount.textContent = n;
+  applyCountEl.textContent = n;
+  pendingPlural.textContent = n === 1 ? "" : "s";
+  pendingBar.classList.toggle("is-visible", n > 0);
+}
+
+document.getElementById("applyAllBtn").addEventListener("click", () => {
+  const n = countPending();
+  if (n === 0) return;
+  // Commit changes to PROTOCOLS
+  PENDING.forEach((updates, id) => {
+    const p = PROTOCOLS.find(x => x.id === id);
+    if (p) Object.assign(p, updates);
+  });
+  PENDING.clear();
+  render();
+  updatePendingBar();
+  showToast(`${n} update${n === 1 ? '' : 's'} saved`);
+});
+
+document.getElementById("cancelAllBtn").addEventListener("click", () => {
+  const n = countPending();
+  if (n === 0) return;
+  document.getElementById("confirmModalCount").textContent = n;
+  document.getElementById("confirmModal").classList.add("is-open");
+});
+
+document.getElementById("confirmYes").addEventListener("click", () => {
+  PENDING.clear();
+  render();
+  updatePendingBar();
+  document.getElementById("confirmModal").classList.remove("is-open");
+});
+document.getElementById("confirmNo").addEventListener("click", () => {
+  document.getElementById("confirmModal").classList.remove("is-open");
+});
+document.getElementById("confirmModal").addEventListener("click", (e) => {
+  if (e.target.id === "confirmModal") e.target.classList.remove("is-open");
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  const modal = document.getElementById("confirmModal");
+  if (modal.classList.contains("is-open")) {
+    modal.classList.remove("is-open");
+  }
+});
+
+/* =================================================================
+   Filters
+   ================================================================= */
+document.querySelectorAll(".qf-pill").forEach(b => {
+  b.addEventListener("click", () => {
+    document.querySelectorAll(".qf-pill").forEach(x => x.classList.remove("is-active"));
+    b.classList.add("is-active");
+    currentFilter = b.dataset.filter;
+    render();
+  });
+});
+document.getElementById("quickSearch").addEventListener("input", render);
+
+/* =================================================================
+   Toast
+   ================================================================= */
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  document.getElementById("toastText").textContent = msg;
+  t.classList.add("is-visible");
+  setTimeout(() => t.classList.remove("is-visible"), 2800);
+}
+
+/* =================================================================
+   Init
+   ================================================================= */
+render();
+updatePendingBar();
+
+window.addEventListener("beforeunload", (e) => {
+  if (countPending() > 0) {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
+</script>
+
+</body>
+</html>
