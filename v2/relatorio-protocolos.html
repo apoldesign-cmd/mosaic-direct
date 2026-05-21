@@ -2366,6 +2366,29 @@
   </div>
 </div>
 
+<!-- CONFIRM DISCARD MODAL (usado por Editar protocolo / cancelamento de edição) -->
+<div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="confirm-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <h3>Descartar alterações?</h3>
+    </div>
+    <p class="confirm-modal-text">
+      Você está prestes a descartar as alterações feitas no protocolo
+      <strong id="confirmDiscardProto">—</strong>. Essa ação não pode ser desfeita.
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-btn confirm-btn-secondary" id="confirmDiscardNo" type="button">Voltar a editar</button>
+      <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- CANCELAR PROTOCOLO MODAL -->
 <div class="agendar-modal-backdrop" id="cancelProtoModal" role="dialog" aria-modal="true">
   <div class="agendar-modal" style="max-width:480px">
