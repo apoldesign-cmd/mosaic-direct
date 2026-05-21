@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Protocolos</title>
+<title>Mosaic Direct — Relatório de Protocolos (Modal)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1739,7 +1739,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Clique em <strong>uma célula de quantidade</strong> para editá-la na tabela, ou use o ícone de <strong>✏️ lápis</strong> para alterar os demais campos no formulário.</span>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Use o ícone de <strong>✏️ lápis</strong> para alterar <strong>todos os campos</strong> do protocolo em um formulário único.</span>
   </div>
 
   <!-- Search bar -->
@@ -2057,36 +2057,29 @@
     </div>
     <div class="edit-fields-modal-body">
 
-      <!-- Resumo das quantidades (read-only — editadas direto na tabela) -->
-      <div class="ef-qty-summary">
-        <div class="ef-qty-head">
-          <span class="ef-qty-title">Quantidades</span>
-          <span class="ef-qty-hint">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            Edite as quantidades <strong>direto na tabela</strong>, clicando sobre o valor.
-          </span>
+      <!-- Quantidades (todas editáveis na Versão B) -->
+      <div class="ef-section">
+        <div class="ef-section-title">Quantidades (t)</div>
+        <div class="ef-form-row cols-4">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdProto">Qtd. Protocolo</label>
+            <input class="ef-field-input" id="efQtdProto" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdAgendada">Agendada</label>
+            <input class="ef-field-input" id="efQtdAgendada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label">Saldo (calc.)</label>
+            <input class="ef-field-input" id="efQtdSaldo" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8;color:var(--mosaic-green-800)" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdFaturada">Faturada</label>
+            <input class="ef-field-input" id="efQtdFaturada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
+          </div>
         </div>
-        <div class="ef-qty-grid">
-          <div class="ef-qty-item">
-            <div class="lbl">Qtd. Protocolo</div>
-            <div class="val"><span id="efSumProto">—</span><span class="unit">t</span></div>
-          </div>
-          <div class="ef-qty-item">
-            <div class="lbl">Agendada</div>
-            <div class="val"><span id="efSumAgendada">—</span><span class="unit">t</span></div>
-          </div>
-          <div class="ef-qty-item saldo">
-            <div class="lbl">Saldo Agendar</div>
-            <div class="val" id="efSumSaldo">—</div>
-          </div>
-          <div class="ef-qty-item">
-            <div class="lbl">Faturada</div>
-            <div class="val"><span id="efSumFaturada">—</span><span class="unit">t</span></div>
-          </div>
-          <div class="ef-qty-item">
-            <div class="lbl">a Faturar</div>
-            <div class="val"><span id="efSumFaturar">—</span><span class="unit">t</span></div>
-          </div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">
+          <strong>Saldo</strong> e <strong>Qtd. a Faturar</strong> são calculados automaticamente a partir das demais.
         </div>
       </div>
 
@@ -2635,10 +2628,10 @@ function renderRowNormal(p) {
       <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
       <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
       <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
-      ${editableQtyCell(p, "qtdProtocolo", true)}
-      ${editableQtyCell(p, "qtdAgendada", false)}
+      ${numCell(p.qtdProtocolo, true)}
+      ${numCell(p.qtdAgendada, false)}
       ${numCell(p.saldo, p.saldo > 0)}
-      ${editableQtyCell(p, "qtdFaturada", false)}
+      ${numCell(p.qtdFaturada, false)}
       ${numCell(p.qtdFaturar, false)}
     </tr>
   `;
@@ -2726,18 +2719,13 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
-  // Ação no cluster (botão Editar/Agendar)
+  // Versão B: edição apenas via modal. Sem click-to-edit nas células.
   const btn = e.target.closest("[data-act]");
-  if (btn) {
-    const id = btn.dataset.id;
-    const act = btn.dataset.act;
-    if (act === "edit")    openEditFieldsModal(id);
-    if (act === "agendar") openAgendarModal(id);
-    return;
-  }
-  // Click em célula de quantidade editável → inline edit
-  const td = e.target.closest("td.editable-qty");
-  if (td) startCellEdit(td);
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const act = btn.dataset.act;
+  if (act === "edit")    openEditFieldsModal(id);
+  if (act === "agendar") openAgendarModal(id);
 });
 
 /* ============== Inline cell edit (só quantidades) ============== */
@@ -2830,14 +2818,22 @@ function openEditFieldsModal(id) {
   // Header
   document.getElementById("efModalProtoId").textContent = p.id;
 
-  // Resumo das quantidades (read-only — editar na tabela)
-  document.getElementById("efSumProto").textContent     = p.qtdProtocolo.toLocaleString("pt-BR");
-  document.getElementById("efSumAgendada").textContent  = p.qtdAgendada.toLocaleString("pt-BR");
-  document.getElementById("efSumSaldo").innerHTML       = `${p.saldo.toLocaleString("pt-BR")}<span class="unit">t</span>`;
-  document.getElementById("efSumFaturada").textContent  = p.qtdFaturada.toLocaleString("pt-BR");
-  document.getElementById("efSumFaturar").textContent   = p.qtdFaturar.toLocaleString("pt-BR");
+  // Quantidades (editáveis na Versão B)
+  setVal("efQtdProto",     p.qtdProtocolo);
+  setVal("efQtdAgendada",  p.qtdAgendada);
+  setVal("efQtdSaldo",     p.saldo);
+  setVal("efQtdFaturada",  p.qtdFaturada);
 
-  // Form (NÃO-quantidade)
+  // Recalcula saldo ao vivo se mudar Protocolo ou Agendada
+  const recalc = () => {
+    const proto = Number(document.getElementById("efQtdProto").value) || 0;
+    const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
+    document.getElementById("efQtdSaldo").value = Math.max(0, proto - ag);
+  };
+  document.getElementById("efQtdProto").oninput    = recalc;
+  document.getElementById("efQtdAgendada").oninput = recalc;
+
+  // Demais campos
   setVal("efStatus",      p.status);
   setVal("efContrato",    p.contrato);
   setVal("efCotacao",     p.cotacao);
@@ -2866,7 +2862,15 @@ function setVal(id, v) {
 }
 
 function readEditFieldsValues() {
+  const proto = Number(document.getElementById("efQtdProto").value) || 0;
+  const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
+  const fat   = Number(document.getElementById("efQtdFaturada").value) || 0;
   return {
+    qtdProtocolo: proto,
+    qtdAgendada:  ag,
+    qtdFaturada:  fat,
+    saldo:        Math.max(0, proto - ag),
+    qtdFaturar:   Math.max(0, proto - fat),
     status:      document.getElementById("efStatus").value,
     contrato:    document.getElementById("efContrato").value,
     cotacao:     document.getElementById("efCotacao").value,

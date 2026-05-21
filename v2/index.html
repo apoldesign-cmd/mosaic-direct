@@ -332,17 +332,40 @@
         <a href="relatorio-protocolos.html" class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
-              <span class="proto-id-chip">NOVO</span>
+              <span class="proto-id-chip">v1</span>
             </div>
-            <span class="proto-tag">✓ Final</span>
+            <span class="proto-tag">✏️ Inline + Modal</span>
           </div>
           <div class="proto-title">Relatório de Protocolos</div>
           <div class="proto-desc">
-            Acompanhamento de protocolos por status, quantidades agendadas, faturadas e
-            saldos. Busca por Protocolo, Contrato SAP ou Cotação. Filtros picklist e exportação CSV.
+            Edição <strong>híbrida</strong>: click direto nas células de quantidade
+            (inline) e ícone de lápis abre <strong>modal</strong> com os demais campos
+            (status, contrato, cooperado, produto, NF). Filtros picklist + exportação CSV.
           </div>
           <div class="proto-foot">
             <span class="proto-foot-meta">relatorio-protocolos</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="relatorio-protocolos-modal.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">v2</span>
+            </div>
+            <span class="proto-tag">📝 Modal Completo</span>
+          </div>
+          <div class="proto-title">Relatório de Protocolos · Modal</div>
+          <div class="proto-desc">
+            Mesma tela, mas com edição <strong>100% no modal</strong> — sem inline edit nas
+            células. O lápis abre o formulário completo com <strong>todos os campos
+            editáveis</strong>, incluindo quantidades. Para validar com PO qual padrão é
+            mais intuitivo.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">relatorio-protocolos-modal</span>
             <span class="proto-foot-arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </span>
