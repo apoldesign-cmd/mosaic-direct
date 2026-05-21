@@ -155,18 +155,17 @@
     background: rgba(0,106,77,0.14);
   }
 
-  /* Dropdown de ações da linha */
+  /* Dropdown de ações da linha — position:fixed evita ser cortado por
+     contextos de empilhamento sticky de outras linhas da tabela. */
   .action-menu-pop {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    min-width: 200px;
+    position: fixed;
+    min-width: 220px;
     background: #fff;
     border: 1px solid var(--border-soft);
     border-radius: var(--radius-md);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.06);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
     padding: 4px;
-    z-index: 30;
+    z-index: 9999;
     display: none;
   }
   .action-cluster.is-open .action-menu-pop { display: block; }
@@ -3069,6 +3068,14 @@ function openActionMenu(cluster, id) {
 
   const pop = document.createElement("div");
   pop.className = "action-menu-pop";
+  // Posiciona o popup como FIXED a partir das coords do botão chevron,
+  // garantindo que nenhuma celula sticky de outra linha sobreponha.
+  const btn = cluster.querySelector("[data-act='menu']");
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    pop.style.top  = `${rect.bottom + 4}px`;
+    pop.style.left = `${rect.left}px`;
+  }
   pop.innerHTML = `
     <button class="action-menu-item" data-act="edit" data-id="${id}" type="button">
       ${SVG_EDIT_SMALL}
@@ -3102,10 +3109,17 @@ function closeAllActionMenus() {
   });
 }
 
-// Click fora fecha o menu
+// Click fora fecha o menu (e o popover não está mais dentro do cluster,
+// está direto no body por position:fixed — então precisa checar pop também)
 document.addEventListener("click", (e) => {
-  if (!e.target.closest(".action-cluster")) closeAllActionMenus();
+  if (!e.target.closest(".action-cluster") && !e.target.closest(".action-menu-pop")) {
+    closeAllActionMenus();
+  }
 });
+
+// Scroll/resize → fecha o menu (já que é fixed, posição não acompanha)
+window.addEventListener("scroll", closeAllActionMenus, true);
+window.addEventListener("resize", closeAllActionMenus);
 
 /* ============== Inline cell edit (só quantidades) ============== */
 let editingCellEl = null;
