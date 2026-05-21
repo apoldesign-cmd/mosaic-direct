@@ -308,6 +308,250 @@
     color: #fff;
   }
   .confirm-btn-danger:hover { background: #8a1820; }
+
+  /* ================================================================
+     Modal "Agendar protocolo"
+     ================================================================ */
+  .agendar-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open { display: flex; opacity: 1; }
+  .agendar-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open .agendar-modal { transform: scale(1); }
+  .agendar-modal-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .agendar-modal-head-text { flex: 1; min-width: 0; }
+  .agendar-modal-head-text h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .agendar-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .agendar-modal-head-sub strong {
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 800;
+  }
+  .agendar-modal-head .modal-x {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+    flex-shrink: 0;
+  }
+  .agendar-modal-head .modal-x:hover { background: var(--bg-section); }
+  .agendar-modal-body {
+    padding: 18px 22px 20px;
+    overflow-y: auto;
+  }
+
+  /* Card de contexto */
+  .agendar-context {
+    background: linear-gradient(135deg, rgba(0,106,77,0.05) 0%, rgba(122,217,181,0.07) 100%);
+    border: 1px solid rgba(0,106,77,0.18);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 18px;
+  }
+  .agendar-context-item .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .agendar-context-item .val {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+  }
+  .agendar-context-item .val.saldo {
+    color: var(--mosaic-green-800);
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .agendar-context-item .val.saldo .unit {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  /* Form */
+  .agendar-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .agendar-form-row.cols-1 { grid-template-columns: 1fr; }
+  .agendar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .agendar-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .agendar-field-label .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .agendar-field-input,
+  .agendar-field-select,
+  .agendar-field-textarea {
+    padding: 0 12px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .agendar-field-textarea {
+    height: 70px;
+    padding: 9px 12px;
+    resize: vertical;
+  }
+  .agendar-field-input:focus,
+  .agendar-field-select:focus,
+  .agendar-field-textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .agendar-field-select {
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .agendar-input-with-suffix { position: relative; }
+  .agendar-input-with-suffix .suffix {
+    position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; font-weight: 700; color: var(--text-3);
+    pointer-events: none;
+  }
+  .agendar-input-with-suffix input { padding-right: 36px; }
+  .agendar-field-hint {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .agendar-field-hint.error { color: var(--mosaic-red); font-weight: 600; }
+
+  /* Footer */
+  .agendar-modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-foot-link {
+    font-size: 12px;
+    color: var(--mosaic-green-700);
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .agendar-modal-foot-link:hover { text-decoration: underline; }
+  .agendar-modal-foot-actions { display: flex; gap: 10px; }
+  .agendar-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast);
+  }
+  .agendar-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .agendar-btn-secondary:hover { background: var(--bg-section); }
+  .agendar-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .agendar-btn-primary:hover { background: var(--mosaic-green-700); }
+  .agendar-btn-primary:disabled {
+    background: var(--bg-section);
+    color: var(--text-3);
+    cursor: not-allowed;
+  }
+
   /* Tooltip on the action button */
   .cell-action-wrap {
     position: relative;
@@ -1535,6 +1779,99 @@
   </div>
 </div>
 
+<!-- AGENDAR PROTOCOLO MODAL -->
+<div class="agendar-modal-backdrop" id="agendarModal" role="dialog" aria-modal="true" aria-labelledby="agendarModalTitle">
+  <div class="agendar-modal">
+    <div class="agendar-modal-head">
+      <span class="agendar-modal-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M12 14v4"/><path d="M10 16h4"/>
+        </svg>
+      </span>
+      <div class="agendar-modal-head-text">
+        <h2 id="agendarModalTitle">Agendar protocolo</h2>
+        <div class="agendar-modal-head-sub">Protocolo <strong id="agModalProtoId">—</strong></div>
+      </div>
+      <button class="modal-x" id="agModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="agendar-modal-body">
+
+      <!-- Contexto do protocolo -->
+      <div class="agendar-context">
+        <div class="agendar-context-item">
+          <div class="lbl">Cooperado</div>
+          <div class="val" id="agCtxCooperado">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Contrato SAP</div>
+          <div class="val" id="agCtxContrato">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Produto</div>
+          <div class="val" id="agCtxProduto">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Saldo disponível</div>
+          <div class="val saldo" id="agCtxSaldo">—</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agSemana">Semana de agendamento <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agSemana"></select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agVolume">Volume a agendar <span class="req">*</span></label>
+          <div class="agendar-input-with-suffix">
+            <input class="agendar-field-input" type="number" id="agVolume" min="0" />
+            <span class="suffix">t</span>
+          </div>
+          <span class="agendar-field-hint" id="agVolumeHint">—</span>
+        </div>
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agFrete">Frete <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agFrete">
+            <option value="CIF">CIF · Por conta da Mosaic</option>
+            <option value="FOB">FOB · Por conta do cliente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agObs">Observações (opcional)</label>
+          <textarea class="agendar-field-textarea" id="agObs" placeholder="Instruções de entrega, restrições de horário, contatos no local..."></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="agendar-modal-foot">
+      <a class="agendar-modal-foot-link" id="agFullFlowLink" href="#">
+        Fluxo completo de agendamento
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <div class="agendar-modal-foot-actions">
+        <button class="agendar-btn agendar-btn-secondary" id="agCancelBtn" type="button">Cancelar</button>
+        <button class="agendar-btn agendar-btn-primary" id="agConfirmBtn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirmar agendamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="bulk-toast" id="bulkToast">
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1745,13 +2082,12 @@ function actionCell(p) {
   }
 
   const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
-  const urlAgendar = `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
 
   return `
     <div class="action-cluster">
       <button class="cell-action action-edit" data-act="edit" data-id="${p.id}" type="button" title="Editar protocolo" aria-label="Editar">${SVG_EDIT}</button>
       ${podeAgendar
-        ? `<a class="cell-action action-agendar" href="${urlAgendar}" title="Agendar este protocolo" aria-label="Agendar protocolo ${p.id}">${SVG_CAL}</a>`
+        ? `<button class="cell-action action-agendar" data-act="agendar" data-id="${p.id}" type="button" title="Agendar este protocolo" aria-label="Agendar protocolo ${p.id}">${SVG_CAL}</button>`
         : ``}
     </div>`;
 }
@@ -1976,6 +2312,7 @@ document.getElementById("tableBody").addEventListener("click", (e) => {
   if (act === "edit")    startEdit(id);
   if (act === "save")    saveEdit(id);
   if (act === "cancel")  requestCancelEdit(id);
+  if (act === "agendar") openAgendarModal(id);
 });
 
 /* ================================================================
@@ -2066,6 +2403,129 @@ function discardEdit(id) {
   render();
 }
 
+/* ================================================================
+   Modal "Agendar protocolo" — fluxo rápido
+   ================================================================ */
+const agendarModal = document.getElementById("agendarModal");
+let agendarCurrentId = null;
+
+function buildSemanaOptions() {
+  // gera 6 semanas a partir da próxima segunda-feira
+  const today = new Date();
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const baseMonday = new Date(today);
+  baseMonday.setDate(today.getDate() + diffToMonday);
+  baseMonday.setHours(0, 0, 0, 0);
+
+  const pad = n => String(n).padStart(2, "0");
+  const fmt = d => `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  const opts = [];
+  for (let i = 0; i < 6; i++) {
+    const mon = new Date(baseMonday);
+    mon.setDate(baseMonday.getDate() + i * 7);
+    const sun = new Date(mon);
+    sun.setDate(mon.getDate() + 6);
+    const label = `${fmt(mon)} — ${fmt(sun)}`;
+    const tag = i === 0 ? " (vigente)" : i === 1 ? " (próxima)" : "";
+    opts.push({ value: label, label: label + tag });
+  }
+  return opts;
+}
+
+function openAgendarModal(id) {
+  const p = findProto(id);
+  if (!p) return;
+  agendarCurrentId = id;
+
+  // Preenche contexto
+  document.getElementById("agModalProtoId").textContent = p.id;
+  document.getElementById("agCtxCooperado").textContent = p.cooperado;
+  document.getElementById("agCtxContrato").textContent  = p.contrato;
+  document.getElementById("agCtxProduto").textContent   = p.descProduto;
+  document.getElementById("agCtxSaldo").innerHTML =
+    `${p.saldo.toLocaleString("pt-BR")}<span class="unit">t</span>`;
+
+  // Popula semana
+  const semanaSel = document.getElementById("agSemana");
+  semanaSel.innerHTML = buildSemanaOptions()
+    .map((o, i) => `<option value="${o.value}"${i === 1 ? ' selected' : ''}>${o.label}</option>`)
+    .join("");
+
+  // Volume = saldo por default, max = saldo
+  const volEl = document.getElementById("agVolume");
+  volEl.value = p.saldo;
+  volEl.max = p.saldo;
+  document.getElementById("agVolumeHint").textContent =
+    `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+  document.getElementById("agVolumeHint").classList.remove("error");
+
+  // Frete (mantém o atual)
+  document.getElementById("agFrete").value = p.frete;
+
+  // Observação
+  document.getElementById("agObs").value = "";
+
+  // Link de fluxo completo
+  document.getElementById("agFullFlowLink").href =
+    `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
+
+  validateAgendarForm();
+  agendarModal.classList.add("is-open");
+  setTimeout(() => semanaSel.focus(), 50);
+}
+
+function closeAgendarModal() {
+  agendarModal.classList.remove("is-open");
+  agendarCurrentId = null;
+}
+
+function validateAgendarForm() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol = Number(document.getElementById("agVolume").value);
+  const hint = document.getElementById("agVolumeHint");
+  let ok = true;
+  if (!vol || vol <= 0) {
+    hint.textContent = "Volume deve ser maior que zero";
+    hint.classList.add("error");
+    ok = false;
+  } else if (vol > p.saldo) {
+    hint.textContent = `Volume excede o saldo disponível (${p.saldo} t)`;
+    hint.classList.add("error");
+    ok = false;
+  } else {
+    hint.textContent = `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+    hint.classList.remove("error");
+  }
+  document.getElementById("agConfirmBtn").disabled = !ok;
+}
+
+function confirmAgendamento() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol     = Number(document.getElementById("agVolume").value);
+  const semana  = document.getElementById("agSemana").value;
+  // Atualiza saldo do protocolo simulando agendamento
+  p.qtdAgendada += vol;
+  p.saldo = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  // Se saldo zerou e status era "Novo" ou "Liberado", muda para "Em agendamento"
+  if (p.saldo === 0 && (p.status === "Novo" || p.status === "Liberado para agendar")) {
+    p.status = "Em agendamento";
+  }
+  closeAgendarModal();
+  render();
+  showBulkToast(`Protocolo ${p.id} agendado · ${vol} t para ${semana.split(' — ')[0]}`);
+}
+
+document.getElementById("agModalClose").addEventListener("click", closeAgendarModal);
+document.getElementById("agCancelBtn").addEventListener("click", closeAgendarModal);
+document.getElementById("agConfirmBtn").addEventListener("click", confirmAgendamento);
+agendarModal.addEventListener("click", (e) => {
+  if (e.target === agendarModal) closeAgendarModal();
+});
+document.getElementById("agVolume").addEventListener("input", validateAgendarForm);
+
 const confirmModal     = document.getElementById("confirmDiscardModal");
 const confirmYes       = document.getElementById("confirmDiscardYes");
 const confirmNo        = document.getElementById("confirmDiscardNo");
@@ -2082,13 +2542,11 @@ confirmModal.addEventListener("click", (e) => {
   if (e.target === confirmModal) confirmModal.classList.remove("is-open");
 });
 
-/* Esc cancela edição (com confirmação) ou fecha modal de confirm */
+/* Esc fecha modais abertos ou dispara cancel da edição */
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
-  if (confirmModal.classList.contains("is-open")) {
-    confirmModal.classList.remove("is-open");
-    return;
-  }
+  if (agendarModal.classList.contains("is-open"))  { closeAgendarModal(); return; }
+  if (confirmModal.classList.contains("is-open"))  { confirmModal.classList.remove("is-open"); return; }
   if (editingId) requestCancelEdit(editingId);
 });
 
