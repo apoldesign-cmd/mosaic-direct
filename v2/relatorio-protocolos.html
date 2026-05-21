@@ -535,6 +535,62 @@
     background-repeat: no-repeat;
     background-position: right 10px center;
   }
+  /* Ficha view (demais informações — somente leitura) */
+  .ef-view-section {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px 16px;
+    margin-top: 18px;
+  }
+  .ef-view-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .ef-view-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-view-lock {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ef-view-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px 16px;
+  }
+  @media (max-width: 720px) { .ef-view-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ef-view-item.span-2 { grid-column: span 2; }
+  .ef-view-item .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .ef-view-item .val {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+  }
+  .ef-view-item .val.mono {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
   .edit-fields-modal-foot {
     padding: 14px 22px;
     border-top: 1px solid var(--border-soft);
@@ -2057,177 +2113,114 @@
     </div>
     <div class="edit-fields-modal-body">
 
-      <!-- Resumo das quantidades (read-only — editadas direto na tabela) -->
-      <div class="ef-qty-summary">
-        <div class="ef-qty-head">
-          <span class="ef-qty-title">Quantidades</span>
-          <span class="ef-qty-hint">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            Edite as quantidades <strong>direto na tabela</strong>, clicando sobre o valor.
+      <!-- Quantidades — ÚNICOS campos editáveis -->
+      <div class="ef-section">
+        <div class="ef-section-title" style="color:var(--mosaic-green-800)">
+          <span style="display:inline-flex;align-items:center;gap:6px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Quantidades (t)
           </span>
         </div>
-        <div class="ef-qty-grid">
-          <div class="ef-qty-item">
-            <div class="lbl">Qtd. Protocolo</div>
-            <div class="val"><span id="efSumProto">—</span><span class="unit">t</span></div>
+        <div class="ef-form-row cols-4">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdProto">Qtd. Protocolo</label>
+            <input class="ef-field-input" id="efQtdProto" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
           </div>
-          <div class="ef-qty-item">
-            <div class="lbl">Agendada</div>
-            <div class="val"><span id="efSumAgendada">—</span><span class="unit">t</span></div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdAgendada">Agendada</label>
+            <input class="ef-field-input" id="efQtdAgendada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
           </div>
-          <div class="ef-qty-item saldo">
-            <div class="lbl">Saldo Agendar</div>
-            <div class="val" id="efSumSaldo">—</div>
+          <div class="ef-field">
+            <label class="ef-field-label">Saldo (calc.)</label>
+            <input class="ef-field-input" id="efQtdSaldo" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8;color:var(--mosaic-green-800)" />
           </div>
-          <div class="ef-qty-item">
-            <div class="lbl">Faturada</div>
-            <div class="val"><span id="efSumFaturada">—</span><span class="unit">t</span></div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdFaturada">Faturada</label>
+            <input class="ef-field-input" id="efQtdFaturada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
           </div>
-          <div class="ef-qty-item">
-            <div class="lbl">a Faturar</div>
-            <div class="val"><span id="efSumFaturar">—</span><span class="unit">t</span></div>
-          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px">
+          <strong>Saldo</strong> e <strong>Qtd. a Faturar</strong> recalculam automaticamente.
         </div>
       </div>
 
-      <!-- Status -->
-      <div class="ef-section">
-        <div class="ef-section-title">Status</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efStatus">Status atual</label>
-            <select class="ef-field-select" id="efStatus">
-              <option>Novo</option>
-              <option>Liberado para agendar</option>
-              <option>Em agendamento</option>
-              <option>Concluído</option>
-              <option>Cancelado</option>
-              <option>Enviar ao SAP</option>
-            </select>
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efPreco">Preço unitário</label>
-            <input class="ef-field-input" id="efPreco" />
-          </div>
+      <!-- Demais informações — ficha read-only -->
+      <div class="ef-view-section">
+        <div class="ef-view-section-head">
+          <span class="ef-view-title">Demais informações</span>
+          <span class="ef-view-lock">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+            Somente leitura
+          </span>
         </div>
-      </div>
-
-      <!-- Contrato / Cotação -->
-      <div class="ef-section">
-        <div class="ef-section-title">Contrato</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efContrato">Contrato SAP</label>
-            <input class="ef-field-input" id="efContrato" />
+        <div class="ef-view-grid">
+          <div class="ef-view-item">
+            <div class="lbl">Status</div>
+            <div class="val" id="efViewStatus">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCotacao">Cotação</label>
-            <input class="ef-field-input" id="efCotacao" />
+          <div class="ef-view-item">
+            <div class="lbl">Preço (unit.)</div>
+            <div class="val" id="efViewPreco">—</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Cliente -->
-      <div class="ef-section">
-        <div class="ef-section-title">Cliente · Filial</div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efFilial">Filial do Cliente</label>
-            <input class="ef-field-input" id="efFilial" />
+          <div class="ef-view-item">
+            <div class="lbl">Contrato SAP</div>
+            <div class="val mono" id="efViewContrato">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCnpjFilial">CPF/CNPJ da Filial</label>
-            <input class="ef-field-input" id="efCnpjFilial" />
+          <div class="ef-view-item">
+            <div class="lbl">Cotação</div>
+            <div class="val mono" id="efViewCotacao">—</div>
           </div>
-        </div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efCidade">Cidade</label>
-            <input class="ef-field-input" id="efCidade" />
+          <div class="ef-view-item span-2">
+            <div class="lbl">Filial do Cliente</div>
+            <div class="val" id="efViewFilial">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efUf">UF</label>
-            <select class="ef-field-select" id="efUf">
-              <option>SP</option><option>MT</option><option>MS</option><option>PR</option>
-              <option>RS</option><option>GO</option><option>MG</option><option>BA</option>
-              <option>SC</option><option>RJ</option><option>DF</option>
-            </select>
+          <div class="ef-view-item">
+            <div class="lbl">CPF/CNPJ Filial</div>
+            <div class="val mono" id="efViewCnpjFilial">—</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Cooperado -->
-      <div class="ef-section">
-        <div class="ef-section-title">Cooperado</div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efCooperado">Nome do Cooperado</label>
-            <input class="ef-field-input" id="efCooperado" />
+          <div class="ef-view-item">
+            <div class="lbl">Cidade · UF</div>
+            <div class="val" id="efViewCidadeUf">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCnpjCoop">CPF/CNPJ</label>
-            <input class="ef-field-input" id="efCnpjCoop" />
+          <div class="ef-view-item span-2">
+            <div class="lbl">Cooperado</div>
+            <div class="val" id="efViewCooperado">—</div>
           </div>
-        </div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efIe">Inscrição Estadual</label>
-            <input class="ef-field-input" id="efIe" />
+          <div class="ef-view-item">
+            <div class="lbl">CPF/CNPJ Cooperado</div>
+            <div class="val mono" id="efViewCnpjCoop">—</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Produto / Logística -->
-      <div class="ef-section">
-        <div class="ef-section-title">Produto · Logística</div>
-        <div class="ef-form-row">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efProduto">Código</label>
-            <input class="ef-field-input" id="efProduto" />
+          <div class="ef-view-item">
+            <div class="lbl">Inscrição Estadual</div>
+            <div class="val mono" id="efViewIe">—</div>
           </div>
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efDescProduto">Descrição</label>
-            <input class="ef-field-input" id="efDescProduto" />
+          <div class="ef-view-item">
+            <div class="lbl">Produto</div>
+            <div class="val mono" id="efViewProduto">—</div>
           </div>
-        </div>
-        <div class="ef-form-row">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efEmbalagem">Embalagem</label>
-            <select class="ef-field-select" id="efEmbalagem">
-              <option>Saco 50kg</option>
-              <option>Saco 25kg</option>
-              <option>Big Bag 1000kg</option>
-              <option>Granel</option>
-            </select>
+          <div class="ef-view-item span-2">
+            <div class="lbl">Descrição do Produto</div>
+            <div class="val" id="efViewDescProduto">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efFrete">Frete</label>
-            <select class="ef-field-select" id="efFrete">
-              <option>CIF</option>
-              <option>FOB</option>
-            </select>
+          <div class="ef-view-item">
+            <div class="lbl">Embalagem</div>
+            <div class="val" id="efViewEmbalagem">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efPlanta">Planta</label>
-            <select class="ef-field-select" id="efPlanta">
-              <option>Limeira</option><option>Paranaguá</option><option>Cubatão</option>
-              <option>Rondonópolis</option><option>Uberaba</option><option>Candeias</option>
-            </select>
+          <div class="ef-view-item">
+            <div class="lbl">Frete</div>
+            <div class="val" id="efViewFrete">—</div>
           </div>
-        </div>
-      </div>
-
-      <!-- Nota Fiscal -->
-      <div class="ef-section">
-        <div class="ef-section-title">Nota Fiscal</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efNf">Número da NF</label>
-            <input class="ef-field-input" id="efNf" placeholder="—" />
+          <div class="ef-view-item">
+            <div class="lbl">Planta</div>
+            <div class="val" id="efViewPlanta">—</div>
           </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efDataNf">Data da NF</label>
-            <input class="ef-field-input" id="efDataNf" placeholder="dd/mm/aaaa" />
+          <div class="ef-view-item">
+            <div class="lbl">NF Protocolo</div>
+            <div class="val mono" id="efViewNf">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Data NF</div>
+            <div class="val mono" id="efViewDataNf">—</div>
           </div>
         </div>
       </div>
@@ -2825,37 +2818,45 @@ function openEditFieldsModal(id) {
   const p = findProto(id);
   if (!p) return;
   editFieldsCurrentId = id;
-  editFieldsSnapshot = { ...p };
+  editFieldsSnapshot = { qtdProtocolo: p.qtdProtocolo, qtdAgendada: p.qtdAgendada, qtdFaturada: p.qtdFaturada };
 
   // Header
   document.getElementById("efModalProtoId").textContent = p.id;
 
-  // Resumo das quantidades (read-only — editar na tabela)
-  document.getElementById("efSumProto").textContent     = p.qtdProtocolo.toLocaleString("pt-BR");
-  document.getElementById("efSumAgendada").textContent  = p.qtdAgendada.toLocaleString("pt-BR");
-  document.getElementById("efSumSaldo").innerHTML       = `${p.saldo.toLocaleString("pt-BR")}<span class="unit">t</span>`;
-  document.getElementById("efSumFaturada").textContent  = p.qtdFaturada.toLocaleString("pt-BR");
-  document.getElementById("efSumFaturar").textContent   = p.qtdFaturar.toLocaleString("pt-BR");
+  // Quantidades editáveis
+  setVal("efQtdProto",     p.qtdProtocolo);
+  setVal("efQtdAgendada",  p.qtdAgendada);
+  setVal("efQtdSaldo",     p.saldo);
+  setVal("efQtdFaturada",  p.qtdFaturada);
 
-  // Form (NÃO-quantidade)
-  setVal("efStatus",      p.status);
-  setVal("efContrato",    p.contrato);
-  setVal("efCotacao",     p.cotacao);
-  setVal("efFilial",      p.filial);
-  setVal("efCnpjFilial",  p.cnpjFilial);
-  setVal("efCidade",      p.cidade);
-  setVal("efUf",          p.uf);
-  setVal("efCooperado",   p.cooperado);
-  setVal("efCnpjCoop",    p.cnpjCoop);
-  setVal("efIe",          p.ie);
-  setVal("efProduto",     p.produto);
-  setVal("efDescProduto", p.descProduto);
-  setVal("efEmbalagem",   p.embalagem);
-  setVal("efFrete",       p.frete);
-  setVal("efPlanta",      p.planta);
-  setVal("efNf",          p.nf === '—' ? '' : p.nf);
-  setVal("efDataNf",      p.dataNf === '—' ? '' : p.dataNf);
-  setVal("efPreco",       p.preco);
+  // Recalcula saldo ao vivo
+  const recalc = () => {
+    const proto = Number(document.getElementById("efQtdProto").value) || 0;
+    const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
+    document.getElementById("efQtdSaldo").value = Math.max(0, proto - ag);
+  };
+  document.getElementById("efQtdProto").oninput    = recalc;
+  document.getElementById("efQtdAgendada").oninput = recalc;
+
+  // Ficha read-only (demais informações)
+  const setText = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v ?? "—"; };
+  document.getElementById("efViewStatus").innerHTML  = statusBadge(p.status);
+  setText("efViewPreco",        p.preco);
+  setText("efViewContrato",     p.contrato);
+  setText("efViewCotacao",      p.cotacao);
+  setText("efViewFilial",       p.filial);
+  setText("efViewCnpjFilial",   p.cnpjFilial);
+  setText("efViewCidadeUf",     `${p.cidade} · ${p.uf}`);
+  setText("efViewCooperado",    p.cooperado);
+  setText("efViewCnpjCoop",     p.cnpjCoop);
+  setText("efViewIe",           p.ie);
+  setText("efViewProduto",      p.produto);
+  setText("efViewDescProduto",  p.descProduto);
+  setText("efViewEmbalagem",    p.embalagem);
+  setText("efViewFrete",        p.frete);
+  setText("efViewPlanta",       p.planta);
+  setText("efViewNf",           p.nf);
+  setText("efViewDataNf",       p.dataNf);
 
   editModal.classList.add("is-open");
 }
@@ -2866,35 +2867,26 @@ function setVal(id, v) {
 }
 
 function readEditFieldsValues() {
+  const proto = Number(document.getElementById("efQtdProto").value) || 0;
+  const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
+  const fat   = Number(document.getElementById("efQtdFaturada").value) || 0;
   return {
-    status:      document.getElementById("efStatus").value,
-    contrato:    document.getElementById("efContrato").value,
-    cotacao:     document.getElementById("efCotacao").value,
-    filial:      document.getElementById("efFilial").value,
-    cnpjFilial:  document.getElementById("efCnpjFilial").value,
-    cidade:      document.getElementById("efCidade").value,
-    uf:          document.getElementById("efUf").value,
-    cooperado:   document.getElementById("efCooperado").value,
-    cnpjCoop:    document.getElementById("efCnpjCoop").value,
-    ie:          document.getElementById("efIe").value,
-    produto:     document.getElementById("efProduto").value,
-    descProduto: document.getElementById("efDescProduto").value,
-    embalagem:   document.getElementById("efEmbalagem").value,
-    frete:       document.getElementById("efFrete").value,
-    planta:      document.getElementById("efPlanta").value,
-    nf:          document.getElementById("efNf").value || '—',
-    dataNf:      document.getElementById("efDataNf").value || '—',
-    preco:       document.getElementById("efPreco").value,
+    qtdProtocolo: proto,
+    qtdAgendada:  ag,
+    qtdFaturada:  fat,
+    saldo:        Math.max(0, proto - ag),
+    qtdFaturar:   Math.max(0, proto - fat),
   };
 }
 
 function isEditFieldsDirty() {
   if (!editFieldsSnapshot) return false;
   const updates = readEditFieldsValues();
-  for (const k in updates) {
-    if (String(updates[k]) !== String(editFieldsSnapshot[k] ?? "")) return true;
-  }
-  return false;
+  return (
+    updates.qtdProtocolo !== editFieldsSnapshot.qtdProtocolo ||
+    updates.qtdAgendada  !== editFieldsSnapshot.qtdAgendada  ||
+    updates.qtdFaturada  !== editFieldsSnapshot.qtdFaturada
+  );
 }
 
 function saveEditFields() {
@@ -2904,7 +2896,7 @@ function saveEditFields() {
   const id = p.id;
   closeEditFieldsModal();
   render();
-  showBulkToast(`Protocolo ${id} atualizado`);
+  showBulkToast(`Protocolo ${id} · quantidades atualizadas`);
 }
 
 function requestCloseEditFields() {

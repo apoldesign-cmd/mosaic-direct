@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Protocolos (Modal)</title>
+<title>Mosaic Direct — Relatório de Protocolos (Inline Row)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -310,39 +310,23 @@
   .confirm-btn-danger:hover { background: #8a1820; }
 
   /* ================================================================
-     Células de quantidade editáveis (click-to-edit)
+     Edição inline da LINHA — apenas quantidades viram inputs
      ================================================================ */
-  .wide-table td.editable-qty {
-    position: relative;
-    cursor: pointer;
-    padding-right: 22px !important;
+  .wide-table tbody tr.is-editing-row td { background: #fffbed !important; }
+  .wide-table tbody tr.is-editing-row td.col-proto {
+    background: #fffbed !important;
+    box-shadow: 4px 0 8px -4px rgba(240,192,32,0.50);
   }
-  .wide-table td.editable-qty:hover {
-    background: #fffbed;
-    box-shadow: inset 0 0 0 1px #f0c020;
-  }
-  .qty-pencil {
-    position: absolute;
-    right: 6px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-3);
-    opacity: 0;
-    transition: opacity var(--ease-fast);
-    pointer-events: none;
-    display: inline-flex;
-  }
-  .wide-table td.editable-qty:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
-  .wide-table td.editable-qty.cell-editing {
+  .wide-table tbody tr.is-editing-row td.cell-row-edit {
     padding: 0 !important;
-    background: #fff;
+    background: #fff !important;
     box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
   }
-  .qty-inline-input {
+  .row-qty-input {
     width: 100%;
-    height: 100%;
     border: none;
     outline: none;
-    padding: 12px 12px;
+    padding: 14px 12px;
     text-align: right;
     font-size: 13px;
     font-weight: 700;
@@ -1739,7 +1723,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Use o ícone de <strong>✏️ lápis</strong> para alterar <strong>todos os campos</strong> do protocolo em um formulário único.</span>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Clique no ícone de <strong>✏️ lápis</strong> para abrir os campos de <strong>quantidade direto na linha</strong> e ajustar.</span>
   </div>
 
   <!-- Search bar -->
@@ -2040,202 +2024,6 @@
   </div>
 </div>
 
-<!-- EDIT FIELDS MODAL (campos NÃO-quantidade) -->
-<div class="edit-fields-modal-backdrop" id="editFieldsModal" role="dialog" aria-modal="true" aria-labelledby="efModalTitle">
-  <div class="edit-fields-modal">
-    <div class="edit-fields-modal-head">
-      <span style="width:38px;height:38px;border-radius:50%;background:var(--mosaic-green-700);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </span>
-      <div style="flex:1;min-width:0">
-        <h2 id="efModalTitle">Editar protocolo</h2>
-        <div class="edit-fields-modal-head-sub">Protocolo <strong id="efModalProtoId">—</strong></div>
-      </div>
-      <button class="modal-x" id="efModalClose" type="button" aria-label="Fechar" style="background:transparent;border:none;color:var(--text-3);cursor:pointer;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="edit-fields-modal-body">
-
-      <!-- Quantidades (todas editáveis na Versão B) -->
-      <div class="ef-section">
-        <div class="ef-section-title">Quantidades (t)</div>
-        <div class="ef-form-row cols-4">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efQtdProto">Qtd. Protocolo</label>
-            <input class="ef-field-input" id="efQtdProto" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efQtdAgendada">Agendada</label>
-            <input class="ef-field-input" id="efQtdAgendada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label">Saldo (calc.)</label>
-            <input class="ef-field-input" id="efQtdSaldo" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8;color:var(--mosaic-green-800)" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efQtdFaturada">Faturada</label>
-            <input class="ef-field-input" id="efQtdFaturada" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
-          </div>
-        </div>
-        <div style="font-size:11px;color:var(--text-3);margin-top:6px">
-          <strong>Saldo</strong> e <strong>Qtd. a Faturar</strong> são calculados automaticamente a partir das demais.
-        </div>
-      </div>
-
-      <!-- Status -->
-      <div class="ef-section">
-        <div class="ef-section-title">Status</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efStatus">Status atual</label>
-            <select class="ef-field-select" id="efStatus">
-              <option>Novo</option>
-              <option>Liberado para agendar</option>
-              <option>Em agendamento</option>
-              <option>Concluído</option>
-              <option>Cancelado</option>
-              <option>Enviar ao SAP</option>
-            </select>
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efPreco">Preço unitário</label>
-            <input class="ef-field-input" id="efPreco" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Contrato / Cotação -->
-      <div class="ef-section">
-        <div class="ef-section-title">Contrato</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efContrato">Contrato SAP</label>
-            <input class="ef-field-input" id="efContrato" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCotacao">Cotação</label>
-            <input class="ef-field-input" id="efCotacao" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Cliente -->
-      <div class="ef-section">
-        <div class="ef-section-title">Cliente · Filial</div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efFilial">Filial do Cliente</label>
-            <input class="ef-field-input" id="efFilial" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCnpjFilial">CPF/CNPJ da Filial</label>
-            <input class="ef-field-input" id="efCnpjFilial" />
-          </div>
-        </div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efCidade">Cidade</label>
-            <input class="ef-field-input" id="efCidade" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efUf">UF</label>
-            <select class="ef-field-select" id="efUf">
-              <option>SP</option><option>MT</option><option>MS</option><option>PR</option>
-              <option>RS</option><option>GO</option><option>MG</option><option>BA</option>
-              <option>SC</option><option>RJ</option><option>DF</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cooperado -->
-      <div class="ef-section">
-        <div class="ef-section-title">Cooperado</div>
-        <div class="ef-form-row">
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efCooperado">Nome do Cooperado</label>
-            <input class="ef-field-input" id="efCooperado" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efCnpjCoop">CPF/CNPJ</label>
-            <input class="ef-field-input" id="efCnpjCoop" />
-          </div>
-        </div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efIe">Inscrição Estadual</label>
-            <input class="ef-field-input" id="efIe" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Produto / Logística -->
-      <div class="ef-section">
-        <div class="ef-section-title">Produto · Logística</div>
-        <div class="ef-form-row">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efProduto">Código</label>
-            <input class="ef-field-input" id="efProduto" />
-          </div>
-          <div class="ef-field span-2">
-            <label class="ef-field-label" for="efDescProduto">Descrição</label>
-            <input class="ef-field-input" id="efDescProduto" />
-          </div>
-        </div>
-        <div class="ef-form-row">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efEmbalagem">Embalagem</label>
-            <select class="ef-field-select" id="efEmbalagem">
-              <option>Saco 50kg</option>
-              <option>Saco 25kg</option>
-              <option>Big Bag 1000kg</option>
-              <option>Granel</option>
-            </select>
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efFrete">Frete</label>
-            <select class="ef-field-select" id="efFrete">
-              <option>CIF</option>
-              <option>FOB</option>
-            </select>
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efPlanta">Planta</label>
-            <select class="ef-field-select" id="efPlanta">
-              <option>Limeira</option><option>Paranaguá</option><option>Cubatão</option>
-              <option>Rondonópolis</option><option>Uberaba</option><option>Candeias</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <!-- Nota Fiscal -->
-      <div class="ef-section">
-        <div class="ef-section-title">Nota Fiscal</div>
-        <div class="ef-form-row cols-2">
-          <div class="ef-field">
-            <label class="ef-field-label" for="efNf">Número da NF</label>
-            <input class="ef-field-input" id="efNf" placeholder="—" />
-          </div>
-          <div class="ef-field">
-            <label class="ef-field-label" for="efDataNf">Data da NF</label>
-            <input class="ef-field-input" id="efDataNf" placeholder="dd/mm/aaaa" />
-          </div>
-        </div>
-      </div>
-
-    </div>
-    <div class="edit-fields-modal-foot">
-      <button class="ef-btn ef-btn-secondary" id="efCancelBtn" type="button">Cancelar</button>
-      <button class="ef-btn ef-btn-primary" id="efSaveBtn" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Salvar alterações
-      </button>
-    </div>
-  </div>
-</div>
-
 <!-- AGENDAR PROTOCOLO MODAL -->
 <div class="agendar-modal-backdrop" id="agendarModal" role="dialog" aria-modal="true" aria-labelledby="agendarModalTitle">
   <div class="agendar-modal">
@@ -2519,15 +2307,29 @@ const STATUS_PODE_AGENDAR = new Set([
   "Em agendamento",
 ]);
 
+/* Estado de edição inline da linha (Versão B) */
+let editingId = null;
+let editingSnapshot = null;
+
 const SVG_EDIT       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const SVG_X          = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 const SVG_EDIT_SMALL = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
 const SVG_CAL        = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>`;
 
 function actionCell(p) {
+  const isEditing = editingId === p.id;
+  if (isEditing) {
+    return `
+      <div class="action-cluster">
+        <button class="cell-action action-save" data-act="save" data-id="${p.id}" type="button" title="Salvar quantidades" aria-label="Salvar">${SVG_CHECK}</button>
+        <button class="cell-action action-cancel" data-act="cancel" data-id="${p.id}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X}</button>
+      </div>`;
+  }
   const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
   return `
     <div class="action-cluster">
-      <button class="cell-action action-edit" data-act="edit" data-id="${p.id}" type="button" title="Editar campos do protocolo" aria-label="Editar">${SVG_EDIT}</button>
+      <button class="cell-action action-edit" data-act="edit" data-id="${p.id}" type="button" title="Editar quantidades" aria-label="Editar">${SVG_EDIT}</button>
       ${podeAgendar
         ? `<button class="cell-action action-agendar" data-act="agendar" data-id="${p.id}" type="button" title="Agendar este protocolo" aria-label="Agendar protocolo ${p.id}">${SVG_CAL}</button>`
         : ``}
@@ -2592,13 +2394,50 @@ function escAttr(v) {
 }
 
 function renderRow(p) {
+  if (editingId === p.id) return renderRowEditing(p);
   return renderRowNormal(p);
 }
 
-function editableQtyCell(p, field, highlight) {
-  const v = p[field];
-  const cls = "num editable-qty" + (highlight ? " highlight" : "");
-  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+function renderRowEditing(p) {
+  // Pega valores possivelmente em edição (do snapshot do DOM, se já renderizou)
+  const proto = p.qtdProtocolo;
+  const ag    = p.qtdAgendada;
+  const fat   = p.qtdFaturada;
+  const saldo = Math.max(0, proto - ag);
+  const faturar = Math.max(0, proto - fat);
+  return `
+    <tr data-proto-id="${p.id}" class="is-editing-row">
+      <td class="col-proto">
+        <div class="proto-cell">
+          ${actionCell(p)}
+          <span class="proto-cell-number">${p.id}</span>
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      <td>${p.embalagem}</td>
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
+      <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
+      <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdProtocolo" type="number" min="0" value="${proto}" autofocus /></td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdAgendada"  type="number" min="0" value="${ag}" /></td>
+      <td class="num muted" data-saldo-cell>${saldo.toLocaleString("pt-BR")}</td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdFaturada"  type="number" min="0" value="${fat}" /></td>
+      <td class="num muted" data-faturar-cell>${faturar.toLocaleString("pt-BR")}</td>
+    </tr>
+  `;
 }
 
 function renderRowNormal(p) {
@@ -2719,80 +2558,101 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
-  // Versão B: edição apenas via modal. Sem click-to-edit nas células.
   const btn = e.target.closest("[data-act]");
   if (!btn) return;
   const id = btn.dataset.id;
   const act = btn.dataset.act;
-  if (act === "edit")    openEditFieldsModal(id);
+  if (act === "edit")    startRowEdit(id);
+  if (act === "save")    saveRowEdit(id);
+  if (act === "cancel")  requestCancelRowEdit(id);
   if (act === "agendar") openAgendarModal(id);
 });
 
-/* ============== Inline cell edit (só quantidades) ============== */
-let editingCellEl = null;
-let editingCellOriginal = null;
+/* Recalcula saldo/qtdFaturar ao vivo enquanto edita os inputs */
+tableBodyEl.addEventListener("input", (e) => {
+  if (!e.target.classList.contains("row-qty-input")) return;
+  if (!editingId) return;
+  const tr = e.target.closest("tr");
+  if (!tr) return;
+  const proto = Number(tr.querySelector('input[data-f="qtdProtocolo"]').value) || 0;
+  const ag    = Number(tr.querySelector('input[data-f="qtdAgendada"]').value)  || 0;
+  const fat   = Number(tr.querySelector('input[data-f="qtdFaturada"]').value)  || 0;
+  const saldoCell   = tr.querySelector('[data-saldo-cell]');
+  const faturarCell = tr.querySelector('[data-faturar-cell]');
+  if (saldoCell)   saldoCell.textContent   = Math.max(0, proto - ag).toLocaleString("pt-BR");
+  if (faturarCell) faturarCell.textContent = Math.max(0, proto - fat).toLocaleString("pt-BR");
+});
 
 function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
 
-function startCellEdit(td) {
-  if (editingCellEl) commitCellEdit(); // fecha qualquer outra célula em edição
-  const id = td.dataset.id;
-  const field = td.dataset.f;
-  const p = findProto(id);
-  if (!p) return;
-  editingCellEl = td;
-  editingCellOriginal = p[field];
-  td.classList.add("cell-editing");
-  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${p[field]}" />`;
-  const input = td.querySelector("input");
-  input.focus();
-  input.select();
-  input.addEventListener("blur",   commitCellEdit);
-  input.addEventListener("keydown", onCellKeyDown);
-}
-
-function onCellKeyDown(e) {
-  if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
-  if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
-}
-
-function commitCellEdit() {
-  if (!editingCellEl) return;
-  const td = editingCellEl;
-  const id = td.dataset.id;
-  const field = td.dataset.f;
-  const input = td.querySelector("input");
-  if (!input) { editingCellEl = null; return; }
-  const newVal = input.value === "" ? 0 : Number(input.value);
-  const p = findProto(id);
-  editingCellEl = null;
-  editingCellOriginal = null;
-  if (!p) return;
-  if (newVal !== p[field]) {
-    p[field] = newVal;
-    // Recalcula derivados
-    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
-    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
-    render();
-    showBulkToast(`Protocolo ${id} · ${labelOfField(field)} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
-  } else {
-    render();
+/* ============== Row-level edit (só quantidades) ============== */
+function startRowEdit(id) {
+  if (editingId && editingId !== id) {
+    // Descarta silenciosamente outra linha em edição
+    editingId = null;
+    editingSnapshot = null;
   }
-}
-
-function cancelCellEdit() {
-  if (!editingCellEl) return;
-  editingCellEl = null;
-  editingCellOriginal = null;
+  const p = findProto(id);
+  if (!p) return;
+  editingId = id;
+  editingSnapshot = { qtdProtocolo: p.qtdProtocolo, qtdAgendada: p.qtdAgendada, qtdFaturada: p.qtdFaturada };
   render();
+  // Foca primeiro input
+  const first = document.querySelector(`tr[data-proto-id="${id}"] .row-qty-input`);
+  if (first) { first.focus(); first.select(); }
 }
 
-function labelOfField(f) {
+function readRowEditValues(id) {
+  const tr = document.querySelector(`tr[data-proto-id="${id}"]`);
+  if (!tr) return null;
   return {
-    qtdProtocolo: "Qtd. Protocolo",
-    qtdAgendada:  "Qtd. Agendada",
-    qtdFaturada:  "Qtd. Faturada",
-  }[f] || f;
+    qtdProtocolo: Number(tr.querySelector('input[data-f="qtdProtocolo"]').value) || 0,
+    qtdAgendada:  Number(tr.querySelector('input[data-f="qtdAgendada"]').value)  || 0,
+    qtdFaturada:  Number(tr.querySelector('input[data-f="qtdFaturada"]').value)  || 0,
+  };
+}
+
+function saveRowEdit(id) {
+  const p = findProto(id);
+  if (!p) return;
+  const upd = readRowEditValues(id);
+  if (!upd) return;
+  p.qtdProtocolo = upd.qtdProtocolo;
+  p.qtdAgendada  = upd.qtdAgendada;
+  p.qtdFaturada  = upd.qtdFaturada;
+  p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  editingId = null;
+  editingSnapshot = null;
+  render();
+  showBulkToast(`Protocolo ${id} · quantidades atualizadas`);
+}
+
+function requestCancelRowEdit(id) {
+  const upd = readRowEditValues(id);
+  const snap = editingSnapshot || {};
+  const dirty = upd && (
+    upd.qtdProtocolo !== snap.qtdProtocolo ||
+    upd.qtdAgendada  !== snap.qtdAgendada  ||
+    upd.qtdFaturada  !== snap.qtdFaturada
+  );
+  if (!dirty) {
+    editingId = null;
+    editingSnapshot = null;
+    render();
+    return;
+  }
+  const cm = document.getElementById("confirmDiscardModal");
+  document.getElementById("confirmDiscardProto").textContent = id;
+  cm.dataset.protoId = id;
+  cm.dataset.source = "rowEdit";
+  cm.classList.add("is-open");
+}
+
+function discardRowEdit() {
+  editingId = null;
+  editingSnapshot = null;
+  render();
 }
 
 function showBulkToast(msg) {
@@ -2803,139 +2663,9 @@ function showBulkToast(msg) {
 }
 
 /* ================================================================
-   Modal "Editar protocolo" — campos NÃO-quantidade
+   Modal "Editar protocolo" REMOVIDO na Versão B.
+   Edição inline da linha (qtds) cobre toda a funcionalidade.
    ================================================================ */
-const editModal = document.getElementById("editFieldsModal");
-let editFieldsCurrentId = null;
-let editFieldsSnapshot = null;
-
-function openEditFieldsModal(id) {
-  const p = findProto(id);
-  if (!p) return;
-  editFieldsCurrentId = id;
-  editFieldsSnapshot = { ...p };
-
-  // Header
-  document.getElementById("efModalProtoId").textContent = p.id;
-
-  // Quantidades (editáveis na Versão B)
-  setVal("efQtdProto",     p.qtdProtocolo);
-  setVal("efQtdAgendada",  p.qtdAgendada);
-  setVal("efQtdSaldo",     p.saldo);
-  setVal("efQtdFaturada",  p.qtdFaturada);
-
-  // Recalcula saldo ao vivo se mudar Protocolo ou Agendada
-  const recalc = () => {
-    const proto = Number(document.getElementById("efQtdProto").value) || 0;
-    const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
-    document.getElementById("efQtdSaldo").value = Math.max(0, proto - ag);
-  };
-  document.getElementById("efQtdProto").oninput    = recalc;
-  document.getElementById("efQtdAgendada").oninput = recalc;
-
-  // Demais campos
-  setVal("efStatus",      p.status);
-  setVal("efContrato",    p.contrato);
-  setVal("efCotacao",     p.cotacao);
-  setVal("efFilial",      p.filial);
-  setVal("efCnpjFilial",  p.cnpjFilial);
-  setVal("efCidade",      p.cidade);
-  setVal("efUf",          p.uf);
-  setVal("efCooperado",   p.cooperado);
-  setVal("efCnpjCoop",    p.cnpjCoop);
-  setVal("efIe",          p.ie);
-  setVal("efProduto",     p.produto);
-  setVal("efDescProduto", p.descProduto);
-  setVal("efEmbalagem",   p.embalagem);
-  setVal("efFrete",       p.frete);
-  setVal("efPlanta",      p.planta);
-  setVal("efNf",          p.nf === '—' ? '' : p.nf);
-  setVal("efDataNf",      p.dataNf === '—' ? '' : p.dataNf);
-  setVal("efPreco",       p.preco);
-
-  editModal.classList.add("is-open");
-}
-
-function setVal(id, v) {
-  const el = document.getElementById(id);
-  if (el && v !== undefined && v !== null) el.value = v;
-}
-
-function readEditFieldsValues() {
-  const proto = Number(document.getElementById("efQtdProto").value) || 0;
-  const ag    = Number(document.getElementById("efQtdAgendada").value) || 0;
-  const fat   = Number(document.getElementById("efQtdFaturada").value) || 0;
-  return {
-    qtdProtocolo: proto,
-    qtdAgendada:  ag,
-    qtdFaturada:  fat,
-    saldo:        Math.max(0, proto - ag),
-    qtdFaturar:   Math.max(0, proto - fat),
-    status:      document.getElementById("efStatus").value,
-    contrato:    document.getElementById("efContrato").value,
-    cotacao:     document.getElementById("efCotacao").value,
-    filial:      document.getElementById("efFilial").value,
-    cnpjFilial:  document.getElementById("efCnpjFilial").value,
-    cidade:      document.getElementById("efCidade").value,
-    uf:          document.getElementById("efUf").value,
-    cooperado:   document.getElementById("efCooperado").value,
-    cnpjCoop:    document.getElementById("efCnpjCoop").value,
-    ie:          document.getElementById("efIe").value,
-    produto:     document.getElementById("efProduto").value,
-    descProduto: document.getElementById("efDescProduto").value,
-    embalagem:   document.getElementById("efEmbalagem").value,
-    frete:       document.getElementById("efFrete").value,
-    planta:      document.getElementById("efPlanta").value,
-    nf:          document.getElementById("efNf").value || '—',
-    dataNf:      document.getElementById("efDataNf").value || '—',
-    preco:       document.getElementById("efPreco").value,
-  };
-}
-
-function isEditFieldsDirty() {
-  if (!editFieldsSnapshot) return false;
-  const updates = readEditFieldsValues();
-  for (const k in updates) {
-    if (String(updates[k]) !== String(editFieldsSnapshot[k] ?? "")) return true;
-  }
-  return false;
-}
-
-function saveEditFields() {
-  const p = findProto(editFieldsCurrentId);
-  if (!p) return;
-  Object.assign(p, readEditFieldsValues());
-  const id = p.id;
-  closeEditFieldsModal();
-  render();
-  showBulkToast(`Protocolo ${id} atualizado`);
-}
-
-function requestCloseEditFields() {
-  if (!isEditFieldsDirty()) {
-    closeEditFieldsModal();
-    return;
-  }
-  // Modal de confirmação reusado
-  const cm = document.getElementById("confirmDiscardModal");
-  document.getElementById("confirmDiscardProto").textContent = editFieldsCurrentId;
-  cm.dataset.protoId = editFieldsCurrentId;
-  cm.dataset.source = "editFields";
-  cm.classList.add("is-open");
-}
-
-function closeEditFieldsModal() {
-  editModal.classList.remove("is-open");
-  editFieldsCurrentId = null;
-  editFieldsSnapshot = null;
-}
-
-document.getElementById("efModalClose").addEventListener("click", requestCloseEditFields);
-document.getElementById("efCancelBtn").addEventListener("click", requestCloseEditFields);
-document.getElementById("efSaveBtn").addEventListener("click", saveEditFields);
-editModal.addEventListener("click", (e) => {
-  if (e.target === editModal) requestCloseEditFields();
-});
 
 /* ================================================================
    Modal "Agendar protocolo" — fluxo rápido
@@ -3067,10 +2797,7 @@ const confirmNo        = document.getElementById("confirmDiscardNo");
 confirmYes.addEventListener("click", () => {
   const source = confirmModal.dataset.source;
   confirmModal.classList.remove("is-open");
-  if (source === "editFields") {
-    // Descarta alterações do modal "Editar campos" e fecha
-    closeEditFieldsModal();
-  }
+  if (source === "rowEdit") discardRowEdit();
   delete confirmModal.dataset.source;
 });
 confirmNo.addEventListener("click", () => {
@@ -3084,7 +2811,7 @@ confirmModal.addEventListener("click", (e) => {
   }
 });
 
-/* Esc fecha modais abertos */
+/* Esc fecha modais abertos ou cancela edição da linha */
 document.addEventListener("keydown", (e) => {
   if (e.key !== "Escape") return;
   if (agendarModal.classList.contains("is-open")) { closeAgendarModal(); return; }
@@ -3093,8 +2820,7 @@ document.addEventListener("keydown", (e) => {
     delete confirmModal.dataset.source;
     return;
   }
-  if (editModal.classList.contains("is-open"))    { requestCloseEditFields(); return; }
-  if (editingCellEl) cancelCellEdit();
+  if (editingId) requestCancelRowEdit(editingId);
 });
 
 /* ================================================================
