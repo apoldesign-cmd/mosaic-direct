@@ -979,8 +979,13 @@
     min-width: 200px;
     padding: 8px 14px !important;
   }
+  /* Thead da col-proto: sticky em DUAS direções (top + left) — fica
+     fixo no canto superior esquerdo independente do scroll. */
   .wide-table thead th.col-proto {
-    z-index: 4;
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 5;
     background: var(--bg-section) !important;
   }
   /* Wrapper interno da célula proto: ações + número */
@@ -2173,9 +2178,7 @@
           <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="preco">Preço NF (unit.)
-            <span class="th-hint">da Nota Fiscal</span>
-          <span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="preco">Preço NF (unit.)<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
