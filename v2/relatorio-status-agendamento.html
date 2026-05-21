@@ -2112,6 +2112,23 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .filter-block--actions { align-self: end; }
+  /* Range filter (Semana de → até) */
+  .filter-block--range { min-width: 0; }
+  .semana-range {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .semana-range select {
+    flex: 1;
+    min-width: 0;
+  }
+  .semana-range-sep {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
   .btn-clear-filters {
     height: 36px;
     padding: 0 14px;
@@ -2293,6 +2310,64 @@
   .report-table tbody tr.is-editing td.col-sticky {
     background: #fffbed !important;
     box-shadow: 1px 0 0 rgba(240,192,32,0.40);
+  }
+  /* Celula em modo edicao: caixa de input grande */
+  .report-table td.cell-row-edit {
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
+  }
+  .row-qty-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 14px 12px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-1);
+    background: transparent;
+  }
+  /* Celula editavel (click-to-edit no modo normal) */
+  .report-table td.editable-qty {
+    position: relative;
+    cursor: pointer;
+    padding-right: 22px !important;
+  }
+  .report-table td.editable-qty:hover {
+    background: #fffbed;
+    box-shadow: inset 0 0 0 1px #f0c020;
+  }
+  .qty-pencil {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    opacity: 0;
+    transition: opacity var(--ease-fast);
+    pointer-events: none;
+    display: inline-flex;
+  }
+  .report-table td.editable-qty:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
+  .report-table td.editable-qty.cell-editing {
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
+  }
+  .qty-inline-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 14px 12px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-1);
+    background: transparent;
   }
 
   /* Inputs inline */
@@ -2629,7 +2704,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use os filtros para ajustar o período ou refinar por recebedor, produto, planta ou status. Clique em <strong>✏️ Editar</strong> em qualquer linha para corrigir campos sem sair da tela.</span>
+    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use o filtro de <strong>semana de → até</strong> para abranger um período maior. Clique em <strong>uma célula de Qtd. Solicitada</strong> para editar inline, ou no <strong>✏️ lápis</strong> para abrir a edição na linha (caixa grande).</span>
   </div>
 
   <!-- Search bar + advanced-filter trigger + export -->
@@ -2674,11 +2749,17 @@
           <option value="cancelado">Cancelado</option>
         </select>
       </div>
-      <div class="filter-block">
+      <div class="filter-block filter-block--range">
         <label>Semana (Seg → Dom)</label>
-        <select id="filterSemana">
-          <!-- options populated by JS -->
-        </select>
+        <div class="semana-range">
+          <select id="filterSemanaDe" aria-label="Semana inicial">
+            <!-- options populated by JS -->
+          </select>
+          <span class="semana-range-sep" aria-hidden="true">→</span>
+          <select id="filterSemanaAte" aria-label="Semana final">
+            <!-- options populated by JS -->
+          </select>
+        </div>
       </div>
       <div class="filter-block">
         <label>CPF/CNPJ do Emissor</label>
@@ -2950,7 +3031,8 @@ const elBody          = document.getElementById("reportTableBody");
 const elEmpty         = document.getElementById("reportEmpty");
 const elSearch        = document.getElementById("filterSearch");
 const elStatus        = document.getElementById("filterStatus");
-const elSemana        = document.getElementById("filterSemana");
+const elSemanaDe      = document.getElementById("filterSemanaDe");
+const elSemanaAte     = document.getElementById("filterSemanaAte");
 const elCnpjEmissor   = document.getElementById("filterCnpjEmissor");
 const elRecebedorNome = document.getElementById("filterRecebedorNome");
 const elRecebedorCnpj = document.getElementById("filterRecebedorCnpj");
@@ -2966,7 +3048,18 @@ function filteredRequests() {
       if (!hay.includes(q)) return false;
     }
     if (elStatus.value        && r.status        !== elStatus.value)        return false;
-    if (elSemana.value        && r.semana        !== elSemana.value)        return false;
+    // Filtro de semana é intervalo (De → Até). Tenta extrair as datas pra comparar.
+    if (elSemanaDe.value || elSemanaAte.value) {
+      const semanaInicio = (r.semana || "").split(" — ")[0]; // dd/mm/aaaa
+      const de  = elSemanaDe.value  ? elSemanaDe.value.split(" — ")[0]  : null;
+      const ate = elSemanaAte.value ? elSemanaAte.value.split(" — ")[0] : null;
+      const toIso = s => { const [d, m, y] = s.split("/"); return `${y}-${m}-${d}`; };
+      const rIso  = toIso(semanaInicio);
+      const deIso  = de  ? toIso(de)  : null;
+      const ateIso = ate ? toIso(ate) : null;
+      if (deIso  && rIso < deIso)  return false;
+      if (ateIso && rIso > ateIso) return false;
+    }
     if (elCnpjEmissor.value   && r.recebedorCnpj !== elCnpjEmissor.value)   return false;
     if (elRecebedorNome.value && r.recebedorNome !== elRecebedorNome.value) return false;
     if (elRecebedorCnpj.value && r.recebedorCnpj !== elRecebedorCnpj.value) return false;
@@ -3025,9 +3118,10 @@ function buildWeeklyBreakdown(r) {
 let editingSol = null;        // sol+semana únicos identificam a linha
 let editingSnapshot = null;   // shallow copy para restaurar no cancelar
 
-const SVG_EDIT  = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-const SVG_CHECK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-const SVG_X     = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const SVG_EDIT       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_EDIT_SMALL = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const SVG_X          = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
 
 function rowKey(r) { return `${r.sol}|${r.semana}`; }
 
@@ -3071,31 +3165,35 @@ function render() {
     let tds = `<td class="col-action">${actionCellHTML(r)}</td>`;
 
     if (editing) {
+      // Modo edição: apenas a Qtd. Solicitada vira input editável.
+      // Todos os outros campos ficam read-only (igual ao modo normal),
+      // pois Confirmada OV e Faturada vêm do SAP e os demais campos
+      // sao imutaveis (Cooperado/Contrato/etc.).
       tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
       tds += `<td class="cell-mono">${r.protocolo}</td>`;
-      tds += `<td><select class="inline-edit" data-f="tipo">${selOptsObj(TIPO_LABELS, r.tipo)}</select></td>`;
-      tds += `<td><select class="inline-edit" data-f="semana">${selOptsList(SEMANA_RANGES.map(s=>s.value), r.semana)}</select></td>`;
-      tds += `<td><select class="inline-edit" data-f="status">${selOptsObj(STATUS_LABELS, r.status)}</select></td>`;
-      tds += `<td><input class="inline-edit" data-f="cotacao"       value="${escAttr(r.cotacao)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="contrato"      value="${escAttr(r.contrato)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="itemContrato"  value="${escAttr(r.itemContrato)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="ov"            value="${escAttr(r.ov === '—' ? '' : r.ov)}" placeholder="—" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="pedidoCliente" value="${escAttr(r.pedidoCliente)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="codProduto"    value="${escAttr(r.codProduto === '—' ? '' : r.codProduto)}" placeholder="—" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="descProduto"   value="${escAttr(r.descProduto)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="embalagem"     value="${escAttr(r.embalagem)}" /></td>`;
-      tds += `<td><select class="inline-edit" data-f="frete">${selOptsList(FRETE_OPTIONS, r.frete)}</select></td>`;
-      tds += `<td><input class="inline-edit" data-f="planta"        value="${escAttr(r.planta)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="recebedorNome" value="${escAttr(r.recebedorNome)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="recebedorCnpj" value="${escAttr(r.recebedorCnpj)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="recebedorIe"   value="${escAttr(r.recebedorIe)}" /></td>`;
-      tds += `<td><input class="inline-edit" data-f="cidade"        value="${escAttr(r.cidade)}" /></td>`;
-      tds += `<td><select class="inline-edit" data-f="uf">${selOptsList(UF_OPTIONS, r.uf)}</select></td>`;
-      tds += `<td><input class="inline-edit num" data-f="qtdSolicitada"  type="number" min="0" value="${r.qtdSolicitada}" /></td>`;
-      /* Confirmada OV e Faturada vêm do SAP — read-only */
-      tds += `<td class="vol-cell vol-cell--conf vol-cell--muted">${fmt(r.qtdConfirmadaOV)}</td>`;
-      tds += `<td class="vol-cell vol-cell--fat vol-cell--muted">${fmt(r.qtdFaturada)}</td>`;
-      /* Totais (calculados — read-only) */
+      tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
+      tds += `<td class="cell-mono">${r.semana}</td>`;
+      tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
+      tds += `<td class="cell-mono">${r.cotacao}</td>`;
+      tds += `<td class="cell-mono">${r.contrato}</td>`;
+      tds += `<td class="cell-mono">${r.itemContrato}</td>`;
+      tds += `<td class="cell-mono">${r.ov}</td>`;
+      tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
+      tds += `<td class="cell-mono">${r.codProduto}</td>`;
+      tds += `<td>${r.descProduto}</td>`;
+      tds += `<td>${r.embalagem}</td>`;
+      tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
+      tds += `<td>${r.planta}</td>`;
+      tds += `<td>${r.recebedorNome}</td>`;
+      tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
+      tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
+      tds += `<td>${r.cidade}</td>`;
+      tds += `<td>${r.uf}</td>`;
+      // 3 colunas de Qtd: Solicitada (editável), Confirmada OV e Faturada (read-only do SAP)
+      tds += `<td class="vol-cell cell-row-edit"><input class="row-qty-input" data-f="qtdSolicitada" type="number" min="0" value="${r.qtdSolicitada}" autofocus /></td>`;
+      tds += `<td class="vol-cell vol-cell--conf vol-cell--muted" title="Vem do SAP — read-only">${fmt(r.qtdConfirmadaOV)}</td>`;
+      tds += `<td class="vol-cell vol-cell--fat vol-cell--muted"  title="Vem do SAP — read-only">${fmt(r.qtdFaturada)}</td>`;
+      // Totais
       tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.planned[0])}</td>`;
       tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.realized[0])}</td>`;
       tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
@@ -3121,9 +3219,10 @@ function render() {
       tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
       tds += `<td>${r.cidade}</td>`;
       tds += `<td>${r.uf}</td>`;
-      tds += `<td class="vol-cell">${fmt(r.qtdSolicitada)}</td>`;
-      tds += `<td class="vol-cell vol-cell--conf">${fmt(r.qtdConfirmadaOV)}</td>`;
-      tds += `<td class="vol-cell vol-cell--fat">${fmt(r.qtdFaturada)}</td>`;
+      // Qtd Solicitada = clicável (editável). Confirmada OV e Faturada vêm do SAP (read-only).
+      tds += `<td class="vol-cell editable-qty" data-key="${rowKey(r)}" data-f="qtdSolicitada" title="Clique para editar">${fmt(r.qtdSolicitada)}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+      tds += `<td class="vol-cell vol-cell--conf" title="Vem do SAP — read-only">${fmt(r.qtdConfirmadaOV)}</td>`;
+      tds += `<td class="vol-cell vol-cell--fat"  title="Vem do SAP — read-only">${fmt(r.qtdFaturada)}</td>`;
       tds += `<td class="vol-cell col-total">${fmt(r.planned[0])}</td>`;
       tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
       tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
@@ -3163,6 +3262,61 @@ function render() {
       if (act === "cancel") requestCancelEdit(key);
     });
   });
+
+  /* Click-to-edit nas celulas de Qtd Solicitada (so quando NAO em row-edit) */
+  elBody.querySelectorAll("td.editable-qty").forEach(td => {
+    td.addEventListener("click", () => {
+      if (editingSol) return; // se ja tem linha em edicao, ignora
+      startCellEdit(td);
+    });
+  });
+}
+
+/* ============== Click-to-edit cell (Qtd Solicitada) ============== */
+let editingCellEl = null;
+
+function startCellEdit(td) {
+  if (editingCellEl) commitCellEdit();
+  const key = td.dataset.key;
+  const field = td.dataset.f;
+  const r = findRequest(key);
+  if (!r) return;
+  editingCellEl = td;
+  td.classList.add("cell-editing");
+  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${r[field]}" />`;
+  const input = td.querySelector("input");
+  input.focus(); input.select();
+  input.addEventListener("blur", commitCellEdit);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
+    if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
+  });
+}
+
+function commitCellEdit() {
+  if (!editingCellEl) return;
+  const td = editingCellEl;
+  const key = td.dataset.key;
+  const field = td.dataset.f;
+  const input = td.querySelector("input");
+  if (!input) { editingCellEl = null; return; }
+  const newVal = input.value === "" ? 0 : Number(input.value);
+  const r = findRequest(key);
+  editingCellEl = null;
+  if (!r) return;
+  if (newVal !== r[field]) {
+    r[field] = newVal;
+    render();
+    showInlineToast(`Linha ${r.sol} · ${field} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
+  } else {
+    render();
+  }
+}
+
+function cancelCellEdit() {
+  if (!editingCellEl) return;
+  editingCellEl = null;
+  render();
 }
 
 /* ---- Inline edit — operações ---- */
@@ -3263,6 +3417,7 @@ function bindConfirmModal() {
       modal.classList.remove("is-open");
       return;
     }
+    if (editingCellEl) { cancelCellEdit(); return; }
     if (editingSol) requestCancelEdit(editingSol);
   });
 }
@@ -3315,15 +3470,18 @@ function buildWeekRanges() {
 const SEMANA_RANGES = buildWeekRanges();
 const SEMANA_VIGENTE = SEMANA_RANGES.find(r => r.current).value;
 
-elSemana.innerHTML = `
-  <option value="">Todas as semanas</option>
-  ${SEMANA_RANGES.map(r =>
-    `<option value="${r.value}"${r.current ? " selected" : ""}>${r.label}</option>`
-  ).join("")}
+// Popula os 2 selects (De → Até) com as mesmas opções
+const semanaOpts = `
+  <option value="">—</option>
+  ${SEMANA_RANGES.map(r => `<option value="${r.value}">${r.label}</option>`).join("")}
 `;
-elSemana.value = SEMANA_VIGENTE;
+elSemanaDe.innerHTML  = semanaOpts;
+elSemanaAte.innerHTML = semanaOpts;
+// Default: ambos = vigente (mostra apenas a semana atual)
+elSemanaDe.value  = SEMANA_VIGENTE;
+elSemanaAte.value = SEMANA_VIGENTE;
 
-[elStatus, elSemana, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+[elStatus, elSemanaDe, elSemanaAte, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", render);
 });
 
@@ -3339,8 +3497,8 @@ const elSearchSuggest  = document.getElementById("searchSuggestions");
 
 function activeFilterCount() {
   let n = 0;
-  /* Conta semana só se mudou da vigente (filtro ativo) */
-  if (elSemana.value && elSemana.value !== SEMANA_VIGENTE) n++;
+  /* Conta range de semana só se mudou da vigente (De ou Até diferente) */
+  if (elSemanaDe.value !== SEMANA_VIGENTE || elSemanaAte.value !== SEMANA_VIGENTE) n++;
   [elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
     if (el && el.value) n++;
   });
