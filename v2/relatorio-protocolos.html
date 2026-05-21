@@ -140,7 +140,7 @@
     padding: 2px 4px;
     border-radius: 6px;
     background: rgba(0,0,0,0.025);
-    margin-right: 6px;
+    margin-left: 8px;
     position: relative;
   }
   .wide-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
@@ -155,8 +155,8 @@
     background: rgba(0,106,77,0.14);
   }
 
-  /* Dropdown de ações da linha — position:fixed evita ser cortado por
-     contextos de empilhamento sticky de outras linhas da tabela. */
+  /* Dropdown de ações da linha — vive no <body> direto (fora de
+     qualquer stacking context da tabela) com position:fixed. */
   .action-menu-pop {
     position: fixed;
     min-width: 220px;
@@ -166,9 +166,7 @@
     box-shadow: 0 12px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
     padding: 4px;
     z-index: 9999;
-    display: none;
   }
-  .action-cluster.is-open .action-menu-pop { display: block; }
   .action-menu-item {
     display: flex;
     align-items: center;
@@ -2884,8 +2882,8 @@ function renderRowNormal(p) {
     <tr data-proto-id="${p.id}">
       <td class="col-proto">
         <div class="proto-cell">
-          ${actionCell(p)}
           <span class="proto-cell-number"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></span>
+          ${actionCell(p)}
         </div>
       </td>
       <td>${statusBadge(p.status)}</td>
@@ -3120,8 +3118,8 @@ function openActionMenu(cluster, id) {
 
   const pop = document.createElement("div");
   pop.className = "action-menu-pop";
-  // Posiciona o popup como FIXED a partir das coords do botão chevron,
-  // garantindo que nenhuma celula sticky de outra linha sobreponha.
+  pop.dataset.clusterId = id;  // pra reassociar no close
+  // Posiciona o popup como FIXED a partir das coords do botão chevron
   const btn = cluster.querySelector("[data-act='menu']");
   if (btn) {
     const rect = btn.getBoundingClientRect();
@@ -3149,16 +3147,17 @@ function openActionMenu(cluster, id) {
       </span>
     </button>
   `;
-  cluster.appendChild(pop);
+  // Anexa direto no <body> pra sair de qualquer stacking context
+  // (sticky cells, overflow scroll, etc.). cluster.is-open vira apenas
+  // marker; o popup vive fora do cluster no DOM.
+  document.body.appendChild(pop);
   cluster.classList.add("is-open");
 }
 
 function closeAllActionMenus() {
-  document.querySelectorAll(".action-cluster.is-open").forEach(c => {
-    c.classList.remove("is-open");
-    const pop = c.querySelector(".action-menu-pop");
-    if (pop) pop.remove();
-  });
+  document.querySelectorAll(".action-cluster.is-open").forEach(c => c.classList.remove("is-open"));
+  // Remove os pops (que vivem no body)
+  document.querySelectorAll(".action-menu-pop").forEach(pop => pop.remove());
 }
 
 // Click fora fecha o menu (e o popover não está mais dentro do cluster,
