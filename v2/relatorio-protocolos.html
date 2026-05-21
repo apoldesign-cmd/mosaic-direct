@@ -116,66 +116,59 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px; height: 28px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-circle);
+    width: 22px; height: 22px;
+    border: none;
+    border-radius: 5px;
     color: var(--text-3);
     cursor: pointer;
-    background: #fff;
-    transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
+    background: transparent;
+    padding: 0;
+    transition: color var(--ease-fast), background var(--ease-fast);
     text-decoration: none;
+    font-family: inherit;
+    flex-shrink: 0;
   }
   .cell-action:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.10);
   }
-  /* Cluster de 2 acoes lado a lado dentro de col-action */
+  /* Cluster de ações inline na célula do Protocolo */
   .action-cluster {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    justify-content: center;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.025);
+    margin-right: 4px;
   }
-  .cell-action.action-edit {
-    border-color: var(--border);
-    color: var(--text-2);
-  }
+  .wide-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
+  .cell-action.action-edit { color: var(--text-3); }
   .cell-action.action-edit:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.14);
   }
   .cell-action.action-save {
-    border-color: var(--mosaic-green-700);
     color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
+    background: rgba(0,106,77,0.10);
   }
   .cell-action.action-save:hover {
-    background: var(--mosaic-green-700);
+    background: var(--mosaic-green-800);
     color: #fff;
-    border-color: var(--mosaic-green-700);
   }
-  .cell-action.action-cancel {
-    border-color: var(--border);
-    color: var(--mosaic-red);
-  }
+  .cell-action.action-cancel { color: var(--text-3); }
   .cell-action.action-cancel:hover {
     background: var(--mosaic-red);
     color: #fff;
-    border-color: var(--mosaic-red);
   }
-  /* "Agendar protocolo" action button — only on rows with saldo > 0 */
-  .action-agendar {
-    border-color: var(--mosaic-green-700);
+  /* "Agendar protocolo" — só em linhas com saldo > 0 e status permitido */
+  .cell-action.action-agendar {
     color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.04);
+    background: rgba(0,106,77,0.08);
   }
-  .action-agendar:hover {
+  .cell-action.action-agendar:hover {
     background: var(--mosaic-green-700);
     color: #fff;
-    border-color: var(--mosaic-green-700);
-    transform: scale(1.08);
   }
 
   /* ================================================================
@@ -341,195 +334,71 @@
   .cell-action-wrap[data-tooltip]:hover::after { opacity: 1; }
 
   /* ================================================================
-     Sticky columns (Checkbox + Ação + Protocolo)
+     Sticky column: Protocolo (com ações inline ao lado do número)
      ================================================================ */
-  /* Column 0: checkbox (44px) */
-  .wide-table th.col-check,
-  .wide-table td.col-check {
-    position: sticky;
-    left: 0;
-    z-index: 3;
-    width: 44px;
-    min-width: 44px;
-    max-width: 44px;
-    padding: 8px 8px !important;
-    text-align: center;
-    background: #fff;
-  }
-  .wide-table thead th.col-check {
-    z-index: 4;
-    background: var(--bg-section) !important;
-  }
-  /* Column 1: action cluster (2 icones lado a lado, ~84px) */
-  .wide-table th.col-action,
-  .wide-table td.col-action {
-    position: sticky;
-    left: 44px;
-    z-index: 3;
-    width: 88px;
-    min-width: 88px;
-    max-width: 88px;
-    padding: 8px 8px !important;
-    text-align: center;
-    background: #fff;
-  }
-  .wide-table thead th.col-action {
-    z-index: 4;
-    background: var(--bg-section) !important;
-  }
-  /* Column 2: Protocolo (sticky too) */
   .wide-table th.col-proto,
   .wide-table td.col-proto {
     position: sticky;
-    left: 132px;
+    left: 0;
     z-index: 3;
     background: #fff;
     box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
-    min-width: 150px;
+    min-width: 200px;
+    padding: 8px 14px !important;
   }
   .wide-table thead th.col-proto {
     z-index: 4;
     background: var(--bg-section) !important;
   }
-  .wide-table td.col-proto a {
-    color: var(--mosaic-green-800);
+  /* Wrapper interno da célula proto: ações + número */
+  .proto-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .proto-cell-number {
     font-weight: 700;
+    font-size: 13px;
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .proto-cell-number a {
+    color: var(--mosaic-green-800);
     text-decoration: none;
     border-bottom: 1px dashed transparent;
     transition: border-color var(--ease-fast), color var(--ease-fast);
   }
-  .wide-table td.col-proto a:hover {
+  .proto-cell-number a:hover {
     color: var(--mosaic-green-700);
     border-bottom-color: var(--mosaic-green-700);
   }
-  /* Hover keeps sticky cells on top of zebra hover */
-  .wide-table tbody tr:hover td.col-check,
-  .wide-table tbody tr:hover td.col-action,
-  .wide-table tbody tr:hover td.col-proto {
-    background: var(--bg-hover);
-  }
-  /* Linha selecionada */
-  .wide-table tbody tr.is-selected td {
-    background: rgba(0,106,77,0.06) !important;
-  }
-  .wide-table tbody tr.is-selected td.col-proto {
-    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
-  }
-
-  /* Custom checkbox */
-  .check-mosaic {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border-strong);
-    border-radius: 4px;
-    background: #fff;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--ease-fast);
-    margin: 0;
-    flex-shrink: 0;
-    vertical-align: middle;
-  }
-  .check-mosaic:hover { border-color: var(--mosaic-green-700); }
-  .check-mosaic:checked,
-  .check-mosaic:indeterminate {
-    background: var(--mosaic-green-800);
-    border-color: var(--mosaic-green-800);
-  }
-  .check-mosaic:checked::after {
-    content: "";
-    width: 10px; height: 10px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='20 6 9 17 4 12'/></svg>");
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  .check-mosaic:indeterminate::after {
-    content: "";
-    width: 8px; height: 2px;
-    background: #fff;
-    border-radius: 1px;
-  }
+  /* Hover keeps sticky cell on top of zebra hover */
+  .wide-table tbody tr:hover td.col-proto { background: var(--bg-hover); }
 
   /* ================================================================
-     Bulk-edit action bar (fixed bottom)
+     Toolbar: botão "Importar via CSV" sutil
      ================================================================ */
-  .bulk-bar {
-    position: fixed;
-    left: 50%;
-    bottom: 28px;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--text-1);
-    color: #fff;
-    border-radius: var(--radius-md);
-    padding: 12px 14px 12px 22px;
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-    z-index: 80;
-    opacity: 0;
-    pointer-events: none;
-    transition: transform var(--ease-base), opacity var(--ease-base);
-    min-width: 480px;
-    max-width: calc(100% - 32px);
-  }
-  .bulk-bar.is-visible {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .bulk-bar-count {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 13px;
-    font-weight: 600;
-  }
-  .bulk-bar-count strong {
-    font-size: 16px;
-    font-weight: 800;
-    color: #fff;
-    background: var(--mosaic-green-700);
-    border-radius: 999px;
-    padding: 2px 10px;
-    min-width: 28px;
-    text-align: center;
-  }
-  .bulk-bar-actions { display: flex; gap: 8px; margin-left: auto; }
-  .bulk-btn {
-    background: transparent;
-    color: #fff;
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: var(--radius-md);
-    padding: 8px 14px;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
+  .toolbar-csv-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
     font-family: inherit;
-    transition: background var(--ease-fast), border-color var(--ease-fast);
+    transition: background var(--ease-fast), color var(--ease-fast);
   }
-  .bulk-btn:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.5);
-  }
-  .bulk-btn.is-primary {
+  .toolbar-csv-btn:hover {
     background: var(--mosaic-green-700);
-    border-color: var(--mosaic-green-700);
+    color: #fff;
   }
-  .bulk-btn.is-primary:hover { background: var(--mosaic-green-800); border-color: var(--mosaic-green-800); }
-  .bulk-btn.is-clear {
-    background: transparent;
-    border: none;
-    color: rgba(255,255,255,0.7);
-    padding: 8px 10px;
-  }
-  .bulk-btn.is-clear:hover { color: #fff; background: rgba(255,255,255,0.08); }
 
   /* ================================================================
      Bulk-edit SIDENAV DRAWER (substitui o modal centralizado)
@@ -1029,12 +898,13 @@
   .results-toolbar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 12px;
   }
   .results-count {
     font-size: 13px;
     color: var(--text-3);
+    margin-right: auto;
   }
   .results-count strong { color: var(--text-1); font-weight: 700; }
 
@@ -1488,16 +1358,16 @@
   <!-- Results count + table -->
   <div class="results-toolbar">
     <span class="results-count"><strong id="resultCount">5</strong> protocolos encontrados</span>
+    <button class="toolbar-csv-btn" id="csvImportBtn" type="button" title="Importar atualizações em massa via planilha CSV">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Atualizar em massa (CSV)
+    </button>
   </div>
 
   <div class="wide-table-wrap">
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
-          <th class="col-check" aria-label="Selecionar">
-            <input type="checkbox" class="check-mosaic" id="checkAll" aria-label="Selecionar todos visíveis" />
-          </th>
-          <th class="col-action" aria-label="Ação"></th>
           <th class="col-proto">Protocolo</th>
           <th>Status</th>
           <th>Contrato SAP</th>
@@ -1556,137 +1426,23 @@
 
 </main>
 
-<!-- BULK-EDIT ACTION BAR (fixed bottom, appears when >=1 selected) -->
-<div class="bulk-bar" id="bulkBar" role="status" aria-live="polite">
-  <div class="bulk-bar-count">
-    <strong id="bulkCount">0</strong>
-    <span>protocolo<span id="bulkPlural">s</span> selecionado<span id="bulkPlural2">s</span></span>
-  </div>
-  <div class="bulk-bar-actions">
-    <button class="bulk-btn is-clear" id="bulkClearBtn" type="button">Limpar seleção</button>
-    <button class="bulk-btn is-primary" id="bulkEditBtn" type="button">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      Editar em massa
-    </button>
-  </div>
-</div>
-
-<!-- BULK-EDIT SIDENAV DRAWER -->
+<!-- CSV IMPORT SIDENAV DRAWER -->
 <div class="modal-backdrop" id="bulkModal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
   <aside class="bulk-modal">
     <div class="bulk-modal-head">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mosaic-green-700)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
       <div class="bulk-modal-head-text">
-        <h2 id="bulkModalTitle">Editar em massa</h2>
-        <div class="bulk-modal-head-sub"><strong id="bulkModalCount">0</strong> protocolos selecionados</div>
+        <h2 id="bulkModalTitle">Atualizar em massa via planilha</h2>
+        <div class="bulk-modal-head-sub">Importe atualizações de centenas de protocolos via CSV</div>
       </div>
       <button class="modal-x" id="bulkModalClose" type="button" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
 
-    <!-- TABS -->
-    <div class="bulk-tabs" role="tablist">
-      <button class="bulk-tab is-active" data-tab="fields" type="button" role="tab">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Editar campos
-      </button>
-      <button class="bulk-tab" data-tab="csv" type="button" role="tab">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Upload CSV
-      </button>
-    </div>
-
     <div class="bulk-modal-body">
-
-      <!-- TAB PANE: EDITAR CAMPOS ============================================== -->
-      <div class="bulk-tab-pane is-active" data-pane="fields">
-        <p class="bulk-modal-lede">
-          Ative apenas os campos que deseja modificar — os demais permanecem com o valor original de cada linha.
-        </p>
-
-        <!-- Campo: Embalagem -->
-        <div class="bulk-field-group" data-field="embalagem">
-          <label class="bulk-field-toggle">
-            <input type="checkbox" class="check-mosaic bulk-field-check" />
-            <span class="bulk-field-toggle-label">Alterar Embalagem</span>
-            <span class="bulk-field-toggle-hint">Saco 50kg / Granel / Big Bag</span>
-          </label>
-          <div class="bulk-field-body">
-            <label>Nova embalagem</label>
-            <select>
-              <option>Saco 50kg</option>
-              <option>Saco 25kg</option>
-              <option>Big Bag 1000kg</option>
-              <option>Granel</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Campo: Frete -->
-        <div class="bulk-field-group" data-field="frete">
-          <label class="bulk-field-toggle">
-            <input type="checkbox" class="check-mosaic bulk-field-check" />
-            <span class="bulk-field-toggle-label">Alterar tipo de Frete</span>
-            <span class="bulk-field-toggle-hint">CIF · FOB</span>
-          </label>
-          <div class="bulk-field-body">
-            <label>Novo tipo de frete</label>
-            <select>
-              <option value="CIF">CIF · Por conta da Mosaic</option>
-              <option value="FOB">FOB · Por conta do cliente</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Campo: Planta -->
-        <div class="bulk-field-group" data-field="planta">
-          <label class="bulk-field-toggle">
-            <input type="checkbox" class="check-mosaic bulk-field-check" />
-            <span class="bulk-field-toggle-label">Alterar Planta de origem</span>
-            <span class="bulk-field-toggle-hint">Aplicado a todos os selecionados</span>
-          </label>
-          <div class="bulk-field-body">
-            <label>Nova planta</label>
-            <select>
-              <option>Limeira</option>
-              <option>Paranaguá</option>
-              <option>Cubatão</option>
-              <option>Rondonópolis</option>
-              <option>Uberaba</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Campo: Vigência -->
-        <div class="bulk-field-group" data-field="vigencia">
-          <label class="bulk-field-toggle">
-            <input type="checkbox" class="check-mosaic bulk-field-check" />
-            <span class="bulk-field-toggle-label">Alterar Vigência</span>
-            <span class="bulk-field-toggle-hint">Estende prazo dos protocolos</span>
-          </label>
-          <div class="bulk-field-body">
-            <label>Nova data limite (vigência fim)</label>
-            <input type="text" placeholder="dd/mm/aaaa" />
-          </div>
-        </div>
-
-        <!-- Campo: Observações -->
-        <div class="bulk-field-group" data-field="obs">
-          <label class="bulk-field-toggle">
-            <input type="checkbox" class="check-mosaic bulk-field-check" />
-            <span class="bulk-field-toggle-label">Adicionar Observação</span>
-            <span class="bulk-field-toggle-hint">Anexa nota interna em todos</span>
-          </label>
-          <div class="bulk-field-body">
-            <label>Observação</label>
-            <textarea placeholder="Texto que será adicionado às observações de cada protocolo selecionado..."></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB PANE: UPLOAD CSV ============================================== -->
-      <div class="bulk-tab-pane" data-pane="csv">
+      <!-- UPLOAD CSV -->
+      <div class="bulk-tab-pane is-active" data-pane="csv">
         <p class="bulk-modal-lede">
           Edição em lote por planilha — atualize <strong>centenas de protocolos</strong> de uma só vez.
           Baixe o template, preencha as colunas que deseja alterar e faça upload.
@@ -1743,13 +1499,13 @@
     </div>
     <div class="bulk-modal-foot">
       <div class="bulk-modal-foot-info">
-        <span id="bulkFootInfo"><strong id="bulkActiveFields">0</strong> de 5 campos selecionados</span>
+        <span id="bulkFootInfo">Aguardando upload de planilha CSV</span>
       </div>
       <div class="bulk-modal-foot-actions">
         <button class="btn btn-secondary" id="bulkCancelBtn" type="button">Cancelar</button>
         <button class="btn btn-primary" id="bulkApplyBtn" type="button" disabled>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-          <span id="bulkApplyLabel">Aplicar a <span id="bulkApplyCount">0</span> protocolos</span>
+          <span id="bulkApplyLabel">Aplicar <span>0</span> atualizações</span>
         </button>
       </div>
     </div>
@@ -2001,47 +1757,6 @@ function actionCell(p) {
 }
 
 /* ================================================================
-   Seleção em massa
-   ================================================================ */
-const selectedIds = new Set();
-
-function getVisibleIds() {
-  return Array.from(document.querySelectorAll("#tableBody tr[data-proto-id]"))
-    .map(tr => tr.getAttribute("data-proto-id"));
-}
-
-function updateBulkBar() {
-  const bar = document.getElementById("bulkBar");
-  const n = selectedIds.size;
-  document.getElementById("bulkCount").textContent = n;
-  document.getElementById("bulkPlural").textContent = n === 1 ? "" : "s";
-  document.getElementById("bulkPlural2").textContent = n === 1 ? "" : "s";
-  bar.classList.toggle("is-visible", n > 0);
-
-  // Atualiza checkAll (indeterminate / checked / unchecked)
-  const checkAll = document.getElementById("checkAll");
-  const visible = getVisibleIds();
-  const visibleSelected = visible.filter(id => selectedIds.has(id)).length;
-  if (visibleSelected === 0) {
-    checkAll.checked = false;
-    checkAll.indeterminate = false;
-  } else if (visibleSelected === visible.length) {
-    checkAll.checked = true;
-    checkAll.indeterminate = false;
-  } else {
-    checkAll.checked = false;
-    checkAll.indeterminate = true;
-  }
-}
-
-function toggleSelect(id, on) {
-  if (on) selectedIds.add(id); else selectedIds.delete(id);
-  const tr = document.querySelector(`#tableBody tr[data-proto-id="${id}"]`);
-  if (tr) tr.classList.toggle("is-selected", on);
-  updateBulkBar();
-}
-
-/* ================================================================
    Render
    ================================================================ */
 function render() {
@@ -2075,7 +1790,7 @@ function render() {
 
   const body = document.getElementById("tableBody");
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="26" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
     return;
   }
 
@@ -2105,12 +1820,13 @@ function renderRow(p) {
 
 function renderRowNormal(p) {
   return `
-    <tr data-proto-id="${p.id}" class="${selectedIds.has(p.id) ? 'is-selected' : ''}">
-      <td class="col-check">
-        <input type="checkbox" class="check-mosaic row-check" data-id="${p.id}" ${selectedIds.has(p.id) ? 'checked' : ''} aria-label="Selecionar protocolo ${p.id}" />
+    <tr data-proto-id="${p.id}">
+      <td class="col-proto">
+        <div class="proto-cell">
+          ${actionCell(p)}
+          <span class="proto-cell-number"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></span>
+        </div>
       </td>
-      <td class="col-action">${actionCell(p)}</td>
-      <td class="col-proto"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></td>
       <td>${statusBadge(p.status)}</td>
       <td>${p.contrato}</td>
       <td>${p.cotacao}</td>
@@ -2143,9 +1859,12 @@ function renderRowEditing(p) {
   // qtdAgendada e qtdFaturada vêm de outros sistemas (operações), então também são read-only aqui.
   return `
     <tr data-proto-id="${p.id}" class="is-editing">
-      <td class="col-check"><input type="checkbox" class="check-mosaic" disabled aria-label="Bloqueado durante edição" /></td>
-      <td class="col-action">${actionCell(p)}</td>
-      <td class="col-proto"><span style="font-weight:700;color:var(--mosaic-green-800)">${p.id}</span></td>
+      <td class="col-proto">
+        <div class="proto-cell">
+          ${actionCell(p)}
+          <span class="proto-cell-number">${p.id}</span>
+        </div>
+      </td>
       <td><select class="inline-edit" data-f="status">${selOptions(STATUS_OPTIONS, p.status)}</select></td>
       <td><input class="inline-edit" data-f="contrato"    value="${escAttr(p.contrato)}" /></td>
       <td><input class="inline-edit" data-f="cotacao"     value="${escAttr(p.cotacao)}" /></td>
@@ -2247,14 +1966,8 @@ document.getElementById("btnExport").addEventListener("click", () => {
 });
 
 /* ================================================================
-   Eventos de seleção + edição inline (delegação)
+   Eventos de edição inline (delegação no tbody)
    ================================================================ */
-document.getElementById("tableBody").addEventListener("change", (e) => {
-  const cb = e.target;
-  if (!cb.classList.contains("row-check")) return;
-  toggleSelect(cb.dataset.id, cb.checked);
-});
-
 document.getElementById("tableBody").addEventListener("click", (e) => {
   const btn = e.target.closest("[data-act]");
   if (!btn) return;
@@ -2379,50 +2092,20 @@ document.addEventListener("keydown", (e) => {
   if (editingId) requestCancelEdit(editingId);
 });
 
-document.getElementById("checkAll").addEventListener("change", (e) => {
-  const on = e.target.checked;
-  getVisibleIds().forEach(id => {
-    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
-    if (cb) cb.checked = on;
-    toggleSelect(id, on);
-  });
-});
-
-document.getElementById("bulkClearBtn").addEventListener("click", () => {
-  Array.from(selectedIds).forEach(id => {
-    const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
-    if (cb) cb.checked = false;
-  });
-  selectedIds.clear();
-  updateBulkBar();
-});
-
 /* ================================================================
-   Bulk-edit modal
+   CSV Import modal (sidenav drawer)
    ================================================================ */
 const bulkModal      = document.getElementById("bulkModal");
-const bulkEditBtn    = document.getElementById("bulkEditBtn");
+const bulkOpenBtn    = document.getElementById("csvImportBtn");
 const bulkClose      = document.getElementById("bulkModalClose");
 const bulkCancel     = document.getElementById("bulkCancelBtn");
 const bulkApply      = document.getElementById("bulkApplyBtn");
-const bulkApplyCount = document.getElementById("bulkApplyCount");
-const bulkModalCount = document.getElementById("bulkModalCount");
-const bulkActive     = document.getElementById("bulkActiveFields");
 const bulkToast      = document.getElementById("bulkToast");
 const bulkToastText  = document.getElementById("bulkToastText");
 
-let currentTab = "fields"; // "fields" | "csv"
-let uploadedCsvFile = null; // { name, size, rows }
+let uploadedCsvFile = null; // { name, size, rows, header, preview }
 
 function openBulkModal() {
-  bulkModalCount.textContent = selectedIds.size;
-  bulkApplyCount.textContent = selectedIds.size;
-  // Reset campos
-  document.querySelectorAll(".bulk-field-group").forEach(g => g.classList.remove("is-active"));
-  document.querySelectorAll(".bulk-field-check").forEach(c => c.checked = false);
-  // Reset tab para fields
-  switchTab("fields");
-  // Reset CSV
   uploadedCsvFile = null;
   renderCsvDropzone();
   updateBulkActiveCount();
@@ -2430,37 +2113,14 @@ function openBulkModal() {
 }
 function closeBulkModal() { bulkModal.classList.remove("is-open"); }
 
-bulkEditBtn.addEventListener("click", openBulkModal);
+if (bulkOpenBtn) bulkOpenBtn.addEventListener("click", openBulkModal);
 bulkClose.addEventListener("click", closeBulkModal);
 bulkCancel.addEventListener("click", closeBulkModal);
 bulkModal.addEventListener("click", (e) => {
   if (e.target === bulkModal) closeBulkModal();
 });
 
-/* ============ TABS ============ */
-function switchTab(name) {
-  currentTab = name;
-  document.querySelectorAll(".bulk-tab").forEach(b => {
-    b.classList.toggle("is-active", b.dataset.tab === name);
-  });
-  document.querySelectorAll(".bulk-tab-pane").forEach(p => {
-    p.classList.toggle("is-active", p.dataset.pane === name);
-  });
-  updateBulkActiveCount();
-}
-document.querySelectorAll(".bulk-tab").forEach(btn => {
-  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
-});
-
-/* ============ TAB: EDITAR CAMPOS ============ */
-document.querySelectorAll(".bulk-field-check").forEach(cb => {
-  cb.addEventListener("change", () => {
-    cb.closest(".bulk-field-group").classList.toggle("is-active", cb.checked);
-    updateBulkActiveCount();
-  });
-});
-
-/* ============ TAB: UPLOAD CSV ============ */
+/* ============ UPLOAD CSV ============ */
 const csvDropzone   = document.getElementById("csvDropzone");
 const csvFileInput  = document.getElementById("csvFileInput");
 const downloadTplBtn = document.getElementById("downloadTemplateBtn");
@@ -2597,51 +2257,23 @@ downloadTplBtn.addEventListener("click", () => {
 
 /* ============ Footer count/apply ============ */
 function updateBulkActiveCount() {
-  if (currentTab === "fields") {
-    const active = document.querySelectorAll(".bulk-field-check:checked").length;
-    bulkActive.textContent = active;
-    document.getElementById("bulkFootInfo").innerHTML =
-      `<strong>${active}</strong> de 5 campos selecionados`;
-    bulkApplyCount.textContent = selectedIds.size;
-    document.getElementById("bulkApplyLabel").innerHTML =
-      `Aplicar a <span id="bulkApplyCount">${selectedIds.size}</span> protocolos`;
-    bulkApply.disabled = active === 0 || selectedIds.size === 0;
-  } else {
-    const n = uploadedCsvFile ? uploadedCsvFile.rowCount : 0;
-    document.getElementById("bulkFootInfo").innerHTML = uploadedCsvFile
-      ? `<strong>${n}</strong> linha${n === 1 ? '' : 's'} prontas para aplicar`
-      : `Aguardando upload de planilha CSV`;
-    document.getElementById("bulkApplyLabel").innerHTML =
-      `Aplicar <span>${n}</span> alterações`;
-    bulkApply.disabled = !uploadedCsvFile;
-  }
+  const n = uploadedCsvFile ? uploadedCsvFile.rowCount : 0;
+  document.getElementById("bulkFootInfo").innerHTML = uploadedCsvFile
+    ? `<strong>${n}</strong> linha${n === 1 ? '' : 's'} pronta${n === 1 ? '' : 's'} para aplicar`
+    : `Aguardando upload de planilha CSV`;
+  document.getElementById("bulkApplyLabel").innerHTML =
+    `Aplicar <span>${n}</span> atualizações`;
+  bulkApply.disabled = !uploadedCsvFile;
 }
 
 bulkApply.addEventListener("click", () => {
-  if (currentTab === "fields") {
-    const n = selectedIds.size;
-    const active = document.querySelectorAll(".bulk-field-check:checked").length;
-    closeBulkModal();
-    bulkToastText.textContent =
-      `${active} campo${active === 1 ? "" : "s"} alterado${active === 1 ? "" : "s"} em ${n} protocolo${n === 1 ? "" : "s"}`;
-    bulkToast.classList.add("is-visible");
-    setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
-
-    // Limpa seleção após aplicar
-    Array.from(selectedIds).forEach(id => {
-      const cb = document.querySelector(`#tableBody .row-check[data-id="${id}"]`);
-      if (cb) cb.checked = false;
-    });
-    selectedIds.clear();
-    updateBulkBar();
-  } else {
-    const n = uploadedCsvFile.rowCount;
-    closeBulkModal();
-    bulkToastText.textContent =
-      `${n} protocolo${n === 1 ? "" : "s"} atualizado${n === 1 ? "" : "s"} via planilha`;
-    bulkToast.classList.add("is-visible");
-    setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
-  }
+  if (!uploadedCsvFile) return;
+  const n = uploadedCsvFile.rowCount;
+  closeBulkModal();
+  bulkToastText.textContent =
+    `${n} protocolo${n === 1 ? "" : "s"} atualizado${n === 1 ? "" : "s"} via planilha`;
+  bulkToast.classList.add("is-visible");
+  setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
 });
 
 /* Esc fecha modal */
