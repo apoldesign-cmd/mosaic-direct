@@ -1537,6 +1537,123 @@
     color: var(--mosaic-green-800);
   }
 
+  /* ================================================================
+     Autocomplete dos filtros (mesmo padrão do "Campo de busca com
+     autocomplete" defendido na página de usabilidade)
+     ================================================================ */
+  .filter-ac {
+    position: relative;
+  }
+  .filter-ac input {
+    width: 100%;
+    height: 38px;
+    padding: 0 56px 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .filter-ac input:hover { border-color: var(--border-strong); }
+  .filter-ac.is-open input,
+  .filter-ac input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .filter-ac input::placeholder {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+  .filter-ac-chev {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    transition: transform var(--ease-base), color var(--ease-fast);
+  }
+  .filter-ac.is-open .filter-ac-chev { transform: translateY(-50%) rotate(180deg); }
+  .filter-ac-clear {
+    position: absolute;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background var(--ease-fast), color var(--ease-fast);
+  }
+  .filter-ac.has-value .filter-ac-clear { display: inline-flex; }
+  .filter-ac-clear:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .filter-ac.has-value .filter-ac-chev { opacity: 0; }
+  .filter-ac-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+    max-height: 240px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    z-index: 20;
+    display: none;
+  }
+  .filter-ac.is-open .filter-ac-list { display: block; }
+  .filter-ac-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-1);
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background var(--ease-fast);
+  }
+  .filter-ac-item:hover,
+  .filter-ac-item.is-active {
+    background: rgba(0,106,77,0.08);
+  }
+  .filter-ac-item mark {
+    background: rgba(240,192,32,0.40);
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .filter-ac-empty {
+    padding: 12px 10px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 12px;
+    font-style: italic;
+  }
+  .filter-ac-all {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 4px;
+    padding-bottom: 10px;
+    font-weight: 600;
+  }
+  .filter-ac-all:hover { background: var(--bg-section); color: var(--text-1); }
+
   /* search-bar (reuses base.css pattern) */
   .search-bar {
     display: flex;
@@ -1828,87 +1945,80 @@
   <div class="advanced-filter is-hidden" id="advancedFilter">
     <div class="filter-row">
       <div class="filter-block">
-        <label>Status</label>
-        <select id="filterStatus">
-          <option value="">Todos</option>
-          <option value="Novo">Novo</option>
-          <option value="Liberado para agendar">Liberado para agendar</option>
-          <option value="Em agendamento">Em agendamento</option>
-          <option value="Concluído">Concluído</option>
-          <option value="Cancelado">Cancelado</option>
-        </select>
+        <label for="filterStatus">Status</label>
+        <div class="filter-ac" data-options='["Novo","Liberado para agendar","Em agendamento","Concluído","Cancelado"]'>
+          <input id="filterStatus" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <span class="filter-ac-chev" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>CPF/CNPJ da Filial</label>
-        <select id="filterCnpjFilial">
-          <option value="">Todos</option>
-          <option>12.345.678/0001-90</option>
-          <option>23.456.789/0001-12</option>
-          <option>34.567.890/0001-34</option>
-          <option>45.678.901/0001-56</option>
-        </select>
+        <label for="filterCnpjFilial">CPF/CNPJ da Filial</label>
+        <div class="filter-ac" data-options='["12.345.678/0001-90","23.456.789/0001-12","34.567.890/0001-34","45.678.901/0001-56"]'>
+          <input id="filterCnpjFilial" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>Filial do Cliente</label>
-        <select id="filterFilial">
-          <option value="">Todas</option>
-          <option>Filial São Paulo</option>
-          <option>Filial Curitiba</option>
-          <option>Filial Porto Alegre</option>
-          <option>Filial Londrina</option>
-        </select>
+        <label for="filterFilial">Filial do Cliente</label>
+        <div class="filter-ac" data-options='["Filial São Paulo","Filial Curitiba","Filial Porto Alegre","Filial Londrina"]'>
+          <input id="filterFilial" type="text" placeholder="Todas" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>CPF/CNPJ do Cooperado</label>
-        <select id="filterCnpjCoop">
-          <option value="">Todos</option>
-          <option>123.456.789-00</option>
-          <option>234.567.890-00</option>
-          <option>345.678.901-00</option>
-          <option>456.789.012-00</option>
-          <option>567.890.123-00</option>
-        </select>
+        <label for="filterCnpjCoop">CPF/CNPJ do Cooperado</label>
+        <div class="filter-ac" data-options='["123.456.789-00","234.567.890-00","345.678.901-00","456.789.012-00","567.890.123-00"]'>
+          <input id="filterCnpjCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>Nome do Cooperado</label>
-        <select id="filterCoop">
-          <option value="">Todos</option>
-          <option>CARLOS ALVES</option>
-          <option>AGUINALDO GOMES</option>
-          <option>TEREZA AKEMI</option>
-          <option>BETO DOS SANTOS</option>
-          <option>RENATO CESAR</option>
-        </select>
+        <label for="filterCoop">Nome do Cooperado</label>
+        <div class="filter-ac" data-options='["CARLOS ALVES","AGUINALDO GOMES","TEREZA AKEMI","BETO DOS SANTOS","RENATO CESAR"]'>
+          <input id="filterCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>IE do Cooperado</label>
-        <select id="filterIe">
-          <option value="">Todos</option>
-          <option>123456789</option>
-          <option>234567890</option>
-          <option>345678901</option>
-          <option>456789012</option>
-          <option>567890123</option>
-        </select>
+        <label for="filterIe">IE do Cooperado</label>
+        <div class="filter-ac" data-options='["123456789","234567890","345678901","456789012","567890123"]'>
+          <input id="filterIe" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>Descrição Produto</label>
-        <select id="filterProduto">
-          <option value="">Todos</option>
-          <option>FFALM 10 20 30</option>
-          <option>FFALM 20 20 00</option>
-          <option>MAP 11-52-00</option>
-          <option>KCl</option>
-          <option>FFALM 15 30 00</option>
-        </select>
+        <label for="filterProduto">Descrição Produto</label>
+        <div class="filter-ac" data-options='["FFALM 10 20 30","FFALM 20 20 00","MAP 11-52-00","KCl","FFALM 15 30 00"]'>
+          <input id="filterProduto" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block">
-        <label>NF do Protocolo</label>
-        <select id="filterNf">
-          <option value="">Todos</option>
-          <option>NF-2024-001</option>
-          <option>NF-2024-089</option>
-        </select>
+        <label for="filterNf">NF do Protocolo</label>
+        <div class="filter-ac" data-options='["NF-2024-001","NF-2024-089"]'>
+          <input id="filterNf" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
       </div>
       <div class="filter-block filter-block--actions">
         <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
@@ -2548,16 +2658,21 @@ function render() {
   const prod   = document.getElementById("filterProduto").value;
   const nf     = document.getElementById("filterNf").value;
 
+  // Autocomplete: aceita match parcial (contém), case-insensitive
+  const matches = (val, needle) => {
+    if (!needle) return true;
+    return String(val ?? "").toLowerCase().includes(needle.toLowerCase());
+  };
   const rows = PROTOCOLS.filter(p => {
     if (q && ![p.id, p.contrato, p.cotacao].some(v => v.toLowerCase().includes(q))) return false;
-    if (status && p.status !== status) return false;
-    if (cnpjF  && p.cnpjFilial !== cnpjF) return false;
-    if (filial && p.filial !== filial)    return false;
-    if (cnpjC  && p.cnpjCoop !== cnpjC)  return false;
-    if (coop   && p.cooperado !== coop)   return false;
-    if (ie     && p.ie !== ie)            return false;
-    if (prod   && p.descProduto !== prod) return false;
-    if (nf     && p.nf !== nf)            return false;
+    if (!matches(p.status,      status)) return false;
+    if (!matches(p.cnpjFilial,  cnpjF))  return false;
+    if (!matches(p.filial,      filial)) return false;
+    if (!matches(p.cnpjCoop,    cnpjC))  return false;
+    if (!matches(p.cooperado,   coop))   return false;
+    if (!matches(p.ie,          ie))     return false;
+    if (!matches(p.descProduto, prod))   return false;
+    if (!matches(p.nf,          nf))     return false;
     return true;
   });
 
@@ -2657,13 +2772,100 @@ elClear.addEventListener("click", () => {
   elSearch.focus();
 });
 
-["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
- "filterCoop","filterIe","filterProduto","filterNf"].forEach(id => {
-  document.getElementById(id).addEventListener("change", () => {
+/* ============================================================
+   Autocomplete dos filtros — comportamento idêntico ao "Campo de
+   busca com autocomplete" da página de Usabilidade
+   ============================================================ */
+const FILTER_IDS = ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+                    "filterCoop","filterIe","filterProduto","filterNf"];
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+function highlight(text, needle) {
+  if (!needle) return escHtml(text);
+  const t = escHtml(text);
+  const re = new RegExp("(" + needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+  return t.replace(re, "<mark>$1</mark>");
+}
+
+function mountAutocomplete(rootEl) {
+  const input   = rootEl.querySelector("input");
+  const list    = rootEl.querySelector(".filter-ac-list");
+  const clear   = rootEl.querySelector(".filter-ac-clear");
+  const options = JSON.parse(rootEl.dataset.options || "[]");
+
+  let activeIdx = -1;
+
+  function buildList(needle) {
+    activeIdx = -1;
+    const matches = options.filter(o => o.toLowerCase().includes((needle||"").toLowerCase()));
+    let html = `<li class="filter-ac-all" data-val="">Todos</li>`;
+    if (matches.length === 0) {
+      html += `<li class="filter-ac-empty">Nenhum resultado para "${escHtml(needle)}"</li>`;
+    } else {
+      html += matches.map(o => `<li class="filter-ac-item" data-val="${escHtml(o)}">${highlight(o, needle)}</li>`).join("");
+    }
+    list.innerHTML = html;
+  }
+
+  function open() {
+    buildList(input.value);
+    rootEl.classList.add("is-open");
+  }
+  function close() {
+    rootEl.classList.remove("is-open");
+  }
+
+  input.addEventListener("focus", open);
+  input.addEventListener("click", open);
+  input.addEventListener("input", () => {
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    buildList(input.value);
+    rootEl.classList.add("is-open");
     updateAdvCount();
     render();
   });
-});
+  input.addEventListener("keydown", (e) => {
+    const items = list.querySelectorAll(".filter-ac-item, .filter-ac-all");
+    if (e.key === "ArrowDown") { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, items.length - 1); }
+    if (e.key === "ArrowUp")   { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const item = items[activeIdx] || items[0];
+      if (item) item.click();
+    }
+    if (e.key === "Escape") { e.preventDefault(); close(); input.blur(); }
+    items.forEach((el, i) => el.classList.toggle("is-active", i === activeIdx));
+  });
+
+  list.addEventListener("mousedown", (e) => {
+    const item = e.target.closest("[data-val]");
+    if (!item) return;
+    e.preventDefault();
+    input.value = item.dataset.val;
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    close();
+    updateAdvCount();
+    render();
+  });
+
+  clear.addEventListener("click", (e) => {
+    e.preventDefault();
+    input.value = "";
+    rootEl.classList.remove("has-value");
+    updateAdvCount();
+    render();
+    input.focus();
+  });
+
+  // Click fora fecha
+  document.addEventListener("click", (e) => {
+    if (!rootEl.contains(e.target)) close();
+  });
+}
+
+document.querySelectorAll(".filter-ac").forEach(mountAutocomplete);
 
 /* Toggle filtros */
 document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
@@ -2675,18 +2877,17 @@ document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
 });
 
 document.getElementById("btnClearFilters").addEventListener("click", () => {
-  ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
-   "filterCoop","filterIe","filterProduto","filterNf"].forEach(id => {
-    document.getElementById(id).value = "";
+  FILTER_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    el.value = "";
+    el.closest(".filter-ac")?.classList.remove("has-value");
   });
   updateAdvCount();
   render();
 });
 
 function updateAdvCount() {
-  const ids = ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
-               "filterCoop","filterIe","filterProduto","filterNf"];
-  const n = ids.filter(id => document.getElementById(id).value).length;
+  const n = FILTER_IDS.filter(id => document.getElementById(id).value).length;
   const el = document.getElementById("advCount");
   el.textContent = String(n);
   el.classList.toggle("is-hidden", n === 0);
