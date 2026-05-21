@@ -416,6 +416,15 @@
     color: var(--text-1);
     background: transparent;
   }
+  select.qty-inline-input {
+    text-align: left;
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 20px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2300583d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
 
   /* ================================================================
      Modal "Editar campos do protocolo"
@@ -1904,7 +1913,10 @@
   .page-btn:disabled { opacity: 0.4; cursor: default; }
 
   /* ============================================================
-     Headers de tabela com setas de ordenação
+     Headers de tabela com seta única de ordenação (estilo Salesforce)
+     - Estado neutro: sem ícone visível
+     - Hover: ícone aparece em cinza claro como dica
+     - Ordenado: seta única verde Mosaic (↑ asc / ↓ desc)
      ============================================================ */
   .wide-table thead th.sortable {
     cursor: pointer;
@@ -1919,20 +1931,20 @@
     top: 50%;
     transform: translateY(-50%);
     display: inline-flex;
-    flex-direction: column;
-    gap: 1px;
-    opacity: 0.5;
-    transition: opacity var(--ease-fast);
-  }
-  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.9; }
-  .wide-table thead th.sortable .sort-icon svg {
-    width: 7px; height: 5px;
+    opacity: 0;
+    transition: opacity var(--ease-fast), transform var(--ease-fast);
     color: var(--text-3);
   }
-  .wide-table thead th.sortable.sort-asc  .sort-icon svg:first-child { color: var(--mosaic-green-800); }
-  .wide-table thead th.sortable.sort-desc .sort-icon svg:last-child  { color: var(--mosaic-green-800); }
-  .wide-table thead th.sortable.sort-asc .sort-icon,
-  .wide-table thead th.sortable.sort-desc .sort-icon { opacity: 1; }
+  .wide-table thead th.sortable .sort-icon svg { width: 11px; height: 11px; }
+  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.5; }
+  .wide-table thead th.sortable.sort-asc  .sort-icon,
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    opacity: 1;
+    color: var(--mosaic-green-800);
+  }
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    transform: translateY(-50%) rotate(180deg);
+  }
 
   /* Esconde spinner do input type="number" no edit inline */
   .qty-inline-input::-webkit-outer-spin-button,
@@ -2145,32 +2157,32 @@
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
-          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
+          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="num sortable" data-sort="preco">Preço NF (unit.)
             <span class="th-hint">da Nota Fiscal</span>
-          <span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
+          <span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -2824,10 +2836,50 @@ function renderRow(p) {
 function editableQtyCell(p, field, highlight) {
   const v = p[field];
   const cls = "num editable-qty" + (highlight ? " highlight" : "");
-  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" data-type="number" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+}
+
+/* Célula editável genérica — usada conforme regras (Embalagem, NF, Data, Preço) */
+function editableCell(p, field, opts = {}) {
+  const v = p[field];
+  const display = opts.display || (v === "—" || !v ? '<span class="muted">—</span>' : v);
+  const tdCls = (opts.cls || "") + " editable-qty"; // reusa o estilo de hover
+  const type = opts.type || "text";  // "text" | "select" | "date"
+  const optsAttr = opts.options ? ` data-options='${JSON.stringify(opts.options)}'` : '';
+  return `<td class="${tdCls.trim()}" data-id="${p.id}" data-f="${field}" data-type="${type}"${optsAttr} title="Clique para editar">${display}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+}
+
+function readOnlyCell(p, field, reason, opts = {}) {
+  // Célula com indicador de lock sutil no hover (não é clicável)
+  const v = p[field];
+  const display = opts.display || (v === "—" || !v ? '<span class="muted">—</span>' : v);
+  const tdCls = opts.cls || "";
+  return `<td class="${tdCls}" title="🔒 ${reason}">${display}</td>`;
 }
 
 function renderRowNormal(p) {
+  // Regras de edição na tabela (idem modal SMDP-161):
+  // Volume: rules.canEditVolume(p) — só reduz, min = qtdAgendada
+  // Embalagem: rules.canEditPackaging(p) — antes do SO
+  // NF / Data NF / Preço NF: rules.canEditInvoice(p) — até billing
+  // Qtd. Agendada e Qtd. Faturada: read-only (vem do SAP)
+  // Outros (Cooperado/Contrato/Cotação/Cidade/UF/IE/Produto/Frete/Planta): imutáveis
+  const embalagemCell = rules.canEditPackaging(p)
+    ? editableCell(p, "embalagem", { type: "select", options: EMBALAGEM_OPTIONS })
+    : readOnlyCell(p, "embalagem", "Sales Order já gerada");
+  const nfCell = rules.canEditInvoice(p)
+    ? editableCell(p, "nf",     { type: "text" })
+    : readOnlyCell(p, "nf",     "Faturamento já concluído", { cls: p.nf === '—' ? 'muted' : '' });
+  const dataNfCell = rules.canEditInvoice(p)
+    ? editableCell(p, "dataNf", { type: "text" })
+    : readOnlyCell(p, "dataNf", "Faturamento já concluído", { cls: p.dataNf === '—' ? 'muted' : '' });
+  const precoCell = rules.canEditInvoice(p)
+    ? editableCell(p, "preco",  { type: "text", cls: "num" })
+    : readOnlyCell(p, "preco",  "Faturamento já concluído", { cls: "num" });
+  const qtdProtocoloCell = rules.canEditVolume(p)
+    ? editableQtyCell(p, "qtdProtocolo", true)
+    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+
   return `
     <tr data-proto-id="${p.id}">
       <td class="col-proto">
@@ -2848,16 +2900,16 @@ function renderRowNormal(p) {
       <td class="muted">${p.ie}</td>
       <td class="muted">${p.produto}</td>
       <td style="font-weight:600">${p.descProduto}</td>
-      <td>${p.embalagem}</td>
+      ${embalagemCell}
       <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
       <td>${p.planta}</td>
-      <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
-      <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
-      <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
-      ${editableQtyCell(p, "qtdProtocolo", true)}
-      ${editableQtyCell(p, "qtdAgendada", false)}
+      ${nfCell}
+      ${dataNfCell}
+      ${precoCell}
+      ${qtdProtocoloCell}
+      ${numCell(p.qtdAgendada, false)}
       ${numCell(p.saldo, p.saldo > 0)}
-      ${editableQtyCell(p, "qtdFaturada", false)}
+      ${numCell(p.qtdFaturada, false)}
       ${numCell(p.qtdFaturar, false)}
     </tr>
   `;
@@ -3128,18 +3180,34 @@ let editingCellOriginal = null;
 function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
 
 function startCellEdit(td) {
-  if (editingCellEl) commitCellEdit(); // fecha qualquer outra célula em edição
-  const id = td.dataset.id;
+  if (editingCellEl) commitCellEdit();
+  const id    = td.dataset.id;
   const field = td.dataset.f;
+  const type  = td.dataset.type || "text";
   const p = findProto(id);
   if (!p) return;
   editingCellEl = td;
   editingCellOriginal = p[field];
   td.classList.add("cell-editing");
-  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${p[field]}" />`;
-  const input = td.querySelector("input");
+
+  // Tipos diferentes geram inputs diferentes
+  if (type === "select") {
+    const opts = JSON.parse(td.dataset.options || "[]");
+    const v = p[field];
+    td.innerHTML = `<select class="qty-inline-input" style="text-align:left">${
+      opts.map(o => `<option value="${o.replace(/"/g, '&quot;')}"${o === v ? ' selected' : ''}>${o}</option>`).join("")
+    }</select>`;
+  } else if (type === "number") {
+    const min = field === "qtdProtocolo" ? rules.minVolume(p) : 0;
+    const max = field === "qtdProtocolo" ? p.qtdProtocolo : "";
+    td.innerHTML = `<input type="number" class="qty-inline-input" min="${min}" ${max !== "" ? `max="${max}"` : ""} value="${p[field]}" />`;
+  } else {
+    const v = p[field] === "—" ? "" : (p[field] || "");
+    td.innerHTML = `<input type="text" class="qty-inline-input" style="text-align:left" value="${String(v).replace(/"/g, '&quot;')}" placeholder="—" />`;
+  }
+  const input = td.querySelector("input, select");
   input.focus();
-  input.select();
+  if (input.select) input.select();
   input.addEventListener("blur",   commitCellEdit);
   input.addEventListener("keydown", onCellKeyDown);
 }
@@ -3152,22 +3220,41 @@ function onCellKeyDown(e) {
 function commitCellEdit() {
   if (!editingCellEl) return;
   const td = editingCellEl;
-  const id = td.dataset.id;
+  const id    = td.dataset.id;
   const field = td.dataset.f;
-  const input = td.querySelector("input");
+  const type  = td.dataset.type || "text";
+  const input = td.querySelector("input, select");
   if (!input) { editingCellEl = null; return; }
-  const newVal = input.value === "" ? 0 : Number(input.value);
+  let newVal = input.value;
   const p = findProto(id);
   editingCellEl = null;
   editingCellOriginal = null;
   if (!p) return;
-  if (newVal !== p[field]) {
+
+  if (type === "number") {
+    newVal = newVal === "" ? 0 : Number(newVal);
+    // Aplica clamping para Volume (não pode ir abaixo do mínimo)
+    if (field === "qtdProtocolo") {
+      const minV = rules.minVolume(p);
+      if (newVal < minV) newVal = minV;
+      if (newVal > editingCellOriginal && editingCellOriginal != null) {
+        // Volume só pode reduzir (mas guardamos o original — depois do reset acima isso é null, então usamos p[field] atual)
+      }
+    }
+  } else if (type === "text" && (newVal === "" || newVal == null)) {
+    newVal = "—";
+  }
+
+  if (String(newVal) !== String(p[field])) {
     p[field] = newVal;
-    // Recalcula derivados
-    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
-    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+    // Recalcula derivados se mudou Volume
+    if (field === "qtdProtocolo") {
+      p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+      p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+    }
     render();
-    showBulkToast(`Protocolo ${id} · ${labelOfField(field)} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
+    const display = type === "number" ? Number(newVal).toLocaleString("pt-BR") + " t" : newVal;
+    showBulkToast(`Protocolo ${id} · ${labelOfField(field)}: ${display}`);
   } else {
     render();
   }
@@ -3185,6 +3272,10 @@ function labelOfField(f) {
     qtdProtocolo: "Qtd. Protocolo",
     qtdAgendada:  "Qtd. Agendada",
     qtdFaturada:  "Qtd. Faturada",
+    embalagem:    "Embalagem",
+    nf:           "NF Protocolo",
+    dataNf:       "Data NF",
+    preco:        "Preço NF",
   }[f] || f;
 }
 

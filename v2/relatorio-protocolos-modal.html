@@ -1776,7 +1776,7 @@
   .page-btn:disabled { opacity: 0.4; cursor: default; }
 
   /* ============================================================
-     Headers de tabela com setas de ordenação
+     Headers de tabela com seta única de ordenação (estilo Salesforce)
      ============================================================ */
   .wide-table thead th.sortable {
     cursor: pointer;
@@ -1791,20 +1791,20 @@
     top: 50%;
     transform: translateY(-50%);
     display: inline-flex;
-    flex-direction: column;
-    gap: 1px;
-    opacity: 0.5;
-    transition: opacity var(--ease-fast);
-  }
-  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.9; }
-  .wide-table thead th.sortable .sort-icon svg {
-    width: 7px; height: 5px;
+    opacity: 0;
+    transition: opacity var(--ease-fast), transform var(--ease-fast);
     color: var(--text-3);
   }
-  .wide-table thead th.sortable.sort-asc  .sort-icon svg:first-child { color: var(--mosaic-green-800); }
-  .wide-table thead th.sortable.sort-desc .sort-icon svg:last-child  { color: var(--mosaic-green-800); }
-  .wide-table thead th.sortable.sort-asc .sort-icon,
-  .wide-table thead th.sortable.sort-desc .sort-icon { opacity: 1; }
+  .wide-table thead th.sortable .sort-icon svg { width: 11px; height: 11px; }
+  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.5; }
+  .wide-table thead th.sortable.sort-asc  .sort-icon,
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    opacity: 1;
+    color: var(--mosaic-green-800);
+  }
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    transform: translateY(-50%) rotate(180deg);
+  }
 
   /* Esconde spinner do input type="number" no edit inline */
   .qty-inline-input::-webkit-outer-spin-button,
@@ -2021,32 +2021,32 @@
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
-          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
+          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
           <th class="num sortable" data-sort="preco">Preço NF (unit.)
             <span class="th-hint">da Nota Fiscal</span>
-          <span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="4,0 8,4 0,4"/></svg><svg viewBox="0 0 8 4" fill="currentColor"><polygon points="0,0 8,0 4,4"/></svg></span></th>
+          <span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
         </tr>
       </thead>
       <tbody id="tableBody">
