@@ -310,6 +310,15 @@
   .confirm-btn-danger:hover { background: #8a1820; }
 
   /* ================================================================
+     Células de quantidade editáveis (click-to-edit)
+     ================================================================ */
+  .wide-table td.editable-qty {
+    position: relative;
+    cursor: pointer;
+    padding-right: 22px !important;
+  }
+
+  /* ================================================================
      Edição inline da LINHA — apenas quantidades viram inputs
      ================================================================ */
   .wide-table tbody tr.is-editing-row td { background: #fffbed !important; }
@@ -1840,7 +1849,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Clique no ícone de <strong>✏️ lápis</strong> para abrir os campos de <strong>quantidade direto na linha</strong> e ajustar.</span>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Clique em <strong>uma célula de quantidade</strong> para editar rápido, ou use o ícone de <strong>✏️ lápis</strong> para abrir os campos da linha com Salvar/Cancelar.</span>
   </div>
 
   <!-- Search bar -->
@@ -2510,6 +2519,12 @@ function escAttr(v) {
   return String(v ?? "").replace(/"/g, "&quot;");
 }
 
+function editableQtyCell(p, field, highlight) {
+  const v = p[field];
+  const cls = "num editable-qty" + (highlight ? " highlight" : "");
+  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+}
+
 function renderRow(p) {
   if (editingId === p.id) return renderRowEditing(p);
   return renderRowNormal(p);
@@ -2584,10 +2599,10 @@ function renderRowNormal(p) {
       <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
       <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
       <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
-      ${numCell(p.qtdProtocolo, true)}
-      ${numCell(p.qtdAgendada, false)}
+      ${editableQtyCell(p, "qtdProtocolo", true)}
+      ${editableQtyCell(p, "qtdAgendada", false)}
       ${numCell(p.saldo, p.saldo > 0)}
-      ${numCell(p.qtdFaturada, false)}
+      ${editableQtyCell(p, "qtdFaturada", false)}
       ${numCell(p.qtdFaturar, false)}
     </tr>
   `;
@@ -2770,6 +2785,9 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
+  // Click em célula de quantidade editável (modo rápido — sem precisar do lápis)
+  const tdCell = e.target.closest("td.editable-qty");
+  if (tdCell && !editingId) { startCellEdit(tdCell); return; }
   const btn = e.target.closest("[data-act]");
   if (!btn) return;
   const id = btn.dataset.id;
@@ -2796,6 +2814,73 @@ tableBodyEl.addEventListener("input", (e) => {
 });
 
 function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+/* ============== Inline cell edit (só quantidades) ============== */
+let editingCellEl = null;
+let editingCellOriginal = null;
+
+function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+function startCellEdit(td) {
+  if (editingCellEl) commitCellEdit(); // fecha qualquer outra célula em edição
+  const id = td.dataset.id;
+  const field = td.dataset.f;
+  const p = findProto(id);
+  if (!p) return;
+  editingCellEl = td;
+  editingCellOriginal = p[field];
+  td.classList.add("cell-editing");
+  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${p[field]}" />`;
+  const input = td.querySelector("input");
+  input.focus();
+  input.select();
+  input.addEventListener("blur",   commitCellEdit);
+  input.addEventListener("keydown", onCellKeyDown);
+}
+
+function onCellKeyDown(e) {
+  if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
+  if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
+}
+
+function commitCellEdit() {
+  if (!editingCellEl) return;
+  const td = editingCellEl;
+  const id = td.dataset.id;
+  const field = td.dataset.f;
+  const input = td.querySelector("input");
+  if (!input) { editingCellEl = null; return; }
+  const newVal = input.value === "" ? 0 : Number(input.value);
+  const p = findProto(id);
+  editingCellEl = null;
+  editingCellOriginal = null;
+  if (!p) return;
+  if (newVal !== p[field]) {
+    p[field] = newVal;
+    // Recalcula derivados
+    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+    render();
+    showBulkToast(`Protocolo ${id} · ${labelOfField(field)} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
+  } else {
+    render();
+  }
+}
+
+function cancelCellEdit() {
+  if (!editingCellEl) return;
+  editingCellEl = null;
+  editingCellOriginal = null;
+  render();
+}
+
+function labelOfField(f) {
+  return {
+    qtdProtocolo: "Qtd. Protocolo",
+    qtdAgendada:  "Qtd. Agendada",
+    qtdFaturada:  "Qtd. Faturada",
+  }[f] || f;
+}
 
 /* ============== Row-level edit (só quantidades) ============== */
 function startRowEdit(id) {
@@ -3032,6 +3117,7 @@ document.addEventListener("keydown", (e) => {
     delete confirmModal.dataset.source;
     return;
   }
+  if (editingCellEl) { cancelCellEdit(); return; }
   if (editingId) requestCancelRowEdit(editingId);
 });
 
