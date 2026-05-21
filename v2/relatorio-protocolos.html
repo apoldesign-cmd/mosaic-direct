@@ -3081,17 +3081,9 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
-  // Item de dropdown clicado
-  const menuItem = e.target.closest(".action-menu-item");
-  if (menuItem && !menuItem.classList.contains("is-disabled")) {
-    const id  = menuItem.dataset.id;
-    const act = menuItem.dataset.act;
-    closeAllActionMenus();
-    if (act === "edit")    openEditFieldsModal(id);
-    if (act === "agendar") openAgendarModal(id);
-    if (act === "cancel")  openCancelModal(id);
-    return;
-  }
+  // (handler de menu-item agora está direto no pop, registrado em
+  // openActionMenu — necessário porque o pop vive no <body>.)
+
   // Botão chevron do cluster — toggle do menu
   const btn = e.target.closest("[data-act='menu']");
   if (btn) {
@@ -3147,6 +3139,19 @@ function openActionMenu(cluster, id) {
       </span>
     </button>
   `;
+  // Handler dos itens do menu — adicionado direto no pop porque ele
+  // vive no <body>, fora do tableBodyEl.
+  pop.addEventListener("click", (e) => {
+    const item = e.target.closest(".action-menu-item");
+    if (!item || item.classList.contains("is-disabled")) return;
+    const itemId  = item.dataset.id;
+    const itemAct = item.dataset.act;
+    closeAllActionMenus();
+    if (itemAct === "edit")    openEditFieldsModal(itemId);
+    if (itemAct === "agendar") openAgendarModal(itemId);
+    if (itemAct === "cancel")  openCancelModal(itemId);
+  });
+
   // Anexa direto no <body> pra sair de qualquer stacking context
   // (sticky cells, overflow scroll, etc.). cluster.is-open vira apenas
   // marker; o popup vive fora do cluster no DOM.
