@@ -2057,7 +2057,9 @@
           <th>Planta</th>
           <th>NF Protocolo</th>
           <th>Data NF</th>
-          <th class="num">Preço (unit.)</th>
+          <th class="num">Preço NF (unit.)
+            <span class="th-hint">da Nota Fiscal</span>
+          </th>
           <th class="num">Qtd. Protocolo
             <span class="th-hint">Total contratado</span>
           </th>
@@ -2269,7 +2271,7 @@
             <div class="val" id="efViewStatus">—</div>
           </div>
           <div class="ef-view-item">
-            <div class="lbl">Preço (unit.)</div>
+            <div class="lbl">Preço NF (unit.)</div>
             <div class="val" id="efViewPreco">—</div>
           </div>
           <div class="ef-view-item">
@@ -2898,7 +2900,7 @@ document.getElementById("btnExport").addEventListener("click", () => {
   const headers = ["Protocolo","Status","Contrato SAP","Cotação","Filial do Cliente",
     "CPF/CNPJ da Filial","Cidade da Filial","UF","Cooperado","CPF/CNPJ do Cooperado",
     "IE do Cooperado","Produto","Descrição Produto","Embalagem","Tipo de Frete","Planta",
-    "NF Protocolo","Data NF Protocolo","Preço (unit.)","Qtd. Protocolo","Qtd. Agendada",
+    "NF Protocolo","Data NF Protocolo","Preço NF (unit.)","Qtd. Protocolo","Qtd. Agendada",
     "Saldo Agendar","Qtd. Faturada","Qtd. a Faturar"];
   const csvRows = [headers.join(";")];
   PROTOCOLS.forEach(p => {
