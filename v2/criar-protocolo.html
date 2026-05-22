@@ -3972,14 +3972,17 @@
     align-items: center;
   }
   .btn-cadastrar-coop {
-    background: #fff;
-    color: var(--mosaic-green-800);
+    background: var(--mosaic-green-800);
+    color: #fff;
     border-color: var(--mosaic-green-800);
   }
   .btn-cadastrar-coop:hover {
-    background: var(--mosaic-green-800);
+    background: var(--mosaic-green-900);
+    border-color: var(--mosaic-green-900);
     color: #fff;
   }
+  /* Ícone do botão também em branco (override padrão de .btn-with-icon) */
+  .btn-cadastrar-coop svg { color: #fff; stroke: #fff; }
   .proto-table-wrap {
     border: 1px solid var(--border-soft);
     background: #fff;
@@ -4415,18 +4418,8 @@
     margin-top: 4px;
   }
   .modal-cad-coop .cad-coop-field.is-error .cad-coop-err { display: block; }
-  .modal-cad-coop .cad-coop-submit {
-    background: var(--mosaic-green-800);
-    color: #fff;
-    border: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 11px 22px;
-    cursor: pointer;
-    transition: background 120ms;
-  }
-  .modal-cad-coop .cad-coop-submit:hover { background: var(--mosaic-green-700); }
+  /* .cad-coop-submit usa .btn .btn-primary do design system (44px verde) */
+  .modal-cad-coop .cad-coop-submit { padding: 0 28px; }
   @media (max-width: 720px) {
     .modal-cad-coop .cad-coop-grid { grid-template-columns: 1fr; }
   }
@@ -5475,7 +5468,7 @@
         </div>
       </div>
 
-      <button class="cad-coop-submit" id="cadCoopSalvar" type="button">Adicionar novo cliente</button>
+      <button class="btn btn-primary cad-coop-submit" id="cadCoopSalvar" type="button">Adicionar novo cliente</button>
     </div>
   </div>
 </div>
