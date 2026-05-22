@@ -377,14 +377,20 @@
   /* ================================================================
      Células de quantidade editáveis (click-to-edit)
      ================================================================ */
-  .wide-table td.editable-qty {
+  .wide-table td.editable-qty,
+  .wide-table td.row-edit-trigger {
     position: relative;
     cursor: pointer;
     padding-right: 22px !important;
   }
-  .wide-table td.editable-qty:hover {
+  .wide-table td.editable-qty:hover,
+  .wide-table td.row-edit-trigger:hover {
     background: #fffbed;
     box-shadow: inset 0 0 0 1px #f0c020;
+  }
+  /* No hover do trigger, destacar todos os campos editáveis da MESMA linha */
+  .wide-table tbody tr:has(td.row-edit-trigger:hover) td.row-edit-trigger {
+    background: #fffbed;
   }
   .qty-pencil {
     position: absolute;
@@ -396,7 +402,8 @@
     pointer-events: none;
     display: inline-flex;
   }
-  .wide-table td.editable-qty:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
+  .wide-table td.editable-qty:hover .qty-pencil,
+  .wide-table td.row-edit-trigger:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
   .wide-table td.editable-qty.cell-editing {
     padding: 0 !important;
     background: #fff;
@@ -2867,14 +2874,21 @@ function renderRowNormal(p) {
   // NF / Data NF / Preço NF: rules.canEditInvoice(p) — até billing
   // Qtd. Agendada e Qtd. Faturada: read-only (vem do SAP)
   // Outros (Cooperado/Contrato/Cotação/Cidade/UF/IE/Produto/Frete/Planta): imutáveis
-  // v2: células são display-only — edição via menu "Editar" (inline em toda a linha)
-  const embalagemCell = `<td title="${rules.canEditPackaging(p) ? 'Editável via menu Editar' : '🔒 Sales Order já gerada'}">${p.embalagem}</td>`;
-  const nfCell        = `<td title="${rules.canEditInvoice(p) ? 'Editável via menu Editar' : '🔒 Faturamento concluído'}">${p.nf || '—'}</td>`;
-  const dataNfCell    = `<td title="${rules.canEditInvoice(p) ? 'Editável via menu Editar' : '🔒 Faturamento concluído'}">${p.dataNf || '—'}</td>`;
-  const precoCell     = `<td class="num" title="${rules.canEditInvoice(p) ? 'Editável via menu Editar' : '🔒 Faturamento concluído'}">${p.preco || '—'}</td>`;
-  const qtdProtocoloCell = rules.canEditVolume(p)
-    ? `<td class="num highlight" title="Editável via menu Editar">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`
-    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+  // v2: células editáveis disparam edição de TODA a linha (não da célula individual)
+  const trigger = (canEdit, lockReason) => canEdit
+    ? `class="row-edit-trigger" data-id="${p.id}" title="Clique para editar esta linha"`
+    : `title="🔒 ${lockReason}"`;
+  const pencil = (canEdit) => canEdit ? `<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span>` : '';
+
+  const canPkg = rules.canEditPackaging(p);
+  const canNF  = rules.canEditInvoice(p);
+  const canVol = rules.canEditVolume(p);
+
+  const embalagemCell = `<td ${trigger(canPkg, 'Sales Order já gerada')}>${p.embalagem}${pencil(canPkg)}</td>`;
+  const nfCell        = `<td ${trigger(canNF,  'Faturamento concluído')}>${p.nf || '—'}${pencil(canNF)}</td>`;
+  const dataNfCell    = `<td ${trigger(canNF,  'Faturamento concluído')}>${p.dataNf || '—'}${pencil(canNF)}</td>`;
+  const precoCell     = `<td class="num" ${trigger(canNF, 'Faturamento concluído')}>${p.preco || '—'}${pencil(canNF)}</td>`;
+  const qtdProtocoloCell = `<td class="num highlight" ${trigger(canVol, 'Status não permite alteração')}>${p.qtdProtocolo.toLocaleString("pt-BR")}${pencil(canVol)}</td>`;
 
   return `
     <tr data-proto-id="${p.id}">
@@ -3227,7 +3241,13 @@ tableBodyEl.addEventListener("click", (e) => {
     }
     return;
   }
-  // v2: click-to-edit individual removido — edição é via menu "Editar" (linha completa)
+  // v2: clique em campo editável → ativa edição da linha inteira (mesmo efeito do "Editar")
+  const trigger = e.target.closest("td.row-edit-trigger");
+  if (trigger) {
+    e.stopPropagation();
+    const id = trigger.dataset.id;
+    if (id && editingRowId !== id) startRowEdit(id);
+  }
 });
 
 function openActionMenu(cluster, id) {
