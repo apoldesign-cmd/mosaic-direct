@@ -3084,12 +3084,10 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
-  // (handler de menu-item agora está direto no pop, registrado em
-  // openActionMenu — necessário porque o pop vive no <body>.)
-
   // Botão chevron do cluster — toggle do menu
   const btn = e.target.closest("[data-act='menu']");
   if (btn) {
+    e.stopPropagation();
     const cluster = btn.closest(".action-cluster");
     const wasOpen = cluster.classList.contains("is-open");
     closeAllActionMenus();
@@ -3099,9 +3097,14 @@ tableBodyEl.addEventListener("click", (e) => {
     }
     return;
   }
-  // Click em célula de quantidade editável → inline edit
+  // Click em célula editável → inline edit (NF, Embalagem, Preço, etc.)
   const td = e.target.closest("td.editable-qty");
-  if (td) startCellEdit(td);
+  if (td) {
+    e.stopPropagation();
+    // Pequeno timeout pra garantir que o handler do document de
+    // closeAllActionMenus rode primeiro (evita re-entradas).
+    startCellEdit(td);
+  }
 });
 
 function openActionMenu(cluster, id) {
@@ -3187,6 +3190,8 @@ let editingCellOriginal = null;
 function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
 
 function startCellEdit(td) {
+  // Se já estamos editando esta MESMA célula, ignora (evita re-trigger)
+  if (editingCellEl === td) return;
   if (editingCellEl) commitCellEdit();
   const id    = td.dataset.id;
   const field = td.dataset.f;
@@ -3215,8 +3220,11 @@ function startCellEdit(td) {
   const input = td.querySelector("input, select");
   input.focus();
   if (input.select) input.select();
-  input.addEventListener("blur",   commitCellEdit);
   input.addEventListener("keydown", onCellKeyDown);
+  // Adiciona blur listener no próximo tick — evita blurs espúrios que
+  // alguns browsers disparam quando o input acabou de ser criado e o
+  // focus ainda está propagando.
+  setTimeout(() => input.addEventListener("blur", commitCellEdit), 0);
 }
 
 function onCellKeyDown(e) {
