@@ -215,7 +215,7 @@
   gap: 4px;
   padding: 0 6px;
   font-size: var(--fs-body-sm);
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--mosaic-green-800);
@@ -232,14 +232,21 @@
 .nav-item.is-active {
   color: var(--mosaic-orange);
 }
-/* Chevron só aparece no hover/focus (Salesforce pattern) */
+/* Chevron — mesmo SVG (polyline 6 9 12 15 18 9) usado em todos os dropdowns
+   do app (action menus, selects). Mask-image herda currentColor pro hover. */
 .nav-item .chev {
-  width: 9px;
-  height: 9px;
-  margin-left: 2px;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: rotate(45deg) translate(-1px, -1px);
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
   opacity: 0;
   transition: opacity var(--ease-fast);
 }
@@ -280,7 +287,7 @@
   display: block;
   padding: 9px 16px;
   font-size: var(--fs-body-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--text-1);
   text-decoration: none;
   text-transform: none;
@@ -1183,3 +1190,27 @@ button.btn-primary svg,
   .container { padding-left: var(--space-4); padding-right: var(--space-4); }
   .mosaic-footer-inner { grid-template-columns: 1fr; gap: var(--space-4); padding: 0 var(--space-4); }
 }
+
+
+/* ============================================================================
+   Sticky horizontal scrollbar (sempre visível no rodapé do viewport quando
+   a tabela transborda). Wraps com [data-h-scroll] ou .wide-table-wrap /
+   .report-table-wrap são auto-detectados pelo script que cada página carrega.
+   ============================================================================ */
+
+.sticky-h-scroll {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: rgba(255,255,255,0.96);
+  border-top: 1px solid var(--border-soft);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  z-index: 200;
+  display: none;
+}
+.sticky-h-scroll.is-visible { display: block; }
+.sticky-h-scroll-inner { height: 1px; }

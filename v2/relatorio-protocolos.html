@@ -3848,6 +3848,44 @@ document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
 });
 
 render();
+
+/* ============================================================================
+   Sticky horizontal scrollbar — espelha o scrollLeft do .wide-table-wrap
+   numa barra fixa na base do viewport. Aparece só quando a tabela transborda
+   e o rodapé natural da tabela está fora do viewport.
+   ============================================================================ */
+(function initStickyHScroll() {
+  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
+    const sticky = document.createElement("div");
+    sticky.className = "sticky-h-scroll";
+    const inner = document.createElement("div");
+    inner.className = "sticky-h-scroll-inner";
+    sticky.appendChild(inner);
+    document.body.appendChild(sticky);
+    let syncing = false;
+    const update = () => {
+      inner.style.width = wrap.scrollWidth + "px";
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      const below = r.bottom > window.innerHeight + 20;
+      sticky.classList.toggle("is-visible", overflows && below);
+    };
+    wrap.addEventListener("scroll", () => {
+      if (syncing) return; syncing = true;
+      sticky.scrollLeft = wrap.scrollLeft;
+      requestAnimationFrame(() => { syncing = false; });
+    });
+    sticky.addEventListener("scroll", () => {
+      if (syncing) return; syncing = true;
+      wrap.scrollLeft = sticky.scrollLeft;
+      requestAnimationFrame(() => { syncing = false; });
+    });
+    window.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
+    update();
+  });
+})();
 </script>
 </body>
 </html>
