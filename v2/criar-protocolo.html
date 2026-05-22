@@ -4284,49 +4284,66 @@
     font-weight: 800;
     margin-bottom: 1px;
   }
-  /* Cadastrar Cooperado side-drawer (V5 style) */
-  .drawer.drawer--cad-coop { width: min(640px, 100%); }
-  .drawer--cad-coop .drawer-body { flex: 1; overflow-y: auto; }
-  .cad-coop-form { padding: 0; }
-  .cad-coop-form .form-section-title {
+  /* Cadastrar Cooperado — centered modal (Adicionar novo cliente) */
+  .modal-cad-coop {
+    max-width: 920px;
+    background: #fff;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  }
+  .modal-cad-coop .cad-coop-header {
     background: var(--bg-section);
-    padding: 12px 24px;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--mosaic-green-900);
-    border-top: 1px solid var(--border-soft);
+    padding: 16px 24px;
     border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
-  .cad-coop-form .form-section-title:first-of-type { border-top: none; }
-  .cad-coop-form .form-grid {
-    padding: 18px 24px;
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: 12px 14px;
-  }
-  .cad-coop-form .field-block { min-width: 0; }
-  .cad-coop-form .field-block label {
-    display: block;
-    font-size: 11px;
+  .modal-cad-coop .cad-coop-header h3 {
+    margin: 0;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-1);
-    margin-bottom: 4px;
+    letter-spacing: -0.005em;
   }
-  .cad-coop-form .field-block label .req { color: var(--mosaic-red); margin-left: 2px; }
-  .cad-coop-form .field-block label .opt-tag {
-    font-size: 9px;
-    text-transform: uppercase;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-left: 4px;
+  .modal-cad-coop .cad-coop-close {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-2);
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 4px;
   }
-  .cad-coop-form input,
-  .cad-coop-form select,
-  .cad-coop-form textarea {
+  .modal-cad-coop .cad-coop-close:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
+  .modal-cad-coop .cad-coop-body {
+    padding: 24px;
+  }
+  .modal-cad-coop .cad-coop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px 18px;
+    margin-bottom: 24px;
+  }
+  .modal-cad-coop .cad-coop-field { min-width: 0; }
+  .modal-cad-coop .cad-coop-field.full { grid-column: 1 / -1; }
+  .modal-cad-coop .cad-coop-field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .modal-cad-coop .cad-coop-field label .req { color: var(--mosaic-red); margin-right: 2px; }
+  .modal-cad-coop .cad-coop-input {
+    position: relative;
+  }
+  .modal-cad-coop input,
+  .modal-cad-coop select,
+  .modal-cad-coop textarea {
     width: 100%;
     height: 38px;
     padding: 0 12px;
-    border: 1.5px solid var(--border);
+    border: 1px solid var(--border);
     background: #fff;
     font-size: 13px;
     font-family: inherit;
@@ -4335,19 +4352,24 @@
     outline: none;
     transition: border-color 120ms;
   }
-  .cad-coop-form textarea {
+  .modal-cad-coop textarea {
     height: auto;
-    min-height: 70px;
+    min-height: 60px;
     padding: 10px 12px;
     resize: vertical;
   }
-  .cad-coop-form input:focus,
-  .cad-coop-form select:focus,
-  .cad-coop-form textarea:focus {
+  .modal-cad-coop input:focus,
+  .modal-cad-coop select:focus,
+  .modal-cad-coop textarea:focus {
     border-color: var(--mosaic-green-700);
     box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
   }
-  .cad-coop-form select {
+  .modal-cad-coop input::placeholder,
+  .modal-cad-coop textarea::placeholder {
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .modal-cad-coop select {
     background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
     background-repeat: no-repeat;
     background-position: right 12px center;
@@ -4356,20 +4378,52 @@
     -webkit-appearance: none;
     padding-right: 32px;
     cursor: pointer;
+    color: var(--text-3);
+    font-weight: 500;
   }
-  .cad-coop-form .span-3 { grid-column: span 3; }
-  .cad-coop-form .span-4 { grid-column: span 4; }
-  .cad-coop-form .span-5 { grid-column: span 5; }
-  .cad-coop-form .span-6 { grid-column: span 6; }
-  .cad-coop-form .span-8 { grid-column: span 8; }
-  .cad-coop-form .span-12 { grid-column: span 12; }
-  .cad-coop-form .modal-footer {
-    padding: 14px 24px;
-    border-top: 1px solid var(--border);
-    background: #fafafa;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
+  .modal-cad-coop select.has-value { color: var(--text-1); font-weight: 600; }
+  /* Validation state (red border + icon + message) */
+  .modal-cad-coop .cad-coop-field.is-error input,
+  .modal-cad-coop .cad-coop-field.is-error select,
+  .modal-cad-coop .cad-coop-field.is-error textarea {
+    border-color: var(--mosaic-red);
+    padding-left: 36px;
+  }
+  .modal-cad-coop .cad-coop-field.is-error .cad-coop-input::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px; height: 14px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b9202a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><line x1='4.93' y1='4.93' x2='19.07' y2='19.07'/></svg>");
+    background-repeat: no-repeat;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .modal-cad-coop .cad-coop-err {
+    display: none;
+    font-size: 11.5px;
+    color: var(--mosaic-red);
+    font-weight: 500;
+    margin-top: 4px;
+  }
+  .modal-cad-coop .cad-coop-field.is-error .cad-coop-err { display: block; }
+  .modal-cad-coop .cad-coop-submit {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 11px 22px;
+    cursor: pointer;
+    transition: background 120ms;
+  }
+  .modal-cad-coop .cad-coop-submit:hover { background: var(--mosaic-green-700); }
+  @media (max-width: 720px) {
+    .modal-cad-coop .cad-coop-grid { grid-template-columns: 1fr; }
   }
 
   /* ================================================================
@@ -5304,99 +5358,122 @@
 
 <!-- CAD COOP MODAL -->
 <!-- CAD COOP DRAWER (side-drawer, V5-style) -->
-<div class="drawer-backdrop" id="cadCoopBackdrop"></div>
-<aside class="drawer drawer--cad-coop" id="cadCoopDrawer" role="dialog" aria-modal="true" aria-labelledby="cadCoopTitle" aria-hidden="true">
-  <div class="drawer-header">
-    <span class="modal-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-    </span>
-    <div class="titles">
-      <h3 id="cadCoopTitle">Cadastrar novo cooperado</h3>
-      <div class="subtitle">Preencha os dados e o endereço para incluir o cooperado.</div>
-    </div>
-    <button class="close-x" data-close-cad-coop-drawer aria-label="Fechar" type="button">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-
-  <div class="drawer-body cad-coop-form">
-    <div class="form-section-title">Dados Cooperado</div>
-    <div class="form-grid">
-      <div class="field-block span-12">
-        <label>Tipo Cliente <span class="req">*</span></label>
-        <select id="cadCoopTipo">
-          <option value="">—</option>
-          <option value="PF">Pessoa Física</option>
-          <option value="PJ">Pessoa Jurídica</option>
-        </select>
-      </div>
-      <div class="field-block span-12">
-        <label>Nome do Cliente <span class="req">*</span></label>
-        <input type="text" id="cadCoopNome" placeholder="Nome completo" />
-      </div>
-      <div class="field-block span-12">
-        <label>Nome da Fazenda</label>
-        <input type="text" id="cadCoopFazenda" placeholder="Opcional" />
-      </div>
-      <div class="field-block span-6">
-        <label>CPF / CNPJ <span class="req">*</span></label>
-        <input type="text" id="cadCoopDoc" inputmode="numeric" maxlength="18" placeholder="000.000.000-00" />
-      </div>
-      <div class="field-block span-6">
-        <label>Inscrição Estadual <span class="req">*</span></label>
-        <input type="text" id="cadCoopIE" inputmode="numeric" maxlength="14" placeholder="000.000.000.000" />
-      </div>
+<div class="modal-backdrop" id="cadCoopBackdrop">
+  <div class="modal modal-cad-coop" id="cadCoopDrawer" role="dialog" aria-modal="true" aria-labelledby="cadCoopTitle" aria-hidden="true">
+    <div class="cad-coop-header">
+      <h3 id="cadCoopTitle">Adicionar novo cliente</h3>
+      <button class="cad-coop-close" data-close-cad-coop-drawer aria-label="Fechar" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
 
-    <div class="form-section-title">Endereço</div>
-    <div class="form-grid">
-      <div class="field-block span-6">
-        <label>CEP <span class="req">*</span></label>
-        <input type="text" id="cadCoopCEP" inputmode="numeric" maxlength="9" placeholder="00000-000" />
+    <div class="cad-coop-body">
+      <div class="cad-coop-grid">
+        <!-- Row 1 -->
+        <div class="cad-coop-field" data-field="tipo">
+          <label><span class="req">*</span>Tipo de cliente</label>
+          <div class="cad-coop-input">
+            <select id="cadCoopTipo">
+              <option value="">Tipo de cliente</option>
+              <option value="PF">Pessoa Física</option>
+              <option value="PJ">Pessoa Jurídica</option>
+            </select>
+          </div>
+          <div class="cad-coop-err">Tipo de cliente é necessário</div>
+        </div>
+        <div class="cad-coop-field" data-field="nome">
+          <label><span class="req">*</span>Nome do agricultor</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopNome" placeholder="Nome do agricultor" />
+          </div>
+          <div class="cad-coop-err">Nome do agricultor é necessário</div>
+        </div>
+        <div class="cad-coop-field" data-field="telefone">
+          <label>Telefone de contato</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopTelefone" placeholder="Telefone de contato" />
+          </div>
+        </div>
+
+        <!-- Row 2 -->
+        <div class="cad-coop-field" data-field="email">
+          <label>E-mail de contato</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopEmail" placeholder="E-mail de contato" />
+          </div>
+        </div>
+        <div class="cad-coop-field" data-field="rua">
+          <label><span class="req">*</span>Rua</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopEndereco" placeholder="Rua" />
+          </div>
+          <div class="cad-coop-err">Rua é necessário</div>
+        </div>
+        <div class="cad-coop-field"><!-- spacer --></div>
+
+        <!-- Row 3 -->
+        <div class="cad-coop-field" data-field="cep">
+          <label><span class="req">*</span>Código Postal</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopCEP" inputmode="numeric" maxlength="9" placeholder="Código Postal" />
+          </div>
+          <div class="cad-coop-err">Código Postal é necessário</div>
+        </div>
+        <div class="cad-coop-field" data-field="end2">
+          <label>Linha de endereço 2 (opcional)</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopEnd2" placeholder="Linha de endereço 2 (opcional)" />
+          </div>
+        </div>
+        <div class="cad-coop-field" data-field="cidade">
+          <label><span class="req">*</span>Cidade</label>
+          <div class="cad-coop-input">
+            <input type="text" id="cadCoopCidade" placeholder="Cidade" />
+          </div>
+          <div class="cad-coop-err">Cidade é necessário</div>
+        </div>
+
+        <!-- Row 4 -->
+        <div class="cad-coop-field" data-field="pais">
+          <label><span class="req">*</span>País</label>
+          <div class="cad-coop-input">
+            <select id="cadCoopPais">
+              <option value="">País</option>
+              <option value="Brasil">Brasil</option>
+              <option value="Argentina">Argentina</option>
+              <option value="Paraguai">Paraguai</option>
+              <option value="Uruguai">Uruguai</option>
+            </select>
+          </div>
+          <div class="cad-coop-err">País é necessário</div>
+        </div>
+        <div class="cad-coop-field" data-field="estado">
+          <label><span class="req">*</span>Estado/Província</label>
+          <div class="cad-coop-input">
+            <select id="cadCoopEstado">
+              <option value="">Estado/Província</option>
+              <option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>RS</option>
+              <option>SC</option><option>BA</option><option>GO</option><option>MT</option><option>MS</option>
+              <option>DF</option><option>ES</option><option>PA</option><option>AM</option><option>CE</option>
+            </select>
+          </div>
+          <div class="cad-coop-err">Estado/Província é necessário</div>
+        </div>
+        <div class="cad-coop-field"><!-- spacer --></div>
+
+        <!-- Row 5 -->
+        <div class="cad-coop-field full" data-field="roteiro">
+          <label>Instruções de entrega (opcional)</label>
+          <div class="cad-coop-input">
+            <textarea id="cadCoopRoteiro" placeholder=""></textarea>
+          </div>
+        </div>
       </div>
-      <div class="field-block span-6">
-        <label>Número <span class="req">*</span></label>
-        <input type="text" id="cadCoopNumero" placeholder="123" />
-      </div>
-      <div class="field-block span-12">
-        <label>Endereço <span class="req">*</span></label>
-        <input type="text" id="cadCoopEndereco" placeholder="Rua, avenida, estrada…" />
-      </div>
-      <div class="field-block span-12">
-        <label>Bairro <span class="req">*</span></label>
-        <input type="text" id="cadCoopBairro" placeholder="" />
-      </div>
-      <div class="field-block span-4">
-        <label>País <span class="req">*</span></label>
-        <select id="cadCoopPais">
-          <option value="">—</option>
-          <option value="Brasil" selected>Brasil</option>
-        </select>
-      </div>
-      <div class="field-block span-4">
-        <label>Estado <span class="req">*</span></label>
-        <select id="cadCoopEstado">
-          <option value="">—</option>
-          <option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>RS</option>
-          <option>SC</option><option>BA</option><option>GO</option><option>MT</option><option>MS</option>
-        </select>
-      </div>
-      <div class="field-block span-4">
-        <label>Cidade <span class="req">*</span></label>
-        <input type="text" id="cadCoopCidade" placeholder="" />
-      </div>
-      <div class="field-block span-12">
-        <label>Roteiro <span class="opt-tag">opcional</span></label>
-        <textarea id="cadCoopRoteiro" placeholder="Instruções de acesso, contatos no local, etc."></textarea>
-      </div>
+
+      <button class="cad-coop-submit" id="cadCoopSalvar" type="button">Adicionar novo cliente</button>
     </div>
   </div>
-
-  <div class="drawer-footer">
-    <button class="btn btn-secondary" data-close-cad-coop-drawer type="button">Cancelar</button>
-    <button class="btn btn-primary" id="cadCoopSalvar" type="button">Salvar</button>
-  </div>
-</aside>
+</div>
 
 
 <!-- CAD COOP SUCCESS -->
@@ -7196,38 +7273,77 @@ document.addEventListener("keydown", e => {
 });
 
 document.getElementById("openCadastrarCoopBtn").addEventListener("click", () => {
-  ["cadCoopTipo","cadCoopNome","cadCoopFazenda","cadCoopDoc","cadCoopIE",
-   "cadCoopCEP","cadCoopEndereco","cadCoopNumero","cadCoopEstado","cadCoopCidade",
-   "cadCoopBairro","cadCoopRoteiro"].forEach(id => {
+  ["cadCoopTipo","cadCoopNome","cadCoopTelefone","cadCoopEmail",
+   "cadCoopCEP","cadCoopEndereco","cadCoopEnd2","cadCoopEstado","cadCoopCidade",
+   "cadCoopRoteiro"].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = "";
   });
-  document.getElementById("cadCoopPais").value = "Brasil";
+  document.getElementById("cadCoopPais").value = "";
+  /* Limpa estados de erro */
+  document.querySelectorAll("#cadCoopDrawer .cad-coop-field.is-error")
+    .forEach(f => f.classList.remove("is-error"));
+  /* Resetar visual do select (sem cor) */
+  document.querySelectorAll("#cadCoopDrawer select").forEach(s => s.classList.remove("has-value"));
   openCadCoopDrawer();
 });
+
+/* Atualiza visual do select (cinza placeholder vs preto preenchido) */
+document.querySelectorAll("#cadCoopDrawer select").forEach(s => {
+  s.addEventListener("change", () => {
+    s.classList.toggle("has-value", !!s.value);
+    /* Limpa erro ao começar a digitar/escolher */
+    const f = s.closest(".cad-coop-field");
+    if (f) f.classList.remove("is-error");
+  });
+});
+/* Limpa erro ao digitar em inputs/textarea */
+document.querySelectorAll("#cadCoopDrawer input, #cadCoopDrawer textarea").forEach(el => {
+  el.addEventListener("input", () => {
+    const f = el.closest(".cad-coop-field");
+    if (f) f.classList.remove("is-error");
+  });
+});
+
 document.getElementById("cadCoopSalvar").addEventListener("click", () => {
   const tipo = document.getElementById("cadCoopTipo").value;
   const nome = document.getElementById("cadCoopNome").value.trim();
-  const doc  = document.getElementById("cadCoopDoc").value.trim();
-  const ie   = document.getElementById("cadCoopIE").value.trim();
   const cep  = document.getElementById("cadCoopCEP").value.trim();
   const end  = document.getElementById("cadCoopEndereco").value.trim();
-  const num  = document.getElementById("cadCoopNumero").value.trim();
+  const pais = document.getElementById("cadCoopPais").value;
   const uf   = document.getElementById("cadCoopEstado").value.trim();
   const cidade = document.getElementById("cadCoopCidade").value.trim();
-  const bairro = document.getElementById("cadCoopBairro").value.trim();
 
-  if (!tipo || !nome || !doc || !ie || !cep || !end || !num || !uf || !cidade || !bairro) {
-    alert("Preencha todos os campos obrigatórios marcados com *.");
-    return;
-  }
-  const fazenda = document.getElementById("cadCoopFazenda").value.trim() || "—";
+  /* Required: tipo, nome, rua, cep, cidade, pais, estado */
+  const required = {
+    tipo:    !!tipo,
+    nome:    !!nome,
+    rua:     !!end,
+    cep:     !!cep,
+    cidade:  !!cidade,
+    pais:    !!pais,
+    estado:  !!uf,
+  };
+  let hasError = false;
+  Object.entries(required).forEach(([key, ok]) => {
+    const field = document.querySelector(`#cadCoopDrawer .cad-coop-field[data-field="${key}"]`);
+    if (!field) return;
+    if (ok) {
+      field.classList.remove("is-error");
+    } else {
+      field.classList.add("is-error");
+      hasError = true;
+    }
+  });
+  if (hasError) return;
+
+  const end2 = document.getElementById("cadCoopEnd2").value.trim();
   const newCoop = {
     id: "C" + String(COOPERADOS.length + 1).padStart(3, "0"),
     nome: nome.toUpperCase(),
-    ie: ie, doc: doc,
-    fazenda: fazenda,
-    rua: end + ", " + num,
+    ie: "—", doc: "—",
+    fazenda: "—",
+    rua: end + (end2 ? ", " + end2 : ""),
     cidade: cidade.toUpperCase(),
     uf: uf, cep: cep,
     pending: true,           /* lock for ~10 min (approval pending) */
