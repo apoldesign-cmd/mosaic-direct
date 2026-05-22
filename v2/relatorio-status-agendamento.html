@@ -2704,7 +2704,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use o filtro de <strong>semana de → até</strong> para abranger um período maior. Clique em <strong>uma célula de Qtd. Solicitada</strong> para editar inline, ou no <strong>✏️ lápis</strong> para abrir a edição na linha (caixa grande).</span>
+    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use o filtro de <strong>semana de → até</strong> para abranger um período maior.</span>
   </div>
 
   <!-- Search bar + advanced-filter trigger + export -->
@@ -2970,9 +2970,6 @@ function buildThead() {
     { l: "IE Recebedor" },
     { l: "Cidade" },
     { l: "UF" },
-    { l: "Qtd Solicitada (t)", a: "right" },
-    { l: "Qtd Confirmada OV (t)", a: "right" },
-    { l: "Qtd Faturada (t)", a: "right" },
   ];
 
   html += main.map(h =>
@@ -3157,8 +3154,8 @@ function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
 
-  /* 1 action + 23 main + 3 totals + 1 toggle = 28 cols (colspan da linha de detalhe) */
-  const COLSPAN = 28;
+  /* 1 action + 20 main + 3 totals + 1 toggle = 25 cols (colspan da linha de detalhe) */
+  const COLSPAN = 25;
 
   elBody.innerHTML = list.map((r, idx) => {
     const editing = editingSol === rowKey(r);
@@ -3189,10 +3186,6 @@ function render() {
       tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
       tds += `<td>${r.cidade}</td>`;
       tds += `<td>${r.uf}</td>`;
-      // 3 colunas de Qtd: Solicitada (editável), Confirmada OV e Faturada (read-only do SAP)
-      tds += `<td class="vol-cell cell-row-edit"><input class="row-qty-input" data-f="qtdSolicitada" type="number" min="0" value="${r.qtdSolicitada}" autofocus /></td>`;
-      tds += `<td class="vol-cell vol-cell--conf vol-cell--muted" title="Vem do SAP — read-only">${fmt(r.qtdConfirmadaOV)}</td>`;
-      tds += `<td class="vol-cell vol-cell--fat vol-cell--muted"  title="Vem do SAP — read-only">${fmt(r.qtdFaturada)}</td>`;
       // Totais
       tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.planned[0])}</td>`;
       tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.realized[0])}</td>`;
@@ -3219,10 +3212,6 @@ function render() {
       tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
       tds += `<td>${r.cidade}</td>`;
       tds += `<td>${r.uf}</td>`;
-      // Qtd Solicitada = clicável (editável). Confirmada OV e Faturada vêm do SAP (read-only).
-      tds += `<td class="vol-cell editable-qty" data-key="${rowKey(r)}" data-f="qtdSolicitada" title="Clique para editar">${fmt(r.qtdSolicitada)}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
-      tds += `<td class="vol-cell vol-cell--conf" title="Vem do SAP — read-only">${fmt(r.qtdConfirmadaOV)}</td>`;
-      tds += `<td class="vol-cell vol-cell--fat"  title="Vem do SAP — read-only">${fmt(r.qtdFaturada)}</td>`;
       tds += `<td class="vol-cell col-total">${fmt(r.planned[0])}</td>`;
       tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
       tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
