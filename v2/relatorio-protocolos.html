@@ -3189,6 +3189,47 @@ let editingCellOriginal = null;
 
 function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
 
+/* ============== Máscaras de input ==============
+   Aplicadas conforme o campo:
+   - NF Protocolo: apenas dígitos, máx 12 chars (padrão NF-e BR
+     número da NF dentro da série tem até 9 digitos, deixo 12 pra
+     casos com prefixo da série)
+   - Data NF: dd/mm/aaaa (8 dígitos formatados)
+   - Preço NF: R$ X.XXX,XX (formatação monetária brasileira)
+============================================== */
+function maskOnlyDigits(s, maxDigits = 12) {
+  return String(s ?? "").replace(/\D/g, "").slice(0, maxDigits);
+}
+function maskDate(s) {
+  const d = maskOnlyDigits(s, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return d.slice(0, 2) + "/" + d.slice(2);
+  return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
+}
+function maskMoney(s) {
+  // Pega só dígitos, máx 10 (até R$ 99.999.999,99)
+  const d = maskOnlyDigits(s, 10);
+  if (d.length === 0) return "";
+  // Garante 3 dígitos pra ter pelo menos "0,01" representável
+  const padded = d.padStart(3, "0");
+  const cents = padded.slice(-2);
+  const intPart = padded.slice(0, -2).replace(/^0+(?=\d)/, "") || "0";
+  // Separador de milhar
+  const intFmt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return intFmt + "," + cents;
+}
+function unmaskMoney(masked) {
+  // "1.450,00" -> "R$ 1.450,00" pra storage
+  if (!masked) return "—";
+  return "R$ " + masked;
+}
+
+const MASKS = {
+  nf:     { fn: (v) => maskOnlyDigits(v, 12), inputmode: "numeric", placeholder: "—",          maxlength: 12, align: "left"  },
+  dataNf: { fn: maskDate,                     inputmode: "numeric", placeholder: "dd/mm/aaaa", maxlength: 10, align: "left"  },
+  preco:  { fn: maskMoney,                    inputmode: "numeric", placeholder: "0,00",       maxlength: 13, align: "right", prefix: "R$ " },
+};
+
 function startCellEdit(td) {
   // Se já estamos editando esta MESMA célula, ignora (evita re-trigger)
   if (editingCellEl === td) return;
@@ -3214,8 +3255,25 @@ function startCellEdit(td) {
     const max = field === "qtdProtocolo" ? p.qtdProtocolo : "";
     td.innerHTML = `<input type="number" class="qty-inline-input" min="${min}" ${max !== "" ? `max="${max}"` : ""} value="${p[field]}" />`;
   } else {
-    const v = p[field] === "—" ? "" : (p[field] || "");
-    td.innerHTML = `<input type="text" class="qty-inline-input" style="text-align:left" value="${String(v).replace(/"/g, '&quot;')}" placeholder="—" />`;
+    const mask = MASKS[field];
+    let v = p[field] === "—" ? "" : (p[field] || "");
+    // Se tem prefixo (ex: "R$ "), remove pra editar
+    if (mask && mask.prefix && v.startsWith(mask.prefix)) v = v.slice(mask.prefix.length);
+    const align = mask ? mask.align : "left";
+    const placeholder = mask ? mask.placeholder : "—";
+    const inputmode = mask ? `inputmode="${mask.inputmode}"` : "";
+    const maxlen = mask ? `maxlength="${mask.maxlength}"` : "";
+    td.innerHTML = `<input type="text" class="qty-inline-input" ${inputmode} ${maxlen} style="text-align:${align}" value="${String(v).replace(/"/g, '&quot;')}" placeholder="${placeholder}" />`;
+    // Aplica a máscara ao digitar
+    if (mask) {
+      const input = td.querySelector("input");
+      input.addEventListener("input", () => {
+        const cursorEnd = input.value.length;
+        input.value = mask.fn(input.value);
+        // Mantém cursor no fim (mais simples que recalcular posição)
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+    }
   }
   const input = td.querySelector("input, select");
   input.focus();
@@ -3256,8 +3314,14 @@ function commitCellEdit() {
         // Volume só pode reduzir (mas guardamos o original — depois do reset acima isso é null, então usamos p[field] atual)
       }
     }
-  } else if (type === "text" && (newVal === "" || newVal == null)) {
-    newVal = "—";
+  } else if (type === "text") {
+    // Aplica prefixo da máscara se necessário (ex: "R$ " no preço)
+    const mask = MASKS[field];
+    if (newVal === "" || newVal == null) {
+      newVal = "—";
+    } else if (mask && mask.prefix) {
+      newVal = mask.prefix + newVal;
+    }
   }
 
   if (String(newVal) !== String(p[field])) {
