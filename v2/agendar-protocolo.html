@@ -29,15 +29,15 @@
   .breadcrumbs .current { color: var(--text-2); }
 
   .page-title {
-    font-size: 26px;
+    font-size: 32px;
     font-weight: 800;
     color: var(--mosaic-green-900);
-    letter-spacing: -0.015em;
-    margin: 0 0 20px;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
   }
 
   /* ============================================================
-     "Vindo do Relatório de Protocolos" banner
+     Vindo do Relatório de Protocolos banner
      ============================================================ */
   .from-report-banner {
     display: none;
@@ -74,7 +74,51 @@
   .from-report-close:hover { background: rgba(0,0,0,0.05); color: var(--text-1); }
 
   /* ============================================================
-     Action row + drawer (padrao igual agendar-contrato-normal)
+     Title row + view toggle
+     ============================================================ */
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 18px;
+  }
+  .title-row .page-title { margin: 0; }
+  .view-toggle {
+    display: inline-flex;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    transition: background-color 120ms, color 120ms;
+  }
+  .view-toggle button:hover:not(.is-active) {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+  .view-toggle button.is-active {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .view-toggle button + button {
+    border-left: 1.5px solid var(--border);
+  }
+
+  /* ============================================================
+     Action row
      ============================================================ */
   .action-row {
     display: flex;
@@ -90,20 +134,27 @@
   .action-help { font-size: 12px; color: var(--text-3); margin-top: 2px; font-weight: 500; }
   .btn-with-icon { display: inline-flex; align-items: center; gap: 8px; }
 
+  /* ============================================================
+     Side drawer (Selecionar protocolo)
+     ============================================================ */
   .drawer-backdrop {
-    position: fixed; inset: 0;
+    position: fixed;
+    inset: 0;
     background: rgba(15, 25, 20, 0.45);
     z-index: 100;
-    opacity: 0; pointer-events: none;
+    opacity: 0;
+    pointer-events: none;
     transition: opacity 240ms ease-out;
   }
   .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
   .drawer {
-    position: fixed; top: 0; right: 0; bottom: 0;
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
     width: min(560px, 100%);
     background: #fff;
     z-index: 101;
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
     box-shadow: -16px 0 40px rgba(0,0,0,0.18);
     transform: translateX(100%);
     transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
@@ -112,7 +163,9 @@
   .drawer-header {
     padding: 22px 28px 18px;
     border-bottom: 1px solid var(--border-soft);
-    display: flex; align-items: flex-start; gap: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
     background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
     flex-shrink: 0;
   }
@@ -120,384 +173,941 @@
     width: 40px; height: 40px;
     background: var(--mosaic-green-800);
     color: #fff;
-    display: inline-flex; align-items: center; justify-content: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
   }
   .drawer-header .titles { flex: 1; }
-  .drawer-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-1); }
-  .drawer-header .subtitle { font-size: 13px; color: var(--text-2); margin-top: 2px; font-weight: 600; }
+  .drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .drawer-header .subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
   .drawer-header .close-x {
-    width: 32px; height: 32px; background: transparent; border: none;
-    color: var(--text-2); cursor: pointer;
-    display: inline-flex; align-items: center; justify-content: center;
+    width: 32px; height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    transition: background-color 120ms, color 120ms;
   }
   .drawer-header .close-x:hover { background: var(--bg-section); color: var(--text-1); }
 
-  .drawer-step { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-  .drawer-step.is-hidden { display: none; }
-
-  .drawer-search { padding: 16px 28px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
-  .drawer-search-wrap {
-    position: relative;
-    display: flex; align-items: center;
-  }
-  .drawer-search-wrap .icon-left {
-    position: absolute; left: 12px; color: var(--text-3); pointer-events: none;
-  }
-  .drawer-search-wrap input {
-    width: 100%; height: 40px;
-    padding: 0 14px 0 40px;
-    border: 1px solid var(--border);
-    font-size: 14px; font-family: inherit; color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .drawer-search-wrap input:focus { border-color: var(--mosaic-green-700); }
-
-  .drawer-back-row {
-    padding: 14px 28px 0;
-    display: flex; align-items: center; gap: 12px;
+  .drawer-search {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
     flex-shrink: 0;
   }
-  .drawer-back-row .back-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: transparent; border: none;
-    color: var(--mosaic-green-800); font-weight: 600; font-size: 13px;
-    cursor: pointer; padding: 4px 8px;
+  .drawer-search-wrap { position: relative; }
+  .drawer-search-wrap input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
   }
-  .drawer-back-row .back-btn:hover { color: var(--mosaic-green-700); }
-  .drawer-back-row .drawer-back-info {
-    font-size: 13px; color: var(--text-3);
+  .drawer-search-wrap input::placeholder { color: var(--text-3); font-weight: 500; }
+  .drawer-search-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
   }
-  .drawer-back-row .drawer-back-info strong {
-    color: var(--mosaic-green-800); font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  .drawer-search-wrap .icon-left {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
   }
+  .drawer-search-wrap .clear-btn {
+    position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .drawer-search-wrap .clear-btn:hover { color: var(--text-1); }
+  .drawer-search-wrap.has-value .clear-btn { display: inline-flex; }
 
   .drawer-meta {
     padding: 12px 28px;
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 12px; color: var(--text-3); font-weight: 600;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
     flex-shrink: 0;
   }
   .drawer-meta .select-all {
-    background: transparent; border: none; cursor: pointer;
-    color: var(--mosaic-green-800); font-size: 12px; font-weight: 700;
-    padding: 0;
+    background: transparent;
+    border: none;
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    font-family: inherit;
   }
-  .drawer-meta .select-all:hover { color: var(--mosaic-green-700); text-decoration: underline; }
+  .drawer-meta .select-all:hover { text-decoration: underline; }
 
   .drawer-list {
-    flex: 1; overflow-y: auto;
-    padding: 0 28px 12px;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .drawer-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
   }
   .drawer-item {
-    display: flex; gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    cursor: pointer;
-    margin-bottom: 8px;
-    transition: border-color 120ms, background-color 120ms;
+    display: flex;
     align-items: flex-start;
+    gap: 14px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background-color 120ms;
+    user-select: none;
   }
-  .drawer-item:hover { border-color: var(--border); background: #fafaf8; }
+  .drawer-item:hover { background: rgba(0, 106, 77, 0.04); }
   .drawer-item.is-selected {
-    border-color: var(--mosaic-green-700);
-    background: rgba(0, 106, 77, 0.04);
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
   }
-  .drawer-item-check {
-    flex-shrink: 0;
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border);
+  .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border-strong);
     background: #fff;
-    display: inline-flex; align-items: center; justify-content: center;
-    margin-top: 1px;
-  }
-  .drawer-item.is-selected .drawer-item-check {
-    border-color: var(--mosaic-green-700);
-    background: var(--mosaic-green-700);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: #fff;
+    transition: background-color 120ms, border-color 120ms;
   }
-  .drawer-item-check svg { opacity: 0; }
-  .drawer-item.is-selected .drawer-item-check svg { opacity: 1; }
+  .drawer-item.is-selected .checkbox {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .checkbox svg { opacity: 0; transition: opacity 120ms; }
+  .drawer-item.is-selected .checkbox svg { opacity: 1; }
+
   .drawer-item-body { flex: 1; min-width: 0; }
-  .drawer-item-title {
-    font-size: 14px; font-weight: 700; color: var(--text-1);
+  .drawer-item-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .drawer-item-proto {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text-1);
     font-family: ui-monospace, "SF Mono", Menlo, monospace;
     letter-spacing: -0.01em;
   }
-  .drawer-item-meta {
-    font-size: 12px; color: var(--text-2); margin-top: 3px;
-    display: flex; flex-wrap: wrap; gap: 4px 12px;
+  .drawer-item-item {
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: 13px;
   }
-  .drawer-item-meta span { line-height: 1.4; }
-  .drawer-item-meta strong { color: var(--text-1); font-weight: 700; }
-
+  .drawer-item-frete {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .drawer-item-frete--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .drawer-item-frete--cif {
+    color: var(--mosaic-orange);
+    border-color: var(--mosaic-orange);
+    background: rgba(213,107,26,0.08);
+  }
+  .drawer-item-product {
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 13px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .drawer-item-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .drawer-item-meta strong { color: var(--text-2); font-weight: 800; }
+  .drawer-item-saldo {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .drawer-item-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .drawer-item mark {
+    background: rgba(240,192,32,0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
   .drawer-footer {
     padding: 16px 28px;
-    border-top: 1px solid var(--border-soft);
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    background: #fff;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     flex-shrink: 0;
   }
-  .drawer-footer .count { font-size: 12px; color: var(--text-3); font-weight: 600; }
-  .drawer-footer .actions { display: flex; gap: 10px; }
-
-  .is-hidden { display: none !important; }
-
-  /* ============================================================
-     Wide table (matches relatorio-protocolos pattern)
-     ============================================================ */
-  .wide-table-wrap {
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    overflow-x: auto;
-    overflow-y: hidden;
-    margin-bottom: 80px;
-  }
-  .wide-table {
-    width: 100%;
-    min-width: 2400px;
-    border-collapse: collapse;
+  .drawer-footer .count {
     font-size: 13px;
-  }
-  .wide-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-md); }
-  .wide-table thead tr:first-child th:last-child  { border-top-right-radius: var(--radius-md); }
-  .wide-table thead th {
-    background: var(--bg-section) !important;
-    color: var(--mosaic-green-800) !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    text-transform: none !important;
-    letter-spacing: 0 !important;
-    padding: 13px 14px !important;
-    border-bottom: 1px solid var(--border-soft) !important;
-    white-space: nowrap;
-    text-align: left;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  .wide-table thead th.num { text-align: right; }
-  .wide-table tbody td {
-    padding: 14px 14px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .wide-table tbody tr:last-child td { border-bottom: none; }
-  .wide-table tbody tr:hover td { background: var(--bg-hover); }
-  .wide-table tbody td.num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  .wide-table tbody td.muted { color: var(--text-3); }
-  .wide-table tbody td.proto-id {
+    color: var(--text-2);
     font-weight: 700;
-    color: var(--mosaic-green-800);
-    font-size: 13px;
   }
-  .wide-table tbody td.saldo-cell {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+  .drawer-footer .count strong {
     color: var(--mosaic-green-800);
     font-weight: 800;
     font-size: 15px;
   }
-  .wide-table tbody td.saldo-cell .unit {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--text-3);
-    margin-left: 3px;
-  }
-  .empty-row td {
+  .drawer-footer .actions { display: flex; gap: 12px; }
+
+  /* ============================================================
+     Empty state + cards container
+     ============================================================ */
+  .cards-empty {
+    border: 1.5px dashed var(--border);
+    background: var(--bg-section);
+    padding: 80px 32px;
     text-align: center;
     color: var(--text-3);
-    padding: 56px 14px !important;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-style: italic;
   }
-  .empty-row td .empty-strong {
+  .cards-empty strong {
     display: block;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+
+  .cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .proto-card {
+    background: #fff;
+    border: 1.5px solid var(--border-soft);
+    border-left-width: 4px;
+    border-left-color: var(--border);
+    transition: border-color 200ms, background-color 200ms;
+  }
+  .proto-card.is-incomplete { border-left-color: var(--border-strong); }
+  .proto-card.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.06), #fff 30%);
+  }
+  .proto-card.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.04), #fff 25%);
+  }
+  .cards-container.show-validation .proto-card.is-incomplete,
+  .cards-container.show-validation .proto-card.is-progress {
+    border-left-color: var(--mosaic-red);
+    background: linear-gradient(to right, rgba(185,32,42,0.05), #fff 25%);
+  }
+
+  /* Proto card header */
+  .proto-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-bottom: 2px solid var(--border-soft);
+    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
+  }
+  .proto-level-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--mosaic-green-800);
+    padding: 3px 7px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .proto-level-tag--item { background: var(--mosaic-green-700); }
+  .proto-id {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .proto-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .proto-head-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .proto-head-inline strong { color: var(--text-1); font-weight: 800; }
+  .proto-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 1px;
+  }
+  .proto-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
+  .proto-head-spacer { margin-left: auto; }
+  .proto-head-remove {
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 120ms, background-color 120ms, border-color 120ms;
+  }
+  .proto-head-remove:hover {
+    color: var(--mosaic-red);
+    background: rgba(185,32,42,0.06);
+    border-color: var(--border-soft);
+  }
+
+  /* Proto card body: item info + fields */
+  .proto-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 12px 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .proto-item-row:last-of-type { border-bottom: none; }
+  .proto-item-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .proto-item-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .proto-item-line--top { gap: 8px; }
+  .proto-item-line--bottom {
+    color: var(--text-2);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .proto-item-product {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-1);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+  }
+  .proto-meta-piece {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .proto-meta-piece strong { color: var(--text-1); font-weight: 800; }
+  .proto-meta-sep { color: var(--border); font-weight: 800; }
+  .proto-saldo {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .proto-saldo .unit {
+    font-size: 10px;
     color: var(--text-2);
     font-weight: 700;
-    margin-bottom: 4px;
-    font-size: 14px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
   }
 
-  /* Frete pill */
-  .frete-pill {
-    display: inline-block;
-    padding: 3px 9px;
-    border-radius: var(--radius-pill);
-    font-size: 10px;
+  /* Frete badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border: 1.5px solid;
     font-weight: 800;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    background: #fff;
+  }
+  .badge--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .badge--cif {
+    color: var(--mosaic-orange);
+    border-color: var(--mosaic-orange);
+    background: rgba(213,107,26,0.08);
+  }
+
+  /* Editable fields */
+  .proto-item-fields {
+    display: grid;
+    grid-template-columns: 100px 130px minmax(180px, 240px);
+    gap: 8px;
+    align-items: end;
+  }
+  .field-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .field-block label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 700;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-block label .req { color: var(--mosaic-red); margin-left: 2px; }
+  .field-block label .opt-tag {
+    color: var(--text-3);
+    font-weight: 600;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-left: 4px;
+  }
+  .input-with-suffix {
+    position: relative;
+    height: 32px;
+  }
+  .input-with-suffix input {
+    width: 100%;
+    height: 32px;
+    padding: 0 28px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .input-with-suffix input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .input-with-suffix .suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    pointer-events: none;
+  }
+  .card-date-wrap {
+    position: relative;
+    height: 32px;
+  }
+  .card-date-wrap input {
+    width: 100%;
+    height: 32px;
+    padding: 0 32px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .card-date-wrap input:focus,
+  .card-date-wrap.is-open input {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .card-date-wrap input::placeholder {
+    color: var(--text-3);
+    font-weight: 500;
     letter-spacing: 0.04em;
+  }
+  .card-date-wrap .cal-trigger {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
+
+  .roteiro-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1.5px dashed var(--border);
+    background: #fff;
+    color: var(--text-3);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+    line-height: 32px;
+    transition: all 120ms;
+  }
+  .roteiro-toggle-btn:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.03);
+  }
+  .roteiro-toggle-btn.has-value {
+    border-style: solid;
+    color: var(--text-1);
+    background: #fff;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
+  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+
+  .proto-item-actions {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .row-icon-btn {
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 120ms, background-color 120ms, border-color 120ms;
+  }
+  .row-icon-btn:hover {
+    color: var(--mosaic-green-800);
+    background: var(--bg-section);
+    border-color: var(--border-soft);
+  }
+  .row-icon-btn.danger:hover { color: var(--mosaic-red); }
+
+  /* Card status footer */
+  .card-status {
+    padding: 8px 18px;
+    border-top: 1px solid var(--border-soft);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.02em;
+  }
+  .card-status--complete {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .card-status--incomplete {
+    color: var(--text-3);
+    background: var(--bg-section);
+  }
+  .cards-container.show-validation .card-status--incomplete {
+    color: var(--mosaic-red);
+    background: rgba(185,32,42,0.05);
+  }
+
+  /* ============================================================
+     Table view
+     ============================================================ */
+  .proto-table-wrap {
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+  }
+  .proto-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 1500px;
+  }
+  .proto-table thead th {
+    background: var(--bg-section);
+    text-align: left;
+    padding: 12px 14px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+    vertical-align: middle;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .proto-table thead th .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .proto-table thead th .opt-tag {
+    font-size: 9px;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-left: 4px;
     text-transform: uppercase;
   }
-  .frete-pill.cif {
-    background: var(--status-carregando-bg);
-    color: var(--status-carregando-fg);
+  .proto-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 500;
+    vertical-align: middle;
+    white-space: nowrap;
   }
-  .frete-pill.fob {
-    background: var(--status-orange-bg, #fff5ec);
-    color: var(--status-orange, #c76814);
+  .proto-table tbody tr {
+    transition: background-color 120ms;
+    border-left: 4px solid transparent;
   }
-
-  /* Cell inputs (volume, semana, roteiro) */
-  .cell-input {
-    width: 110px;
+  .proto-table tbody tr:hover td { background: var(--bg-hover); }
+  .proto-table tbody tr:nth-child(even) td { background: var(--bg-hover); }
+  .proto-table tbody tr.is-incomplete { border-left-color: var(--border-strong); }
+  .proto-table tbody tr.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.04), transparent 30%);
+  }
+  .proto-table tbody tr.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
+  }
+  .proto-table-wrap.show-validation tr.is-incomplete,
+  .proto-table-wrap.show-validation tr.is-progress {
+    border-left-color: var(--mosaic-red);
+  }
+  .proto-table .cell-stack { line-height: 1.35; }
+  .proto-table .stack-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--text-1);
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 2px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .proto-table .stack-secondary {
+    color: var(--text-3);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .proto-table .stack-secondary strong { color: var(--text-2); font-weight: 800; }
+  .proto-table .stack-secondary .arrow-to {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+  }
+  .proto-table .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .proto-table .saldo-primary {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .proto-table .saldo-unit {
+    font-size: 11px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+  .proto-table .v3-status-cell { text-align: center; width: 32px; }
+  .proto-table .v3-status-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .proto-table .v3-status-dot--complete { background: var(--mosaic-green-700); color: #fff; }
+  .proto-table .v3-status-dot--progress { background: var(--mosaic-yellow); color: var(--text-1); }
+  .proto-table .v3-status-dot--incomplete {
+    background: #ececea;
+    color: var(--text-3);
+    border: 1.5px solid var(--border-strong);
+  }
+  .proto-table-wrap.show-validation tr.is-incomplete .v3-status-dot,
+  .proto-table-wrap.show-validation tr.is-progress .v3-status-dot {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+  .proto-table .v5-table-roteiro {
+    height: 30px !important;
+    line-height: 30px !important;
+    padding: 0 8px !important;
+    font-size: 11.5px;
+    min-width: 130px;
+  }
+  .proto-table .v3-cell-volume-wrap {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+  .proto-table .v3-cell-volume-wrap input {
+    width: 100%;
     height: 32px;
     padding: 0 22px 0 10px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    border: 1.5px solid var(--border);
     background: #fff;
+    font-size: 12.5px;
     font-family: inherit;
-    font-size: 13px;
-    color: var(--text-1);
     font-weight: 600;
+    color: var(--text-1);
     outline: none;
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
-  }
-  .cell-input:hover { border-color: var(--border-strong); }
-  .cell-input:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 2px rgba(0,106,77,0.15);
-  }
-  .cell-input.num {
+    box-sizing: border-box;
     text-align: right;
-    font-variant-numeric: tabular-nums;
   }
-  .cell-input::-webkit-outer-spin-button,
-  .cell-input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  .proto-table .v3-cell-volume-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
   }
-  .cell-input[type="number"] {
-    -moz-appearance: textfield;
-    appearance: textfield;
-  }
-  .volume-wrap { position: relative; display: inline-block; }
-  .volume-wrap .unit-suffix {
+  .proto-table .v3-cell-volume-wrap .suffix {
     position: absolute;
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-3);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 800;
+    color: var(--text-3);
     pointer-events: none;
   }
-  .week-wrap { position: relative; display: inline-block; }
-  .week-wrap .cell-input { width: 140px; padding-right: 32px; cursor: pointer; }
-  .week-wrap .cal-btn {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: var(--text-3);
-    width: 24px; height: 24px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  .week-wrap .cal-btn:hover { color: var(--mosaic-green-800); background: rgba(0,106,77,0.10); }
-
-  .roteiro-wrap {
+  .proto-table .v3-cell-date-wrap {
     position: relative;
-    display: inline-block;
+    width: 100%;
+    display: block;
   }
-  .roteiro-wrap .cell-input {
-    width: 220px;
-    padding-right: 30px;
-    color: var(--text-2);
+  .proto-table .v3-cell-date-wrap input {
+    width: 100%;
+    height: 32px;
+    padding: 0 30px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
   }
-  .roteiro-wrap .ext-btn {
+  .proto-table .v3-cell-date-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .proto-table .v3-cell-date-wrap .cal-trigger {
     position: absolute;
-    right: 4px;
+    right: 2px;
     top: 50%;
     transform: translateY(-50%);
-    background: transparent;
+    width: 26px;
+    height: 26px;
     border: none;
-    color: var(--text-3);
-    width: 24px; height: 24px;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    border-radius: 4px;
   }
-  .roteiro-wrap .ext-btn:hover { color: var(--mosaic-green-800); background: rgba(0,106,77,0.10); }
-
-  /* Row action buttons */
-  .row-actions {
+  .proto-table .v3-cell-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
+  .proto-table .v3-row-actions {
     display: inline-flex;
-    align-items: center;
     gap: 4px;
   }
-  .row-icon-btn {
-    width: 30px; height: 30px;
-    border: 1px solid var(--border-soft);
-    border-radius: 6px;
-    background: #fff;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
-  }
-  .row-icon-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-    background: rgba(0,106,77,0.06);
-  }
-  .row-icon-btn.is-danger:hover {
-    border-color: var(--mosaic-red);
-    color: var(--mosaic-red);
-    background: rgba(185,32,42,0.06);
+
+  /* Validation: Semana passada */
+  input.is-invalid,
+  .card-date-wrap.is-invalid input,
+  .v3-cell-date-wrap.is-invalid input,
+  .v3-cell-volume-wrap.is-invalid input {
+    border-color: var(--mosaic-red) !important;
+    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
   }
 
   /* ============================================================
-     Footer fixo
+     Summary footer (fixed)
      ============================================================ */
   .summary-footer {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    left: 0; right: 0; bottom: 0;
     background: #fff;
     border-top: 1px solid var(--border);
-    padding: 14px 56px;
-    z-index: 50;
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
-  }
-  .summary-actions {
-    max-width: 1320px;
-    margin: 0 auto;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    padding: 0;
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    z-index: 50;
+  }
+  .summary-footer-inner {
+    width: 100%;
+    max-width: 1320px;
+    padding: 16px 56px;
+    display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: space-between;
+    gap: 24px;
   }
-  .summary-actions .summary-info {
-    margin-right: auto;
-    font-size: 13px;
+  .page { padding-bottom: 110px !important; }
+  .summary-stats {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .summary-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .summary-stat .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
     color: var(--text-3);
-    font-weight: 600;
-  }
-  .summary-actions .summary-info strong {
-    color: var(--text-1);
     font-weight: 800;
   }
+  .summary-stat .value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-stat .value.muted { color: var(--text-3); }
+  .summary-stat .unit {
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 4px;
+  }
+  .summary-actions { display: flex; gap: 12px; }
+
+  /* Buttons */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -505,194 +1115,437 @@
     gap: 8px;
     height: 42px;
     padding: 0 22px;
-    border: 1px solid transparent;
+    border: 1.5px solid transparent;
     background: #fff;
     color: var(--text-1);
     font-size: 14px;
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    border-radius: var(--radius-md);
-    transition: background var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+    transition: background var(--ease-fast, 120ms), border-color var(--ease-fast, 120ms), color var(--ease-fast, 120ms);
   }
   .btn-primary {
     background: var(--mosaic-green-800);
     color: #fff;
+    border-color: var(--mosaic-green-800);
   }
-  .btn-primary:hover { background: var(--mosaic-green-900); }
-  .btn-primary:disabled,
-  .btn-primary.is-disabled {
-    background: #c8d2cd;
-    color: #fff;
+  .btn-primary:hover { background: var(--mosaic-green-900); border-color: var(--mosaic-green-900); }
+  .btn-primary:disabled, .btn:disabled {
+    background: #d6d6d6;
+    color: #8a8a8a;
+    border-color: #d6d6d6;
     cursor: not-allowed;
   }
   .btn-secondary {
     background: #fff;
     color: var(--text-1);
-    border-color: var(--border);
+    border-color: var(--border-strong);
   }
-  .btn-secondary:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .btn-secondary:hover { background: var(--bg-section); }
+  .btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+  .btn-danger:hover { background: #9c1b22; border-color: #9c1b22; }
+
+  /* Hint pulse */
+  @keyframes pulse-hint {
+    0%   { box-shadow: 0 0 0 0 rgba(0,106,77,0.50); }
+    70%  { box-shadow: 0 0 0 14px rgba(0,106,77,0.00); }
+    100% { box-shadow: 0 0 0 0 rgba(0,106,77,0.00); }
+  }
+  .hint-pulse {
+    position: relative;
+    animation: pulse-hint 1800ms ease-out infinite;
+  }
+  .hint-pulse::after {
+    content: attr(data-hint);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 14px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    white-space: nowrap;
+    z-index: 70;
+    pointer-events: none;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  .hint-pulse::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 7px);
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--mosaic-green-800);
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  @keyframes hint-fadein { to { opacity: 1; } }
 
   /* ============================================================
-     Confirm + Success modal (small centered)
+     Confirm + Success modals
      ============================================================ */
   .modal-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.45);
-    z-index: 200;
     display: none;
     align-items: center;
     justify-content: center;
     padding: 24px;
+    z-index: 200;
   }
   .modal-backdrop.is-open { display: flex; }
-  .confirm-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 270;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
-  .confirm-modal-backdrop.is-open { display: flex; }
-  .confirm-modal {
+  .modal-confirm-v2 {
     background: #fff;
-    border-radius: var(--radius-md);
     width: 100%;
-    max-width: 440px;
-    padding: 28px 28px 22px;
-    box-shadow: var(--shadow-modal);
-    text-align: center;
+    max-width: 540px;
+    overflow: hidden;
+    box-shadow: var(--shadow-modal, 0 18px 60px rgba(0,0,0,0.22));
+    animation: modal-pop 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
   }
-  .confirm-icon {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: var(--status-aprovado-bg);
-    color: var(--mosaic-green-700);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
+  @keyframes modal-pop {
+    from { opacity: 0; transform: translateY(8px) scale(0.99); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
   }
-  .confirm-modal-title {
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--text-1);
-    margin: 0 0 6px;
-    line-height: 1.3;
-  }
-  .confirm-modal-sub {
-    font-size: 14px;
-    color: var(--text-2);
-    margin: 0 0 20px;
-    line-height: 1.45;
-  }
-  .confirm-modal-sub strong {
-    color: var(--mosaic-green-800);
-    font-weight: 800;
-  }
-  .confirm-modal-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: center;
-  }
-  .confirm-modal-actions .btn { flex: 1; max-width: 200px; }
-
-  /* Success modal — bigger headline */
-  .success-modal-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--text-1);
-    margin: 0;
-    line-height: 1.25;
-  }
-  .success-modal-title .big {
-    display: block;
-    font-size: 28px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    letter-spacing: -0.01em;
-    margin-top: 4px;
-  }
-  .success-modal .confirm-modal-actions { margin-top: 22px; flex-direction: column; gap: 10px; }
-  .success-modal .confirm-modal-actions .btn { max-width: 100%; width: 100%; }
-
-  /* ============================================================
-     Datepicker popup (compact)
-     ============================================================ */
-  .dp-popup {
-    position: fixed;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-modal);
-    padding: 12px;
-    z-index: 400;
-    display: none;
-    min-width: 240px;
-  }
-  .dp-popup.is-open { display: block; }
-  .dp-head {
+  .confirm-v2-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-soft);
   }
-  .dp-head .dp-month {
+  .confirm-v2-header h3 {
+    margin: 0;
+    font-size: 18px;
     font-weight: 800;
-    color: var(--text-1);
-    font-size: 13px;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
   }
-  .dp-head button {
+  .confirm-v2-close {
+    width: 32px; height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirm-v2-close:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--mosaic-green-900);
+  }
+  .confirm-v2-body {
+    padding: 28px 28px 24px;
+    background: #fff;
+  }
+  .confirm-v2-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 999px;
+  }
+  .confirm-v2-icon--info,
+  .confirm-v2-icon--success {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-700);
+  }
+  .confirm-v2-icon--warn {
+    background: rgba(199,104,20,0.12);
+    color: var(--mosaic-orange);
+  }
+  .confirm-v2-text {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-1);
+    font-weight: 500;
+  }
+  .confirm-v2-text strong { font-weight: 800; }
+  .confirm-v2-summary {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .confirm-v2-summary .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 600;
+  }
+  .confirm-v2-summary .row strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .confirm-v2-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .confirm-v2-actions--stack {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .confirm-v2-actions--stack .btn { width: 100%; }
+
+  /* ============================================================
+     Roteiro drawer
+     ============================================================ */
+  .roteiro-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,25,20,0.45);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out;
+  }
+  .roteiro-drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .roteiro-drawer {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: min(540px, 100%);
+    background: #fff;
+    z-index: 111;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .roteiro-drawer.is-open { transform: translateX(0); }
+  .roteiro-drawer-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .roteiro-drawer-header .titles { flex: 1; min-width: 0; }
+  .roteiro-drawer-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .roteiro-drawer-header .subtitle {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .roteiro-drawer-header .subtitle strong { color: var(--text-1); font-weight: 800; }
+  .roteiro-drawer-header .close-x {
+    width: 32px; height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roteiro-drawer-header .close-x:hover { background: rgba(0,0,0,0.05); }
+  .roteiro-drawer-body {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+  .roteiro-drawer-body label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: 0.01em;
+  }
+  .roteiro-drawer-body label .opt-tag {
+    color: var(--text-3);
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-left: 4px;
+  }
+  .roteiro-drawer-body textarea {
+    flex: 1;
+    width: 100%;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    resize: none;
+    min-height: 380px;
+    box-sizing: border-box;
+  }
+  .roteiro-drawer-body textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .roteiro-drawer-body textarea::placeholder {
+    color: var(--text-3);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .roteiro-drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ============================================================
+     Datepicker popup
+     ============================================================ */
+  .dp-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    padding: 14px;
+    width: 280px;
+    z-index: 300;
+    display: none;
+    user-select: none;
+    animation: dp-pop 160ms ease-out;
+  }
+  @keyframes dp-pop {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .dp-popup.is-open { display: block; }
+  .dp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .dp-nav {
     width: 28px; height: 28px;
     background: transparent;
     border: 1px solid var(--border-soft);
-    border-radius: 6px;
     color: var(--text-2);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     justify-content: center;
   }
-  .dp-head button:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); }
+  .dp-nav:hover {
+    background: var(--bg-section);
+    color: var(--mosaic-green-800);
+    border-color: var(--border);
+  }
+  .dp-month {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--text-1);
+    text-transform: capitalize;
+  }
+  .dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 6px;
+  }
+  .dp-weekdays div {
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 4px 0;
+  }
   .dp-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 2px;
   }
-  .dp-grid .dp-dow {
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text-3);
-    text-align: center;
-    padding: 4px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .dp-grid .dp-day {
-    height: 28px;
-    border: none;
+  .dp-day {
     background: transparent;
+    border: none;
+    height: 30px;
     color: var(--text-1);
-    font-family: inherit;
-    font-size: 12px;
     font-weight: 600;
+    font-size: 12px;
+    font-family: inherit;
     cursor: pointer;
-    border-radius: 5px;
   }
-  .dp-grid .dp-day:hover { background: var(--bg-section); }
-  .dp-grid .dp-day.is-other { color: var(--text-disabled, #a8aeab); }
-  .dp-grid .dp-day.is-today {
-    box-shadow: inset 0 0 0 1px var(--mosaic-green-700);
+  .dp-day:hover { background: var(--bg-section); }
+  .dp-day.is-other { color: #b8b8b6; }
+  .dp-day.is-today {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    box-shadow: inset 0 0 0 1.5px var(--mosaic-green-700);
   }
-  .dp-grid .dp-day.is-selected {
+  .dp-day.is-selected {
     background: var(--mosaic-green-800);
     color: #fff;
+    font-weight: 800;
   }
+  .dp-day.is-disabled {
+    color: #b8b8b6;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+  .dp-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .dp-clear,
+  .dp-today-btn {
+    background: transparent;
+    border: none;
+    color: var(--mosaic-green-700);
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 4px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: inherit;
+  }
+  .dp-clear:hover, .dp-today-btn:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -755,7 +1608,7 @@
   </nav>
 </header>
 
-<!-- PAGE =========================================================== -->
+<!-- PAGE ============================================================ -->
 <main class="page">
   <div class="breadcrumbs">
     <a href="index.html">Home</a>
@@ -764,9 +1617,24 @@
     <span class="sep">›</span>
     <span class="current">Agendar Protocolo</span>
   </div>
-  <h1 class="page-title">Agendar Protocolo(s)</h1>
 
-  <!-- Banner: contexto vindo do Relatório de Protocolos -->
+  <div class="title-row">
+    <h1 class="page-title">Agendar Protocolo(s)</h1>
+    <div style="display:flex;align-items:center;gap:0;">
+      <div class="view-toggle" id="viewToggle" role="tablist" aria-label="Visualização">
+        <button data-view="cards" type="button" class="is-active" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Cards
+        </button>
+        <button data-view="table" type="button" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+          Tabela
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner vindo do Relatório de Protocolos -->
   <div class="from-report-banner" id="fromReportBanner">
     <div class="from-report-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -793,110 +1661,85 @@
     </button>
   </div>
 
-  <!-- Action row: seleção de protocolos -->
+  <!-- Action row -->
   <div class="action-row">
     <div>
       <div class="action-label">Selecionar protocolo(s)</div>
-      <div class="action-help">Clique no botão ao lado para escolher o protocolo e seus contratos.</div>
+      <div class="action-help">Clique no botão ao lado para escolher protocolos para agendar.</div>
     </div>
     <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       Selecionar Protocolo
     </button>
   </div>
 
-  <!-- Main wide table -->
-  <div class="wide-table-wrap" data-h-scroll>
-    <table class="wide-table" id="mainTable">
-      <thead>
-        <tr>
-          <th>Protocolo</th>
-          <th>Contrato</th>
-          <th>Item</th>
-          <th>Referência Cliente</th>
-          <th>Nome Recebedor</th>
-          <th>CPF/CNPJ do Recebedor</th>
-          <th>IE do Recebedor</th>
-          <th>Cidade/UF do Recebedor</th>
-          <th>Descrição do Produto</th>
-          <th>Data Início Contrato</th>
-          <th>Data Fim Contrato</th>
-          <th>Frete</th>
-          <th>Planta</th>
-          <th>CNPJ Filial</th>
-          <th class="num">Saldo Protocolo</th>
-          <th>Volume Desejado</th>
-          <th>Semana Desejada</th>
-          <th>Roteiro Protocolo</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
+  <!-- Container -->
+  <div class="cards-container" id="cardsContainer">
+    <!-- Renderizado por JS -->
   </div>
 </main>
 
-<!-- Footer fixo ==================================================== -->
-<div class="summary-footer">
-  <div class="summary-actions">
-    <div class="summary-info" id="summaryInfo">Selecione protocolos para começar.</div>
-    <button class="btn btn-secondary" id="cancelBtn" type="button">Cancelar</button>
-    <button class="btn btn-primary" id="agendarBtn" type="button" disabled>Agendar</button>
+<!-- Sticky summary footer -->
+<div class="summary-footer" id="summaryFooter">
+  <div class="summary-footer-inner">
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="label">Protocolos</span>
+        <span class="value" id="statProtos">0</span>
+      </div>
+      <div class="summary-stat">
+        <span class="label">Volume Total</span>
+        <span class="value" id="statVolume">0<span class="unit">t</span></span>
+      </div>
+      <div class="summary-stat">
+        <span class="label">Prontos para Agendar</span>
+        <span class="value" id="statReady">0/0</span>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
+    </div>
   </div>
 </div>
 
-<!-- Drawer: seleção de protocolo + contratos ====================== -->
+<!-- DRAWER: Selecionar protocolo ==================================== -->
 <div class="drawer-backdrop" id="drawerBackdrop"></div>
-<aside class="drawer drawer-protocolo" id="protoDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+<aside class="drawer" id="protoDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
   <div class="drawer-header">
     <span class="modal-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     </span>
     <div class="titles">
       <h3 id="drawerTitle">Selecionar protocolo</h3>
-      <div class="subtitle" id="drawerSubtitle">Busque o protocolo que deseja agendar.</div>
+      <div class="subtitle">Escolha um ou mais protocolos para adicionar ao agendamento.</div>
     </div>
     <button class="close-x" data-close-drawer aria-label="Fechar" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
     </button>
   </div>
 
-  <!-- Step 1: Busca de protocolo -->
-  <div class="drawer-step drawer-step-1" id="drawerStep1">
-    <div class="drawer-search">
-      <div class="drawer-search-wrap">
-        <span class="icon-left" aria-hidden="true">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-        </span>
-        <input type="text" id="protoSearch" placeholder="Buscar por protocolo..." autocomplete="off" />
-      </div>
+  <div class="drawer-search">
+    <div class="drawer-search-wrap" id="drawerSearchWrap">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="drawerSearch" placeholder="Buscar por protocolo, contrato, produto, recebedor..." autocomplete="off" />
+      <button class="clear-btn" id="drawerClearBtn" type="button" aria-label="Limpar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-    <div class="drawer-meta">
-      <span><span id="protoCount">0</span> protocolo(s)</span>
-    </div>
-    <div class="drawer-list" id="protoList"></div>
   </div>
 
-  <!-- Step 2: Contratos do protocolo selecionado -->
-  <div class="drawer-step drawer-step-2 is-hidden" id="drawerStep2">
-    <div class="drawer-back-row">
-      <button class="back-btn" id="drawerBackBtn" type="button">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        Voltar
-      </button>
-      <div class="drawer-back-info">
-        Protocolo <strong id="drawerProtoLabel">—</strong>
-      </div>
-    </div>
-    <div class="drawer-meta">
-      <span><span id="contratoCount">0</span> contrato(s) disponível(eis)</span>
-      <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
-    </div>
-    <div class="drawer-list" id="contratoList"></div>
+  <div class="drawer-meta">
+    <span><span id="drawerCount">0</span> resultado(s)</span>
+    <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
   </div>
+
+  <div class="drawer-list" id="drawerList"></div>
 
   <div class="drawer-footer">
-    <div class="count" id="drawerFooterCount">Nenhum contrato selecionado</div>
+    <div class="count" id="drawerFooterCount">Nenhum protocolo selecionado</div>
     <div class="actions">
       <button class="btn btn-secondary" data-close-drawer type="button">Cancelar</button>
       <button class="btn btn-primary" id="drawerAddBtn" type="button" disabled>Adicionar selecionados</button>
@@ -904,533 +1747,1088 @@
   </div>
 </aside>
 
-<!-- Modal: confirmar agendamento ================================== -->
-<div class="confirm-modal-backdrop" id="confirmModal">
-  <div class="confirm-modal" role="dialog" aria-modal="true">
-    <div class="confirm-icon">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+<!-- ROTEIRO DRAWER ================================================== -->
+<div class="roteiro-drawer-backdrop" id="roteiroDrawerBackdrop"></div>
+<aside class="roteiro-drawer" id="roteiroDrawer" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="roteiro-drawer-header">
+    <div class="titles">
+      <h3>Roteiro de entrega</h3>
+      <div class="subtitle" id="roteiroDrawerSubtitle"></div>
     </div>
-    <h3 class="confirm-modal-title">Você está prestes a agendar (<span id="confirmCount">0</span>) protocolos.</h3>
-    <p class="confirm-modal-sub">Pronto para continuar?</p>
-    <div class="confirm-modal-actions">
-      <button class="btn btn-secondary" type="button" data-close-modal="confirmModal">Voltar</button>
-      <button class="btn btn-primary" id="confirmYes" type="button">Confirmar</button>
+    <button class="close-x" id="roteiroDrawerClose" type="button" aria-label="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="roteiro-drawer-body">
+    <label id="roteiroDrawerLabel">Descrição</label>
+    <textarea id="roteiroDrawerText"
+              placeholder="Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
+  </div>
+  <div class="roteiro-drawer-footer">
+    <button class="btn btn-secondary" id="roteiroDrawerCancel" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="roteiroDrawerSave" type="button">Salvar</button>
+  </div>
+</aside>
+
+<!-- MODAIS ========================================================== -->
+<div class="modal-backdrop" id="cancelModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Cancelar agendamentos</h3>
+      <button class="confirm-v2-close" data-close="cancelModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--warn" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3 10 18H2L12 3z" stroke-width="1.8"/>
+          <path d="M12 10v4" stroke-width="2.2"/>
+          <circle cx="12" cy="17.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text">Você está prestes a <strong>cancelar todos os agendamentos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" data-close="cancelModal" type="button">Voltar</button>
+        <button class="btn btn-danger" id="cancelConfirm" type="button">Sim, cancelar agendamentos</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: sucesso ================================================ -->
-<div class="confirm-modal-backdrop" id="successModal">
-  <div class="confirm-modal success-modal" role="dialog" aria-modal="true">
-    <div class="confirm-icon">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg>
+<div class="modal-backdrop" id="submitModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Confirmar agendamento</h3>
+      <button class="confirm-v2-close" data-close="submitModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
     </div>
-    <h3 class="success-modal-title">
-      Seus protocolos foram
-      <span class="big">AGENDADOS!</span>
-    </h3>
-    <div class="confirm-modal-actions">
-      <button class="btn btn-primary" id="successNew" type="button">Agendar Protocolos</button>
-      <button class="btn btn-secondary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <div class="confirm-v2-summary" id="submitSummary"></div>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" data-close="submitModal" type="button">Voltar</button>
+        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar e enviar</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Datepicker popup -->
-<div class="dp-popup" id="dpPopup" role="dialog" aria-hidden="true"></div>
+<div class="modal-backdrop" id="successModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Protocolos agendados</h3>
+      <button class="confirm-v2-close" data-close="successModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--success" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
+          <polyline points="8 12.5 11 15.5 16 9.5"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text"><strong>Seus protocolos foram AGENDADOS!</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
+      <div class="confirm-v2-actions confirm-v2-actions--stack">
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar novos protocolos</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-// ============================================================
-// State / sample data
-// ============================================================
+/* ===================================================================
+   DATA: protocolos disponiveis para selecao
+   =================================================================== */
 const PROTOCOLS = [
   {
     id: "M9W38746",
-    contratos: [
-      { contrato: "Q-20356", item: "10", refCliente: "2735331", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "JOSE DA SILVA", cnpjRecebedor: "712.865.870.640", ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 32.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
-      { contrato: "Q-13945", item: "50", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "CARLOS ALVES", cnpjRecebedor: "488.722.440-05", ieRecebedor: "877.714.770.605", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 160.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "FOB", planta: "Toll Cefértil - Cubatão" }
-    ]
+    contrato: "Q-85721", item: "10",
+    refCliente: "612847",
+    descProduto: "STRAF 04 30 10 STR + 50 BMI2",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.620,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "30/09/2025",
+    saldo: "1.500,00",
+    frete: "CIF",
+    nomeRecebedor: "JOSE DA SILVA",
+    cnpjRecebedor: "712.865.870.640",
+    ieRecebedor: "618.281.300-87",
+    cidadeRecebedor: "Limeira/SP"
   },
   {
     id: "M93HD231",
-    contratos: [
-      { contrato: "Q-94721", item: "20", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "MARIA BEZERRA", cnpjRecebedor: "40.908.039/0001-26", ieRecebedor: "118.299.922.567", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 203.13, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" }
-    ]
+    contrato: "Q-20303", item: "10",
+    refCliente: "474663",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/08/2025", vigenciaFim: "30/10/2025",
+    saldo: "1.000,00",
+    frete: "FOB",
+    nomeRecebedor: "CARLOS ALVES",
+    cnpjRecebedor: "488.722.440-05",
+    ieRecebedor: "877.714.770.605",
+    cidadeRecebedor: "Limeira/SP"
   },
   {
     id: "M586JF3BH",
-    contratos: [
-      { contrato: "Q-20351", item: "80", refCliente: "2084442", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "TEREZA AKEMI", cnpjRecebedor: "91.459.226/0001-00", ieRecebedor: "032.475.991.210", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 4.64, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
-      { contrato: "Q-43321", item: "100", refCliente: "9981772", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "TEREZA AKEMI", cnpjRecebedor: "91.459.226/0001-00", ieRecebedor: "032.475.991.210", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 87.20, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "FOB", planta: "Toll Cefértil - Cubatão" }
-    ]
+    contrato: "Q-94721", item: "20",
+    refCliente: "",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/08/2025", vigenciaFim: "30/10/2025",
+    saldo: "203,13",
+    frete: "CIF",
+    nomeRecebedor: "MARIA BEZERRA",
+    cnpjRecebedor: "40.908.039/0001-26",
+    ieRecebedor: "118.299.922.567",
+    cidadeRecebedor: "Sertãozinho/SP"
   },
   {
     id: "M092DB23",
-    contratos: [
-      { contrato: "Q-55102", item: "30", refCliente: "1245001", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "JOSE DA SILVA", cnpjRecebedor: "712.865.870.640", ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 50.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" }
-    ]
+    contrato: "Q-20351", item: "80",
+    refCliente: "2084442",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "4,64",
+    frete: "CIF",
+    nomeRecebedor: "TEREZA AKEMI",
+    cnpjRecebedor: "91.459.226/0001-00",
+    ieRecebedor: "032.475.991.210",
+    cidadeRecebedor: "Sertãozinho/SP"
+  },
+  {
+    id: "MK4HD928",
+    contrato: "Q-13945", item: "50",
+    refCliente: "",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "160,00",
+    frete: "FOB",
+    nomeRecebedor: "CARLOS ALVES",
+    cnpjRecebedor: "488.722.440-05",
+    ieRecebedor: "877.714.770.605",
+    cidadeRecebedor: "Limeira/SP"
+  },
+  {
+    id: "M3D49483",
+    contrato: "Q-20356", item: "10",
+    refCliente: "2735331",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "32,00",
+    frete: "CIF",
+    nomeRecebedor: "JOSE DA SILVA",
+    cnpjRecebedor: "712.865.870.640",
+    ieRecebedor: "618.281.300-87",
+    cidadeRecebedor: "Limeira/SP"
   }
 ];
 
-const ROTEIRO_DEFAULT = "Lorem impsum lorem ipsum lorem";
-
-let rows = []; // { uid, ...contractData, volume, semana, roteiro }
-let drawerState = {
-  step: 1,
-  selectedProtoId: null,
-  selectedContratoKeys: new Set()
+/* ===================================================================
+   STATE
+   =================================================================== */
+const state = {
+  rows: [],                       // [{ ...protoData, volume, semana, roteiro }]
+  selectedInDrawer: new Set(),    // indices em PROTOCOLS
+  viewMode: (function() {
+    try {
+      const saved = localStorage.getItem("mosaicProtoViewMode");
+      return saved === "table" || saved === "cards" ? saved : "cards";
+    } catch (_) { return "cards"; }
+  })()
 };
 
-// ============================================================
-// Helpers
-// ============================================================
-function fmtNum(n) {
-  return n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function genUid() { return "r" + Math.random().toString(36).slice(2, 9); }
+/* SVGs */
+const ICON_DUP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>';
+const ICON_DEL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>';
+const ICON_CAL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+const ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const ICON_WARN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>';
+const ICON_EXP = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>';
+const ICON_DOT = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>';
+const ICON_BANG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>';
+const ICON_CHK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
 
-function openModal(id) {
-  document.getElementById(id).classList.add("is-open");
-}
-function closeModal(id) {
-  document.getElementById(id).classList.remove("is-open");
-}
-document.querySelectorAll("[data-close-modal]").forEach(el => {
-  el.addEventListener("click", () => closeModal(el.getAttribute("data-close-modal")));
-});
-document.querySelectorAll(".modal-backdrop, .confirm-modal-backdrop").forEach(bd => {
-  bd.addEventListener("click", (e) => { if (e.target === bd) bd.classList.remove("is-open"); });
-});
-
+/* ===================================================================
+   HELPERS
+   =================================================================== */
 function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function highlightMatch(text, query) {
+  if (!query) return escapeHtml(text);
+  const safe = String(text);
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp("(" + escaped + ")", "gi");
+  return escapeHtml(safe).replace(re, "<mark>$1</mark>");
+}
+function parseBR(s) {
+  if (!s) return 0;
+  const n = parseFloat(String(s).replace(/\./g, "").replace(",", "."));
+  return isNaN(n) ? 0 : n;
+}
+function maskVolumeDecimal(input) {
+  let v = (input.value || "").replace(/[^\d,]/g, "");
+  const parts = v.split(",");
+  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
+  const segs = v.split(",");
+  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
+  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
+  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = segs.join(",");
+}
+function rowStatus(r) {
+  const ok = !!(r.volume && r.semana);
+  if (ok) return "complete";
+  const anyTouched = !!(r.volume || r.semana || r.roteiro);
+  return anyTouched ? "progress" : "incomplete";
+}
+function brDateToDate(br) {
+  if (!br) return null;
+  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+function todayStart() {
+  const t = new Date(); t.setHours(0, 0, 0, 0); return t;
+}
+function rowInvalidSemana(r) {
+  if (!r.semana) return false;
+  const d = brDateToDate(r.semana);
+  return d && d < todayStart();
+}
+function rowVolumeExceeds(r) {
+  const vol = parseBR(r.volume);
+  const saldo = parseBR(r.saldo);
+  return vol > 0 && vol > saldo;
+}
+function canAgendar() {
+  if (state.rows.length === 0) return false;
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r) && !rowVolumeExceeds(r));
+}
+function isAlreadyAdded(p) {
+  return state.rows.some(row => row.id === p.id);
 }
 
-// ============================================================
-// Drawer (selecao de protocolo + contratos)
-// ============================================================
-const drawerEl = document.getElementById("protoDrawer");
-const drawerBackdrop = document.getElementById("drawerBackdrop");
-const drawerStep1 = document.getElementById("drawerStep1");
-const drawerStep2 = document.getElementById("drawerStep2");
-const drawerSubtitle = document.getElementById("drawerSubtitle");
-const protoSearch = document.getElementById("protoSearch");
-const protoListEl = document.getElementById("protoList");
-const protoCountEl = document.getElementById("protoCount");
-const contratoListEl = document.getElementById("contratoList");
-const contratoCountEl = document.getElementById("contratoCount");
-const drawerProtoLabel = document.getElementById("drawerProtoLabel");
-const drawerFooterCount = document.getElementById("drawerFooterCount");
-const drawerAddBtn = document.getElementById("drawerAddBtn");
+/* ===================================================================
+   DRAWER (Selecionar protocolo)
+   =================================================================== */
+const elDrawer         = document.getElementById("protoDrawer");
+const elDrawerBackdrop = document.getElementById("drawerBackdrop");
+const elDrawerSearch   = document.getElementById("drawerSearch");
+const elDrawerSearchWrap = document.getElementById("drawerSearchWrap");
+const elDrawerClearBtn = document.getElementById("drawerClearBtn");
+const elDrawerList     = document.getElementById("drawerList");
+const elDrawerCount    = document.getElementById("drawerCount");
+const elDrawerSelectAll = document.getElementById("drawerSelectAll");
+const elDrawerAddBtn   = document.getElementById("drawerAddBtn");
+const elDrawerFooterCount = document.getElementById("drawerFooterCount");
 
+function renderDrawerList() {
+  const q = (elDrawerSearch.value || "").trim().toLowerCase();
+  elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
+
+  const filtered = PROTOCOLS
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => {
+      if (!q) return true;
+      const haystack = [
+        p.id, p.contrato, p.item, p.refCliente, p.descProduto, p.embalagem,
+        p.frete, p.planta, p.enviarPara, p.cnpjFilial, p.nomeRecebedor,
+        p.cnpjRecebedor, p.cidadeRecebedor, p.vigenciaInicio, p.vigenciaFim, p.saldo
+      ].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+
+  elDrawerCount.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    elDrawerList.innerHTML = '<div class="drawer-empty">Nenhum protocolo encontrado para "' + escapeHtml(q) + '"</div>';
+    updateDrawerFooter();
+    return;
+  }
+
+  elDrawerList.innerHTML = filtered.map(({ p, i }) => {
+    const selected = state.selectedInDrawer.has(i);
+    const added = isAlreadyAdded(p);
+    const fretePill = p.frete === "FOB"
+      ? '<span class="drawer-item-frete drawer-item-frete--fob">FOB</span>'
+      : '<span class="drawer-item-frete drawer-item-frete--cif">CIF</span>';
+    return ''
+      + '<label class="drawer-item ' + (selected ? 'is-selected' : '') + ' ' + (added ? 'is-disabled' : '') + '" data-i="' + i + '">'
+      + '<span class="checkbox"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
+      + '<div class="drawer-item-body">'
+        + '<div class="drawer-item-line1">'
+          + '<span class="drawer-item-proto">' + highlightMatch(p.id, q) + '</span>'
+          + '<span style="color:var(--border-strong);">·</span>'
+          + '<span class="drawer-item-item">Contrato ' + highlightMatch(p.contrato, q) + ' · Item ' + highlightMatch(p.item, q) + '</span>'
+          + fretePill
+          + (added ? '<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>' : '')
+        + '</div>'
+        + '<div class="drawer-item-product">' + highlightMatch(p.descProduto, q) + '</div>'
+        + '<div class="drawer-item-meta">'
+          + '<span><strong>Ref. Cliente:</strong> ' + highlightMatch(p.refCliente || '—', q) + '</span>'
+          + '<span><strong>Embalagem:</strong> ' + highlightMatch(p.embalagem, q) + '</span>'
+          + '<span><strong>Planta:</strong> ' + highlightMatch(p.planta, q) + '</span>'
+          + '<span><strong>Enviar para:</strong> ' + highlightMatch(p.enviarPara, q) + '</span>'
+          + '<span><strong>CNPJ Filial:</strong> ' + highlightMatch(p.cnpjFilial, q) + '</span>'
+          + '<span><strong>IE:</strong> ' + highlightMatch(p.ie, q) + '</span>'
+          + '<span><strong>Preço/Ton:</strong> R$ ' + escapeHtml(p.precoTon) + '</span>'
+          + '<span><strong>Vigência:</strong> ' + escapeHtml(p.vigenciaInicio) + ' → ' + escapeHtml(p.vigenciaFim) + '</span>'
+          + '<span><strong>Recebedor:</strong> ' + highlightMatch(p.nomeRecebedor, q) + ' · ' + escapeHtml(p.cidadeRecebedor) + '</span>'
+        + '</div>'
+      + '</div>'
+      + '<div class="drawer-item-saldo">' + escapeHtml(p.saldo) + '<span class="unit">t</span></div>'
+      + '</label>';
+  }).join("");
+  updateDrawerFooter();
+}
+function updateDrawerFooter() {
+  const n = state.selectedInDrawer.size;
+  elDrawerFooterCount.innerHTML = n === 0
+    ? "Nenhum protocolo selecionado"
+    : "<strong>" + n + "</strong> " + (n === 1 ? "protocolo selecionado" : "protocolos selecionados");
+  elDrawerAddBtn.disabled = n === 0;
+}
 function openDrawer() {
-  drawerState = { step: 1, selectedProtoId: null, selectedContratoKeys: new Set() };
-  protoSearch.value = "";
-  showStep(1);
-  renderProtoList();
-  renderDrawerFooter();
-  drawerEl.classList.add("is-open");
-  drawerEl.setAttribute("aria-hidden", "false");
-  drawerBackdrop.classList.add("is-open");
+  state.selectedInDrawer.clear();
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawer.classList.add("is-open");
+  elDrawer.setAttribute("aria-hidden", "false");
+  elDrawerBackdrop.classList.add("is-open");
+  setTimeout(() => elDrawerSearch.focus(), 320);
 }
 function closeDrawer() {
-  drawerEl.classList.remove("is-open");
-  drawerEl.setAttribute("aria-hidden", "true");
-  drawerBackdrop.classList.remove("is-open");
+  elDrawer.classList.remove("is-open");
+  elDrawer.setAttribute("aria-hidden", "true");
+  elDrawerBackdrop.classList.remove("is-open");
 }
-
-function showStep(n) {
-  drawerState.step = n;
-  if (n === 1) {
-    drawerStep1.classList.remove("is-hidden");
-    drawerStep2.classList.add("is-hidden");
-    drawerSubtitle.textContent = "Busque o protocolo que deseja agendar.";
-  } else {
-    drawerStep1.classList.add("is-hidden");
-    drawerStep2.classList.remove("is-hidden");
-    drawerSubtitle.textContent = "Selecione os contratos que deseja agendar.";
-  }
-}
-
-function filteredProtocols() {
-  const q = (protoSearch.value || "").trim().toLowerCase();
-  if (!q) return PROTOCOLS.slice();
-  return PROTOCOLS.filter(p => p.id.toLowerCase().includes(q));
-}
-
-function renderProtoList() {
-  const items = filteredProtocols();
-  protoCountEl.textContent = items.length;
-  if (items.length === 0) {
-    protoListEl.innerHTML = '<div style="padding:24px 14px;text-align:center;color:var(--text-3);font-size:13px;">Nenhum protocolo encontrado.</div>';
-    return;
-  }
-  protoListEl.innerHTML = items.map(p => {
-    const n = p.contratos.length;
-    return `
-      <div class="drawer-item" data-proto-id="${p.id}">
-        <div class="drawer-item-body">
-          <div class="drawer-item-title">${p.id}</div>
-          <div class="drawer-item-meta">
-            <span><strong>${n}</strong> contrato${n > 1 ? "s" : ""}</span>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-  protoListEl.querySelectorAll("[data-proto-id]").forEach(el => {
-    el.addEventListener("click", () => {
-      drawerState.selectedProtoId = el.getAttribute("data-proto-id");
-      drawerState.selectedContratoKeys = new Set();
-      drawerProtoLabel.textContent = drawerState.selectedProtoId;
-      showStep(2);
-      renderContratoList();
-      renderDrawerFooter();
-    });
-  });
-}
-
-function renderContratoList() {
-  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
-  if (!proto) return;
-  contratoCountEl.textContent = proto.contratos.length;
-  contratoListEl.innerHTML = proto.contratos.map(c => {
-    const key = c.contrato + "|" + c.item;
-    const isSel = drawerState.selectedContratoKeys.has(key);
-    const fretePill = c.frete === "FOB"
-      ? '<span class="frete-pill fob">FOB</span>'
-      : '<span class="frete-pill cif">CIF</span>';
-    return `
-      <div class="drawer-item ${isSel ? 'is-selected' : ''}" data-key="${key}">
-        <span class="drawer-item-check" aria-hidden="true">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </span>
-        <div class="drawer-item-body">
-          <div class="drawer-item-title">${c.contrato} · Item ${c.item}</div>
-          <div class="drawer-item-meta">
-            <span>${escapeHtml(c.nomeRecebedor)}</span>
-            <span>${c.cidadeRecebedor}</span>
-            <span>${fretePill}</span>
-            <span>Saldo <strong>${fmtNum(c.saldo)} t</strong></span>
-          </div>
-        </div>
-      </div>
-    `;
-  }).join("");
-  contratoListEl.querySelectorAll("[data-key]").forEach(el => {
-    el.addEventListener("click", () => {
-      const k = el.getAttribute("data-key");
-      if (drawerState.selectedContratoKeys.has(k)) drawerState.selectedContratoKeys.delete(k);
-      else drawerState.selectedContratoKeys.add(k);
-      renderContratoList();
-      renderDrawerFooter();
-    });
-  });
-}
-
-function renderDrawerFooter() {
-  const n = drawerState.selectedContratoKeys.size;
-  if (drawerState.step === 1 || n === 0) {
-    drawerFooterCount.textContent = "Nenhum contrato selecionado";
-  } else {
-    drawerFooterCount.innerHTML = "<strong style='color:var(--mosaic-green-800);font-weight:800;'>" + n + "</strong> contrato(s) selecionado(s)";
-  }
-  drawerAddBtn.disabled = n === 0;
-}
-
 document.getElementById("openDrawerBtn").addEventListener("click", openDrawer);
-document.querySelectorAll("[data-close-drawer]").forEach(el => {
-  el.addEventListener("click", closeDrawer);
+document.querySelectorAll("[data-close-drawer]").forEach(b => b.addEventListener("click", closeDrawer));
+elDrawerBackdrop.addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && elDrawer.classList.contains("is-open")) closeDrawer();
 });
-drawerBackdrop.addEventListener("click", closeDrawer);
-document.getElementById("drawerBackBtn").addEventListener("click", () => {
-  drawerState.selectedContratoKeys = new Set();
-  showStep(1);
-  renderDrawerFooter();
+elDrawerSearch.addEventListener("input", renderDrawerList);
+elDrawerClearBtn.addEventListener("click", () => {
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawerSearch.focus();
 });
-document.getElementById("drawerSelectAll").addEventListener("click", () => {
-  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
-  if (!proto) return;
-  const allKeys = proto.contratos.map(c => c.contrato + "|" + c.item);
-  const allSelected = allKeys.every(k => drawerState.selectedContratoKeys.has(k));
-  if (allSelected) drawerState.selectedContratoKeys = new Set();
-  else drawerState.selectedContratoKeys = new Set(allKeys);
-  renderContratoList();
-  renderDrawerFooter();
+elDrawerList.addEventListener("click", e => {
+  const item = e.target.closest(".drawer-item");
+  if (!item || item.classList.contains("is-disabled")) return;
+  e.preventDefault();
+  const i = parseInt(item.dataset.i, 10);
+  if (state.selectedInDrawer.has(i)) state.selectedInDrawer.delete(i);
+  else state.selectedInDrawer.add(i);
+  item.classList.toggle("is-selected");
+  updateDrawerFooter();
 });
-protoSearch.addEventListener("input", renderProtoList);
-
-drawerAddBtn.addEventListener("click", () => {
-  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
-  if (!proto) return;
-  proto.contratos.forEach(c => {
-    const key = c.contrato + "|" + c.item;
-    if (drawerState.selectedContratoKeys.has(key)) {
-      rows.push({
-        uid: genUid(),
-        id: proto.id,
-        ...c,
-        volume: "",
-        semana: "",
-        roteiro: ROTEIRO_DEFAULT
-      });
+elDrawerSelectAll.addEventListener("click", () => {
+  const q = (elDrawerSearch.value || "").trim().toLowerCase();
+  const visible = PROTOCOLS.map((p, i) => ({ p, i })).filter(({ p }) => {
+    if (!q) return true;
+    const haystack = [
+      p.id, p.contrato, p.item, p.refCliente, p.descProduto,
+      p.embalagem, p.frete, p.planta, p.enviarPara, p.cnpjFilial,
+      p.nomeRecebedor, p.cnpjRecebedor, p.cidadeRecebedor
+    ].join(" ").toLowerCase();
+    return haystack.includes(q);
+  }).filter(({ p }) => !isAlreadyAdded(p)).map(({ i }) => i);
+  const allSelected = visible.every(i => state.selectedInDrawer.has(i));
+  if (allSelected) visible.forEach(i => state.selectedInDrawer.delete(i));
+  else visible.forEach(i => state.selectedInDrawer.add(i));
+  renderDrawerList();
+});
+elDrawerAddBtn.addEventListener("click", () => {
+  const indices = [...state.selectedInDrawer].sort((a, b) => a - b);
+  indices.forEach(i => {
+    const p = PROTOCOLS[i];
+    if (!isAlreadyAdded(p)) {
+      state.rows.push(Object.assign({}, p, { volume: "", semana: "", roteiro: "" }));
     }
   });
+  state.selectedInDrawer.clear();
   closeDrawer();
   renderTable();
-  updateFooter();
 });
 
-// ============================================================
-// Main table render
-// ============================================================
-const tableBody = document.getElementById("tableBody");
+/* ===================================================================
+   VIEW TOGGLE
+   =================================================================== */
+const elBody = document.getElementById("cardsContainer");
+const elAgendar = document.getElementById("agendarBtn");
 
+document.getElementById("viewToggle").addEventListener("click", e => {
+  const btn = e.target.closest("button[data-view]");
+  if (!btn) return;
+  const m = btn.dataset.view;
+  if (m === state.viewMode) return;
+  state.viewMode = m;
+  try { localStorage.setItem("mosaicProtoViewMode", m); } catch (_) {}
+  renderTable();
+});
+
+/* ===================================================================
+   RENDERING
+   =================================================================== */
 function renderTable() {
-  if (rows.length === 0) {
-    tableBody.innerHTML = `
-      <tr class="empty-row">
-        <td colspan="19">
-          <span class="empty-strong">Nenhum protocolo selecionado.</span>
-          Clique em "Selecionar Protocolo" acima para escolher os contratos.
-        </td>
-      </tr>
-    `;
+  if (state.viewMode === "table") renderTableView();
+  else renderCardsView();
+  document.querySelectorAll("#viewToggle button").forEach(b => {
+    const active = b.dataset.view === state.viewMode;
+    b.classList.toggle("is-active", active);
+    b.setAttribute("aria-selected", active ? "true" : "false");
+  });
+}
+
+function refreshHint() {
+  document.querySelectorAll(".hint-pulse").forEach(el => {
+    el.classList.remove("hint-pulse");
+    el.removeAttribute("data-hint");
+  });
+  if (state.rows.length === 0) {
+    const btn = document.getElementById("openDrawerBtn");
+    if (btn) {
+      btn.classList.add("hint-pulse");
+      btn.setAttribute("data-hint", "Comece selecionando protocolos");
+    }
+  }
+}
+
+function renderCardsView() {
+  elBody.innerHTML = "";
+
+  if (state.rows.length === 0) {
+    elBody.innerHTML = ''
+      + '<div class="cards-empty">'
+      +   '<strong>Nenhum protocolo selecionado</strong>'
+      +   'Use o botão "Selecionar Protocolo" acima para adicionar protocolos ao agendamento.'
+      + '</div>';
+    elAgendar.disabled = true;
+    updateSummary();
+    refreshHint();
     return;
   }
-  tableBody.innerHTML = rows.map(r => {
-    const fretePill = r.frete === "FOB"
-      ? '<span class="frete-pill fob">FOB</span>'
-      : '<span class="frete-pill cif">CIF</span>';
-    return `
-      <tr data-uid="${r.uid}">
-        <td class="proto-id">${r.id}</td>
-        <td>${r.contrato}</td>
-        <td>${r.item}</td>
-        <td>${r.refCliente || '<span class="muted">—</span>'}</td>
-        <td>${r.nomeRecebedor}</td>
-        <td>${r.cnpjRecebedor}</td>
-        <td>${r.ieRecebedor}</td>
-        <td>${r.cidadeRecebedor}</td>
-        <td>${r.descProduto}</td>
-        <td>${r.dataIni}</td>
-        <td>${r.dataFim}</td>
-        <td>${fretePill}</td>
-        <td>${r.planta}</td>
-        <td>${r.cnpjFilial}</td>
-        <td class="saldo-cell">${fmtNum(r.saldo)}<span class="unit">t</span></td>
-        <td>
-          <span class="volume-wrap">
-            <input type="number" class="cell-input num" data-field="volume" data-uid="${r.uid}" value="${r.volume}" placeholder="0,00" step="0.01" min="0" />
-            <span class="unit-suffix">t</span>
-          </span>
-        </td>
-        <td>
-          <span class="week-wrap">
-            <input type="text" class="cell-input" data-field="semana" data-uid="${r.uid}" value="${r.semana}" placeholder="dd/mm/aaaa" readonly />
-            <button type="button" class="cal-btn" data-cal-uid="${r.uid}" aria-label="Abrir calendário">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            </button>
-          </span>
-        </td>
-        <td>
-          <span class="roteiro-wrap">
-            <input type="text" class="cell-input" data-field="roteiro" data-uid="${r.uid}" value="${escapeHtml(r.roteiro)}" placeholder="Lorem impsum lorem ipsum lorem" />
-            <button type="button" class="ext-btn" aria-label="Abrir roteiro">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            </button>
-          </span>
-        </td>
-        <td>
-          <span class="row-actions">
-            <button type="button" class="row-icon-btn" data-dup-uid="${r.uid}" aria-label="Duplicar">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            </button>
-            <button type="button" class="row-icon-btn is-danger" data-del-uid="${r.uid}" aria-label="Excluir">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
-            </button>
-          </span>
-        </td>
-      </tr>
-    `;
-  }).join("");
 
-  // Wire input changes
-  tableBody.querySelectorAll(".cell-input").forEach(inp => {
-    inp.addEventListener("input", (e) => {
-      const uid = inp.getAttribute("data-uid");
-      const field = inp.getAttribute("data-field");
-      const row = rows.find(r => r.uid === uid);
-      if (row) {
-        row[field] = inp.value;
-        updateFooter();
-      }
-    });
+  const list = document.createElement("div");
+  list.className = "cards-list";
+
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const fretePill = '<span class="badge badge--' + (isCIF ? 'cif' : 'fob') + '">' + r.frete + '</span>';
+    const card = document.createElement("article");
+    card.className = "proto-card is-" + status;
+    card.setAttribute("data-row", idx);
+
+    card.innerHTML = ''
+      + '<header class="proto-head">'
+        + '<span class="proto-level-tag">Protocolo</span>'
+        + '<span class="proto-id">' + escapeHtml(r.id) + '</span>'
+        + '<span class="proto-divider"></span>'
+        + '<span class="proto-head-inline"><span class="proto-meta-label">Contrato</span><strong>' + escapeHtml(r.contrato) + '</strong> · Item <strong>' + escapeHtml(r.item) + '</strong></span>'
+        + '<span class="proto-divider"></span>'
+        + '<span class="proto-head-inline"><span class="proto-meta-label">Vigência</span><strong>' + escapeHtml(r.vigenciaInicio) + '</strong><span class="arrow">→</span><strong>' + escapeHtml(r.vigenciaFim) + '</strong></span>'
+        + '<span class="proto-head-spacer"></span>'
+        + '<button class="proto-head-remove" data-action="remove" data-row="' + idx + '" title="Remover protocolo" aria-label="Remover protocolo">' + ICON_DEL + '</button>'
+      + '</header>'
+
+      + '<div class="proto-item-row">'
+        + '<div class="proto-item-info">'
+          + '<div class="proto-item-line proto-item-line--top">'
+            + '<span class="proto-level-tag proto-level-tag--item">Item</span>'
+            + fretePill
+            + '<span class="proto-item-product" title="' + escapeHtml(r.descProduto) + '">' + escapeHtml(r.descProduto) + '</span>'
+          + '</div>'
+          + '<div class="proto-item-line proto-item-line--bottom">'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Embalagem</span><strong>' + escapeHtml(r.embalagem) + '</strong></span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Rota</span><strong>' + escapeHtml(r.planta) + '</strong><span style="color:var(--mosaic-green-700);font-weight:800;margin:0 2px;">→</span>' + escapeHtml(r.enviarPara) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Recebedor</span><strong>' + escapeHtml(r.nomeRecebedor) + '</strong> · ' + escapeHtml(r.cidadeRecebedor) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Saldo</span><span class="proto-saldo">' + escapeHtml(r.saldo) + '<span class="unit">t</span></span></span>'
+          + '</div>'
+        + '</div>'
+
+        + '<div class="proto-item-fields">'
+          + '<div class="field-block">'
+            + '<label>Volume <span class="req">*</span></label>'
+            + '<div class="input-with-suffix">'
+              + '<input type="text" inputmode="decimal" value="' + escapeHtml(r.volume) + '" placeholder="0,00" data-row="' + idx + '" data-field="volume" />'
+              + '<span class="suffix">t</span>'
+            + '</div>'
+          + '</div>'
+          + '<div class="field-block">'
+            + '<label>Semana <span class="req">*</span></label>'
+            + '<div class="card-date-wrap" data-row="' + idx + '">'
+              + '<input type="text" class="card-date-input" value="' + escapeHtml(r.semana) + '" placeholder="DD/MM/AAAA" data-row="' + idx + '" data-field="semana" readonly />'
+              + '<button class="cal-trigger" data-action="open-dp" data-row="' + idx + '" type="button" aria-label="Abrir calendário">' + ICON_CAL + '</button>'
+            + '</div>'
+          + '</div>'
+          + '<div class="field-block">'
+            + '<label>Roteiro <span class="opt-tag">Opc.</span></label>'
+            + '<button class="roteiro-toggle-btn ' + (r.roteiro ? 'has-value' : '') + '" data-action="open-roteiro" data-row="' + idx + '" type="button" aria-label="' + (r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro') + '">'
+              + '<span class="roteiro-toggle-text">' + (r.roteiro ? escapeHtml(r.roteiro.substring(0, 40) + (r.roteiro.length > 40 ? '…' : '')) : 'Adicionar roteiro') + '</span>'
+              + '<svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>'
+            + '</button>'
+          + '</div>'
+        + '</div>'
+      + '</div>'
+
+      + (status === "complete"
+          ? '<div class="card-status card-status--complete">' + ICON_CHECK + ' Pronto para agendar</div>'
+          : '<div class="card-status card-status--incomplete">' + ICON_WARN + ' Preencha Volume e Semana</div>'
+      );
+
+    list.appendChild(card);
   });
-  // Duplicate
-  tableBody.querySelectorAll("[data-dup-uid]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const uid = btn.getAttribute("data-dup-uid");
-      const idx = rows.findIndex(r => r.uid === uid);
-      if (idx >= 0) {
-        const src = rows[idx];
-        const copy = { ...src, uid: genUid(), volume: "", semana: "", roteiro: src.roteiro };
-        rows.splice(idx + 1, 0, copy);
-        renderTable();
-        updateFooter();
-      }
-    });
-  });
-  // Delete
-  tableBody.querySelectorAll("[data-del-uid]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const uid = btn.getAttribute("data-del-uid");
-      rows = rows.filter(r => r.uid !== uid);
-      renderTable();
-      updateFooter();
-    });
-  });
-  // Calendar
-  tableBody.querySelectorAll("[data-cal-uid]").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      openDatepicker(btn.getAttribute("data-cal-uid"), btn);
-    });
-  });
+
+  elBody.appendChild(list);
+  updateSummary();
+  refreshHint();
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
 }
 
-function updateFooter() {
-  const info = document.getElementById("summaryInfo");
-  const btn = document.getElementById("agendarBtn");
-  if (rows.length === 0) {
-    info.textContent = "Selecione protocolos para começar.";
-    btn.disabled = true;
+function renderTableView() {
+  elBody.innerHTML = "";
+  if (state.rows.length === 0) {
+    elBody.innerHTML = ''
+      + '<div class="cards-empty">'
+      +   '<strong>Nenhum protocolo selecionado</strong>'
+      +   'Use o botão "Selecionar Protocolo" acima para adicionar protocolos ao agendamento.'
+      + '</div>';
+    elAgendar.disabled = true;
+    updateSummary();
+    refreshHint();
     return;
   }
-  const valid = rows.every(r => {
-    const v = parseFloat((r.volume + "").replace(",", "."));
-    return !isNaN(v) && v > 0 && r.semana && r.semana.trim().length > 0;
+
+  const wrap = document.createElement("div");
+  wrap.className = "proto-table-wrap";
+
+  wrap.innerHTML = ''
+    + '<table class="proto-table">'
+      + '<thead><tr>'
+        + '<th class="v3-status-cell" aria-label="Status"></th>'
+        + '<th>Protocolo / Contrato</th>'
+        + '<th>Produto / Embalagem</th>'
+        + '<th>Recebedor / Destino</th>'
+        + '<th>Saldo</th>'
+        + '<th>Volume <span class="req">*</span></th>'
+        + '<th>Semana <span class="req">*</span></th>'
+        + '<th>Roteiro <span class="opt-tag">opc.</span></th>'
+        + '<th aria-label="Ações"></th>'
+      + '</tr></thead>'
+      + '<tbody></tbody>'
+    + '</table>';
+  elBody.appendChild(wrap);
+  const tbody = wrap.querySelector("tbody");
+
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const fretePill = '<span class="badge badge--' + (isCIF ? 'cif' : 'fob') + '">' + r.frete + '</span>';
+    const roteiroPreview = r.roteiro ? (r.roteiro.length > 28 ? r.roteiro.substring(0, 28) + '…' : r.roteiro) : '';
+
+    let dot;
+    if (status === "complete") dot = '<span class="v3-status-dot v3-status-dot--complete" title="Pronto">' + ICON_CHK + '</span>';
+    else if (status === "progress") dot = '<span class="v3-status-dot v3-status-dot--progress" title="Em progresso">' + ICON_BANG + '</span>';
+    else dot = '<span class="v3-status-dot v3-status-dot--incomplete" title="Aguardando">' + ICON_DOT + '</span>';
+
+    const tr = document.createElement("tr");
+    tr.className = "is-" + status;
+    tr.setAttribute("data-row", idx);
+    tr.innerHTML = ''
+      + '<td class="v3-status-cell">' + dot + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary">' + escapeHtml(r.id) + ' ' + fretePill + '</div>'
+        + '<div class="stack-secondary"><strong>' + escapeHtml(r.contrato) + '</strong> · Item ' + escapeHtml(r.item) + (r.refCliente ? ' · Ref. ' + escapeHtml(r.refCliente) : '') + '</div>'
+        + '<div class="stack-tertiary">' + escapeHtml(r.vigenciaInicio) + ' → ' + escapeHtml(r.vigenciaFim) + '</div>'
+      + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.descProduto) + '</div>'
+        + '<div class="stack-secondary">' + escapeHtml(r.embalagem) + '</div>'
+        + '<div class="stack-tertiary">De ' + escapeHtml(r.planta) + '</div>'
+      + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.nomeRecebedor) + '</div>'
+        + '<div class="stack-secondary">' + escapeHtml(r.cidadeRecebedor) + '</div>'
+        + '<div class="stack-tertiary">CNPJ ' + escapeHtml(r.cnpjRecebedor) + '</div>'
+      + '</td>'
+      + '<td><div class="saldo-primary">' + escapeHtml(r.saldo) + ' <span class="saldo-unit">t</span></div></td>'
+      + '<td>'
+        + '<div class="v3-cell-volume-wrap">'
+          + '<input type="text" inputmode="decimal" value="' + escapeHtml(r.volume) + '" placeholder="0,00" data-row="' + idx + '" data-field="volume" />'
+          + '<span class="suffix">t</span>'
+        + '</div>'
+      + '</td>'
+      + '<td>'
+        + '<div class="v3-cell-date-wrap" data-row="' + idx + '">'
+          + '<input type="text" class="v3-cell-date-input" value="' + escapeHtml(r.semana) + '" placeholder="DD/MM/AAAA" data-row="' + idx + '" data-field="semana" readonly />'
+          + '<button class="cal-trigger" data-action="open-dp" data-row="' + idx + '" type="button" aria-label="Abrir calendário">' + ICON_CAL + '</button>'
+        + '</div>'
+      + '</td>'
+      + '<td>'
+        + '<button class="roteiro-toggle-btn ' + (r.roteiro ? 'has-value' : '') + ' v5-table-roteiro" data-action="open-roteiro" data-row="' + idx + '" type="button" aria-label="' + (r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro') + '">'
+          + '<span class="roteiro-toggle-text">' + (roteiroPreview ? escapeHtml(roteiroPreview) : 'Adicionar') + '</span>'
+          + ICON_EXP
+        + '</button>'
+      + '</td>'
+      + '<td>'
+        + '<span class="v3-row-actions">'
+          + '<button class="row-icon-btn" data-action="duplicate" data-row="' + idx + '" type="button" title="Duplicar">' + ICON_DUP + '</button>'
+          + '<button class="row-icon-btn danger" data-action="remove" data-row="' + idx + '" type="button" title="Remover">' + ICON_DEL + '</button>'
+        + '</span>'
+      + '</td>';
+    tbody.appendChild(tr);
   });
-  info.innerHTML = `<strong>${rows.length}</strong> protocolo(s) selecionado(s)` +
-    (valid ? "" : ' · <span style="color:var(--mosaic-orange)">preencha Volume + Semana</span>');
-  btn.disabled = !valid;
+
+  updateSummary();
+  refreshHint();
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
 }
 
-// ============================================================
-// Datepicker
-// ============================================================
-const dpPopup = document.getElementById("dpPopup");
-let dpState = { uid: null, year: 0, month: 0 };
+function refreshValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll('[data-row="' + idx + '"][data-field="semana"]').forEach(el => {
+      const wrap = el.closest('.card-date-wrap, .v3-cell-date-wrap') || el;
+      const bad = rowInvalidSemana(r);
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = bad ? "Semana desejada não pode ser uma data passada" : "";
+    });
+    document.querySelectorAll('[data-row="' + idx + '"][data-field="volume"]').forEach(el => {
+      const wrap = el.closest('.input-with-suffix, .v3-cell-volume-wrap') || el;
+      const bad = rowVolumeExceeds(r);
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = bad ? "Volume excede o saldo do protocolo (" + r.saldo + " t)" : "";
+    });
+  });
+}
 
-function openDatepicker(uid, anchorBtn) {
-  const row = rows.find(r => r.uid === uid);
-  let baseDate = new Date();
-  if (row && row.semana) {
-    const m = row.semana.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-    if (m) baseDate = new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+function updateSummary() {
+  const totalVolume = state.rows.reduce((s, r) => s + parseBR(r.volume), 0);
+  const ready = state.rows.filter(r => rowStatus(r) === "complete").length;
+  document.getElementById("statProtos").textContent = state.rows.length;
+  document.getElementById("statVolume").innerHTML = totalVolume.toLocaleString("pt-BR") + '<span class="unit">t</span>';
+  const statReady = document.getElementById("statReady");
+  statReady.textContent = ready + "/" + (state.rows.length || 0);
+  statReady.classList.toggle("muted", ready < state.rows.length);
+}
+
+/* ===================================================================
+   INPUT WIRING (event delegation)
+   =================================================================== */
+elBody.addEventListener("input", e => {
+  const t = e.target;
+  if (!t.matches || !t.matches("[data-field]")) return;
+  if (t.dataset.field === "volume") maskVolumeDecimal(t);
+  const idx = parseInt(t.dataset.row, 10);
+  const field = t.dataset.field;
+  if (!state.rows[idx]) return;
+  state.rows[idx][field] = t.value;
+  afterFieldChange(idx, t);
+});
+function afterFieldChange(idx, sourceEl) {
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
+  updateSummary();
+  const r = state.rows[idx];
+  if (!r) return;
+  // update row/card status class
+  const card = sourceEl.closest(".proto-card");
+  if (card) {
+    card.classList.remove("is-incomplete", "is-progress", "is-complete");
+    card.classList.add("is-" + rowStatus(r));
   }
-  dpState = { uid, year: baseDate.getFullYear(), month: baseDate.getMonth() };
-  renderDatepicker();
-  const r = anchorBtn.getBoundingClientRect();
-  dpPopup.style.top = (r.bottom + 6) + "px";
-  dpPopup.style.left = Math.max(8, r.right - 260) + "px";
-  dpPopup.classList.add("is-open");
+  const tr = sourceEl.closest("tr[data-row]");
+  if (tr) {
+    tr.classList.remove("is-incomplete", "is-progress", "is-complete");
+    tr.classList.add("is-" + rowStatus(r));
+  }
 }
-function closeDatepicker() { dpPopup.classList.remove("is-open"); }
-document.addEventListener("click", (e) => {
-  if (!dpPopup.contains(e.target) && !e.target.closest("[data-cal-uid]")) closeDatepicker();
+elBody.addEventListener("click", e => {
+  const actBtn = e.target.closest("[data-action]");
+  if (!actBtn) return;
+  const action = actBtn.dataset.action;
+  const idx = parseInt(actBtn.dataset.row, 10);
+  if (action === "remove") {
+    state.rows.splice(idx, 1);
+    renderTable();
+  } else if (action === "duplicate") {
+    const r = state.rows[idx];
+    state.rows.splice(idx + 1, 0, Object.assign({}, r));
+    renderTable();
+  } else if (action === "open-dp") {
+    const wrap = actBtn.closest(".card-date-wrap, .v3-cell-date-wrap");
+    if (!wrap) return;
+    const input = wrap.querySelector(".card-date-input, .v3-cell-date-input");
+    openDatePicker(input, wrap);
+  } else if (action === "open-roteiro") {
+    openRoteiroDrawer(idx);
+  }
+});
+// click on the date input itself opens picker
+elBody.addEventListener("click", e => {
+  const input = e.target.closest(".card-date-input, .v3-cell-date-input");
+  if (!input) return;
+  const wrap = input.closest(".card-date-wrap, .v3-cell-date-wrap");
+  openDatePicker(input, wrap);
 });
 
-function renderDatepicker() {
-  const { year, month } = dpState;
-  const months = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
-  const dows = ["D","S","T","Q","Q","S","S"];
-  const first = new Date(year, month, 1);
-  const firstDow = first.getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const today = new Date();
-  const todayKey = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-  const row = rows.find(r => r.uid === dpState.uid);
-  let selKey = null;
-  if (row && row.semana) {
-    const m = row.semana.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-    if (m) selKey = `${m[3]}-${Number(m[2])-1}-${Number(m[1])}`;
-  }
-
-  let html = '<div class="dp-head">';
-  html += '<button type="button" id="dpPrev" aria-label="Mês anterior"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>';
-  html += `<span class="dp-month">${months[month]} ${year}</span>`;
-  html += '<button type="button" id="dpNext" aria-label="Próximo mês"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>';
-  html += '</div><div class="dp-grid">';
-  dows.forEach(d => { html += `<div class="dp-dow">${d}</div>`; });
-  for (let i = 0; i < firstDow; i++) html += '<button type="button" class="dp-day is-other" disabled></button>';
-  for (let d = 1; d <= daysInMonth; d++) {
-    const k = `${year}-${month}-${d}`;
-    const classes = ["dp-day"];
-    if (k === todayKey) classes.push("is-today");
-    if (k === selKey) classes.push("is-selected");
-    html += `<button type="button" class="${classes.join(' ')}" data-day="${d}">${d}</button>`;
-  }
-  html += '</div>';
-  dpPopup.innerHTML = html;
-
-  document.getElementById("dpPrev").addEventListener("click", () => {
-    if (--dpState.month < 0) { dpState.month = 11; dpState.year--; }
-    renderDatepicker();
+/* ===================================================================
+   MODAL HELPERS
+   =================================================================== */
+function openModal(id) { document.getElementById(id).classList.add("is-open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("is-open"); }
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => closeModal(btn.dataset.close));
+});
+document.querySelectorAll(".modal-backdrop").forEach(bd => {
+  bd.addEventListener("click", e => {
+    if (e.target === bd) bd.classList.remove("is-open");
   });
-  document.getElementById("dpNext").addEventListener("click", () => {
-    if (++dpState.month > 11) { dpState.month = 0; dpState.year++; }
-    renderDatepicker();
-  });
-  dpPopup.querySelectorAll(".dp-day[data-day]").forEach(b => {
-    b.addEventListener("click", () => {
-      const d = Number(b.getAttribute("data-day"));
-      const dd = String(d).padStart(2, "0");
-      const mm = String(dpState.month + 1).padStart(2, "0");
-      const yyyy = dpState.year;
-      const str = `${dd}/${mm}/${yyyy}`;
-      const row = rows.find(r => r.uid === dpState.uid);
-      if (row) {
-        row.semana = str;
-        renderTable();
-        updateFooter();
-      }
-      closeDatepicker();
-    });
-  });
-}
+});
 
-// ============================================================
-// Footer actions
-// ============================================================
+/* ===================================================================
+   FOOTER ACTIONS
+   =================================================================== */
 document.getElementById("cancelBtn").addEventListener("click", () => {
-  if (rows.length === 0 || confirm("Descartar protocolos selecionados?")) {
-    rows = [];
-    renderTable();
-    updateFooter();
-  }
+  if (state.rows.length === 0) return;
+  openModal("cancelModal");
+});
+document.getElementById("cancelConfirm").addEventListener("click", () => {
+  state.rows = [];
+  closeModal("cancelModal");
+  renderTable();
 });
 document.getElementById("agendarBtn").addEventListener("click", () => {
-  document.getElementById("confirmCount").textContent = rows.length;
-  openModal("confirmModal");
+  elBody.classList.add("show-validation");
+  const wrap = elBody.querySelector(".proto-table-wrap");
+  if (wrap) wrap.classList.add("show-validation");
+  if (!canAgendar()) return;
+  document.getElementById("confirmCount").textContent = state.rows.length;
+  const summaryEl = document.getElementById("submitSummary");
+  const totalVolume = state.rows.reduce((s, r) => s + parseBR(r.volume), 0);
+  summaryEl.innerHTML = ''
+    + '<div class="row"><span>Protocolos a agendar</span><strong>' + state.rows.length + '</strong></div>'
+    + '<div class="row"><span>Volume total</span><strong>' + totalVolume.toLocaleString("pt-BR") + ' t</strong></div>';
+  openModal("submitModal");
 });
-document.getElementById("confirmYes").addEventListener("click", () => {
-  closeModal("confirmModal");
+elBody.addEventListener("input", () => {
+  if (elBody.classList.contains("show-validation") && canAgendar()) {
+    elBody.classList.remove("show-validation");
+    const wrap = elBody.querySelector(".proto-table-wrap");
+    if (wrap) wrap.classList.remove("show-validation");
+  }
+});
+document.getElementById("submitConfirm").addEventListener("click", () => {
+  closeModal("submitModal");
   openModal("successModal");
+});
+document.getElementById("successReport").addEventListener("click", () => {
+  closeModal("successModal");
+  window.location.href = "relatorio-status-agendamento.html";
 });
 document.getElementById("successNew").addEventListener("click", () => {
   closeModal("successModal");
-  rows = [];
+  state.rows = [];
   renderTable();
-  updateFooter();
-});
-document.getElementById("successReport").addEventListener("click", () => {
-  window.location.href = "relatorio-status-agendamento.html";
 });
 
-// ============================================================
-// Init
-// ============================================================
+/* ===================================================================
+   ROTEIRO DRAWER
+   =================================================================== */
+const elRoteiroDrawer    = document.getElementById("roteiroDrawer");
+const elRoteiroBackdrop  = document.getElementById("roteiroDrawerBackdrop");
+const elRoteiroText      = document.getElementById("roteiroDrawerText");
+const elRoteiroSubtitle  = document.getElementById("roteiroDrawerSubtitle");
+const elRoteiroLabel     = document.getElementById("roteiroDrawerLabel");
+let roteiroIdx = null;
+
+function openRoteiroDrawer(idx) {
+  const r = state.rows[idx];
+  if (!r) return;
+  roteiroIdx = idx;
+  const isCIF = r.frete === "CIF";
+  elRoteiroSubtitle.innerHTML = '<strong>' + escapeHtml(r.id) + '</strong> · Contrato ' + escapeHtml(r.contrato) + ' · Item ' + escapeHtml(r.item) + ' · ' + r.frete;
+  elRoteiroLabel.innerHTML = 'Descrição <span class="opt-tag">Opcional</span>';
+  elRoteiroText.value = r.roteiro || "";
+  elRoteiroText.placeholder = isCIF
+    ? "Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."
+    : "Adicione observações de entrega se necessário (opcional para FOB).";
+  elRoteiroDrawer.classList.add("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "false");
+  elRoteiroBackdrop.classList.add("is-open");
+  setTimeout(() => elRoteiroText.focus(), 320);
+}
+function closeRoteiroDrawer() {
+  elRoteiroDrawer.classList.remove("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "true");
+  elRoteiroBackdrop.classList.remove("is-open");
+}
+function saveRoteiroDrawer() {
+  if (roteiroIdx == null) { closeRoteiroDrawer(); return; }
+  const r = state.rows[roteiroIdx];
+  if (!r) { closeRoteiroDrawer(); return; }
+  r.roteiro = elRoteiroText.value;
+  closeRoteiroDrawer();
+  renderTable();
+}
+document.getElementById("roteiroDrawerClose").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroDrawerCancel").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroDrawerSave").addEventListener("click", saveRoteiroDrawer);
+elRoteiroBackdrop.addEventListener("click", closeRoteiroDrawer);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && elRoteiroDrawer.classList.contains("is-open")) closeRoteiroDrawer();
+});
+
+/* ===================================================================
+   DATEPICKER
+   =================================================================== */
+let dpPopup = null;
+let dpCurrentInput = null;
+let dpViewYear = 0;
+let dpViewMonth = 0;
+let dpSelected = null;
+const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const WEEKDAY_NAMES = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+function ensureDP() {
+  if (dpPopup) return dpPopup;
+  dpPopup = document.createElement("div");
+  dpPopup.className = "dp-popup";
+  dpPopup.innerHTML = ''
+    + '<div class="dp-header">'
+      + '<button class="dp-nav" data-dp="prev" type="button" aria-label="Mês anterior"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>'
+      + '<span class="dp-month"></span>'
+      + '<button class="dp-nav" data-dp="next" type="button" aria-label="Próximo mês"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>'
+    + '</div>'
+    + '<div class="dp-weekdays"></div>'
+    + '<div class="dp-grid"></div>'
+    + '<div class="dp-footer">'
+      + '<button class="dp-clear" data-dp="clear" type="button">Limpar</button>'
+      + '<button class="dp-today-btn" data-dp="today" type="button">Hoje</button>'
+    + '</div>';
+  document.body.appendChild(dpPopup);
+  dpPopup.querySelector(".dp-weekdays").innerHTML = WEEKDAY_NAMES.map(n => '<div>' + n + '</div>').join("");
+  dpPopup.addEventListener("click", e => {
+    const nav = e.target.closest("[data-dp]");
+    if (nav) {
+      const a = nav.dataset.dp;
+      if (a === "prev") {
+        dpViewMonth--; if (dpViewMonth < 0) { dpViewMonth = 11; dpViewYear--; }
+        renderDP();
+      } else if (a === "next") {
+        dpViewMonth++; if (dpViewMonth > 11) { dpViewMonth = 0; dpViewYear++; }
+        renderDP();
+      } else if (a === "today") {
+        const t = new Date();
+        dpViewYear = t.getFullYear(); dpViewMonth = t.getMonth();
+        selectDPDate(t);
+      } else if (a === "clear") {
+        clearDPDate();
+      }
+      return;
+    }
+    const day = e.target.closest(".dp-day");
+    if (day && !day.classList.contains("is-disabled")) {
+      const y = parseInt(day.dataset.y, 10);
+      const m = parseInt(day.dataset.m, 10);
+      const d = parseInt(day.dataset.d, 10);
+      selectDPDate(new Date(y, m, d));
+    }
+  });
+  return dpPopup;
+}
+function openDatePicker(input, wrap) {
+  ensureDP();
+  dpCurrentInput = input;
+  if (input.value && /^\d{2}\/\d{2}\/\d{4}$/.test(input.value)) {
+    const parts = input.value.split("/");
+    dpSelected = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    dpViewYear = dpSelected.getFullYear();
+    dpViewMonth = dpSelected.getMonth();
+  } else {
+    dpSelected = null;
+    const t = new Date();
+    dpViewYear = t.getFullYear();
+    dpViewMonth = t.getMonth();
+  }
+  dpPopup.classList.add("is-open");
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  if (wrap) wrap.classList.add("is-open");
+  renderDP();
+  const rect = (wrap || input).getBoundingClientRect();
+  const popupRect = dpPopup.getBoundingClientRect();
+  const popupHeight = popupRect.height || 320;
+  const popupWidth = popupRect.width || 280;
+  const viewportH = window.innerHeight;
+  const viewportW = window.innerWidth;
+  const spaceBelow = viewportH - rect.bottom;
+  const spaceAbove = rect.top;
+  const offset = 6;
+  let top, left;
+  if (spaceBelow < popupHeight + offset && spaceAbove > popupHeight + offset) {
+    top = window.scrollY + rect.top - popupHeight - offset;
+  } else {
+    top = window.scrollY + rect.bottom + offset;
+  }
+  left = window.scrollX + rect.left;
+  if (rect.left + popupWidth > viewportW - 8) {
+    left = window.scrollX + rect.right - popupWidth;
+    if (left < window.scrollX + 8) left = window.scrollX + 8;
+  }
+  dpPopup.style.top = top + "px";
+  dpPopup.style.left = left + "px";
+}
+function closeDatePicker() {
+  if (dpPopup) dpPopup.classList.remove("is-open");
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  dpCurrentInput = null;
+}
+function renderDP() {
+  if (!dpPopup) return;
+  dpPopup.querySelector(".dp-month").textContent = MONTH_NAMES[dpViewMonth] + " " + dpViewYear;
+  const firstDay = new Date(dpViewYear, dpViewMonth, 1);
+  const startWeekDay = firstDay.getDay();
+  const daysInMonth = new Date(dpViewYear, dpViewMonth + 1, 0).getDate();
+  const daysInPrev = new Date(dpViewYear, dpViewMonth, 0).getDate();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const cells = [];
+  for (let i = startWeekDay - 1; i >= 0; i--) {
+    const day = daysInPrev - i;
+    cells.push({ d: new Date(dpViewYear, dpViewMonth - 1, day), isOther: true });
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({ d: new Date(dpViewYear, dpViewMonth, day), isOther: false });
+  }
+  while (cells.length < 42) {
+    const last = cells[cells.length - 1].d;
+    const next = new Date(last);
+    next.setDate(next.getDate() + 1);
+    cells.push({ d: next, isOther: next.getMonth() !== dpViewMonth });
+  }
+  const grid = dpPopup.querySelector(".dp-grid");
+  const blockPast = dpCurrentInput && dpCurrentInput.dataset && dpCurrentInput.dataset.field === "semana";
+  grid.innerHTML = cells.map(c => {
+    const d = c.d;
+    const sameDay = function(a, b) {
+      return a && b
+        && a.getFullYear() === b.getFullYear()
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
+    };
+    const classes = ["dp-day"];
+    if (c.isOther) classes.push("is-other");
+    if (sameDay(d, today)) classes.push("is-today");
+    if (sameDay(d, dpSelected)) classes.push("is-selected");
+    let titleAttr = "";
+    if (blockPast && d < today) {
+      classes.push("is-disabled");
+      titleAttr = ' title="Não pode data anterior à atual"';
+    }
+    return '<button type="button" class="' + classes.join(" ") + '"' + titleAttr + ' data-y="' + d.getFullYear() + '" data-m="' + d.getMonth() + '" data-d="' + d.getDate() + '">' + d.getDate() + '</button>';
+  }).join("");
+}
+function selectDPDate(date) {
+  dpSelected = date;
+  if (dpCurrentInput) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yy = date.getFullYear();
+    dpCurrentInput.value = dd + "/" + mm + "/" + yy;
+    const idx = parseInt(dpCurrentInput.dataset.row, 10);
+    const field = dpCurrentInput.dataset.field;
+    if (!isNaN(idx) && state.rows[idx] && field) {
+      state.rows[idx][field] = dpCurrentInput.value;
+      afterFieldChange(idx, dpCurrentInput);
+    }
+  }
+  closeDatePicker();
+}
+function clearDPDate() {
+  dpSelected = null;
+  if (dpCurrentInput) {
+    dpCurrentInput.value = "";
+    const idx = parseInt(dpCurrentInput.dataset.row, 10);
+    const field = dpCurrentInput.dataset.field;
+    if (!isNaN(idx) && state.rows[idx] && field) {
+      state.rows[idx][field] = "";
+      afterFieldChange(idx, dpCurrentInput);
+    }
+  }
+  closeDatePicker();
+}
+document.addEventListener("click", e => {
+  if (!dpPopup || !dpPopup.classList.contains("is-open")) return;
+  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap, .v3-cell-date-wrap")) return;
+  closeDatePicker();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeDatePicker();
+});
+window.addEventListener("scroll", () => {
+  if (dpPopup && dpPopup.classList.contains("is-open") && dpCurrentInput) {
+    const wrap = dpCurrentInput.closest(".card-date-wrap, .v3-cell-date-wrap");
+    const rect = (wrap || dpCurrentInput).getBoundingClientRect();
+    dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
+    dpPopup.style.left = (window.scrollX + rect.left) + "px";
+  }
+}, true);
+
+/* ===================================================================
+   INIT
+   =================================================================== */
 (function init() {
   // Detect query-string from Relatório de Protocolos
   const params = new URLSearchParams(window.location.search);
@@ -1443,43 +2841,6 @@ document.getElementById("successReport").addEventListener("click", () => {
     if (banner) banner.style.display = "flex";
   }
   renderTable();
-  updateFooter();
-})();
-
-// ============================================================
-// Sticky horizontal scrollbar
-// ============================================================
-(function initStickyHScroll() {
-  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
-    const sticky = document.createElement("div");
-    sticky.className = "sticky-h-scroll";
-    const inner = document.createElement("div");
-    inner.className = "sticky-h-scroll-inner";
-    sticky.appendChild(inner);
-    document.body.appendChild(sticky);
-    let syncing = false;
-    const update = () => {
-      inner.style.width = wrap.scrollWidth + "px";
-      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
-      const r = wrap.getBoundingClientRect();
-      const below = r.bottom > window.innerHeight + 20;
-      sticky.classList.toggle("is-visible", overflows && below);
-    };
-    wrap.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      sticky.scrollLeft = wrap.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    sticky.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      wrap.scrollLeft = sticky.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    window.addEventListener("scroll", update);
-    window.addEventListener("resize", update);
-    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
-    update();
-  });
 })();
 </script>
 <script src="review-overlay.js" defer></script>
