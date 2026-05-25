@@ -380,14 +380,19 @@
   font-weight: 600;
 }
 
+/* page-title padronizado em todas as telas (32px / weight 800 / green-900).
+   Override de regras inline que tinham 26px (relatorios) ou 28px (token h1). */
 .page-title {
-  margin: 0 0 var(--space-5);
-  font-size: var(--fs-h1);
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  color: var(--mosaic-green-800);
-  line-height: var(--lh-tight);
+  margin: 0 0 var(--space-5) !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--mosaic-green-900) !important;
+  line-height: var(--lh-tight) !important;
 }
+/* dentro de .title-row, page-title tem margin 0 (toggle Cards/Tabela alinha) */
+.title-row .page-title { margin: 0 !important; }
+.title-row { margin-bottom: 24px !important; }
 
 /* ==========================================================================
    6. INFO BANNER
