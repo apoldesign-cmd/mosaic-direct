@@ -548,9 +548,13 @@
     layer.style.width = (scrollContainer.scrollWidth || scrollContainer.clientWidth) + "px";
     layer.style.height = (scrollContainer.scrollHeight || scrollContainer.clientHeight) + "px";
 
-    // Pins
-    const here = state.comments.filter(c => c.pageUrl === pageId());
-    const pinsHtml = here.map(c => renderPin(c)).join("");
+    // Pins — só visíveis quando o modo revisão está ATIVO. Senão a página
+    // fica intocada (inputs, botões, scroll, etc.) e o usuário interage normal.
+    let pinsHtml = "";
+    if (state.enabled) {
+      const here = state.comments.filter(c => c.pageUrl === pageId());
+      pinsHtml = here.map(c => renderPin(c)).join("");
+    }
     let composerHtml = "";
     if (state.pending && state.enabled) {
       composerHtml = renderComposer(state.pending);
