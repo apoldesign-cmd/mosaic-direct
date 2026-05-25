@@ -216,8 +216,11 @@
       width: 100%; height: 100%;
       pointer-events: none; z-index: 50;
     }
-    body.review-mode-active { cursor: crosshair !important; }
-    body.review-mode-active * { cursor: crosshair !important; }
+    /* Cursor: balão de comentário (amarelo Mosaic) com ponta no x=4,y=28 */
+    body.review-mode-active,
+    body.review-mode-active * {
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'><path d='M4 4 L28 4 Q30 4 30 6 L30 20 Q30 22 28 22 L12 22 L4 30 Z' fill='%23f0c020' stroke='%23003e2a' stroke-width='1.6' stroke-linejoin='round'/><circle cx='11' cy='13' r='1.6' fill='%23003e2a'/><circle cx='17' cy='13' r='1.6' fill='%23003e2a'/><circle cx='23' cy='13' r='1.6' fill='%23003e2a'/></svg>") 4 28, crosshair !important;
+    }
     body.review-mode-active [data-review-fab],
     body.review-mode-active [data-review-pin],
     body.review-mode-active [data-review-pin] *,
@@ -289,18 +292,22 @@
     .pin-reply-input:focus { border-color: #006a4d; }
     .pin-reply-actions { display: flex; gap: 6px; margin-top: 6px; justify-content: flex-end; }
 
-    /* Composer (pending) */
+    /* Composer (pending) — anchor X (left/center/right) e Y (up/down) */
     [data-review-composer] {
-      position: absolute; transform: translate(-50%, -100%);
+      position: absolute;
       pointer-events: auto; z-index: 52;
       width: 320px; max-width: calc(100vw - 32px);
       background: #fff; border: 1px solid #cdcdcd;
       box-shadow: 0 12px 28px rgba(0,0,0,0.18);
       padding: 12px;
+      /* default: anchor center-up */
+      transform: translate(-50%, -100%) translateY(-8px);
     }
-    [data-review-composer][data-flip-x] { transform: translate(-100%, -100%); }
-    [data-review-composer][data-flip-x][data-flip-y] { transform: translate(-100%, 0); }
-    [data-review-composer][data-flip-y]:not([data-flip-x]) { transform: translate(-50%, 0); }
+    [data-review-composer][data-anchor-x="left"]   { transform: translate(0,    -100%) translateY(-8px); margin-left: 8px; }
+    [data-review-composer][data-anchor-x="right"]  { transform: translate(-100%, -100%) translateY(-8px); margin-left: -8px; }
+    [data-review-composer][data-anchor-y="down"]                                  { transform: translate(-50%, 0) translateY(28px); }
+    [data-review-composer][data-anchor-x="left"][data-anchor-y="down"]            { transform: translate(0,    0) translateY(28px); margin-left: 8px; }
+    [data-review-composer][data-anchor-x="right"][data-anchor-y="down"]           { transform: translate(-100%, 0) translateY(28px); margin-left: -8px; }
     [data-review-composer] textarea {
       width: 100%; min-height: 80px;
       padding: 8px 10px; border: 1px solid #cdcdcd;
@@ -569,8 +576,8 @@
 
   function renderPin(c) {
     const x = c.x, y = c.y;
-    const flipX = x > 60 ? "data-flip-x" : "";
-    const flipY = y > 65 ? "data-flip-y" : "";
+    const flipX = x > 55 ? "data-flip-x" : "";
+    const flipY = y < 30 ? "data-flip-y" : "";
     const active = state.activePin === c.id;
     return `
       <div data-review-pin data-pin-id="${c.id}" data-status="${c.status}" ${flipX} ${flipY}
@@ -617,10 +624,14 @@
   }
 
   function renderComposer({ x, y }) {
-    const flipX = x > 60 ? "data-flip-x" : "";
-    const flipY = y > 65 ? "data-flip-y" : "";
+    // Anchor X: se x estiver perto da esquerda → anchor left; perto da direita → anchor right; senão center
+    let anchorX = "center";
+    if (x < 25) anchorX = "left";
+    else if (x > 65) anchorX = "right";
+    // Anchor Y: se y estiver perto do topo (pouco espaço acima) → anchor down (composer abaixo do pin)
+    const anchorY = y < 25 ? "down" : "up";
     return `
-      <div data-review-composer ${flipX} ${flipY}
+      <div data-review-composer data-anchor-x="${anchorX}" data-anchor-y="${anchorY}"
            style="left:${x}%;top:${y}%">
         <div class="composer-meta">
           <strong>${esc(state.author)}</strong>${state.area ? " · " + esc(state.area) : ""}

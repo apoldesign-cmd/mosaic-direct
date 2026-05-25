@@ -726,15 +726,26 @@ button.btn-secondary,
 }
 
 /* --------------------------------------------------------------------
-   Unificação de margem horizontal: header usa 32px (.container), mas
-   .page do V5/criar-protocolo/etc usa 56px. Forçamos .page a usar 32px
-   pra TODO conteúdo (breadcrumb, título, action-row, cards, tabela)
-   ficar alinhado com logo, menu e itens do header.
+   Unificação de margem horizontal — TODAS as telas seguem o mesmo
+   alinhamento do header (max-width 1320px + padding 32px lateral).
+   Header (.mosaic-header-top) e footer (.summary-footer-inner)
+   já tem max-width 1320px; .page passa a respeitar isso também.
    -------------------------------------------------------------------- */
 .page {
-  padding-left: var(--container-pad-x) !important;  /* 32px */
+  max-width: var(--container-max) !important;        /* 1320px */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--container-pad-x) !important;   /* 32px */
   padding-right: var(--container-pad-x) !important;
-  width: 100% !important;  /* body é flex column; sem isso .page shrinka pra content size */
+  width: 100% !important;
+}
+/* Footer fixo full-bleed, mas o inner respeita o mesmo container do header */
+.summary-footer-inner {
+  max-width: var(--container-max) !important;        /* 1320px */
+  padding-left: var(--container-pad-x) !important;   /* 32px (era 56px em alguns arquivos) */
+  padding-right: var(--container-pad-x) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 
 /* Full-bleed gray sections (apenas action-row e empty state) —
