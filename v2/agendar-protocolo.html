@@ -74,125 +74,177 @@
   .from-report-close:hover { background: rgba(0,0,0,0.05); color: var(--text-1); }
 
   /* ============================================================
-     Search row no topo da página
+     Action row + drawer (padrao igual agendar-contrato-normal)
      ============================================================ */
-  .select-row {
+  .action-row {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 14px;
-    padding: 4px 0;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
   }
-  .select-row-label {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--text-1);
-    white-space: nowrap;
+  .action-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
+  .action-help { font-size: 12px; color: var(--text-3); margin-top: 2px; font-weight: 500; }
+  .btn-with-icon { display: inline-flex; align-items: center; gap: 8px; }
+
+  .drawer-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 100;
+    opacity: 0; pointer-events: none;
+    transition: opacity 240ms ease-out;
   }
-  .search-wrap {
-    position: relative;
-    flex: 0 0 360px;
-    max-width: 360px;
-  }
-  .search-input {
-    width: 100%;
-    height: 40px;
-    padding: 0 36px 0 38px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 14px;
+  .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
-    color: var(--text-1);
+    z-index: 101;
+    display: flex; flex-direction: column;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .drawer.is-open { transform: translateX(0); }
+  .drawer-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex; align-items: flex-start; gap: 14px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    flex-shrink: 0;
+  }
+  .drawer-header .modal-icon {
+    width: 40px; height: 40px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .titles { flex: 1; }
+  .drawer-header h3 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-1); }
+  .drawer-header .subtitle { font-size: 13px; color: var(--text-2); margin-top: 2px; font-weight: 600; }
+  .drawer-header .close-x {
+    width: 32px; height: 32px; background: transparent; border: none;
+    color: var(--text-2); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .close-x:hover { background: var(--bg-section); color: var(--text-1); }
+
+  .drawer-step { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .drawer-step.is-hidden { display: none; }
+
+  .drawer-search { padding: 16px 28px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
+  .drawer-search-wrap {
+    position: relative;
+    display: flex; align-items: center;
+  }
+  .drawer-search-wrap .icon-left {
+    position: absolute; left: 12px; color: var(--text-3); pointer-events: none;
+  }
+  .drawer-search-wrap input {
+    width: 100%; height: 40px;
+    padding: 0 14px 0 40px;
+    border: 1px solid var(--border);
+    font-size: 14px; font-family: inherit; color: var(--text-1);
     outline: none;
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    transition: border-color 120ms;
   }
-  .search-input:hover { border-color: var(--border-strong); }
-  .search-input:focus { border-color: var(--mosaic-green-700); box-shadow: var(--shadow-focus); }
-  .search-icon-left {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-3);
-    pointer-events: none;
-    display: inline-flex;
+  .drawer-search-wrap input:focus { border-color: var(--mosaic-green-700); }
+
+  .drawer-back-row {
+    padding: 14px 28px 0;
+    display: flex; align-items: center; gap: 12px;
+    flex-shrink: 0;
   }
-  .search-clear {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: var(--text-3);
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    cursor: pointer;
-    display: none;
-    align-items: center;
-    justify-content: center;
+  .drawer-back-row .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: transparent; border: none;
+    color: var(--mosaic-green-800); font-weight: 600; font-size: 13px;
+    cursor: pointer; padding: 4px 8px;
   }
-  .search-wrap.has-value .search-clear { display: inline-flex; }
-  .search-clear:hover { color: var(--text-1); background: rgba(0,0,0,0.05); }
-  .select-row-help {
-    font-size: 13px;
-    color: var(--text-3);
-    line-height: 1.4;
+  .drawer-back-row .back-btn:hover { color: var(--mosaic-green-700); }
+  .drawer-back-row .drawer-back-info {
+    font-size: 13px; color: var(--text-3);
+  }
+  .drawer-back-row .drawer-back-info strong {
+    color: var(--mosaic-green-800); font-family: ui-monospace, "SF Mono", Menlo, monospace;
   }
 
-  /* Autocomplete dropdown */
-  .autocomplete {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
-    right: 0;
-    background: #fff;
+  .drawer-meta {
+    padding: 12px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px; color: var(--text-3); font-weight: 600;
+    flex-shrink: 0;
+  }
+  .drawer-meta .select-all {
+    background: transparent; border: none; cursor: pointer;
+    color: var(--mosaic-green-800); font-size: 12px; font-weight: 700;
+    padding: 0;
+  }
+  .drawer-meta .select-all:hover { color: var(--mosaic-green-700); text-decoration: underline; }
+
+  .drawer-list {
+    flex: 1; overflow-y: auto;
+    padding: 0 28px 12px;
+  }
+  .drawer-item {
+    display: flex; gap: 12px;
+    padding: 12px 14px;
     border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-soft);
-    z-index: 50;
-    display: none;
-    overflow: hidden;
-  }
-  .autocomplete.is-open { display: block; }
-  .ac-section-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    padding: 10px 14px 6px;
-  }
-  .ac-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 14px;
+    background: #fff;
     cursor: pointer;
-    font-size: 13.5px;
-    color: var(--text-1);
-    font-weight: 600;
-    transition: background var(--ease-fast);
+    margin-bottom: 8px;
+    transition: border-color 120ms, background-color 120ms;
+    align-items: flex-start;
   }
-  .ac-item:hover, .ac-item.is-active { background: var(--bg-section); }
-  .ac-item .ac-icon { color: var(--text-3); display: inline-flex; }
-  .ac-divider { height: 1px; background: var(--border-soft); margin: 4px 0; }
-  .ac-show-more {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--mosaic-green-800);
-    background: var(--bg-section);
-    border-bottom: 1px solid var(--border-soft);
-    transition: background var(--ease-fast);
+  .drawer-item:hover { border-color: var(--border); background: #fafaf8; }
+  .drawer-item.is-selected {
+    border-color: var(--mosaic-green-700);
+    background: rgba(0, 106, 77, 0.04);
   }
-  .ac-show-more:hover { background: var(--bg-section-2, #ebebeb); }
-  .ac-show-more strong { font-weight: 800; }
+  .drawer-item-check {
+    flex-shrink: 0;
+    width: 18px; height: 18px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .drawer-item.is-selected .drawer-item-check {
+    border-color: var(--mosaic-green-700);
+    background: var(--mosaic-green-700);
+    color: #fff;
+  }
+  .drawer-item-check svg { opacity: 0; }
+  .drawer-item.is-selected .drawer-item-check svg { opacity: 1; }
+  .drawer-item-body { flex: 1; min-width: 0; }
+  .drawer-item-title {
+    font-size: 14px; font-weight: 700; color: var(--text-1);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .drawer-item-meta {
+    font-size: 12px; color: var(--text-2); margin-top: 3px;
+    display: flex; flex-wrap: wrap; gap: 4px 12px;
+  }
+  .drawer-item-meta span { line-height: 1.4; }
+  .drawer-item-meta strong { color: var(--text-1); font-weight: 700; }
+
+  .drawer-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border-soft);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .drawer-footer .count { font-size: 12px; color: var(--text-3); font-weight: 600; }
+  .drawer-footer .actions { display: flex; gap: 10px; }
+
+  .is-hidden { display: none !important; }
 
   /* ============================================================
      Wide table (matches relatorio-protocolos pattern)
@@ -482,7 +534,7 @@
   .btn-secondary:hover { background: var(--bg-section); border-color: var(--border-strong); }
 
   /* ============================================================
-     Modal: busca de contrato
+     Confirm + Success modal (small centered)
      ============================================================ */
   .modal-backdrop {
     position: fixed;
@@ -495,169 +547,6 @@
     padding: 24px;
   }
   .modal-backdrop.is-open { display: flex; }
-  .modal {
-    background: #fff;
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-modal);
-    width: 100%;
-    max-width: 1240px;
-    max-height: 92vh;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-  .modal-busca-header {
-    padding: 22px 28px 8px;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .modal-busca-header .close-x {
-    position: absolute;
-    right: 18px;
-    top: 18px;
-    background: transparent;
-    border: none;
-    width: 28px; height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-3);
-    cursor: pointer;
-    border-radius: 50%;
-  }
-  .modal-busca-header .close-x:hover { background: rgba(0,0,0,0.05); color: var(--text-1); }
-  .modal-busca-search-row {
-    display: flex;
-    align-items: flex-end;
-    gap: 12px;
-    padding: 14px 28px 20px;
-    border-bottom: 1px solid var(--border-soft);
-    flex-shrink: 0;
-  }
-  .modal-busca-field { flex: 1; }
-  .modal-busca-field label {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    margin-bottom: 6px;
-  }
-  .modal-busca-field input {
-    width: 100%;
-    height: 42px;
-    padding: 0 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-family: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-1);
-    background: #fff;
-    outline: none;
-  }
-  .modal-busca-field input:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: var(--shadow-focus);
-  }
-  .modal-busca-search-row .btn-buscar {
-    height: 42px;
-    padding: 0 24px;
-    background: var(--mosaic-green-800);
-    color: #fff;
-    border: none;
-    border-radius: var(--radius-md);
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .modal-busca-search-row .btn-buscar:hover { background: var(--mosaic-green-900); }
-
-  .modal-busca-body {
-    padding: 0;
-    overflow: auto;
-    flex: 1;
-  }
-  .modal-results {
-    width: 100%;
-    min-width: 1600px;
-    border-collapse: collapse;
-    font-size: 12.5px;
-  }
-  .modal-results thead th {
-    background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
-    text-align: left;
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  .modal-results tbody td {
-    padding: 14px 12px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .modal-results tbody tr {
-    cursor: pointer;
-    transition: background var(--ease-fast);
-  }
-  .modal-results tbody tr:hover { background: var(--bg-hover); }
-  .modal-results tbody tr.is-selected { background: rgba(0,106,77,0.06); }
-  .modal-results tbody td.num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-weight: 700;
-    color: var(--mosaic-green-800);
-  }
-  .modal-results tbody td.proto-id {
-    font-weight: 700;
-    color: var(--mosaic-green-800);
-  }
-  .radio {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 1.5px solid var(--border-strong);
-    border-radius: 50%;
-    background: #fff;
-    position: relative;
-    vertical-align: middle;
-    cursor: pointer;
-    transition: border-color var(--ease-fast);
-  }
-  .radio.is-checked { border-color: var(--mosaic-green-800); }
-  .radio.is-checked::after {
-    content: "";
-    position: absolute;
-    inset: 3px;
-    background: var(--mosaic-green-800);
-    border-radius: 50%;
-  }
-
-  .modal-busca-footer {
-    padding: 16px 28px;
-    border-top: 1px solid var(--border-soft);
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    background: #fff;
-    flex-shrink: 0;
-  }
-
-  /* ============================================================
-     Confirm + Success modal (small centered)
-     ============================================================ */
   .confirm-modal-backdrop {
     position: fixed;
     inset: 0;
@@ -854,6 +743,7 @@
         Agendamento<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
           <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html" class="is-active">Agendar Protocolo</a>
           <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
         </div>
       </span>
@@ -903,21 +793,16 @@
     </button>
   </div>
 
-  <!-- Search row -->
-  <div class="select-row">
-    <div class="select-row-label">Selecionar protocolo(s)</div>
-    <div class="search-wrap" id="searchWrap">
-      <span class="search-icon-left" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span>
-      <input type="text" id="searchInput" class="search-input" placeholder="Buscar protocolo ou contrato..." autocomplete="off" />
-      <button type="button" class="search-clear" id="searchClear" aria-label="Limpar">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <!-- Autocomplete -->
-      <div class="autocomplete" id="autocomplete"></div>
+  <!-- Action row: seleção de protocolos -->
+  <div class="action-row">
+    <div>
+      <div class="action-label">Selecionar protocolo(s)</div>
+      <div class="action-help">Clique no botão ao lado para escolher o protocolo e seus contratos.</div>
     </div>
-    <div class="select-row-help">Pesquise pelos protocolos para realizar o agendamento</div>
+    <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Selecionar Protocolo
+    </button>
   </div>
 
   <!-- Main wide table -->
@@ -960,49 +845,64 @@
   </div>
 </div>
 
-<!-- Modal: busca de contrato ====================================== -->
-<div class="modal-backdrop" id="searchModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
-    <div class="modal-busca-header">
-      <button class="close-x" type="button" data-close-modal="searchModal" aria-label="Fechar">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
+<!-- Drawer: seleção de protocolo + contratos ====================== -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer drawer-protocolo" id="protoDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-header">
+    <span class="modal-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    </span>
+    <div class="titles">
+      <h3 id="drawerTitle">Selecionar protocolo</h3>
+      <div class="subtitle" id="drawerSubtitle">Busque o protocolo que deseja agendar.</div>
     </div>
-    <div class="modal-busca-search-row">
-      <div class="modal-busca-field">
-        <label for="modalSearchInput">Contrato</label>
-        <input type="text" id="modalSearchInput" />
+    <button class="close-x" data-close-drawer aria-label="Fechar" type="button">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <!-- Step 1: Busca de protocolo -->
+  <div class="drawer-step drawer-step-1" id="drawerStep1">
+    <div class="drawer-search">
+      <div class="drawer-search-wrap">
+        <span class="icon-left" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </span>
+        <input type="text" id="protoSearch" placeholder="Buscar por protocolo..." autocomplete="off" />
       </div>
-      <button class="btn-buscar" id="modalSearchBtn" type="button">Buscar</button>
     </div>
-    <div class="modal-busca-body">
-      <table class="modal-results" id="modalResults">
-        <thead>
-          <tr>
-            <th style="width:40px"></th>
-            <th>Protocolo</th>
-            <th>Contrato</th>
-            <th>Item</th>
-            <th>Referência Cliente</th>
-            <th>CPF/CNPJ da Filial</th>
-            <th>Cidade/UF da Filial</th>
-            <th>Nome Recebedor</th>
-            <th>CPF/CNPJ do Recebedor</th>
-            <th>IE do Recebedor</th>
-            <th>Cidade/UF do Recebedor</th>
-            <th>Descrição do Produto</th>
-            <th class="num" style="text-align:right">Saldo Disponível (t)</th>
-          </tr>
-        </thead>
-        <tbody id="modalResultsBody"></tbody>
-      </table>
+    <div class="drawer-meta">
+      <span><span id="protoCount">0</span> protocolo(s)</span>
     </div>
-    <div class="modal-busca-footer">
-      <button class="btn btn-secondary" type="button" data-close-modal="searchModal">Cancelar</button>
-      <button class="btn btn-primary" id="modalSelectBtn" type="button" disabled>Selecionar</button>
+    <div class="drawer-list" id="protoList"></div>
+  </div>
+
+  <!-- Step 2: Contratos do protocolo selecionado -->
+  <div class="drawer-step drawer-step-2 is-hidden" id="drawerStep2">
+    <div class="drawer-back-row">
+      <button class="back-btn" id="drawerBackBtn" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        Voltar
+      </button>
+      <div class="drawer-back-info">
+        Protocolo <strong id="drawerProtoLabel">—</strong>
+      </div>
+    </div>
+    <div class="drawer-meta">
+      <span><span id="contratoCount">0</span> contrato(s) disponível(eis)</span>
+      <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
+    </div>
+    <div class="drawer-list" id="contratoList"></div>
+  </div>
+
+  <div class="drawer-footer">
+    <div class="count" id="drawerFooterCount">Nenhum contrato selecionado</div>
+    <div class="actions">
+      <button class="btn btn-secondary" data-close-drawer type="button">Cancelar</button>
+      <button class="btn btn-primary" id="drawerAddBtn" type="button" disabled>Adicionar selecionados</button>
     </div>
   </div>
-</div>
+</aside>
 
 <!-- Modal: confirmar agendamento ================================== -->
 <div class="confirm-modal-backdrop" id="confirmModal">
@@ -1043,18 +943,43 @@
 // ============================================================
 // State / sample data
 // ============================================================
-const SAMPLE_CONTRACTS = [
-  { id: "M3D49483", contrato: "Q-20356", item: "10", refCliente: "2735331", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "JOSE DA SILVA", cnpjRecebedor: "712.865.870.640", ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 32.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
-  { id: "M3D4F821", contrato: "Q-13945", item: "50", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "CARLOS ALVES", cnpjRecebedor: "488.722.440-05", ieRecebedor: "877.714.770.605", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 160.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "FOB", planta: "Toll Cefértil - Cubatão" },
-  { id: "M3D49TH1", contrato: "Q-94721", item: "20", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "MARIA BEZERRA", cnpjRecebedor: "40.908.039/0001-26", ieRecebedor: "118.299.922.567", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 203.13, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
-  { id: "M3D4HE29", contrato: "Q-20351", item: "80", refCliente: "2084442", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "TEREZA AKEMI", cnpjRecebedor: "91.459.226/0001-00", ieRecebedor: "032.475.991.210", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 4.64, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" }
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    contratos: [
+      { contrato: "Q-20356", item: "10", refCliente: "2735331", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "JOSE DA SILVA", cnpjRecebedor: "712.865.870.640", ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 32.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
+      { contrato: "Q-13945", item: "50", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "CARLOS ALVES", cnpjRecebedor: "488.722.440-05", ieRecebedor: "877.714.770.605", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 160.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "FOB", planta: "Toll Cefértil - Cubatão" }
+    ]
+  },
+  {
+    id: "M93HD231",
+    contratos: [
+      { contrato: "Q-94721", item: "20", refCliente: "", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "MARIA BEZERRA", cnpjRecebedor: "40.908.039/0001-26", ieRecebedor: "118.299.922.567", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 203.13, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" }
+    ]
+  },
+  {
+    id: "M586JF3BH",
+    contratos: [
+      { contrato: "Q-20351", item: "80", refCliente: "2084442", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "TEREZA AKEMI", cnpjRecebedor: "91.459.226/0001-00", ieRecebedor: "032.475.991.210", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 4.64, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" },
+      { contrato: "Q-43321", item: "100", refCliente: "9981772", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "TEREZA AKEMI", cnpjRecebedor: "91.459.226/0001-00", ieRecebedor: "032.475.991.210", cidadeRecebedor: "Sertãozinho/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 87.20, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "FOB", planta: "Toll Cefértil - Cubatão" }
+    ]
+  },
+  {
+    id: "M092DB23",
+    contratos: [
+      { contrato: "Q-55102", item: "30", refCliente: "1245001", cnpjFilial: "01.123.456/0001-10", cidadeFilial: "Sertãozinho/SP", nomeRecebedor: "JOSE DA SILVA", cnpjRecebedor: "712.865.870.640", ieRecebedor: "618.281.300-87", cidadeRecebedor: "Limeira/SP", descProduto: "EXCLN 24 05 24 UR", saldo: 50.00, dataIni: "01/07/2025", dataFim: "31/12/2025", frete: "CIF", planta: "Toll Cefértil - Cubatão" }
+    ]
+  }
 ];
 
-const RECENT_PROTOCOLS = ["M9W38746", "M93HD231", "M586JF3BH", "M092DB23"];
 const ROTEIRO_DEFAULT = "Lorem impsum lorem ipsum lorem";
 
 let rows = []; // { uid, ...contractData, volume, semana, roteiro }
-let modalSelected = new Set();
+let drawerState = {
+  step: 1,
+  selectedProtoId: null,
+  selectedContratoKeys: new Set()
+};
 
 // ============================================================
 // Helpers
@@ -1077,124 +1002,181 @@ document.querySelectorAll(".modal-backdrop, .confirm-modal-backdrop").forEach(bd
   bd.addEventListener("click", (e) => { if (e.target === bd) bd.classList.remove("is-open"); });
 });
 
-// ============================================================
-// Search input + autocomplete
-// ============================================================
-const searchWrap = document.getElementById("searchWrap");
-const searchInput = document.getElementById("searchInput");
-const searchClear = document.getElementById("searchClear");
-const autocomplete = document.getElementById("autocomplete");
-
-function renderAutocomplete() {
-  const q = searchInput.value.trim();
-  let html = "";
-  if (q.length > 0) {
-    html += '<div class="ac-show-more" id="acShowMore">' +
-      '<span class="ac-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>' +
-      'Mostre mais resultados para "<strong>' + escapeHtml(q) + '</strong>"' +
-      '</div>';
-    html += '<div class="ac-section-title">Contratos Recentes</div>';
-  } else {
-    html += '<div class="ac-section-title">Protocolos Recentes</div>';
-  }
-  RECENT_PROTOCOLS.forEach(p => {
-    html += '<div class="ac-item" data-proto="' + p + '">' + p + '</div>';
-  });
-  autocomplete.innerHTML = html;
-  autocomplete.classList.add("is-open");
-
-  const showMore = document.getElementById("acShowMore");
-  if (showMore) showMore.addEventListener("click", openSearchModal);
-  autocomplete.querySelectorAll(".ac-item").forEach(el => {
-    el.addEventListener("click", () => {
-      searchInput.value = el.getAttribute("data-proto");
-      searchWrap.classList.add("has-value");
-      openSearchModal();
-    });
-  });
-}
-
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
 
-searchInput.addEventListener("focus", renderAutocomplete);
-searchInput.addEventListener("input", () => {
-  searchWrap.classList.toggle("has-value", searchInput.value.length > 0);
-  renderAutocomplete();
-});
-searchClear.addEventListener("click", () => {
-  searchInput.value = "";
-  searchWrap.classList.remove("has-value");
-  autocomplete.classList.remove("is-open");
-  searchInput.focus();
-});
-document.addEventListener("click", (e) => {
-  if (!searchWrap.contains(e.target)) autocomplete.classList.remove("is-open");
-});
+// ============================================================
+// Drawer (selecao de protocolo + contratos)
+// ============================================================
+const drawerEl = document.getElementById("protoDrawer");
+const drawerBackdrop = document.getElementById("drawerBackdrop");
+const drawerStep1 = document.getElementById("drawerStep1");
+const drawerStep2 = document.getElementById("drawerStep2");
+const drawerSubtitle = document.getElementById("drawerSubtitle");
+const protoSearch = document.getElementById("protoSearch");
+const protoListEl = document.getElementById("protoList");
+const protoCountEl = document.getElementById("protoCount");
+const contratoListEl = document.getElementById("contratoList");
+const contratoCountEl = document.getElementById("contratoCount");
+const drawerProtoLabel = document.getElementById("drawerProtoLabel");
+const drawerFooterCount = document.getElementById("drawerFooterCount");
+const drawerAddBtn = document.getElementById("drawerAddBtn");
 
-// ============================================================
-// Search modal (busca de contrato)
-// ============================================================
-function openSearchModal() {
-  autocomplete.classList.remove("is-open");
-  modalSelected = new Set();
-  document.getElementById("modalSearchInput").value = searchInput.value;
-  renderModalResults();
-  openModal("searchModal");
+function openDrawer() {
+  drawerState = { step: 1, selectedProtoId: null, selectedContratoKeys: new Set() };
+  protoSearch.value = "";
+  showStep(1);
+  renderProtoList();
+  renderDrawerFooter();
+  drawerEl.classList.add("is-open");
+  drawerEl.setAttribute("aria-hidden", "false");
+  drawerBackdrop.classList.add("is-open");
+}
+function closeDrawer() {
+  drawerEl.classList.remove("is-open");
+  drawerEl.setAttribute("aria-hidden", "true");
+  drawerBackdrop.classList.remove("is-open");
 }
 
-function renderModalResults() {
-  const body = document.getElementById("modalResultsBody");
-  body.innerHTML = SAMPLE_CONTRACTS.map(c => {
-    const checked = modalSelected.has(c.id) ? "is-checked" : "";
+function showStep(n) {
+  drawerState.step = n;
+  if (n === 1) {
+    drawerStep1.classList.remove("is-hidden");
+    drawerStep2.classList.add("is-hidden");
+    drawerSubtitle.textContent = "Busque o protocolo que deseja agendar.";
+  } else {
+    drawerStep1.classList.add("is-hidden");
+    drawerStep2.classList.remove("is-hidden");
+    drawerSubtitle.textContent = "Selecione os contratos que deseja agendar.";
+  }
+}
+
+function filteredProtocols() {
+  const q = (protoSearch.value || "").trim().toLowerCase();
+  if (!q) return PROTOCOLS.slice();
+  return PROTOCOLS.filter(p => p.id.toLowerCase().includes(q));
+}
+
+function renderProtoList() {
+  const items = filteredProtocols();
+  protoCountEl.textContent = items.length;
+  if (items.length === 0) {
+    protoListEl.innerHTML = '<div style="padding:24px 14px;text-align:center;color:var(--text-3);font-size:13px;">Nenhum protocolo encontrado.</div>';
+    return;
+  }
+  protoListEl.innerHTML = items.map(p => {
+    const n = p.contratos.length;
     return `
-      <tr data-id="${c.id}" class="${checked ? 'is-selected' : ''}">
-        <td><span class="radio ${checked}" data-id="${c.id}"></span></td>
-        <td class="proto-id">${c.id}</td>
-        <td>${c.contrato}</td>
-        <td>${c.item}</td>
-        <td>${c.refCliente || '<span style="color:var(--text-3)">—</span>'}</td>
-        <td>${c.cnpjFilial}</td>
-        <td>${c.cidadeFilial}</td>
-        <td>${c.nomeRecebedor}</td>
-        <td>${c.cnpjRecebedor}</td>
-        <td>${c.ieRecebedor}</td>
-        <td>${c.cidadeRecebedor}</td>
-        <td>${c.descProduto}</td>
-        <td class="num">${fmtNum(c.saldo)}</td>
-      </tr>
+      <div class="drawer-item" data-proto-id="${p.id}">
+        <div class="drawer-item-body">
+          <div class="drawer-item-title">${p.id}</div>
+          <div class="drawer-item-meta">
+            <span><strong>${n}</strong> contrato${n > 1 ? "s" : ""}</span>
+          </div>
+        </div>
+      </div>
     `;
   }).join("");
-  body.querySelectorAll("tr").forEach(tr => {
-    tr.addEventListener("click", () => {
-      const id = tr.getAttribute("data-id");
-      if (modalSelected.has(id)) modalSelected.delete(id);
-      else modalSelected.add(id);
-      renderModalResults();
-      updateModalSelectBtn();
+  protoListEl.querySelectorAll("[data-proto-id]").forEach(el => {
+    el.addEventListener("click", () => {
+      drawerState.selectedProtoId = el.getAttribute("data-proto-id");
+      drawerState.selectedContratoKeys = new Set();
+      drawerProtoLabel.textContent = drawerState.selectedProtoId;
+      showStep(2);
+      renderContratoList();
+      renderDrawerFooter();
     });
   });
-  updateModalSelectBtn();
 }
 
-function updateModalSelectBtn() {
-  const btn = document.getElementById("modalSelectBtn");
-  btn.disabled = modalSelected.size === 0;
-}
-
-document.getElementById("modalSearchBtn").addEventListener("click", renderModalResults);
-document.getElementById("modalSelectBtn").addEventListener("click", () => {
-  SAMPLE_CONTRACTS.filter(c => modalSelected.has(c.id)).forEach(c => {
-    rows.push({
-      uid: genUid(),
-      ...c,
-      volume: "",
-      semana: "",
-      roteiro: ROTEIRO_DEFAULT
+function renderContratoList() {
+  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
+  if (!proto) return;
+  contratoCountEl.textContent = proto.contratos.length;
+  contratoListEl.innerHTML = proto.contratos.map(c => {
+    const key = c.contrato + "|" + c.item;
+    const isSel = drawerState.selectedContratoKeys.has(key);
+    const fretePill = c.frete === "FOB"
+      ? '<span class="frete-pill fob">FOB</span>'
+      : '<span class="frete-pill cif">CIF</span>';
+    return `
+      <div class="drawer-item ${isSel ? 'is-selected' : ''}" data-key="${key}">
+        <span class="drawer-item-check" aria-hidden="true">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </span>
+        <div class="drawer-item-body">
+          <div class="drawer-item-title">${c.contrato} · Item ${c.item}</div>
+          <div class="drawer-item-meta">
+            <span>${escapeHtml(c.nomeRecebedor)}</span>
+            <span>${c.cidadeRecebedor}</span>
+            <span>${fretePill}</span>
+            <span>Saldo <strong>${fmtNum(c.saldo)} t</strong></span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+  contratoListEl.querySelectorAll("[data-key]").forEach(el => {
+    el.addEventListener("click", () => {
+      const k = el.getAttribute("data-key");
+      if (drawerState.selectedContratoKeys.has(k)) drawerState.selectedContratoKeys.delete(k);
+      else drawerState.selectedContratoKeys.add(k);
+      renderContratoList();
+      renderDrawerFooter();
     });
   });
-  closeModal("searchModal");
+}
+
+function renderDrawerFooter() {
+  const n = drawerState.selectedContratoKeys.size;
+  if (drawerState.step === 1 || n === 0) {
+    drawerFooterCount.textContent = "Nenhum contrato selecionado";
+  } else {
+    drawerFooterCount.innerHTML = "<strong style='color:var(--mosaic-green-800);font-weight:800;'>" + n + "</strong> contrato(s) selecionado(s)";
+  }
+  drawerAddBtn.disabled = n === 0;
+}
+
+document.getElementById("openDrawerBtn").addEventListener("click", openDrawer);
+document.querySelectorAll("[data-close-drawer]").forEach(el => {
+  el.addEventListener("click", closeDrawer);
+});
+drawerBackdrop.addEventListener("click", closeDrawer);
+document.getElementById("drawerBackBtn").addEventListener("click", () => {
+  drawerState.selectedContratoKeys = new Set();
+  showStep(1);
+  renderDrawerFooter();
+});
+document.getElementById("drawerSelectAll").addEventListener("click", () => {
+  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
+  if (!proto) return;
+  const allKeys = proto.contratos.map(c => c.contrato + "|" + c.item);
+  const allSelected = allKeys.every(k => drawerState.selectedContratoKeys.has(k));
+  if (allSelected) drawerState.selectedContratoKeys = new Set();
+  else drawerState.selectedContratoKeys = new Set(allKeys);
+  renderContratoList();
+  renderDrawerFooter();
+});
+protoSearch.addEventListener("input", renderProtoList);
+
+drawerAddBtn.addEventListener("click", () => {
+  const proto = PROTOCOLS.find(p => p.id === drawerState.selectedProtoId);
+  if (!proto) return;
+  proto.contratos.forEach(c => {
+    const key = c.contrato + "|" + c.item;
+    if (drawerState.selectedContratoKeys.has(key)) {
+      rows.push({
+        uid: genUid(),
+        id: proto.id,
+        ...c,
+        volume: "",
+        semana: "",
+        roteiro: ROTEIRO_DEFAULT
+      });
+    }
+  });
+  closeDrawer();
   renderTable();
   updateFooter();
 });
@@ -1210,7 +1192,7 @@ function renderTable() {
       <tr class="empty-row">
         <td colspan="19">
           <span class="empty-strong">Nenhum protocolo selecionado.</span>
-          Use o campo de busca acima para selecionar protocolos.
+          Clique em "Selecionar Protocolo" acima para escolher os contratos.
         </td>
       </tr>
     `;
