@@ -833,24 +833,25 @@
   .proto-table-wrap {
     border: 1px solid var(--border-soft);
     background: #fff;
-    overflow-x: auto;
+    overflow-x: visible;
   }
   .proto-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
-    min-width: 1500px;
+    table-layout: auto;
   }
+  /* Header padronizado (igual relatorio-protocolos): cinza, verde-800, 13px, weight 600, sem uppercase */
   .proto-table thead th {
     background: var(--bg-section);
+    color: var(--mosaic-green-800);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border-soft);
     text-align: left;
-    padding: 12px 14px;
-    font-weight: 800;
-    color: var(--text-1);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 2px solid var(--border);
     white-space: nowrap;
     vertical-align: middle;
     position: sticky;
@@ -2395,12 +2396,12 @@ function renderTableView() {
       + '<td class="cell-stack">'
         + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.descProduto) + '</div>'
         + '<div class="stack-secondary">' + escapeHtml(r.embalagem) + '</div>'
-        + '<div class="stack-tertiary">De ' + escapeHtml(r.planta) + '</div>'
+        + '<div class="stack-tertiary">De ' + escapeHtml(r.planta) + (r.cnpjFilial ? ' · CNPJ ' + escapeHtml(r.cnpjFilial) : '') + '</div>'
       + '</td>'
       + '<td class="cell-stack">'
         + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.nomeRecebedor) + '</div>'
         + '<div class="stack-secondary">' + escapeHtml(r.cidadeRecebedor) + '</div>'
-        + '<div class="stack-tertiary">CNPJ ' + escapeHtml(r.cnpjRecebedor) + '</div>'
+        + '<div class="stack-tertiary">CNPJ ' + escapeHtml(r.cnpjRecebedor) + (r.ieRecebedor ? ' · IE ' + escapeHtml(r.ieRecebedor) : '') + '</div>'
       + '</td>'
       + '<td><div class="saldo-primary">' + escapeHtml(r.saldo) + ' <span class="saldo-unit">t</span></div></td>'
       + '<td>'

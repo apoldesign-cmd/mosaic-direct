@@ -43,6 +43,13 @@
   top: 0;
   z-index: var(--z-header);
   background: #fff;
+  border-bottom: none;
+  box-shadow: none;
+}
+.mosaic-header-top,
+.mosaic-nav {
+  border-top: none;
+  border-bottom: none;
 }
 
 .mosaic-header-top {
