@@ -1553,7 +1553,7 @@ function render() {
     return `
     <tr class="${rowCls}" data-id="${p.id}">
       <td class="col-check"><div class="cell-content"><input type="checkbox" class="slds-check row-check" data-id="${p.id}" aria-label="Select ${p.id}" ${checked} /></div></td>
-      ${cellHTML(p, "id",        "Protocol",  { editable:false, render: v => `<span class="cell-text"><a href="#">${v}</a></span>` })}
+      ${cellHTML(p, "id",        "Protocol",  { editable:false, render: v => `<span class="cell-text"><a href="manutencao-protocolo-detalhe.html?id=${encodeURIComponent(v)}">${v}</a></span>` })}
       ${cellHTML(p, "status",    "Status",    { render: v => `<span class="cell-text">${statusBadge(v)}</span>` })}
       ${cellHTML(p, "contrato",  "Contrato")}
       ${cellHTML(p, "cotacao",   "Cotação")}

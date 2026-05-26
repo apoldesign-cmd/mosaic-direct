@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Protocolo · Mosaic SalesCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+<style>
+/* ============================================================
+   Salesforce Lightning — tokens (mesma base do manutencao-protocolos.html)
+   ============================================================ */
+:root {
+  --slds-blue:        #0176d3;
+  --slds-blue-hover:  #014486;
+  --slds-blue-light:  #cfe9fe;
+  --slds-navy:        #032e61;
+  --slds-header-bg:   #16325c;
+  --slds-border:      #c9c9c9;
+  --slds-border-soft: #e5e5e5;
+  --slds-bg-page:     #f3f3f3;
+  --slds-bg-section:  #f3f2f2;
+  --slds-bg-hover:    #f3f3f3;
+  --slds-bg-selected: #ecebea;
+  --slds-text-1:      #080707;
+  --slds-text-2:      #3e3e3c;
+  --slds-text-3:      #706e6b;
+  --slds-success:     #2e844a;
+  --slds-warning:     #fe9339;
+  --slds-error:       #ba0517;
+  --slds-text-link:   #0176d3;
+  --slds-orange:      #ff9a3c;
+  --mosaic-green-800: #00583d;
+}
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Salesforce Sans", "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  background: var(--slds-bg-page);
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select, textarea { font-family: inherit; }
+a { color: var(--slds-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============================================================
+   SANDBOX BANNER (gray strip)
+   ============================================================ */
+.sandbox-banner {
+  background: #514f4d;
+  color: #fff;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 11px;
+}
+.sandbox-banner-left { display: inline-flex; align-items: center; gap: 6px; opacity: 0.9; }
+.sandbox-banner-dot { width: 7px; height: 7px; background: #f0c020; border-radius: 50%; }
+.sandbox-banner-right {
+  display: inline-flex; align-items: center; gap: 4px;
+  cursor: pointer; opacity: 0.85;
+}
+
+/* ============================================================
+   GLOBAL HEADER (light, Lightning Experience style)
+   ============================================================ */
+.slds-header {
+  background: #f3f3f3;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 16px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  z-index: 50;
+}
+.slds-app-logo {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--mosaic-green-800);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-size: 17px;
+}
+.slds-app-logo-mark {
+  width: 28px; height: 28px;
+  background: var(--mosaic-green-800);
+  border-radius: 6px;
+  color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 12px;
+}
+.slds-search {
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+}
+.slds-search input {
+  width: 100%;
+  height: 32px;
+  padding: 0 12px 0 36px;
+  background: #fff;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+}
+.slds-search input:focus { border-color: var(--slds-blue); box-shadow: 0 0 3px var(--slds-blue); }
+.slds-search-icon {
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: var(--slds-text-3); pointer-events: none;
+}
+.slds-header-actions { display: flex; align-items: center; gap: 4px; }
+.slds-icon-btn {
+  width: 32px; height: 32px;
+  background: transparent;
+  border: none;
+  color: var(--slds-text-2);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.slds-icon-btn:hover { background: rgba(0,0,0,0.06); color: var(--slds-blue); }
+.slds-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #f4b400;
+  color: var(--slds-text-1);
+  font-weight: 700;
+  font-size: 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+/* ============================================================
+   APP SWITCHER + NAV BAR
+   ============================================================ */
+.slds-app-nav {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 16px;
+  height: 42px;
+  display: flex;
+  align-items: stretch;
+  position: relative;
+  z-index: 40;
+}
+.slds-app-switcher {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding-right: 16px;
+  margin-right: 8px;
+  border-right: 1px solid var(--slds-border-soft);
+  font-weight: 700;
+  color: var(--slds-text-1);
+}
+.slds-app-switcher-icon {
+  width: 22px; height: 22px;
+  color: var(--slds-text-3);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.slds-app-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--slds-text-2);
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+}
+.slds-app-tab:hover { color: var(--slds-blue); background: var(--slds-bg-hover); text-decoration: none; }
+.slds-app-tab.is-active {
+  color: var(--slds-blue);
+  font-weight: 700;
+  border-bottom-color: var(--slds-blue);
+}
+.slds-app-tab-more {
+  display: inline-flex; align-items: center;
+  padding: 0 10px;
+  color: var(--slds-text-3);
+  background: transparent; border: none; cursor: pointer;
+  font-size: 13px;
+}
+.slds-app-nav-edit {
+  margin-left: auto;
+  display: inline-flex; align-items: center;
+  padding: 0 10px;
+  color: var(--slds-text-3);
+  background: transparent; border: none; cursor: pointer;
+}
+.slds-app-nav-edit:hover { color: var(--slds-blue); }
+
+/* ============================================================
+   HIGHLIGHTS PANEL
+   ============================================================ */
+.highlights {
+  background: #fff;
+  box-shadow: 0 2px 2px rgba(0,0,0,0.04);
+  padding: 14px 24px 16px;
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.highlights-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.highlights-icon {
+  width: 44px; height: 44px;
+  background: var(--mosaic-green-800);
+  border-radius: 6px;
+  color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.highlights-titleblock { flex: 1; min-width: 0; }
+.highlights-objname {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-weight: 600;
+  margin-bottom: 1px;
+}
+.highlights-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--mosaic-green-800);
+  font-family: "Inter", monospace;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+.highlights-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+}
+.slds-btn {
+  height: 30px;
+  padding: 0 12px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  border-radius: 4px;
+  color: var(--slds-blue);
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.slds-btn:hover { background: var(--slds-bg-hover); }
+.slds-btn-brand {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.slds-btn-brand:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
+.slds-btn-destructive {
+  background: var(--slds-error);
+  border-color: var(--slds-error);
+  color: #fff;
+}
+.slds-btn-destructive:hover { background: #98030f; border-color: #98030f; }
+.slds-btn-destructive-outline {
+  border-color: var(--slds-error);
+  color: var(--slds-error);
+}
+.slds-btn-destructive-outline:hover { background: #fdeaec; }
+.slds-btn-icon {
+  width: 30px; padding: 0;
+  color: var(--slds-text-3);
+}
+.slds-btn-icon:hover { color: var(--slds-blue); }
+.slds-btn:disabled,
+.slds-btn:disabled:hover {
+  background: #ecebea; border-color: var(--slds-border);
+  color: var(--slds-text-3); cursor: not-allowed;
+}
+
+/* Compact layout (key fields row) */
+.highlights-fields {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--slds-border-soft);
+}
+.hl-field {
+  padding: 0 16px;
+  border-right: 1px solid var(--slds-border-soft);
+}
+.hl-field:first-child { padding-left: 0; }
+.hl-field:last-child { border-right: none; padding-right: 0; }
+.hl-field-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--slds-text-3);
+  margin-bottom: 2px;
+}
+.hl-field-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* Status badge inline */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.status-pill.s-novo            { background: #ecebea; color: var(--slds-text-2); }
+.status-pill.s-em_aprovacao    { background: #fff3cd; color: #856404; }
+.status-pill.s-rascunho        { background: #ecebea; color: var(--slds-text-2); }
+.status-pill.s-ativo           { background: #cfe9fe; color: var(--slds-blue-hover); }
+.status-pill.s-concluido       { background: #d4f3e0; color: var(--slds-success); }
+.status-pill.s-cancelado       { background: #fde2e4; color: var(--slds-error); }
+.status-pill.s-liberado        { background: #cfe9fe; color: var(--slds-blue-hover); }
+.status-pill.s-em_agendamento  { background: #fff3cd; color: #856404; }
+
+/* ============================================================
+   SALES PATH (chevrons)
+   ============================================================ */
+.sales-path-wrap {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.sales-path {
+  flex: 1;
+  display: flex;
+  height: 36px;
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+}
+.sales-path-step {
+  flex: 1;
+  position: relative;
+  background: #ecebea;
+  color: var(--slds-text-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px 0 30px;
+}
+.sales-path-step:first-child { padding-left: 18px; }
+.sales-path-step::after {
+  content: "";
+  position: absolute;
+  right: -18px;
+  top: 0;
+  width: 0; height: 0;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-left: 18px solid #ecebea;
+  z-index: 2;
+}
+.sales-path-step::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0; height: 0;
+  border-top: 18px solid transparent;
+  border-bottom: 18px solid transparent;
+  border-left: 18px solid #fff;
+  z-index: 1;
+}
+.sales-path-step:first-child::before { display: none; }
+.sales-path-step.is-completed { background: #cce4f3; color: var(--slds-blue-hover); }
+.sales-path-step.is-completed::after { border-left-color: #cce4f3; }
+.sales-path-step.is-current {
+  background: var(--slds-blue);
+  color: #fff;
+}
+.sales-path-step.is-current::after { border-left-color: var(--slds-blue); }
+.sales-path-step.is-cancelled { background: #fde2e4; color: var(--slds-error); }
+.sales-path-step.is-cancelled::after { border-left-color: #fde2e4; }
+.sales-path-step:last-child { padding-right: 18px; }
+.sales-path-step:last-child::after { display: none; }
+
+.sales-path-action {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   RELATED LIST QUICK LINKS
+   ============================================================ */
+.quick-links {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 8px 24px 10px;
+  font-size: 12px;
+}
+.quick-links-label {
+  color: var(--slds-text-3);
+  margin-right: 10px;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-weight: 500;
+}
+.quick-links-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  vertical-align: middle;
+}
+.ql-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border: 1px solid var(--slds-border-soft);
+  border-radius: 999px;
+  font-size: 11.5px;
+  color: var(--slds-blue);
+  background: #f7fbff;
+  cursor: pointer;
+  text-decoration: none;
+}
+.ql-chip:hover { background: #eaf4fc; text-decoration: none; }
+.ql-chip-icon { width: 13px; height: 13px; color: var(--slds-blue); }
+.quick-links-all {
+  margin-left: 8px;
+  color: var(--slds-blue);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ============================================================
+   MAIN GRID (2 columns)
+   ============================================================ */
+.main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 12px;
+  padding: 12px;
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+/* Card shell */
+.card {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.card + .card { margin-top: 12px; }
+.card-head {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+.card-head-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  display: inline-flex; align-items: center; gap: 8px;
+  flex: 1;
+}
+.card-head-chev {
+  width: 12px; height: 12px;
+  color: var(--slds-text-3);
+  transition: transform 150ms ease;
+}
+.card.is-collapsed .card-head-chev { transform: rotate(-90deg); }
+.card.is-collapsed .card-body { display: none; }
+.card-body { padding: 14px 18px; }
+
+/* ============================================================
+   LEFT TABS (Detalhes / Relacionado / Histórico / Atividade)
+   ============================================================ */
+.tabs-bar {
+  display: flex;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: #fff;
+  padding: 0 16px;
+}
+.tab-btn {
+  padding: 12px 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+  cursor: pointer;
+}
+.tab-btn:hover { color: var(--slds-blue); }
+.tab-btn.is-active {
+  color: var(--slds-blue);
+  font-weight: 700;
+  border-bottom-color: var(--slds-blue);
+}
+.tab-panel { display: none; }
+.tab-panel.is-active { display: block; }
+
+/* ============================================================
+   DETAIL SECTIONS
+   ============================================================ */
+.section {
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.section:last-child { border-bottom: none; }
+.section-head {
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  background: var(--slds-bg-section);
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.section-head-chev {
+  width: 11px; height: 11px;
+  color: var(--slds-text-3);
+  transition: transform 150ms ease;
+}
+.section.is-collapsed .section-head-chev { transform: rotate(-90deg); }
+.section.is-collapsed .section-body { display: none; }
+.section-body {
+  padding: 8px 18px 14px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 32px;
+}
+.field {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--slds-border-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  position: relative;
+}
+.field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slds-text-3);
+}
+.field-value {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--slds-text-1);
+  min-height: 18px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 22px;
+}
+.field-value.is-empty { color: var(--slds-text-3); }
+.field.is-editable:hover { background: var(--slds-bg-hover); }
+.field.is-editable .field-pencil {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px; height: 22px;
+  background: transparent;
+  border: none;
+  color: var(--slds-text-3);
+  border-radius: 3px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.field.is-editable:hover .field-pencil { display: inline-flex; }
+.field.is-editable .field-pencil:hover { color: var(--slds-blue); background: #fff; }
+.field.is-locked .lock-icon {
+  width: 11px; height: 11px;
+  color: var(--slds-text-3);
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.field.is-editing {
+  background: #fff;
+  outline: 2px solid var(--slds-blue);
+  outline-offset: -2px;
+  padding: 8px 26px 8px 4px;
+}
+.field.is-editing input,
+.field.is-editing select {
+  width: 100%;
+  height: 28px;
+  font-size: 13px;
+  padding: 0 8px;
+  border: 1px solid var(--slds-border);
+  border-radius: 3px;
+  outline: none;
+}
+.field.is-editing input:focus,
+.field.is-editing select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 2px var(--slds-blue);
+}
+.field-inline-actions {
+  display: inline-flex;
+  gap: 4px;
+  position: absolute;
+  right: 2px;
+  bottom: -22px;
+  z-index: 5;
+  background: #fff;
+  border: 1px solid var(--slds-border);
+  border-radius: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}
+.field-inline-btn {
+  width: 22px; height: 22px;
+  border: none;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.field-inline-btn:hover { background: var(--slds-bg-hover); }
+.field-inline-btn.save { color: var(--slds-success); }
+.field-inline-btn.cancel { color: var(--slds-error); }
+
+/* Cancelled row banner */
+.cancelled-banner {
+  margin: 12px;
+  padding: 12px 16px;
+  background: #fde2e4;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  color: var(--slds-error);
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex; gap: 10px; align-items: center;
+}
+
+/* ============================================================
+   HISTORY TABLE
+   ============================================================ */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.history-table th,
+.history-table td {
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.history-table th {
+  background: var(--slds-bg-section);
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--slds-text-2);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.history-table tbody tr:hover { background: var(--slds-bg-hover); }
+
+/* Related cards inside Relacionado tab */
+.related-card {
+  padding: 12px 16px;
+  border: 1px solid var(--slds-border-soft);
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+.related-card h4 {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  font-weight: 700;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.related-card-body { font-size: 12.5px; color: var(--slds-text-2); }
+.related-link { color: var(--slds-blue); cursor: pointer; }
+.mini-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-top: 6px;
+}
+.mini-table th, .mini-table td {
+  text-align: left;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.mini-table th {
+  font-size: 10.5px;
+  color: var(--slds-text-3);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.empty-panel {
+  padding: 30px 16px;
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--slds-text-3);
+}
+
+/* ============================================================
+   RIGHT SIDEBAR
+   ============================================================ */
+.sidebar-tabs {
+  display: flex;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 12px;
+}
+.sidebar-tabs .tab-btn { padding: 10px 12px; font-size: 12.5px; }
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,7,7,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.is-open { display: flex; }
+.slds-modal {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slds-modal.is-wide { max-width: 720px; }
+.slds-modal-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: var(--slds-bg-section);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.slds-modal-head h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+}
+.slds-modal-close {
+  width: 28px; height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--slds-text-3);
+  border-radius: 4px;
+}
+.slds-modal-close:hover { background: rgba(0,0,0,0.06); color: var(--slds-text-1); }
+.slds-modal-body {
+  padding: 16px 20px;
+  font-size: 13px;
+  color: var(--slds-text-2);
+  line-height: 1.5;
+  overflow-y: auto;
+}
+.slds-modal-body strong { color: var(--slds-text-1); font-weight: 700; }
+.slds-modal-foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--slds-border-soft);
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  background: var(--slds-bg-section);
+}
+
+/* Modal form */
+.modal-form-section { margin-bottom: 18px; }
+.modal-form-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--slds-text-3);
+  letter-spacing: 0.04em;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--slds-border-soft);
+  margin-bottom: 10px;
+}
+.modal-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 18px;
+}
+.modal-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.modal-form-field label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+  display: flex; align-items: center; gap: 6px;
+}
+.modal-form-field input,
+.modal-form-field select {
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--slds-border);
+  border-radius: 3px;
+  font-size: 13px;
+  outline: none;
+  background: #fff;
+}
+.modal-form-field input:focus,
+.modal-form-field select:focus { border-color: var(--slds-blue); box-shadow: 0 0 2px var(--slds-blue); }
+.modal-form-field input:disabled,
+.modal-form-field select:disabled,
+.modal-form-field input[readonly] {
+  background: #f4f3f2;
+  color: var(--slds-text-2);
+  cursor: not-allowed;
+}
+.modal-form-field .lock-tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px;
+  color: var(--slds-text-3);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cancel-reason-error {
+  color: var(--slds-error);
+  font-weight: 600;
+  font-size: 12.5px;
+  padding: 8px 10px;
+  background: #fde2e4;
+  border-radius: 3px;
+  margin-top: 8px;
+}
+
+/* Toast */
+.slds-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--slds-success);
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 220;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+}
+.slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
+.slds-toast.is-error { background: var(--slds-error); }
+
+</style>
+</head>
+<body>
+
+<!-- ====================== Sandbox banner ====================== -->
+<div class="sandbox-banner">
+  <div class="sandbox-banner-left">
+    <span class="sandbox-banner-dot"></span>
+    Sandbox: IntDev
+  </div>
+  <div class="sandbox-banner-right">
+    Opções
+    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</div>
+
+<!-- ====================== Global header ====================== -->
+<header class="slds-header" role="banner">
+  <div class="slds-app-logo">
+    <span class="slds-app-logo-mark">M</span>
+    Mosaic
+  </div>
+  <div class="slds-search">
+    <span class="slds-search-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+    <input type="search" placeholder="Pesquisar..." aria-label="Pesquisar" />
+  </div>
+  <div class="slds-header-actions">
+    <button class="slds-icon-btn" type="button" aria-label="Favoritos" title="Favoritos">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Novo" title="Novo">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="App Launcher" title="App Launcher">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
+        <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+        <circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
+      </svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Ajuda" title="Ajuda">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Setup" title="Setup">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
+    <button class="slds-icon-btn" type="button" aria-label="Notificações" title="Notificações">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </button>
+    <button class="slds-avatar" type="button" aria-label="Conta">VD</button>
+  </div>
+</header>
+
+<!-- ====================== App switcher + nav ====================== -->
+<nav class="slds-app-nav" role="navigation">
+  <div class="slds-app-switcher">
+    <span class="slds-app-switcher-icon">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg>
+    </span>
+    Vendas
+  </div>
+  <a href="#" class="slds-app-tab">Início</a>
+  <a href="#" class="slds-app-tab">Contas</a>
+  <a href="#" class="slds-app-tab">Oportunidades</a>
+  <a href="#" class="slds-app-tab">Acordos de vendas</a>
+  <a href="#" class="slds-app-tab">Contatos</a>
+  <a href="#" class="slds-app-tab">Cotações</a>
+  <a href="#" class="slds-app-tab">Contratos</a>
+  <a href="#" class="slds-app-tab">Pedidos</a>
+  <a href="#" class="slds-app-tab">Remessas</a>
+  <a href="#" class="slds-app-tab">Faturas</a>
+  <a href="manutencao-protocolos.html" class="slds-app-tab is-active">Protocolos</a>
+  <button class="slds-app-tab-more" type="button">Mais ▾</button>
+  <button class="slds-app-nav-edit" type="button" title="Editar página">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </button>
+</nav>
+
+<!-- ====================== Highlights panel ====================== -->
+<section class="highlights" id="highlights">
+  <div class="highlights-top">
+    <span class="highlights-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    </span>
+    <div class="highlights-titleblock">
+      <div class="highlights-objname">Protocolo</div>
+      <h1 class="highlights-title" id="hlTitle">M9W38746</h1>
+    </div>
+    <div class="highlights-actions">
+      <button class="slds-btn" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Seguir
+      </button>
+      <button class="slds-btn slds-btn-brand" type="button" id="btnEdit">Editar</button>
+      <button class="slds-btn slds-btn-destructive-outline" type="button" id="btnCancel">Cancelar protocolo</button>
+      <button class="slds-btn slds-btn-icon" type="button" aria-label="Mais ações">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="highlights-fields">
+    <div class="hl-field">
+      <div class="hl-field-label">Status</div>
+      <div class="hl-field-value" id="hlStatus">—</div>
+    </div>
+    <div class="hl-field">
+      <div class="hl-field-label">Cooperado</div>
+      <div class="hl-field-value" id="hlCooperado">—</div>
+    </div>
+    <div class="hl-field">
+      <div class="hl-field-label">Contrato SAP</div>
+      <div class="hl-field-value" id="hlContrato">—</div>
+    </div>
+    <div class="hl-field">
+      <div class="hl-field-label">Saldo Disponível</div>
+      <div class="hl-field-value" id="hlSaldo">—</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================== Sales Path ====================== -->
+<section class="sales-path-wrap">
+  <div class="sales-path" id="salesPath">
+    <!-- gerado por JS -->
+  </div>
+  <button class="slds-btn slds-btn-brand sales-path-action" type="button" id="markCompleteBtn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    Marcar status como concluído
+  </button>
+</section>
+
+<!-- ====================== Quick links ====================== -->
+<section class="quick-links">
+  <span class="quick-links-label">
+    Links rápidos da lista relacionada
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+  </span>
+  <span class="quick-links-list">
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Notas e anexos
+    </a>
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Cooperado relacionado
+    </a>
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>
+      Pedidos (contrato)
+    </a>
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      Agendamentos
+    </a>
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 1 1-2.83-2.83l8.49-8.49"/></svg>
+      Arquivos
+    </a>
+    <a class="ql-chip" href="#">
+      <svg class="ql-chip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+      Histórico
+    </a>
+  </span>
+  <span class="quick-links-all">Mostrar tudo (6)</span>
+</section>
+
+<!-- ====================== Cancelled banner (cond.) ====================== -->
+<div id="cancelledBanner" style="display:none"></div>
+
+<!-- ====================== Main grid ====================== -->
+<div class="main-grid">
+  <!-- LEFT COLUMN -->
+  <div class="card">
+    <div class="tabs-bar">
+      <button class="tab-btn is-active" type="button" data-tab="detalhes">Detalhes</button>
+      <button class="tab-btn" type="button" data-tab="relacionado">Relacionado</button>
+      <button class="tab-btn" type="button" data-tab="historico">Histórico</button>
+      <button class="tab-btn" type="button" data-tab="atividade">Atividade</button>
+    </div>
+
+    <!-- TAB: Detalhes -->
+    <div class="tab-panel is-active" data-tab="detalhes" id="detailsPanel">
+      <!-- renderizado por JS -->
+    </div>
+
+    <!-- TAB: Relacionado -->
+    <div class="tab-panel" data-tab="relacionado">
+      <div style="padding:14px 18px;">
+        <div class="related-card">
+          <h4>Cooperado <span class="related-link">Ver registro →</span></h4>
+          <div class="related-card-body" id="relCooperado"></div>
+        </div>
+        <div class="related-card">
+          <h4>Pedido (Contrato) <span class="related-link">Ver registro →</span></h4>
+          <div class="related-card-body" id="relPedido"></div>
+        </div>
+        <div class="related-card">
+          <h4>Agendamentos (<span id="relAgCount">0</span>) <span class="related-link">Mostrar todos →</span></h4>
+          <table class="mini-table" id="relAgTable">
+            <thead><tr><th>Semana</th><th>Volume (t)</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: Histórico -->
+    <div class="tab-panel" data-tab="historico">
+      <table class="history-table" id="historyTable">
+        <thead>
+          <tr>
+            <th>Data/Hora</th>
+            <th>Campo Alterado</th>
+            <th>Valor Antigo</th>
+            <th>Valor Novo</th>
+            <th>Usuário</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- TAB: Atividade -->
+    <div class="tab-panel" data-tab="atividade">
+      <div class="empty-panel">Sem atividades recentes.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div>
+    <div class="card">
+      <div class="card-head"><span class="card-head-title">Próxima etapa</span></div>
+      <div class="card-body">
+        <div class="empty-panel" style="padding:18px 8px;">Sem próximas ações sugeridas.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sidebar-tabs">
+        <button class="tab-btn is-active" type="button" data-stab="atividade">Atividade</button>
+        <button class="tab-btn" type="button" data-stab="chatter">Chatter</button>
+      </div>
+      <div class="card-body">
+        <div class="empty-panel" style="padding:20px 8px;">Sem atividades a serem mostradas.<br/>Faça uma chamada, envie um email, crie uma tarefa, etc.</div>
+        <div style="text-align:center; padding-top:8px;">
+          <button class="slds-btn" type="button" style="color:var(--slds-success); border-color:var(--slds-success);">Mostrar todas as atividades</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card is-collapsed">
+      <div class="card-head" data-toggle="card">
+        <span class="card-head-title">Histórico de atividades (0)</span>
+        <svg class="card-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="card-body"><div class="empty-panel">Sem atividades passadas.</div></div>
+    </div>
+
+    <div class="card is-collapsed">
+      <div class="card-head" data-toggle="card">
+        <span class="card-head-title">Arquivos (0)</span>
+        <svg class="card-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="card-body"><div class="empty-panel">Sem arquivos anexados.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal Editar ====================== -->
+<div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <h2 id="editModalTitle">Editar protocolo</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="editModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body" id="editModalBody">
+      <!-- form renderizado por JS -->
+    </div>
+    <div class="slds-modal-foot">
+      <button class="slds-btn" type="button" data-close-modal="editModal">Cancelar</button>
+      <button class="slds-btn" type="button" id="saveAndNewBtn">Salvar e criar</button>
+      <button class="slds-btn slds-btn-brand" type="button" id="saveEditBtn">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal Cancelar ====================== -->
+<div class="modal-backdrop" id="cancelModal" role="dialog" aria-modal="true">
+  <div class="slds-modal">
+    <div class="slds-modal-head">
+      <h2 id="cancelModalTitle">Cancelar protocolo?</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="cancelModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body">
+      <p>Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato. <strong>Não é reversível.</strong></p>
+      <div id="cancelReasonBox" class="cancel-reason-error" style="display:none"></div>
+    </div>
+    <div class="slds-modal-foot">
+      <button class="slds-btn" type="button" data-close-modal="cancelModal">Voltar</button>
+      <button class="slds-btn slds-btn-destructive" type="button" id="confirmCancelBtn">Cancelar protocolo</button>
+    </div>
+  </div>
+</div>
+
+<div class="slds-toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   DATA — protocolos sample (alinhado com manutencao-protocolos.html)
+   ================================================================= */
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    status: "ativo",
+    cooperado: "JOSE DA SILVA",
+    cooperadoCnpj: "123.456.789-00",
+    contrato: "Q-85721",
+    itemContrato: "10",
+    cidade: "Sertãozinho",
+    uf: "SP",
+    embalagem: "BagOneWay Liner 1.40",
+    frete: "CIF",
+    planta: "Toll Cefértil — Cubatão",
+    rota: "Sertãozinho via BR-364",
+    saldo: 1500,
+    qtd: 1500,
+    qtdAgendada: 0,
+    nf: "",
+    dataNf: "",
+    precoNf: 2620.00,
+    endereco: "Rod. Anhanguera, km 332 · Distrito Industrial",
+    cep: "14160-000",
+    pais: "Brasil",
+    dataInicio: "2026-01-15",
+    dataFim: "2026-12-31",
+    dataCriacao: "2026-01-10 09:14",
+    dataAlteracao: "2026-05-20 16:42",
+    hasSO: true, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    cancelReason: ""
+  },
+  {
+    id: "M93HD231",
+    status: "em_aprovacao",
+    cooperado: "CARLOS ALVES",
+    cooperadoCnpj: "987.654.321-00",
+    contrato: "Q-20303",
+    itemContrato: "10",
+    cidade: "Rio Verde",
+    uf: "GO",
+    embalagem: "BagOneWay Liner 1.40",
+    frete: "FOB",
+    planta: "Toll Cefértil — Rondonópolis",
+    rota: "Rio Verde via BR-060",
+    saldo: 1000,
+    qtd: 1000,
+    qtdAgendada: 0,
+    nf: "",
+    dataNf: "",
+    precoNf: 2480.00,
+    endereco: "Av. Brasil, 1500 · Centro",
+    cep: "75901-000",
+    pais: "Brasil",
+    dataInicio: "2026-03-01",
+    dataFim: "2026-12-31",
+    dataCriacao: "2026-02-25 11:02",
+    dataAlteracao: "2026-05-22 10:08",
+    hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    cancelReason: ""
+  },
+  {
+    id: "M586JF3BH",
+    status: "concluido",
+    cooperado: "TEREZA AKEMI",
+    cooperadoCnpj: "11.222.333/0001-44",
+    contrato: "Q-44550",
+    itemContrato: "20",
+    cidade: "Porto Alegre",
+    uf: "RS",
+    embalagem: "Big Bag 1000kg",
+    frete: "CIF",
+    planta: "Toll Cefértil — Cubatão",
+    rota: "Porto Alegre via BR-101",
+    saldo: 0,
+    qtd: 203.13,
+    qtdAgendada: 203.13,
+    nf: "12345",
+    dataNf: "2026-01-15",
+    precoNf: 2450.00,
+    endereco: "Av. Ipiranga, 6681 · Bairro Partenon",
+    cep: "90619-900",
+    pais: "Brasil",
+    dataInicio: "2025-10-01",
+    dataFim: "2026-03-31",
+    dataCriacao: "2025-10-05 08:30",
+    dataAlteracao: "2026-01-16 09:05",
+    hasSO: true, hasOV: true, hasBilling: true, hasActiveRequests: false,
+    cancelReason: ""
+  },
+  {
+    id: "M092DB23",
+    status: "cancelado",
+    cooperado: "JORGE DOS ANJOS",
+    cooperadoCnpj: "55.666.777/0001-88",
+    contrato: "Q-30190",
+    itemContrato: "30",
+    cidade: "Cuiabá",
+    uf: "MT",
+    embalagem: "Saco 50kg",
+    frete: "FOB",
+    planta: "Toll Cefértil — Rondonópolis",
+    rota: "Cuiabá via BR-070",
+    saldo: 0,
+    qtd: 500,
+    qtdAgendada: 0,
+    nf: "",
+    dataNf: "",
+    precoNf: 2300.00,
+    endereco: "Rua das Acácias, 200",
+    cep: "78000-000",
+    pais: "Brasil",
+    dataInicio: "2026-02-01",
+    dataFim: "2026-12-31",
+    dataCriacao: "2026-01-20 14:00",
+    dataAlteracao: "2026-05-10 09:30",
+    hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    cancelReason: "Cancelado pelo usuário em 10/05/2026"
+  }
+];
+
+/* Field history sample por protocolo */
+const HISTORY = {
+  "M9W38746": [
+    { dt: "2026-05-20 16:42", field: "Volume Desejado", old: "1600", neu: "1500", user: "Victor Dias" },
+    { dt: "2026-05-12 10:15", field: "Embalagem",       old: "Saco 50kg", neu: "BagOneWay Liner 1.40", user: "Alyssa Harris" },
+    { dt: "2026-04-30 09:00", field: "Rota de Entrega", old: "Sertãozinho via BR-153", neu: "Sertãozinho via BR-364", user: "Marcos Lima" },
+    { dt: "2026-01-10 09:14", field: "Protocolo criado", old: "—", neu: "M9W38746", user: "Sistema" }
+  ],
+  "M93HD231": [
+    { dt: "2026-05-22 10:08", field: "Status",          old: "Rascunho", neu: "Em aprovação", user: "Victor Dias" },
+    { dt: "2026-05-05 11:30", field: "Volume Desejado", old: "800", neu: "1000", user: "Carlos Mendes" },
+    { dt: "2026-02-25 11:02", field: "Protocolo criado", old: "—", neu: "M93HD231", user: "Sistema" }
+  ],
+  "M586JF3BH": [
+    { dt: "2026-01-16 09:05", field: "Status",         old: "Ativo", neu: "Concluído", user: "Patricia Vega" },
+    { dt: "2026-01-15 17:20", field: "NF Protocolo",   old: "—", neu: "12345", user: "Patricia Vega" },
+    { dt: "2026-01-15 17:20", field: "Data NF",        old: "—", neu: "15/01/2026", user: "Patricia Vega" },
+    { dt: "2026-01-15 17:20", field: "Preço NF",       old: "—", neu: "R$ 2.450,00", user: "Patricia Vega" },
+    { dt: "2025-10-05 08:30", field: "Protocolo criado", old: "—", neu: "M586JF3BH", user: "Sistema" }
+  ],
+  "M092DB23": [
+    { dt: "2026-05-10 09:30", field: "Status",         old: "Em aprovação", neu: "Cancelado", user: "Victor Dias" },
+    { dt: "2026-03-12 14:00", field: "Volume Desejado", old: "300", neu: "500", user: "Marcos Lima" },
+    { dt: "2026-01-20 14:00", field: "Protocolo criado", old: "—", neu: "M092DB23", user: "Sistema" }
+  ]
+};
+
+/* Agendamentos sample */
+const AGENDAMENTOS = {
+  "M9W38746": [ { semana: "S22/2026", volume: 500, status: "Liberado" } ],
+  "M93HD231": [],
+  "M586JF3BH": [
+    { semana: "S02/2026", volume: 100, status: "Concluído" },
+    { semana: "S03/2026", volume: 103.13, status: "Concluído" }
+  ],
+  "M092DB23": []
+};
+
+/* =================================================================
+   RULES — SMDP-161
+   ================================================================= */
+const rules = {
+  canEditVolume:    p => p.status !== "cancelado" && !p.hasBilling,
+  minVolume:        p => p.qtdAgendada || 0,
+  canEditPackaging: p => p.status !== "cancelado" && !p.hasSO,
+  canEditRoute:     p => p.status !== "cancelado" && !p.hasOV,
+  canEditInvoice:   p => p.status !== "cancelado" && !p.hasBilling,
+  canCancel:        p => p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling,
+  cancelReason: p => {
+    if (p.status === "cancelado") return "Protocolo já cancelado.";
+    if (p.hasBilling) return "Não permitido após faturamento.";
+    if (p.hasActiveRequests) return "Existem agendamentos ativos.";
+    return "";
+  }
+};
+
+function lockReason(p, field) {
+  if (p.status === "cancelado") return "Protocolo cancelado";
+  switch (field) {
+    case "qtd":       return p.hasBilling ? "Faturamento já realizado" : "";
+    case "embalagem": return p.hasSO ? "Sales Order já gerada" : "";
+    case "rota":      return p.hasOV ? "Ordem de Venda já gerada" : "";
+    case "nf":
+    case "dataNf":
+    case "precoNf":   return p.hasBilling ? "Faturamento já realizado" : "";
+    default:          return "Campo somente leitura";
+  }
+}
+
+const STATUS_LABEL = {
+  novo: "Novo",
+  em_aprovacao: "Em aprovação",
+  rascunho: "Rascunho",
+  ativo: "Ativo",
+  liberado: "Liberado",
+  em_agendamento: "Em agendamento",
+  concluido: "Concluído",
+  cancelado: "Cancelado"
+};
+
+const EMBALAGEM_OPTS = ["Saco 50kg", "Saco 25kg", "Big Bag 1000kg", "BagOneWay Liner 1.40", "Granel"];
+
+/* Sales Path order */
+const PATH_STEPS = ["em_aprovacao", "rascunho", "ativo", "concluido"];
+const PATH_LABELS = {
+  em_aprovacao: "Em aprovação",
+  rascunho: "Rascunho",
+  ativo: "Ativo",
+  concluido: "Concluído"
+};
+
+/* =================================================================
+   STATE
+   ================================================================= */
+function getIdFromUrl() {
+  const m = /[?&]id=([^&]+)/.exec(location.search || "");
+  return m ? decodeURIComponent(m[1]) : null;
+}
+const queryId = getIdFromUrl();
+let CURRENT = PROTOCOLS.find(p => p.id === queryId) || PROTOCOLS[0];
+
+/* =================================================================
+   HELPERS
+   ================================================================= */
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+function fmtMoney(v) {
+  if (v == null || v === "") return "—";
+  return "R$ " + Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function fmtNumber(v) {
+  if (v == null || v === "") return "—";
+  return Number(v).toLocaleString("pt-BR");
+}
+function fmtDate(v) {
+  if (!v) return "—";
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  return m ? `${m[3]}/${m[2]}/${m[1]}` : v;
+}
+function fmtVolume(v) { return v == null || v === "" ? "—" : Number(v).toLocaleString("pt-BR") + " t"; }
+
+function showToast(msg, isError) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.toggle("is-error", !!isError);
+  t.classList.add("is-visible");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("is-visible"), 2400);
+}
+
+const LOCK_ICON = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
+const PENCIL_ICON = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+
+/* =================================================================
+   RENDER — Highlights & Sales Path
+   ================================================================= */
+function renderHighlights() {
+  const p = CURRENT;
+  document.getElementById("hlTitle").textContent = p.id;
+  document.title = `${p.id} · Protocolo · Mosaic SalesCloud`;
+  document.getElementById("editModalTitle").textContent = `Editar protocolo ${p.id}`;
+  document.getElementById("cancelModalTitle").textContent = `Cancelar protocolo ${p.id}?`;
+
+  const statusLabel = STATUS_LABEL[p.status] || p.status;
+  document.getElementById("hlStatus").innerHTML =
+    `<span class="status-pill s-${p.status}">${statusLabel}</span>`;
+  document.getElementById("hlCooperado").textContent = p.cooperado;
+  document.getElementById("hlContrato").textContent  = `${p.contrato} · Item ${p.itemContrato}`;
+  document.getElementById("hlSaldo").textContent     = fmtVolume(p.saldo);
+
+  /* Botões de header */
+  const canCancel = rules.canCancel(p);
+  const btnCancel = document.getElementById("btnCancel");
+  btnCancel.disabled = !canCancel;
+  btnCancel.title = canCancel ? "" : rules.cancelReason(p);
+
+  /* Cancelled banner */
+  const banner = document.getElementById("cancelledBanner");
+  if (p.status === "cancelado") {
+    banner.style.display = "block";
+    banner.innerHTML = `<div class="cancelled-banner">
+      ${LOCK_ICON}
+      <span>Protocolo cancelado. ${escapeHtml(p.cancelReason || "Edição bloqueada.")}</span>
+    </div>`;
+  } else {
+    banner.style.display = "none";
+    banner.innerHTML = "";
+  }
+}
+
+function renderSalesPath() {
+  const p = CURRENT;
+  const wrap = document.getElementById("salesPath");
+  if (p.status === "cancelado") {
+    wrap.innerHTML = `<div class="sales-path-step is-cancelled" style="flex:1">Cancelado</div>`;
+    document.getElementById("markCompleteBtn").style.display = "none";
+    return;
+  }
+  const currentIdx = PATH_STEPS.indexOf(p.status);
+  wrap.innerHTML = PATH_STEPS.map((s, i) => {
+    let cls = "";
+    if (i < currentIdx) cls = "is-completed";
+    else if (i === currentIdx) cls = "is-current";
+    return `<div class="sales-path-step ${cls}">${PATH_LABELS[s]}</div>`;
+  }).join("");
+  document.getElementById("markCompleteBtn").style.display = (p.status === "concluido") ? "none" : "inline-flex";
+}
+
+/* =================================================================
+   RENDER — Detail tab (sections + fields)
+   ================================================================= */
+function fieldHTML(label, value, opts) {
+  opts = opts || {};
+  const editable = !!opts.editable;
+  const lockedStruct = !!opts.lockedStruct; // campo locked por regra
+  const reason = opts.reason || "";
+  const key = opts.key || "";
+  const v = (value == null || value === "") ? '<span class="is-empty">—</span>' : escapeHtml(String(value));
+
+  const lockIcon = (lockedStruct && CURRENT.status !== "cancelado") ? LOCK_ICON : "";
+  const pencil = editable
+    ? `<button class="field-pencil" type="button" data-field-edit="${key}" aria-label="Editar">${PENCIL_ICON}</button>`
+    : "";
+  const cls = `field${editable ? " is-editable" : ""}${lockedStruct ? " is-locked" : ""}`;
+  const title = (lockedStruct && reason) ? ` title="${escapeHtml(reason)}"` : "";
+
+  return `
+    <div class="${cls}"${title} data-field="${escapeHtml(key)}">
+      <div class="field-label">${escapeHtml(label)}</div>
+      <div class="field-value">${v} ${lockIcon}</div>
+      ${pencil}
+    </div>`;
+}
+
+function renderDetails() {
+  const p = CURRENT;
+  const isCancelled = p.status === "cancelado";
+
+  const editableVolume   = !isCancelled && rules.canEditVolume(p);
+  const editablePackage  = !isCancelled && rules.canEditPackaging(p);
+  const editableRoute    = !isCancelled && rules.canEditRoute(p);
+  const editableInvoice  = !isCancelled && rules.canEditInvoice(p);
+
+  const sec1 = `
+    <div class="section">
+      <div class="section-head" data-toggle="section">
+        <svg class="section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Informações do Protocolo
+      </div>
+      <div class="section-body">
+        ${fieldHTML("Número do Protocolo", p.id)}
+        ${fieldHTML("Status", STATUS_LABEL[p.status] || p.status)}
+        ${fieldHTML("Cooperado", p.cooperado, { lockedStruct: true, reason: "Imutável" })}
+        ${fieldHTML("Contrato SAP", p.contrato, { lockedStruct: true, reason: "Imutável" })}
+        ${fieldHTML("Item Contrato", p.itemContrato)}
+        ${fieldHTML("Cidade Recebedor", p.cidade, { lockedStruct: true, reason: "Vem do SAP" })}
+        ${fieldHTML("UF", p.uf, { lockedStruct: true, reason: "Vem do SAP" })}
+        ${fieldHTML("Volume Desejado", fmtVolume(p.qtd), {
+          editable: editableVolume, key: "qtd",
+          lockedStruct: !editableVolume,
+          reason: lockReason(p, "qtd")
+        })}
+        ${fieldHTML("Embalagem", p.embalagem, {
+          editable: editablePackage, key: "embalagem",
+          lockedStruct: !editablePackage,
+          reason: lockReason(p, "embalagem")
+        })}
+        ${fieldHTML("Rota de Entrega", p.rota, {
+          editable: editableRoute, key: "rota",
+          lockedStruct: !editableRoute,
+          reason: lockReason(p, "rota")
+        })}
+        ${fieldHTML("Frete", p.frete, { lockedStruct: true, reason: "Vem do SAP" })}
+        ${fieldHTML("Planta", p.planta, { lockedStruct: true, reason: "Vem do SAP" })}
+        ${fieldHTML("NF Protocolo", p.nf, {
+          editable: editableInvoice, key: "nf",
+          lockedStruct: !editableInvoice,
+          reason: lockReason(p, "nf")
+        })}
+        ${fieldHTML("Data NF Protocolo", fmtDate(p.dataNf), {
+          editable: editableInvoice, key: "dataNf",
+          lockedStruct: !editableInvoice,
+          reason: lockReason(p, "dataNf")
+        })}
+        ${fieldHTML("Preço NF Unitário", fmtMoney(p.precoNf), {
+          editable: editableInvoice, key: "precoNf",
+          lockedStruct: !editableInvoice,
+          reason: lockReason(p, "precoNf")
+        })}
+      </div>
+    </div>`;
+
+  const sec2 = `
+    <div class="section">
+      <div class="section-head" data-toggle="section">
+        <svg class="section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Endereço de Entrega
+      </div>
+      <div class="section-body">
+        ${fieldHTML("Endereço", p.endereco, { lockedStruct: true, reason: "Vem do SAP" })}
+        ${fieldHTML("CEP", p.cep, { lockedStruct: true })}
+        ${fieldHTML("Cidade", p.cidade, { lockedStruct: true })}
+        ${fieldHTML("UF", p.uf, { lockedStruct: true })}
+        ${fieldHTML("País", p.pais, { lockedStruct: true })}
+      </div>
+    </div>`;
+
+  const sec3 = `
+    <div class="section">
+      <div class="section-head" data-toggle="section">
+        <svg class="section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Datas e Vigência
+      </div>
+      <div class="section-body">
+        ${fieldHTML("Data Início Contrato", fmtDate(p.dataInicio), { lockedStruct: true })}
+        ${fieldHTML("Data Fim Contrato",    fmtDate(p.dataFim),    { lockedStruct: true })}
+        ${fieldHTML("Data Criação Protocolo", p.dataCriacao,       { lockedStruct: true })}
+        ${fieldHTML("Data Última Alteração", p.dataAlteracao,      { lockedStruct: true })}
+      </div>
+    </div>`;
+
+  document.getElementById("detailsPanel").innerHTML = sec1 + sec2 + sec3;
+}
+
+/* =================================================================
+   RENDER — Histórico tab
+   ================================================================= */
+function renderHistory() {
+  const rows = HISTORY[CURRENT.id] || [];
+  const tbody = document.querySelector("#historyTable tbody");
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="5" class="empty-panel">Sem alterações registradas.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${escapeHtml(r.dt)}</td>
+      <td>${escapeHtml(r.field)}</td>
+      <td>${escapeHtml(r.old)}</td>
+      <td>${escapeHtml(r.neu)}</td>
+      <td>${escapeHtml(r.user)}</td>
+    </tr>`).join("");
+}
+
+/* =================================================================
+   RENDER — Relacionado tab
+   ================================================================= */
+function renderRelated() {
+  const p = CURRENT;
+  document.getElementById("relCooperado").innerHTML =
+    `<strong>${escapeHtml(p.cooperado)}</strong><br/>${escapeHtml(p.cooperadoCnpj)}`;
+  document.getElementById("relPedido").innerHTML =
+    `<strong>${escapeHtml(p.contrato)}</strong> · Item ${escapeHtml(p.itemContrato)}`;
+
+  const ag = AGENDAMENTOS[p.id] || [];
+  document.getElementById("relAgCount").textContent = ag.length;
+  const body = document.querySelector("#relAgTable tbody");
+  if (!ag.length) {
+    body.innerHTML = `<tr><td colspan="3" style="color:var(--slds-text-3); padding:10px;">Sem agendamentos.</td></tr>`;
+  } else {
+    body.innerHTML = ag.map(a => `<tr><td>${escapeHtml(a.semana)}</td><td>${fmtNumber(a.volume)}</td><td>${escapeHtml(a.status)}</td></tr>`).join("");
+  }
+}
+
+/* =================================================================
+   Inline edit (lapizinho)
+   ================================================================= */
+function startInlineEdit(fieldKey) {
+  const p = CURRENT;
+  const fieldEl = document.querySelector(`.field[data-field="${fieldKey}"]`);
+  if (!fieldEl) return;
+  const labelText = fieldEl.querySelector(".field-label").textContent;
+
+  /* gera input */
+  let inputHTML = "";
+  const raw = p[fieldKey];
+  if (fieldKey === "embalagem") {
+    inputHTML = `<select>${EMBALAGEM_OPTS.map(o => `<option ${o === raw ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}</select>`;
+  } else if (fieldKey === "dataNf") {
+    inputHTML = `<input type="date" value="${escapeHtml(raw || "")}" />`;
+  } else if (fieldKey === "qtd" || fieldKey === "precoNf") {
+    inputHTML = `<input type="number" step="0.01" value="${escapeHtml(raw || "")}" />`;
+  } else {
+    inputHTML = `<input type="text" value="${escapeHtml(raw || "")}" />`;
+  }
+
+  fieldEl.classList.add("is-editing");
+  fieldEl.innerHTML = `
+    <div class="field-label">${escapeHtml(labelText)}</div>
+    ${inputHTML}
+    <div class="field-inline-actions">
+      <button class="field-inline-btn save" type="button" aria-label="Salvar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="field-inline-btn cancel" type="button" aria-label="Cancelar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>`;
+  const ctrl = fieldEl.querySelector("input,select");
+  ctrl.focus();
+  if (ctrl.select) ctrl.select();
+
+  fieldEl.querySelector(".field-inline-btn.save").addEventListener("click", () => {
+    const newVal = ctrl.value;
+    /* validação: volume não pode ser < qtdAgendada */
+    if (fieldKey === "qtd" && Number(newVal) < rules.minVolume(p)) {
+      showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
+      return;
+    }
+    if (fieldKey === "precoNf" || fieldKey === "qtd") {
+      p[fieldKey] = Number(newVal);
+    } else {
+      p[fieldKey] = newVal;
+    }
+    p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
+    /* registra no histórico (mock) */
+    (HISTORY[p.id] = HISTORY[p.id] || []).unshift({
+      dt: p.dataAlteracao,
+      field: labelText,
+      old: "—",
+      neu: String(newVal),
+      user: "Você"
+    });
+    renderAll();
+    showToast(`${labelText} atualizado.`);
+  });
+  fieldEl.querySelector(".field-inline-btn.cancel").addEventListener("click", () => {
+    renderDetails();
+  });
+  ctrl.addEventListener("keydown", e => {
+    if (e.key === "Escape") renderDetails();
+    if (e.key === "Enter" && ctrl.tagName !== "SELECT") fieldEl.querySelector(".field-inline-btn.save").click();
+  });
+}
+
+/* =================================================================
+   Modal Editar
+   ================================================================= */
+function openEditModal() {
+  const p = CURRENT;
+  if (p.status === "cancelado") {
+    showToast("Protocolo cancelado: edição bloqueada.", true);
+    return;
+  }
+  const editableVolume   = rules.canEditVolume(p);
+  const editablePackage  = rules.canEditPackaging(p);
+  const editableRoute    = rules.canEditRoute(p);
+  const editableInvoice  = rules.canEditInvoice(p);
+
+  const lockTag = reason => reason ? `<span class="lock-tag">${LOCK_ICON} ${escapeHtml(reason)}</span>` : "";
+
+  const html = `
+    <div class="modal-form-section">
+      <div class="modal-form-section-title">Informações principais</div>
+      <div class="modal-form-grid">
+        <div class="modal-form-field">
+          <label>Número do Protocolo ${lockTag("Imutável")}</label>
+          <input value="${escapeHtml(p.id)}" readonly />
+        </div>
+        <div class="modal-form-field">
+          <label>Status ${lockTag("Somente leitura")}</label>
+          <input value="${escapeHtml(STATUS_LABEL[p.status] || p.status)}" readonly />
+        </div>
+        <div class="modal-form-field">
+          <label>Cooperado ${lockTag("Imutável")}</label>
+          <input value="${escapeHtml(p.cooperado)}" readonly />
+        </div>
+        <div class="modal-form-field">
+          <label>Contrato SAP ${lockTag("Imutável")}</label>
+          <input value="${escapeHtml(p.contrato + " · Item " + p.itemContrato)}" readonly />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-form-section">
+      <div class="modal-form-section-title">Volume e embalagem</div>
+      <div class="modal-form-grid">
+        <div class="modal-form-field">
+          <label>Volume Desejado (t) ${editableVolume ? "" : lockTag(lockReason(p,"qtd") || "Bloqueado")}</label>
+          <input type="number" step="0.01" min="${rules.minVolume(p)}" value="${p.qtd}" ${editableVolume ? "" : "readonly"} data-modal-field="qtd" />
+        </div>
+        <div class="modal-form-field">
+          <label>Embalagem ${editablePackage ? "" : lockTag(lockReason(p,"embalagem") || "Bloqueado")}</label>
+          ${editablePackage
+            ? `<select data-modal-field="embalagem">${EMBALAGEM_OPTS.map(o => `<option ${o === p.embalagem ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}</select>`
+            : `<input value="${escapeHtml(p.embalagem)}" readonly />`}
+        </div>
+        <div class="modal-form-field">
+          <label>Rota de Entrega ${editableRoute ? "" : lockTag(lockReason(p,"rota") || "Bloqueado")}</label>
+          <input value="${escapeHtml(p.rota)}" ${editableRoute ? "" : "readonly"} data-modal-field="rota" />
+        </div>
+        <div class="modal-form-field">
+          <label>Frete ${lockTag("Vem do SAP")}</label>
+          <input value="${escapeHtml(p.frete)}" readonly />
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-form-section">
+      <div class="modal-form-section-title">Nota Fiscal</div>
+      <div class="modal-form-grid">
+        <div class="modal-form-field">
+          <label>NF Protocolo ${editableInvoice ? "" : lockTag(lockReason(p,"nf") || "Bloqueado")}</label>
+          <input value="${escapeHtml(p.nf)}" ${editableInvoice ? "" : "readonly"} data-modal-field="nf" />
+        </div>
+        <div class="modal-form-field">
+          <label>Data NF Protocolo ${editableInvoice ? "" : lockTag(lockReason(p,"dataNf") || "Bloqueado")}</label>
+          <input type="date" value="${escapeHtml(p.dataNf)}" ${editableInvoice ? "" : "readonly"} data-modal-field="dataNf" />
+        </div>
+        <div class="modal-form-field">
+          <label>Preço NF Unitário (R$) ${editableInvoice ? "" : lockTag(lockReason(p,"precoNf") || "Bloqueado")}</label>
+          <input type="number" step="0.01" value="${p.precoNf}" ${editableInvoice ? "" : "readonly"} data-modal-field="precoNf" />
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("editModalBody").innerHTML = html;
+  document.getElementById("editModal").classList.add("is-open");
+}
+
+function saveEditModal() {
+  const p = CURRENT;
+  document.querySelectorAll("#editModalBody [data-modal-field]").forEach(el => {
+    if (el.readOnly || el.disabled) return;
+    const key = el.dataset.modalField;
+    let v = el.value;
+    if (key === "qtd" || key === "precoNf") {
+      v = Number(v);
+      if (key === "qtd" && v < rules.minVolume(p)) {
+        showToast(`Volume mínimo: ${rules.minVolume(p)} t.`, true);
+        throw new Error("volume_invalido");
+      }
+    }
+    p[key] = v;
+  });
+  p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
+  document.getElementById("editModal").classList.remove("is-open");
+  renderAll();
+  showToast("Protocolo atualizado.");
+}
+
+/* =================================================================
+   Modal Cancelar
+   ================================================================= */
+function openCancelModal() {
+  const p = CURRENT;
+  const reason = rules.cancelReason(p);
+  const box = document.getElementById("cancelReasonBox");
+  const btn = document.getElementById("confirmCancelBtn");
+  if (reason) {
+    box.style.display = "block";
+    box.textContent = `Não é possível cancelar: ${reason}`;
+    btn.disabled = true;
+  } else {
+    box.style.display = "none";
+    box.textContent = "";
+    btn.disabled = false;
+  }
+  document.getElementById("cancelModal").classList.add("is-open");
+}
+
+function confirmCancel() {
+  const p = CURRENT;
+  if (!rules.canCancel(p)) return;
+  p.status = "cancelado";
+  p.cancelReason = "Cancelado pelo usuário em " + new Date().toLocaleDateString("pt-BR");
+  p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
+  (HISTORY[p.id] = HISTORY[p.id] || []).unshift({
+    dt: p.dataAlteracao, field: "Status", old: "Anterior", neu: "Cancelado", user: "Você"
+  });
+  document.getElementById("cancelModal").classList.remove("is-open");
+  renderAll();
+  showToast("Protocolo cancelado.");
+}
+
+/* =================================================================
+   Tabs (left + sidebar)
+   ================================================================= */
+function setupTabs() {
+  document.querySelectorAll(".tab-btn[data-tab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const target = btn.dataset.tab;
+      const parent = btn.closest(".card");
+      parent.querySelectorAll(".tab-btn[data-tab]").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+      parent.querySelectorAll(".tab-panel[data-tab]").forEach(p => p.classList.toggle("is-active", p.dataset.tab === target));
+    });
+  });
+  /* Sidebar mini-tabs (visual only) */
+  document.querySelectorAll(".tab-btn[data-stab]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const parent = btn.parentElement;
+      parent.querySelectorAll(".tab-btn[data-stab]").forEach(b => b.classList.remove("is-active"));
+      btn.classList.add("is-active");
+    });
+  });
+}
+
+function setupCollapsers() {
+  document.body.addEventListener("click", (e) => {
+    const sectHead = e.target.closest(".section-head[data-toggle='section']");
+    if (sectHead) {
+      sectHead.parentElement.classList.toggle("is-collapsed");
+      return;
+    }
+    const cardHead = e.target.closest(".card-head[data-toggle='card']");
+    if (cardHead) {
+      cardHead.parentElement.classList.toggle("is-collapsed");
+      return;
+    }
+    /* Modal close */
+    const closeBtn = e.target.closest("[data-close-modal]");
+    if (closeBtn) {
+      document.getElementById(closeBtn.dataset.closeModal).classList.remove("is-open");
+      return;
+    }
+    /* backdrop click closes */
+    if (e.target.classList.contains("modal-backdrop")) {
+      e.target.classList.remove("is-open");
+    }
+  });
+}
+
+/* Detail panel uses event delegation for pencils */
+function setupDetailPencils() {
+  document.getElementById("detailsPanel").addEventListener("click", e => {
+    const btn = e.target.closest("[data-field-edit]");
+    if (!btn) return;
+    e.stopPropagation();
+    startInlineEdit(btn.dataset.fieldEdit);
+  });
+}
+
+/* =================================================================
+   RENDER ALL
+   ================================================================= */
+function renderAll() {
+  renderHighlights();
+  renderSalesPath();
+  renderDetails();
+  renderHistory();
+  renderRelated();
+}
+
+/* =================================================================
+   Init
+   ================================================================= */
+document.getElementById("btnEdit").addEventListener("click", openEditModal);
+document.getElementById("btnCancel").addEventListener("click", openCancelModal);
+document.getElementById("saveEditBtn").addEventListener("click", () => {
+  try { saveEditModal(); } catch(_) {}
+});
+document.getElementById("saveAndNewBtn").addEventListener("click", () => {
+  try { saveEditModal(); showToast("Salvo. Criando novo..."); } catch(_) {}
+});
+document.getElementById("confirmCancelBtn").addEventListener("click", confirmCancel);
+document.getElementById("markCompleteBtn").addEventListener("click", () => {
+  const p = CURRENT;
+  const idx = PATH_STEPS.indexOf(p.status);
+  if (idx >= 0 && idx < PATH_STEPS.length - 1) {
+    const oldStatus = STATUS_LABEL[p.status];
+    p.status = PATH_STEPS[idx + 1];
+    p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
+    (HISTORY[p.id] = HISTORY[p.id] || []).unshift({
+      dt: p.dataAlteracao, field: "Status", old: oldStatus, neu: STATUS_LABEL[p.status], user: "Você"
+    });
+    renderAll();
+    showToast(`Status: ${STATUS_LABEL[p.status]}`);
+  }
+});
+
+setupTabs();
+setupCollapsers();
+renderAll();
+setupDetailPencils();
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>
