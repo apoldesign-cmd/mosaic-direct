@@ -734,9 +734,203 @@ button, input, select, textarea { font-family: inherit; }
   pointer-events: none;
 }
 .slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
+.slds-toast.is-error { background: var(--slds-error); }
 
 /* Container padding for scroll */
 .list-content { padding-bottom: 80px; }
+
+/* ============================================================
+   LOCKED CELLS (SMDP-161 — campos bloqueados por SAP/SO/OV/Billing)
+   ============================================================ */
+.list-table tbody td.is-locked {
+  background: #fafafa;
+}
+.list-table tbody td.is-locked .cell-content {
+  cursor: not-allowed;
+  padding-right: 28px;
+}
+.list-table tbody td.is-locked:hover { background: #fafafa; }
+.list-table tbody tr:hover td.is-locked { background: #fafafa; }
+.cell-lock-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px; height: 12px;
+  color: var(--slds-text-3);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* Linhas canceladas */
+.list-table tbody tr.row-cancelled td {
+  color: var(--slds-text-3);
+}
+.list-table tbody tr.row-cancelled td.is-locked { background: #f7f7f7; }
+.list-table tbody tr.row-cancelled .cell-text a,
+.list-table tbody tr.row-cancelled .cell-text strong { color: var(--slds-text-3); }
+.list-table tbody tr.row-cancelled td[data-field="id"] .cell-text a {
+  text-decoration: line-through;
+}
+/* Em linhas canceladas, esconde o ícone de cadeado — a pílula de status já comunica */
+.list-table tbody tr.row-cancelled .cell-lock-icon { display: none; }
+
+/* ============================================================
+   ROW ACTIONS (dropdown chevron na última coluna)
+   ============================================================ */
+.col-actions { width: 44px; min-width: 44px; }
+.col-actions .cell-content { justify-content: center; padding: 0; }
+.row-actions-btn {
+  width: 24px; height: 24px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slds-text-3);
+}
+.row-actions-btn:hover {
+  background: var(--slds-bg-hover);
+  border-color: var(--slds-border);
+  color: var(--slds-blue);
+}
+.row-actions-menu {
+  position: absolute;
+  right: 8px;
+  top: 30px;
+  background: #fff;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  min-width: 180px;
+  z-index: 30;
+  padding: 4px 0;
+  display: none;
+}
+.row-actions-menu.is-open { display: block; }
+.row-actions-menu button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: var(--slds-text-1);
+  cursor: pointer;
+  font-family: inherit;
+}
+.row-actions-menu button:hover { background: var(--slds-bg-hover); }
+.row-actions-menu button:disabled {
+  color: var(--slds-text-3);
+  cursor: not-allowed;
+}
+.row-actions-menu button.is-destructive { color: var(--slds-error); }
+.row-actions-menu button.is-destructive:hover { background: #fef2f2; }
+.row-actions-menu .menu-reason {
+  font-size: 11px;
+  color: var(--slds-error);
+  padding: 2px 14px 8px;
+  line-height: 1.3;
+}
+
+/* ============================================================
+   MASS EDIT TOOLBAR
+   ============================================================ */
+.mass-toolbar {
+  background: var(--slds-blue-light);
+  border-bottom: 1px solid var(--slds-blue);
+  padding: 8px 24px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+.mass-toolbar.is-visible { display: flex; }
+.mass-toolbar-status {
+  color: var(--slds-blue-hover);
+  font-weight: 600;
+  margin-right: auto;
+}
+.mass-toolbar-status strong { color: var(--slds-text-1); font-weight: 700; }
+
+/* ============================================================
+   MASS EDIT MODAL (form)
+   ============================================================ */
+.slds-modal.is-wide { max-width: 600px; }
+.mass-form { display: flex; flex-direction: column; gap: 14px; }
+.mass-form-warn {
+  background: #fff7e6;
+  border: 1px solid #ffd591;
+  color: #874d00;
+  padding: 9px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  line-height: 1.4;
+}
+.mass-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mass-form-row label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--slds-text-2);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.mass-form-row input,
+.mass-form-row select {
+  height: 32px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--slds-text-1);
+  outline: none;
+}
+.mass-form-row input:focus,
+.mass-form-row select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 3px var(--slds-blue);
+}
+.mass-form-row .hint {
+  font-size: 11px;
+  color: var(--slds-text-3);
+}
+.mass-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cancel-list {
+  margin: 6px 0 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+  color: var(--slds-text-2);
+}
+.cancel-list li {
+  padding: 4px 0;
+  border-bottom: 1px solid var(--slds-border-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.cancel-list li:last-child { border-bottom: none; }
+.cancel-list .cancel-reason {
+  color: var(--slds-error);
+  font-size: 11px;
+  font-weight: 600;
+}
 </style>
 </head>
 <body>
@@ -861,6 +1055,24 @@ button, input, select, textarea { font-family: inherit; }
 </div>
 
 <!-- =================================================================
+     MASS EDIT TOOLBAR (only visible when ≥1 row selected)
+     ================================================================= -->
+<div class="mass-toolbar" id="massToolbar" role="region" aria-label="Mass edit toolbar">
+  <span class="mass-toolbar-status">
+    <strong id="massSelCount">0</strong> protocolo(s) selecionado(s)
+  </span>
+  <button class="slds-btn" id="massClearBtn" type="button">Limpar seleção</button>
+  <button class="slds-btn slds-btn-destructive" id="massCancelBtn" type="button">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+    Cancelar selecionados
+  </button>
+  <button class="slds-btn slds-btn-brand" id="massEditBtn" type="button">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Edição em massa
+  </button>
+</div>
+
+<!-- =================================================================
      LIST TABLE
      ================================================================= -->
 <div class="list-content">
@@ -883,10 +1095,16 @@ button, input, select, textarea { font-family: inherit; }
           <th>Embalagem</th>
           <th>Frete</th>
           <th>Planta</th>
+          <th>Rota de entrega</th>
           <th class="num">Qtd Protocolo (t)</th>
           <th class="num">Saldo (t)</th>
+          <th class="num">Qtd Agendada (t)</th>
+          <th>NF</th>
+          <th>Data NF</th>
+          <th class="num">Preço NF (R$)</th>
           <th>Owner</th>
           <th>Última Modificação</th>
+          <th class="col-actions" aria-label="Ações"></th>
         </tr>
       </thead>
       <tbody id="listBody"><!-- rendered by JS --></tbody>
@@ -930,6 +1148,89 @@ button, input, select, textarea { font-family: inherit; }
   </div>
 </div>
 
+<!-- =================================================================
+     CANCEL PROTOCOL MODAL (single or bulk)
+     ================================================================= -->
+<div class="modal-backdrop" id="cancelModal" role="dialog" aria-modal="true">
+  <div class="slds-modal">
+    <div class="slds-modal-head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-error)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+      <h2 id="cancelModalTitle">Cancelar protocolo?</h2>
+    </div>
+    <div class="slds-modal-body">
+      <p id="cancelModalBody">Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato. Não é reversível.</p>
+      <ul class="cancel-list" id="cancelList"></ul>
+    </div>
+    <div class="slds-modal-foot">
+      <button class="slds-btn" id="cancelModalBack" type="button">Voltar</button>
+      <button class="slds-btn slds-btn-destructive" id="cancelModalConfirm" type="button">
+        Cancelar protocolo
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- =================================================================
+     MASS EDIT MODAL (form)
+     ================================================================= -->
+<div class="modal-backdrop" id="massEditModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <h2>Edição em massa · <span id="massEditCount">0</span> protocolo(s)</h2>
+    </div>
+    <div class="slds-modal-body">
+      <form class="mass-form" id="massEditForm" onsubmit="return false;">
+        <div class="mass-form-warn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span>Campos não editáveis em alguns protocolos (já enviados ao SAP, com OV gerada ou faturados) serão ignorados nessa linha.</span>
+        </div>
+
+        <div class="mass-form-row">
+          <label>Volume (t)</label>
+          <input type="number" id="massVol" min="0" step="1" placeholder="Deixe em branco para não alterar" />
+          <span class="hint" id="massVolHint">Apenas redução é permitida.</span>
+        </div>
+
+        <div class="mass-form-grid">
+          <div class="mass-form-row">
+            <label>Embalagem</label>
+            <select id="massEmb">
+              <option value="">— Não alterar —</option>
+            </select>
+          </div>
+          <div class="mass-form-row">
+            <label>Rota de entrega</label>
+            <input type="text" id="massRota" placeholder="Não alterar" />
+          </div>
+        </div>
+
+        <div class="mass-form-grid">
+          <div class="mass-form-row">
+            <label>NF</label>
+            <input type="text" id="massNf" placeholder="Não alterar" />
+          </div>
+          <div class="mass-form-row">
+            <label>Data NF</label>
+            <input type="date" id="massDataNf" />
+          </div>
+        </div>
+
+        <div class="mass-form-row">
+          <label>Preço NF (R$)</label>
+          <input type="number" id="massPreco" min="0" step="0.01" placeholder="Não alterar" />
+        </div>
+      </form>
+    </div>
+    <div class="slds-modal-foot">
+      <button class="slds-btn" id="massEditCancel" type="button">Voltar</button>
+      <button class="slds-btn slds-btn-brand" id="massEditApply" type="button">
+        Aplicar nas <span id="massApplyCount">0</span> selecionadas
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="slds-toast" id="toast" role="status">
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -940,31 +1241,159 @@ button, input, select, textarea { font-family: inherit; }
 /* =================================================================
    DATA — protocolos sample (mesma base do Relatorio de Protocolos)
    ================================================================= */
+/* SMDP-161 sample data:
+   - qtdAgendada: soma dos requests ativos no SAP (mínimo do volume)
+   - hasSO:      Sales Order já gerada (trava embalagem)
+   - hasOV:      Ordem de Venda já gerada (trava rota)
+   - hasBilling: faturamento realizado (trava NF/Data/Preço + volume)
+   - hasActiveRequests: tem agendamentos ativos (impede cancelamento)
+
+   NOTA: A regra original distinguia CIF/FOB para edição de rota,
+   mas Marco Barbara em 07/05/2026 sobrescreveu isso — rota é editável
+   até a geração da OV, sem distinção de frete.
+*/
 const PROTOCOLS = [
+  // Novo, sem nada gerado — tudo editável
   { id:"M9W38746", status:"novo",           contrato:"20084782", cotacao:"Q-394874",
     filial:"Filial São Paulo",  cnpj:"12.345.678/0001-90", cidade:"São Paulo",  uf:"SP",
     cooperado:"CARLOS ALVES",   produto:"FFALM 10 20 30",  embalagem:"Saco 50kg",
-    frete:"CIF", planta:"Limeira",       qtd:300, saldo:50,  owner:"Alyssa Harris", updated:"5 min" },
+    frete:"CIF", planta:"Limeira", rota:"BR-364 · Rota A",
+    qtd:300, saldo:300, qtdAgendada:0,
+    nf:"", dataNf:"", precoNf:0,
+    hasSO:false, hasOV:false, hasBilling:false, hasActiveRequests:false,
+    owner:"Alyssa Harris", updated:"5 min" },
+
+  // Em agendamento, SO já gerada, OV em andamento, faturamento parcial não — embalagem locked, rota locked
   { id:"M9W47291", status:"em_agendamento", contrato:"20085391", cotacao:"Q-451220",
     filial:"Filial Curitiba",   cnpj:"23.456.789/0001-01", cidade:"Curitiba",   uf:"PR",
     cooperado:"BETO DOS SANTOS", produto:"DAP 18 46 00",   embalagem:"Granel",
-    frete:"FOB", planta:"Paranaguá",     qtd:500, saldo:300, owner:"Marcos Lima",   updated:"23 min" },
+    frete:"FOB", planta:"Paranaguá", rota:"BR-277 · Rota Litoral",
+    qtd:500, saldo:200, qtdAgendada:200,
+    nf:"", dataNf:"", precoNf:0,
+    hasSO:true, hasOV:true, hasBilling:false, hasActiveRequests:true,
+    owner:"Marcos Lima",   updated:"23 min" },
+
+  // Concluído + faturado — TUDO locked, exceto talvez owner
   { id:"M9W51038", status:"concluido",      contrato:"20086112", cotacao:"Q-512883",
     filial:"Filial Porto Alegre", cnpj:"34.567.890/0001-34", cidade:"Porto Alegre", uf:"RS",
     cooperado:"TEREZA AKEMI",   produto:"MAP 11 52 00",    embalagem:"Big Bag 1000kg",
-    frete:"CIF", planta:"Cubatão",       qtd:200, saldo:0,   owner:"Patricia Vega", updated:"2h" },
+    frete:"CIF", planta:"Cubatão", rota:"BR-101 · Rota Sul",
+    qtd:200, saldo:0, qtdAgendada:200,
+    nf:"000123456", dataNf:"2026-04-18", precoNf:4280.50,
+    hasSO:true, hasOV:true, hasBilling:true, hasActiveRequests:false,
+    owner:"Patricia Vega", updated:"2h" },
+
+  // Cancelado — tudo locked (pílula de status já comunica)
   { id:"M9W63847", status:"cancelado",      contrato:"20086901", cotacao:"Q-602114",
     filial:"Filial Rio Verde",  cnpj:"45.678.901/0001-45", cidade:"Rio Verde",  uf:"GO",
     cooperado:"JORGE DOS ANJOS", produto:"FFALM 10 20 30", embalagem:"Saco 50kg",
-    frete:"FOB", planta:"Rondonópolis",  qtd:150, saldo:150, owner:"Carlos Mendes", updated:"1d" },
+    frete:"FOB", planta:"Rondonópolis", rota:"BR-364 · Rota A",
+    qtd:150, saldo:0, qtdAgendada:0,
+    nf:"", dataNf:"", precoNf:0,
+    hasSO:false, hasOV:false, hasBilling:false, hasActiveRequests:false,
+    owner:"Carlos Mendes", updated:"1d" },
+
+  // Liberado, SO gerada, sem OV — só embalagem locked
   { id:"M9W71205", status:"liberado",       contrato:"20087445", cotacao:"Q-712005",
     filial:"Filial Londrina",   cnpj:"56.789.012/0001-56", cidade:"Londrina",   uf:"PR",
     cooperado:"RENATO CESAR",   produto:"KCl Granulado",   embalagem:"Granel",
-    frete:"CIF", planta:"Paranaguá",     qtd:400, saldo:400, owner:"Alyssa Harris", updated:"3h" },
+    frete:"CIF", planta:"Paranaguá", rota:"BR-277 · Rota Litoral",
+    qtd:400, saldo:400, qtdAgendada:0,
+    nf:"", dataNf:"", precoNf:0,
+    hasSO:true, hasOV:false, hasBilling:false, hasActiveRequests:false,
+    owner:"Alyssa Harris", updated:"3h" },
+
+  // Em agendamento, billing parcial gerado — NF locked, volume locked
+  { id:"M9W82914", status:"em_agendamento", contrato:"20088001", cotacao:"Q-803344",
+    filial:"Filial Uberlândia", cnpj:"67.890.123/0001-67", cidade:"Uberlândia", uf:"MG",
+    cooperado:"AGUINADO GOMES", produto:"NPK 04 14 08",    embalagem:"Saco 50kg",
+    frete:"CIF", planta:"Uberaba", rota:"BR-050 · Triângulo",
+    qtd:250, saldo:100, qtdAgendada:100,
+    nf:"000201339", dataNf:"2026-05-10", precoNf:3950.00,
+    hasSO:true, hasOV:true, hasBilling:true, hasActiveRequests:true,
+    owner:"Marcos Lima", updated:"45 min" },
 ];
+
+/* =================================================================
+   RULES — SMDP-161
+   ================================================================= */
+const rules = {
+  canEditVolume: p => p.status !== "cancelado" && !p.hasBilling,
+  minVolume: p => p.qtdAgendada || 0,
+  canEditPackaging: p => p.status !== "cancelado" && !p.hasSO,
+  canEditRoute: p => p.status !== "cancelado" && !p.hasOV,
+  canEditInvoice: p => p.status !== "cancelado" && !p.hasBilling,
+  canCancel: p => p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling,
+  cancelReason: p => {
+    if (p.status === "cancelado") return "Protocolo já cancelado";
+    if (p.hasBilling) return "Não permitido após faturamento";
+    if (p.hasActiveRequests) return "Existem agendamentos ativos";
+    return "";
+  }
+};
+
+/* Lock reason por campo — usado no title (tooltip) das células bloqueadas. */
+function lockReason(p, field) {
+  if (p.status === "cancelado") return "Protocolo cancelado";
+  switch (field) {
+    case "qtd":
+      return p.hasBilling ? "Faturamento já realizado" : "";
+    case "embalagem":
+      return p.hasSO ? "Sales Order já gerada" : "";
+    case "rota":
+      return p.hasOV ? "Ordem de Venda já gerada" : "";
+    case "nf":
+    case "dataNf":
+    case "precoNf":
+      return p.hasBilling ? "Faturamento já realizado" : "";
+    case "cooperado":
+    case "contrato":
+    case "cnpj":
+    case "filial":
+    case "cidade":
+    case "uf":
+    case "produto":
+    case "cotacao":
+    case "frete":
+    case "planta":
+      return "Campo vindo do SAP — somente leitura";
+    default:
+      return "";
+  }
+}
+
+/* Determina se um campo é editável para um protocolo específico (regras SMDP-161). */
+function isFieldEditable(p, field) {
+  if (p.status === "cancelado") return false;
+  switch (field) {
+    case "qtd":       return rules.canEditVolume(p);
+    case "embalagem": return rules.canEditPackaging(p);
+    case "rota":      return rules.canEditRoute(p);
+    case "nf":
+    case "dataNf":
+    case "precoNf":   return rules.canEditInvoice(p);
+    case "status":
+    case "owner":     return true; // owner/status sempre mutáveis pelo CS
+    // Campos sempre locked (vêm do SAP)
+    case "cooperado":
+    case "contrato":
+    case "cotacao":
+    case "filial":
+    case "cnpj":
+    case "cidade":
+    case "uf":
+    case "produto":
+    case "frete":
+    case "planta":    return false;
+    default:          return false;
+  }
+}
 
 /* Pending changes registry: Map<protoId, {field: newValue}> */
 const PENDING = new Map();
+
+/* Mass-edit selection: Set<protoId> */
+const SELECTED = new Set();
 
 /* =================================================================
    Field config — editable cells + options
@@ -978,23 +1407,29 @@ const FRETE_OPTS     = ["CIF", "FOB"];
 const PLANTA_OPTS    = ["Limeira", "Paranaguá", "Cubatão", "Rondonópolis", "Uberaba", "Candeias"];
 const UF_OPTS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
 
-/* Cells: which columns are editable + their type. */
+/* Cells: which columns são potencialmente editáveis + tipo.
+   A editabilidade FINAL por linha é decidida em isFieldEditable() (SMDP-161). */
 const FIELDS = [
   { key:"protocol",  label:"Protocol",       editable:false },
   { key:"status",    label:"Status",         editable:true, type:"select", opts:STATUS_OPTS },
-  { key:"contrato",  label:"Contrato SAP",   editable:true, type:"text" },
-  { key:"cotacao",   label:"Cotação",        editable:true, type:"text" },
-  { key:"filial",    label:"Cliente · Filial", editable:true, type:"text" },
-  { key:"cnpj",      label:"CPF/CNPJ",       editable:true, type:"text" },
-  { key:"cidade_uf", label:"Cidade · UF",    editable:false }, // composto
-  { key:"cooperado", label:"Cooperado",      editable:true, type:"text" },
-  { key:"produto",   label:"Produto",        editable:true, type:"text" },
-  { key:"embalagem", label:"Embalagem",      editable:true, type:"select-list", opts:EMBALAGEM_OPTS },
-  { key:"frete",     label:"Frete",          editable:true, type:"select-list", opts:FRETE_OPTS },
-  { key:"planta",    label:"Planta",         editable:true, type:"select-list", opts:PLANTA_OPTS },
+  { key:"contrato",  label:"Contrato SAP",   editable:false, type:"text" },
+  { key:"cotacao",   label:"Cotação",        editable:false, type:"text" },
+  { key:"filial",    label:"Cliente · Filial", editable:false, type:"text" },
+  { key:"cnpj",      label:"CPF/CNPJ",       editable:false, type:"text" },
+  { key:"cidade_uf", label:"Cidade · UF",    editable:false },
+  { key:"cooperado", label:"Cooperado",      editable:false, type:"text" },
+  { key:"produto",   label:"Produto",        editable:false, type:"text" },
+  { key:"embalagem", label:"Embalagem",      editable:true,  type:"select-list", opts:EMBALAGEM_OPTS },
+  { key:"frete",     label:"Frete",          editable:false, type:"select-list", opts:FRETE_OPTS },
+  { key:"planta",    label:"Planta",         editable:false, type:"select-list", opts:PLANTA_OPTS },
+  { key:"rota",      label:"Rota de entrega", editable:true, type:"text" },
   { key:"qtd",       label:"Qtd Protocolo (t)", editable:true, type:"number", num:true },
   { key:"saldo",     label:"Saldo (t)",      editable:false, num:true },
-  { key:"owner",     label:"Owner",          editable:true, type:"text" },
+  { key:"qtdAgendada", label:"Qtd Agendada (t)", editable:false, num:true },
+  { key:"nf",        label:"NF",             editable:true,  type:"text" },
+  { key:"dataNf",    label:"Data NF",        editable:true,  type:"date" },
+  { key:"precoNf",   label:"Preço NF",       editable:true,  type:"number", num:true },
+  { key:"owner",     label:"Owner",          editable:true,  type:"text" },
   { key:"updated",   label:"Última Modificação", editable:false },
 ];
 
@@ -1026,11 +1461,22 @@ function fretePill(f) {
   return `<span class="status-pill" style="${color}">${f}</span>`;
 }
 
+const LOCK_ICON_SVG = `<svg class="cell-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
+
 function cellHTML(p, field, label, opts = {}) {
   const v = getEffectiveValue(p, field);
-  const isEdit = opts.editable !== false;
+  // Editabilidade pode ser forçada falsa via opts (campos compostos / read-only),
+  // caso contrário consulta as regras SMDP-161 por linha+campo.
+  let isEdit;
+  if (opts.editable === false) isEdit = false;
+  else isEdit = isFieldEditable(p, field);
+
+  const reason = !isEdit ? lockReason(p, field) : "";
+  const isStructurallyLocked = !isEdit && opts.editable !== false;
+
   const modCls = isModified(p.id, field) ? "cell-modified" : "";
   const editCls = isEdit ? "editable" : "";
+  const lockCls = isStructurallyLocked ? "is-locked" : "";
   const numCls = opts.num ? "num" : "";
 
   let content;
@@ -1040,10 +1486,14 @@ function cellHTML(p, field, label, opts = {}) {
     content = `<span class="cell-text">${v == null || v === "" ? '<span style="color:var(--slds-text-3)">—</span>' : escapeHtml(String(v))}</span>`;
   }
 
-  const pencil = isEdit ? `<button class="cell-pencil" type="button" tabindex="-1" aria-label="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>` : '';
+  const pencil = isEdit
+    ? `<button class="cell-pencil" type="button" tabindex="-1" aria-label="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`
+    : (isStructurallyLocked ? LOCK_ICON_SVG : "");
+
+  const titleAttr = isStructurallyLocked && reason ? ` title="${escapeHtml(reason)}"` : "";
 
   return `
-    <td class="${editCls} ${modCls} ${numCls}" data-id="${p.id}" data-field="${field}">
+    <td class="${editCls} ${lockCls} ${modCls} ${numCls}" data-id="${p.id}" data-field="${field}"${titleAttr}>
       <div class="cell-content">
         ${content}
         ${pencil}
@@ -1067,6 +1517,18 @@ function applyFilter() {
   });
 }
 
+function formatMoney(v) {
+  if (!v) return '<span style="color:var(--slds-text-3)">—</span>';
+  return Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatDate(v) {
+  if (!v) return '<span style="color:var(--slds-text-3)">—</span>';
+  // v esperado YYYY-MM-DD
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
+  if (!m) return escapeHtml(v);
+  return `${m[3]}/${m[2]}/${m[1]}`;
+}
+
 function render() {
   const list = applyFilter();
   document.getElementById("totalCount").textContent = list.length;
@@ -1084,9 +1546,13 @@ function render() {
   document.getElementById("cntConc").textContent = counts.concluido;
   document.getElementById("cntCanc").textContent = counts.cancelado;
 
-  tbody.innerHTML = list.map(p => `
-    <tr data-id="${p.id}">
-      <td class="col-check"><div class="cell-content"><input type="checkbox" class="slds-check row-check" data-id="${p.id}" aria-label="Select ${p.id}" /></div></td>
+  tbody.innerHTML = list.map(p => {
+    const isCancelled = getEffectiveValue(p, "status") === "cancelado";
+    const rowCls = (SELECTED.has(p.id) ? "is-row-selected " : "") + (isCancelled ? "row-cancelled " : "");
+    const checked = SELECTED.has(p.id) ? "checked" : "";
+    return `
+    <tr class="${rowCls}" data-id="${p.id}">
+      <td class="col-check"><div class="cell-content"><input type="checkbox" class="slds-check row-check" data-id="${p.id}" aria-label="Select ${p.id}" ${checked} /></div></td>
       ${cellHTML(p, "id",        "Protocol",  { editable:false, render: v => `<span class="cell-text"><a href="#">${v}</a></span>` })}
       ${cellHTML(p, "status",    "Status",    { render: v => `<span class="cell-text">${statusBadge(v)}</span>` })}
       ${cellHTML(p, "contrato",  "Contrato")}
@@ -1099,12 +1565,39 @@ function render() {
       ${cellHTML(p, "embalagem", "Embalagem")}
       ${cellHTML(p, "frete",     "Frete", { render: v => `<span class="cell-text">${fretePill(v)}</span>` })}
       ${cellHTML(p, "planta",    "Planta")}
+      ${cellHTML(p, "rota",      "Rota de entrega")}
       ${cellHTML(p, "qtd",       "Qtd", { num:true, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
       ${cellHTML(p, "saldo",     "Saldo", { num:true, editable:false, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
+      ${cellHTML(p, "qtdAgendada", "Qtd Agendada", { num:true, editable:false, render: v => `<span class="cell-text">${Number(v || 0).toLocaleString("pt-BR")}</span>` })}
+      ${cellHTML(p, "nf",        "NF")}
+      ${cellHTML(p, "dataNf",    "Data NF", { render: v => `<span class="cell-text">${formatDate(v)}</span>` })}
+      ${cellHTML(p, "precoNf",   "Preço NF", { num:true, render: v => `<span class="cell-text">${formatMoney(v)}</span>` })}
       ${cellHTML(p, "owner",     "Owner")}
       ${cellHTML(p, "updated",   "Updated", { editable:false })}
+      <td class="col-actions">
+        <div class="cell-content">
+          <button class="row-actions-btn" type="button" data-id="${p.id}" aria-label="Ações do protocolo ${p.id}" title="Ações">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+          </button>
+        </div>
+      </td>
     </tr>
-  `).join("");
+  `;
+  }).join("");
+
+  // Header checkbox state
+  const checkAll = document.getElementById("checkAll");
+  if (list.length === 0) {
+    checkAll.checked = false;
+    checkAll.indeterminate = false;
+  } else {
+    const allSelected = list.every(p => SELECTED.has(p.id));
+    const someSelected = list.some(p => SELECTED.has(p.id));
+    checkAll.checked = allSelected;
+    checkAll.indeterminate = !allSelected && someSelected;
+  }
+
+  updateMassToolbar();
 }
 
 /* =================================================================
@@ -1117,6 +1610,11 @@ function startEditCell(td) {
   const field = td.dataset.field;
   const p = PROTOCOLS.find(x => x.id === id);
   if (!p) return;
+  // Re-check de segurança — regras SMDP-161
+  if (!isFieldEditable(p, field)) {
+    showToast(lockReason(p, field) || "Campo bloqueado", true);
+    return;
+  }
   const v = getEffectiveValue(p, field);
   const fieldDef = FIELDS.find(f => f.key === field) || { type: "text" };
 
@@ -1130,7 +1628,16 @@ function startEditCell(td) {
       `<option value="${o}"${o===v?' selected':''}>${o}</option>`).join("");
     inputHTML = `<select class="edit-input">${opts}</select>`;
   } else if (fieldDef.type === "number") {
-    inputHTML = `<input class="edit-input" type="number" min="0" value="${v}" />`;
+    // Para volume (qtd), aplica mínimo = qtdAgendada e máximo = valor original (não pode aumentar)
+    if (field === "qtd") {
+      const min = rules.minVolume(p);
+      const max = p.qtd;
+      inputHTML = `<input class="edit-input" type="number" min="${min}" max="${max}" value="${v}" />`;
+    } else {
+      inputHTML = `<input class="edit-input" type="number" min="0" step="${field === 'precoNf' ? '0.01' : '1'}" value="${v}" />`;
+    }
+  } else if (fieldDef.type === "date") {
+    inputHTML = `<input class="edit-input" type="date" value="${escapeHtml(String(v ?? ''))}" />`;
   } else {
     inputHTML = `<input class="edit-input" type="text" value="${escapeHtml(String(v ?? ''))}" />`;
   }
@@ -1145,6 +1652,25 @@ function startEditCell(td) {
   const commit = () => {
     let newVal = input.value;
     if (input.type === "number") newVal = newVal === "" ? 0 : Number(newVal);
+
+    // Validação SMDP-161 para volume
+    if (field === "qtd") {
+      const min = rules.minVolume(p);
+      const max = p.qtd;
+      if (Number(newVal) > max) {
+        showToast(`Volume não pode aumentar (máx ${max} t)`, true);
+        cleanupEditing();
+        render();
+        return;
+      }
+      if (Number(newVal) < min) {
+        showToast(`Volume mínimo = ${min} t (agendado no SAP)`, true);
+        cleanupEditing();
+        render();
+        return;
+      }
+    }
+
     const original = p[field];
     if (String(newVal) === String(original)) {
       // Voltou ao original — limpa pending
@@ -1265,12 +1791,351 @@ document.getElementById("quickSearch").addEventListener("input", render);
 /* =================================================================
    Toast
    ================================================================= */
-function showToast(msg) {
+function showToast(msg, isError = false) {
   const t = document.getElementById("toast");
   document.getElementById("toastText").textContent = msg;
+  t.classList.toggle("is-error", !!isError);
   t.classList.add("is-visible");
-  setTimeout(() => t.classList.remove("is-visible"), 2800);
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("is-visible"), isError ? 3800 : 2800);
 }
+
+/* =================================================================
+   SELECTION — checkboxes + mass toolbar
+   ================================================================= */
+const massToolbar    = document.getElementById("massToolbar");
+const massSelCount   = document.getElementById("massSelCount");
+
+function updateMassToolbar() {
+  const n = SELECTED.size;
+  massSelCount.textContent = n;
+  massToolbar.classList.toggle("is-visible", n > 0);
+}
+
+tbody.addEventListener("change", (e) => {
+  const cb = e.target.closest(".row-check");
+  if (!cb) return;
+  const id = cb.dataset.id;
+  if (cb.checked) SELECTED.add(id); else SELECTED.delete(id);
+  // toggla classe na linha sem re-render completo
+  const tr = cb.closest("tr");
+  if (tr) tr.classList.toggle("is-row-selected", cb.checked);
+  // Atualiza estado do checkbox header
+  const visibleIds = applyFilter().map(p => p.id);
+  const checkAll = document.getElementById("checkAll");
+  const allSel = visibleIds.length > 0 && visibleIds.every(id => SELECTED.has(id));
+  const someSel = visibleIds.some(id => SELECTED.has(id));
+  checkAll.checked = allSel;
+  checkAll.indeterminate = !allSel && someSel;
+  updateMassToolbar();
+});
+
+document.getElementById("checkAll").addEventListener("change", (e) => {
+  const list = applyFilter();
+  if (e.target.checked) {
+    list.forEach(p => SELECTED.add(p.id));
+  } else {
+    list.forEach(p => SELECTED.delete(p.id));
+  }
+  render();
+});
+
+document.getElementById("massClearBtn").addEventListener("click", () => {
+  SELECTED.clear();
+  render();
+});
+
+/* =================================================================
+   ROW ACTIONS — menu (Cancelar protocolo)
+   ================================================================= */
+let openMenuEl = null;
+function closeRowMenu() {
+  if (openMenuEl) {
+    openMenuEl.remove();
+    openMenuEl = null;
+  }
+}
+
+tbody.addEventListener("click", (e) => {
+  const btn = e.target.closest(".row-actions-btn");
+  if (!btn) return;
+  e.stopPropagation();
+  const id = btn.dataset.id;
+  const p = PROTOCOLS.find(x => x.id === id);
+  if (!p) return;
+
+  // Toggle: se já tá aberto pra esse id, fecha
+  if (openMenuEl && openMenuEl.dataset.id === id) {
+    closeRowMenu();
+    return;
+  }
+  closeRowMenu();
+
+  const canCancel = rules.canCancel(p);
+  const reason = canCancel ? "" : rules.cancelReason(p);
+
+  const menu = document.createElement("div");
+  menu.className = "row-actions-menu is-open";
+  menu.dataset.id = id;
+  menu.innerHTML = `
+    <button type="button" data-action="edit">Editar campos da linha</button>
+    <button type="button" data-action="cancel" class="is-destructive" ${canCancel ? "" : "disabled"}>Cancelar protocolo</button>
+    ${reason ? `<div class="menu-reason">${escapeHtml(reason)}</div>` : ""}
+  `;
+  // Posiciona o menu absolute dentro da td.col-actions (já é position:relative? não — usa td posicao)
+  const td = btn.closest("td.col-actions");
+  td.style.position = "relative";
+  td.appendChild(menu);
+  openMenuEl = menu;
+
+  menu.addEventListener("click", (ev) => {
+    const actBtn = ev.target.closest("button[data-action]");
+    if (!actBtn) return;
+    ev.stopPropagation();
+    const action = actBtn.dataset.action;
+    closeRowMenu();
+    if (action === "edit") {
+      showToast("Clique em qualquer célula editável para alterá-la");
+    } else if (action === "cancel") {
+      if (!rules.canCancel(p)) return;
+      openCancelModal([p]);
+    }
+  });
+});
+
+document.addEventListener("click", () => closeRowMenu());
+
+/* =================================================================
+   CANCEL PROTOCOL MODAL — single ou em massa
+   ================================================================= */
+let cancelTargets = []; // array de protocolos
+
+function openCancelModal(targets) {
+  cancelTargets = targets;
+  const cancelable = targets.filter(p => rules.canCancel(p));
+  const blocked = targets.filter(p => !rules.canCancel(p));
+
+  const titleEl = document.getElementById("cancelModalTitle");
+  const bodyEl = document.getElementById("cancelModalBody");
+  const listEl = document.getElementById("cancelList");
+  const confirmBtn = document.getElementById("cancelModalConfirm");
+
+  if (targets.length === 1) {
+    const p = targets[0];
+    titleEl.textContent = `Cancelar protocolo ${p.id}?`;
+    bodyEl.textContent = "Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato. Não é reversível.";
+    listEl.innerHTML = "";
+    if (!rules.canCancel(p)) {
+      listEl.innerHTML = `<li><span>${escapeHtml(p.id)}</span><span class="cancel-reason">${escapeHtml(rules.cancelReason(p))}</span></li>`;
+      confirmBtn.disabled = true;
+      confirmBtn.style.opacity = "0.5";
+      confirmBtn.style.cursor = "not-allowed";
+    } else {
+      confirmBtn.disabled = false;
+      confirmBtn.style.opacity = "";
+      confirmBtn.style.cursor = "";
+      confirmBtn.textContent = "Cancelar protocolo";
+    }
+  } else {
+    titleEl.textContent = `Cancelar ${cancelable.length} de ${targets.length} protocolo(s)?`;
+    bodyEl.textContent = "Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato em cada protocolo. Não é reversível. Protocolos que não atendem aos requisitos serão ignorados.";
+    listEl.innerHTML = targets.map(p => {
+      const can = rules.canCancel(p);
+      return `<li><span>${escapeHtml(p.id)} — ${escapeHtml(p.cooperado)}</span>${can ? '<span style="color:var(--slds-success);font-weight:600">Pronto p/ cancelar</span>' : `<span class="cancel-reason">${escapeHtml(rules.cancelReason(p))}</span>`}</li>`;
+    }).join("");
+    confirmBtn.disabled = cancelable.length === 0;
+    confirmBtn.style.opacity = cancelable.length === 0 ? "0.5" : "";
+    confirmBtn.style.cursor = cancelable.length === 0 ? "not-allowed" : "";
+    confirmBtn.textContent = `Cancelar ${cancelable.length} protocolo(s)`;
+  }
+
+  document.getElementById("cancelModal").classList.add("is-open");
+}
+
+document.getElementById("cancelModalBack").addEventListener("click", () => {
+  document.getElementById("cancelModal").classList.remove("is-open");
+});
+document.getElementById("cancelModal").addEventListener("click", (e) => {
+  if (e.target.id === "cancelModal") e.target.classList.remove("is-open");
+});
+document.getElementById("cancelModalConfirm").addEventListener("click", () => {
+  const cancelable = cancelTargets.filter(p => rules.canCancel(p));
+  if (cancelable.length === 0) return;
+  cancelable.forEach(p => {
+    p.status = "cancelado";
+    p.saldo = 0; // exclui volume do saldo do contrato (preserva qtd original)
+    // Limpa qualquer pending dessa linha
+    PENDING.delete(p.id);
+    SELECTED.delete(p.id);
+  });
+  document.getElementById("cancelModal").classList.remove("is-open");
+  render();
+  updatePendingBar();
+  showToast(cancelable.length === 1
+    ? `Protocolo ${cancelable[0].id} cancelado`
+    : `${cancelable.length} protocolos cancelados`);
+});
+
+document.getElementById("massCancelBtn").addEventListener("click", () => {
+  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
+  if (targets.length === 0) return;
+  openCancelModal(targets);
+});
+
+/* =================================================================
+   MASS EDIT MODAL (CS-only feature)
+   ================================================================= */
+const massEditModal  = document.getElementById("massEditModal");
+const massApplyCount = document.getElementById("massApplyCount");
+const massEditCount  = document.getElementById("massEditCount");
+const massVol        = document.getElementById("massVol");
+const massVolHint    = document.getElementById("massVolHint");
+const massEmb        = document.getElementById("massEmb");
+const massRota       = document.getElementById("massRota");
+const massNf         = document.getElementById("massNf");
+const massDataNf     = document.getElementById("massDataNf");
+const massPreco      = document.getElementById("massPreco");
+
+// Popular options de embalagem
+massEmb.innerHTML = '<option value="">— Não alterar —</option>' +
+  EMBALAGEM_OPTS.map(o => `<option value="${o}">${o}</option>`).join("");
+
+function openMassEditModal() {
+  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
+  if (targets.length === 0) return;
+  massApplyCount.textContent = targets.length;
+  massEditCount.textContent = targets.length;
+
+  // Calcula mínimo permitido para volume = max das qtdAgendada das selecionadas
+  // (pois ao aplicar um volume, ele só pode ser >= maior qtdAgendada de qualquer linha)
+  const editableVolTargets = targets.filter(p => rules.canEditVolume(p));
+  let minAllowed = 0;
+  let maxAllowed = Infinity;
+  editableVolTargets.forEach(p => {
+    if (p.qtdAgendada > minAllowed) minAllowed = p.qtdAgendada;
+    if (p.qtd < maxAllowed) maxAllowed = p.qtd;
+  });
+  if (editableVolTargets.length === 0) {
+    massVol.disabled = true;
+    massVol.placeholder = "Nenhuma linha permite editar volume";
+    massVolHint.textContent = "Nenhuma das selecionadas permite alterar volume.";
+  } else {
+    massVol.disabled = false;
+    massVol.min = minAllowed;
+    massVol.max = maxAllowed;
+    massVol.value = "";
+    massVol.placeholder = `Entre ${minAllowed} e ${maxAllowed} (apenas redução)`;
+    massVolHint.textContent = `Apenas redução é permitida. Mínimo: ${minAllowed} t · Máximo atual: ${maxAllowed} t.`;
+  }
+
+  // Reset outros campos
+  massEmb.value = "";
+  massRota.value = "";
+  massNf.value = "";
+  massDataNf.value = "";
+  massPreco.value = "";
+
+  massEditModal.classList.add("is-open");
+}
+
+document.getElementById("massEditBtn").addEventListener("click", openMassEditModal);
+document.getElementById("massEditCancel").addEventListener("click", () => {
+  massEditModal.classList.remove("is-open");
+});
+massEditModal.addEventListener("click", (e) => {
+  if (e.target.id === "massEditModal") e.target.classList.remove("is-open");
+});
+
+document.getElementById("massEditApply").addEventListener("click", () => {
+  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
+  if (targets.length === 0) return;
+
+  const vol = massVol.value === "" ? null : Number(massVol.value);
+  const emb = massEmb.value || null;
+  const rota = massRota.value.trim() || null;
+  const nf = massNf.value.trim() || null;
+  const dataNf = massDataNf.value || null;
+  const preco = massPreco.value === "" ? null : Number(massPreco.value);
+
+  if (vol == null && !emb && !rota && !nf && !dataNf && preco == null) {
+    showToast("Preencha ao menos um campo para aplicar", true);
+    return;
+  }
+
+  let appliedFields = 0;
+  let touchedRows = 0;
+  targets.forEach(p => {
+    let touched = false;
+    if (vol != null && rules.canEditVolume(p)) {
+      // Respeita mínimo individual da linha
+      const min = rules.minVolume(p);
+      const max = p.qtd;
+      if (vol >= min && vol <= max && vol !== p.qtd) {
+        const pending = PENDING.get(p.id) || {};
+        pending.qtd = vol;
+        PENDING.set(p.id, pending);
+        appliedFields++;
+        touched = true;
+      }
+    }
+    if (emb && rules.canEditPackaging(p) && emb !== p.embalagem) {
+      const pending = PENDING.get(p.id) || {};
+      pending.embalagem = emb;
+      PENDING.set(p.id, pending);
+      appliedFields++;
+      touched = true;
+    }
+    if (rota && rules.canEditRoute(p) && rota !== p.rota) {
+      const pending = PENDING.get(p.id) || {};
+      pending.rota = rota;
+      PENDING.set(p.id, pending);
+      appliedFields++;
+      touched = true;
+    }
+    if (nf && rules.canEditInvoice(p) && nf !== p.nf) {
+      const pending = PENDING.get(p.id) || {};
+      pending.nf = nf;
+      PENDING.set(p.id, pending);
+      appliedFields++;
+      touched = true;
+    }
+    if (dataNf && rules.canEditInvoice(p) && dataNf !== p.dataNf) {
+      const pending = PENDING.get(p.id) || {};
+      pending.dataNf = dataNf;
+      PENDING.set(p.id, pending);
+      appliedFields++;
+      touched = true;
+    }
+    if (preco != null && rules.canEditInvoice(p) && preco !== p.precoNf) {
+      const pending = PENDING.get(p.id) || {};
+      pending.precoNf = preco;
+      PENDING.set(p.id, pending);
+      appliedFields++;
+      touched = true;
+    }
+    if (touched) touchedRows++;
+  });
+
+  massEditModal.classList.remove("is-open");
+  render();
+  updatePendingBar();
+
+  if (appliedFields === 0) {
+    showToast("Nenhuma alteração aplicada (regras de bloqueio)", true);
+  } else {
+    showToast(`${appliedFields} alterações pendentes em ${touchedRows} protocolo(s)`);
+  }
+});
+
+/* Fecha modais com Esc — extende handler existente */
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  ["cancelModal", "massEditModal"].forEach(id => {
+    const m = document.getElementById(id);
+    if (m && m.classList.contains("is-open")) m.classList.remove("is-open");
+  });
+  closeRowMenu();
+});
 
 /* =================================================================
    Init
