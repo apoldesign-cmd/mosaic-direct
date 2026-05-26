@@ -766,19 +766,38 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
 }
 .slds-modal.is-wide { max-width: 720px; }
+.slds-modal.is-edit { max-width: 960px; }
 .slds-modal-head {
   padding: 14px 20px;
   border-bottom: 1px solid var(--slds-border-soft);
-  background: var(--slds-bg-section);
+  background: #f3f3f3;
   display: flex;
   align-items: center;
   gap: 10px;
+  position: relative;
 }
 .slds-modal-head h2 {
   font-size: 16px;
   font-weight: 700;
   margin: 0;
   flex: 1;
+}
+/* Edit modal: header com título centralizado */
+.slds-modal.is-edit .slds-modal-head {
+  padding: 16px 20px;
+  justify-content: center;
+}
+.slds-modal.is-edit .slds-modal-head h2 {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  flex: none;
+}
+.slds-modal.is-edit .slds-modal-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .slds-modal-close {
   width: 28px; height: 28px;
@@ -806,61 +825,129 @@ a:hover { text-decoration: underline; }
   background: var(--slds-bg-section);
 }
 
-/* Modal form */
-.modal-form-section { margin-bottom: 18px; }
-.modal-form-section-title {
-  font-size: 11px;
-  text-transform: uppercase;
-  font-weight: 700;
+/* ============================================================
+   EDIT MODAL — Lightning Standard Edit Form (label esquerda / input direita)
+   ============================================================ */
+.slds-modal.is-edit .slds-modal-body { padding: 0; background: #fff; }
+.edit-required-legend {
+  text-align: right;
+  font-size: 12px;
+  font-style: italic;
   color: var(--slds-text-3);
-  letter-spacing: 0.04em;
-  padding: 8px 0;
+  padding: 14px 28px;
+  background: #fff;
   border-bottom: 1px solid var(--slds-border-soft);
-  margin-bottom: 10px;
 }
-.modal-form-grid {
+.edit-required-legend .req-star { color: var(--slds-error); font-style: normal; margin-right: 2px; }
+
+.edit-section { border-bottom: 1px solid var(--slds-border-soft); }
+.edit-section:last-child { border-bottom: none; }
+.edit-section-head {
+  background: #f7f7f7;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  padding: 8px 16px;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.edit-section-head-chev {
+  width: 11px; height: 11px; color: var(--slds-text-3);
+  transition: transform 150ms ease;
+}
+.edit-section.is-collapsed .edit-section-head-chev { transform: rotate(-90deg); }
+.edit-section.is-collapsed .edit-section-body { display: none; }
+.edit-section-body {
+  padding: 16px 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px 18px;
+  gap: 14px 36px;
+  background: #fff;
 }
-.modal-form-field {
+.edit-form-field {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+.edit-form-field > label {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--slds-text-2);
+  text-align: right;
+  line-height: 1.3;
+  padding-top: 2px;
+}
+.edit-form-field > label .req-star {
+  color: var(--slds-error);
+  margin-right: 3px;
+  font-weight: 700;
+}
+.edit-form-input-wrap {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
-.modal-form-field label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--slds-text-2);
-  display: flex; align-items: center; gap: 6px;
-}
-.modal-form-field input,
-.modal-form-field select {
-  height: 30px;
-  padding: 0 8px;
+.edit-form-field input,
+.edit-form-field select {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
   border: 1px solid var(--slds-border);
-  border-radius: 3px;
+  border-radius: 4px;
   font-size: 13px;
   outline: none;
   background: #fff;
+  color: var(--slds-text-1);
+  font-family: inherit;
 }
-.modal-form-field input:focus,
-.modal-form-field select:focus { border-color: var(--slds-blue); box-shadow: 0 0 2px var(--slds-blue); }
-.modal-form-field input:disabled,
-.modal-form-field select:disabled,
-.modal-form-field input[readonly] {
-  background: #f4f3f2;
+.edit-form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+.edit-form-field input:focus,
+.edit-form-field select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 3px var(--slds-blue);
+}
+.edit-form-field input[readonly],
+.edit-form-field input:disabled,
+.edit-form-field select:disabled {
+  background: #fafafa;
   color: var(--slds-text-2);
   cursor: not-allowed;
 }
-.modal-form-field .lock-tag {
-  display: inline-flex; align-items: center; gap: 3px;
-  font-size: 10px;
+.edit-form-input-wrap .edit-lock-icon {
+  position: absolute;
+  right: 10px;
+  top: 8px;
+  width: 14px; height: 14px;
   color: var(--slds-text-3);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  pointer-events: none;
+  opacity: 0.7;
 }
+.edit-form-input-wrap.has-lock input,
+.edit-form-input-wrap.has-lock select { padding-right: 30px; }
+.edit-form-helper {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-style: italic;
+}
+
+.slds-modal.is-edit .slds-modal-foot {
+  background: #f7f7f7;
+  padding: 14px 20px;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.cancel-reason-error-legacy { /* placeholder to avoid breakage */ }
 
 .cancel-reason-error {
   color: var(--slds-error);
@@ -871,6 +958,61 @@ a:hover { text-decoration: underline; }
   border-radius: 3px;
   margin-top: 8px;
 }
+
+/* ============================================================
+   INLINE EDIT "BILHETE" — modo edição full-page no tab Detalhes
+   ============================================================ */
+#detailsPanel.is-editing .field.is-editable .field-pencil { display: none !important; }
+#detailsPanel.is-editing .field.is-editable .field-value-display { display: none; }
+#detailsPanel.is-editing .field.is-editable .field-value-input { display: flex; }
+
+.field-value-input { display: none; width: 100%; }
+.field-value-input input,
+.field-value-input select {
+  width: 100%;
+  height: 32px;
+  padding: 0 10px;
+  border: 1.5px solid var(--slds-blue);
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
+  background: #fff;
+  color: var(--slds-text-1);
+  font-family: inherit;
+  box-shadow: 0 0 0 2px rgba(1,118,211,0.15);
+}
+.field-value-input select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+}
+#detailsPanel.is-editing .field {
+  padding-right: 4px;
+}
+
+.inline-edit-footer {
+  display: none;
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  background: #fff;
+  border-top: 1px solid var(--slds-border);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+  padding: 12px 24px;
+  z-index: 50;
+  align-items: center;
+  justify-content: space-between;
+}
+.inline-edit-footer.is-visible { display: flex; }
+.inline-edit-footer .ief-legend {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--slds-text-3);
+}
+.inline-edit-footer .ief-legend .req-star { color: var(--slds-error); font-style: normal; margin-right: 2px; }
+.inline-edit-footer .ief-actions { display: flex; gap: 8px; }
 
 /* Toast */
 .slds-toast {
@@ -1165,7 +1307,7 @@ a:hover { text-decoration: underline; }
 
 <!-- ====================== Modal Editar ====================== -->
 <div class="modal-backdrop" id="editModal" role="dialog" aria-modal="true">
-  <div class="slds-modal is-wide">
+  <div class="slds-modal is-edit">
     <div class="slds-modal-head">
       <h2 id="editModalTitle">Editar protocolo</h2>
       <button class="slds-modal-close" type="button" data-close-modal="editModal" aria-label="Fechar">
@@ -1180,6 +1322,15 @@ a:hover { text-decoration: underline; }
       <button class="slds-btn" type="button" id="saveAndNewBtn">Salvar e criar</button>
       <button class="slds-btn slds-btn-brand" type="button" id="saveEditBtn">Salvar</button>
     </div>
+  </div>
+</div>
+
+<!-- ====================== Inline Edit Floating Footer ====================== -->
+<div class="inline-edit-footer" id="inlineEditFooter">
+  <div class="ief-legend"><span class="req-star">*</span>= Informações obrigatórias</div>
+  <div class="ief-actions">
+    <button class="slds-btn" type="button" id="inlineEditCancelBtn">Cancelar</button>
+    <button class="slds-btn slds-btn-brand" type="button" id="inlineEditSaveBtn">Salvar</button>
   </div>
 </div>
 
@@ -1535,12 +1686,29 @@ function fieldHTML(label, value, opts) {
   const cls = `field${editable ? " is-editable" : ""}${lockedStruct ? " is-locked" : ""}`;
   const title = (lockedStruct && reason) ? ` title="${escapeHtml(reason)}"` : "";
 
+  /* Input "shadow" pra inline-edit (escondido por default) */
+  const inputHTML = editable ? buildInlineInput(key, CURRENT[key]) : "";
+
   return `
     <div class="${cls}"${title} data-field="${escapeHtml(key)}">
       <div class="field-label">${escapeHtml(label)}</div>
-      <div class="field-value">${v} ${lockIcon}</div>
+      <div class="field-value field-value-display">${v} ${lockIcon}</div>
+      ${editable ? `<div class="field-value-input" data-input-for="${escapeHtml(key)}">${inputHTML}</div>` : ""}
       ${pencil}
     </div>`;
+}
+
+function buildInlineInput(key, raw) {
+  if (key === "embalagem") {
+    return `<select data-inline-field="${key}">${EMBALAGEM_OPTS.map(o => `<option ${o === raw ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}</select>`;
+  }
+  if (key === "dataNf") {
+    return `<input type="date" value="${escapeHtml(raw || "")}" data-inline-field="${key}" />`;
+  }
+  if (key === "qtd" || key === "precoNf") {
+    return `<input type="number" step="0.01" value="${escapeHtml(raw == null ? "" : String(raw))}" data-inline-field="${key}" />`;
+  }
+  return `<input type="text" value="${escapeHtml(raw == null ? "" : String(raw))}" data-inline-field="${key}" />`;
 }
 
 function renderDetails() {
@@ -1674,70 +1842,112 @@ function renderRelated() {
 }
 
 /* =================================================================
-   Inline edit (lapizinho)
+   Inline edit "BILHETE" — qualquer lapisinho ativa edit-mode global
+   no tab Detalhes (todos os campos editáveis viram input simultaneamente,
+   footer flutuante com Cancelar/Salvar aparece no rodapé)
    ================================================================= */
-function startInlineEdit(fieldKey) {
+let inlineEditActive = false;
+let inlineEditSnapshot = null;
+
+function enterInlineEdit(focusFieldKey) {
+  if (inlineEditActive) return;
   const p = CURRENT;
-  const fieldEl = document.querySelector(`.field[data-field="${fieldKey}"]`);
-  if (!fieldEl) return;
-  const labelText = fieldEl.querySelector(".field-label").textContent;
-
-  /* gera input */
-  let inputHTML = "";
-  const raw = p[fieldKey];
-  if (fieldKey === "embalagem") {
-    inputHTML = `<select>${EMBALAGEM_OPTS.map(o => `<option ${o === raw ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}</select>`;
-  } else if (fieldKey === "dataNf") {
-    inputHTML = `<input type="date" value="${escapeHtml(raw || "")}" />`;
-  } else if (fieldKey === "qtd" || fieldKey === "precoNf") {
-    inputHTML = `<input type="number" step="0.01" value="${escapeHtml(raw || "")}" />`;
-  } else {
-    inputHTML = `<input type="text" value="${escapeHtml(raw || "")}" />`;
+  if (p.status === "cancelado") {
+    showToast("Protocolo cancelado: edição bloqueada.", true);
+    return;
   }
-
-  fieldEl.classList.add("is-editing");
-  fieldEl.innerHTML = `
-    <div class="field-label">${escapeHtml(labelText)}</div>
-    ${inputHTML}
-    <div class="field-inline-actions">
-      <button class="field-inline-btn save" type="button" aria-label="Salvar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="field-inline-btn cancel" type="button" aria-label="Cancelar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>`;
-  const ctrl = fieldEl.querySelector("input,select");
-  ctrl.focus();
-  if (ctrl.select) ctrl.select();
-
-  fieldEl.querySelector(".field-inline-btn.save").addEventListener("click", () => {
-    const newVal = ctrl.value;
-    /* validação: volume não pode ser < qtdAgendada */
-    if (fieldKey === "qtd" && Number(newVal) < rules.minVolume(p)) {
-      showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
-      return;
+  inlineEditSnapshot = Object.assign({}, p);
+  const panel = document.getElementById("detailsPanel");
+  panel.classList.add("is-editing");
+  document.getElementById("inlineEditFooter").classList.add("is-visible");
+  inlineEditActive = true;
+  /* foca no campo clicado */
+  if (focusFieldKey) {
+    const target = panel.querySelector(`[data-input-for="${focusFieldKey}"] input, [data-input-for="${focusFieldKey}"] select`);
+    if (target) {
+      target.focus();
+      if (target.select) try { target.select(); } catch(_) {}
     }
-    if (fieldKey === "precoNf" || fieldKey === "qtd") {
-      p[fieldKey] = Number(newVal);
-    } else {
-      p[fieldKey] = newVal;
+  }
+}
+
+function cancelInlineEdit() {
+  if (!inlineEditActive) return;
+  if (inlineEditSnapshot) Object.assign(CURRENT, inlineEditSnapshot);
+  exitInlineEdit();
+  renderDetails();
+}
+
+function saveInlineEdit() {
+  if (!inlineEditActive) return;
+  const p = CURRENT;
+  const inputs = document.querySelectorAll("#detailsPanel.is-editing [data-inline-field]");
+  const changes = [];
+  for (const el of inputs) {
+    const key = el.dataset.inlineField;
+    /* Respeita regras: campo não editável continua intocado */
+    if (!isFieldEditable(p, key)) continue;
+    let v = el.value;
+    if (key === "qtd" || key === "precoNf") {
+      v = v === "" ? null : Number(v);
+      if (key === "qtd" && v != null && v < rules.minVolume(p)) {
+        showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
+        return;
+      }
     }
+    if (p[key] !== v && !(p[key] == null && v === "")) {
+      changes.push({ key, label: labelForKey(key), old: p[key], neu: v });
+      p[key] = v;
+    }
+  }
+  if (changes.length) {
     p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
-    /* registra no histórico (mock) */
-    (HISTORY[p.id] = HISTORY[p.id] || []).unshift({
-      dt: p.dataAlteracao,
-      field: labelText,
-      old: "—",
-      neu: String(newVal),
-      user: "Você"
-    });
-    renderAll();
-    showToast(`${labelText} atualizado.`);
-  });
-  fieldEl.querySelector(".field-inline-btn.cancel").addEventListener("click", () => {
-    renderDetails();
-  });
-  ctrl.addEventListener("keydown", e => {
-    if (e.key === "Escape") renderDetails();
-    if (e.key === "Enter" && ctrl.tagName !== "SELECT") fieldEl.querySelector(".field-inline-btn.save").click();
-  });
+    HISTORY[p.id] = HISTORY[p.id] || [];
+    for (const c of changes) {
+      HISTORY[p.id].unshift({
+        dt: p.dataAlteracao,
+        field: c.label,
+        old: c.old == null || c.old === "" ? "—" : String(c.old),
+        neu: c.neu == null || c.neu === "" ? "—" : String(c.neu),
+        user: "Você"
+      });
+    }
+  }
+  exitInlineEdit();
+  renderAll();
+  showToast(changes.length ? "Alterações salvas com sucesso" : "Nenhuma alteração.");
+}
+
+function exitInlineEdit() {
+  document.getElementById("detailsPanel").classList.remove("is-editing");
+  document.getElementById("inlineEditFooter").classList.remove("is-visible");
+  inlineEditSnapshot = null;
+  inlineEditActive = false;
+}
+
+function isFieldEditable(p, key) {
+  if (p.status === "cancelado") return false;
+  switch (key) {
+    case "qtd":       return rules.canEditVolume(p);
+    case "embalagem": return rules.canEditPackaging(p);
+    case "rota":      return rules.canEditRoute(p);
+    case "nf":
+    case "dataNf":
+    case "precoNf":   return rules.canEditInvoice(p);
+    default:          return false;
+  }
+}
+
+function labelForKey(key) {
+  switch (key) {
+    case "qtd":       return "Volume Desejado";
+    case "embalagem": return "Embalagem";
+    case "rota":      return "Rota de Entrega";
+    case "nf":        return "NF Protocolo";
+    case "dataNf":    return "Data NF Protocolo";
+    case "precoNf":   return "Preço NF Unitário";
+    default:          return key;
+  }
 }
 
 /* =================================================================
@@ -1754,72 +1964,97 @@ function openEditModal() {
   const editableRoute    = rules.canEditRoute(p);
   const editableInvoice  = rules.canEditInvoice(p);
 
-  const lockTag = reason => reason ? `<span class="lock-tag">${LOCK_ICON} ${escapeHtml(reason)}</span>` : "";
+  /* Helper: renderiza um campo no padrão label-esquerda/input-direita */
+  function fld(opts) {
+    const label   = opts.label;
+    const required= !!opts.required;
+    const locked  = !!opts.locked;
+    const key     = opts.key || "";
+    const type    = opts.type || "text";
+    const value   = opts.value == null ? "" : opts.value;
+    const helper  = opts.helper || "";
+    const options = opts.options || null;
+
+    let control;
+    if (options) {
+      control = `<select ${locked ? "disabled" : ""} data-modal-field="${escapeHtml(key)}">
+        ${options.map(o => `<option ${o === value ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}
+      </select>`;
+    } else {
+      control = `<input type="${type}" value="${escapeHtml(String(value))}" ${locked ? "readonly" : ""} data-modal-field="${escapeHtml(key)}" />`;
+    }
+    const lockSvg = locked
+      ? `<svg class="edit-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`
+      : "";
+    const wrapCls = locked ? "edit-form-input-wrap has-lock" : "edit-form-input-wrap";
+    const star = required ? `<span class="req-star">*</span>` : "";
+    return `
+      <div class="edit-form-field">
+        <label>${star}${escapeHtml(label)}</label>
+        <div class="${wrapCls}">
+          ${control}
+          ${lockSvg}
+          ${helper ? `<div class="edit-form-helper">${escapeHtml(helper)}</div>` : ""}
+        </div>
+      </div>`;
+  }
+
+  const sec1 = `
+    <div class="edit-section">
+      <div class="edit-section-head" data-toggle="edit-section">
+        <svg class="edit-section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Informações do Protocolo
+      </div>
+      <div class="edit-section-body">
+        ${fld({ label: "Volume Desejado", required: true, key: "qtd", type: "number", value: p.qtd, locked: !editableVolume })}
+        ${fld({ label: "Status", value: STATUS_LABEL[p.status] || p.status, locked: true })}
+        ${fld({ label: "Embalagem", required: true, key: "embalagem", value: p.embalagem, options: EMBALAGEM_OPTS, locked: !editablePackage })}
+        ${fld({ label: "Cooperado", required: true, value: p.cooperado, locked: true })}
+        ${fld({ label: "Rota de Entrega", key: "rota", value: p.rota, locked: !editableRoute })}
+        ${fld({ label: "Contrato SAP", required: true, value: p.contrato, locked: true })}
+        ${fld({ label: "NF Protocolo", key: "nf", value: p.nf, locked: !editableInvoice })}
+        ${fld({ label: "Data NF", key: "dataNf", type: "date", value: p.dataNf, locked: !editableInvoice })}
+        ${fld({ label: "Preço NF Unitário", key: "precoNf", type: "number", value: p.precoNf, locked: !editableInvoice, helper: "Esse campo é calculado após o salvamento" })}
+        ${fld({ label: "Item Contrato", value: p.itemContrato, locked: true })}
+        ${fld({ label: "Frete", value: p.frete, locked: true })}
+        ${fld({ label: "Planta", value: p.planta, locked: true })}
+      </div>
+    </div>`;
+
+  const sec2 = `
+    <div class="edit-section is-collapsed">
+      <div class="edit-section-head" data-toggle="edit-section">
+        <svg class="edit-section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Endereço de Entrega
+      </div>
+      <div class="edit-section-body">
+        ${fld({ label: "Endereço", value: p.endereco, locked: true })}
+        ${fld({ label: "CEP", value: p.cep, locked: true })}
+        ${fld({ label: "Cidade Recebedor", value: p.cidade, locked: true })}
+        ${fld({ label: "UF", value: p.uf, locked: true })}
+        ${fld({ label: "País", value: p.pais, locked: true })}
+      </div>
+    </div>`;
+
+  const sec3 = `
+    <div class="edit-section is-collapsed">
+      <div class="edit-section-head" data-toggle="edit-section">
+        <svg class="edit-section-head-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        Datas e Vigência
+      </div>
+      <div class="edit-section-body">
+        ${fld({ label: "Data Início Contrato", value: fmtDate(p.dataInicio), locked: true })}
+        ${fld({ label: "Data Fim Contrato", value: fmtDate(p.dataFim), locked: true })}
+        ${fld({ label: "Data Criação", value: p.dataCriacao, locked: true })}
+        ${fld({ label: "Data Última Alteração", value: p.dataAlteracao, locked: true })}
+      </div>
+    </div>`;
 
   const html = `
-    <div class="modal-form-section">
-      <div class="modal-form-section-title">Informações principais</div>
-      <div class="modal-form-grid">
-        <div class="modal-form-field">
-          <label>Número do Protocolo ${lockTag("Imutável")}</label>
-          <input value="${escapeHtml(p.id)}" readonly />
-        </div>
-        <div class="modal-form-field">
-          <label>Status ${lockTag("Somente leitura")}</label>
-          <input value="${escapeHtml(STATUS_LABEL[p.status] || p.status)}" readonly />
-        </div>
-        <div class="modal-form-field">
-          <label>Cooperado ${lockTag("Imutável")}</label>
-          <input value="${escapeHtml(p.cooperado)}" readonly />
-        </div>
-        <div class="modal-form-field">
-          <label>Contrato SAP ${lockTag("Imutável")}</label>
-          <input value="${escapeHtml(p.contrato + " · Item " + p.itemContrato)}" readonly />
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-form-section">
-      <div class="modal-form-section-title">Volume e embalagem</div>
-      <div class="modal-form-grid">
-        <div class="modal-form-field">
-          <label>Volume Desejado (t) ${editableVolume ? "" : lockTag(lockReason(p,"qtd") || "Bloqueado")}</label>
-          <input type="number" step="0.01" min="${rules.minVolume(p)}" value="${p.qtd}" ${editableVolume ? "" : "readonly"} data-modal-field="qtd" />
-        </div>
-        <div class="modal-form-field">
-          <label>Embalagem ${editablePackage ? "" : lockTag(lockReason(p,"embalagem") || "Bloqueado")}</label>
-          ${editablePackage
-            ? `<select data-modal-field="embalagem">${EMBALAGEM_OPTS.map(o => `<option ${o === p.embalagem ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}</select>`
-            : `<input value="${escapeHtml(p.embalagem)}" readonly />`}
-        </div>
-        <div class="modal-form-field">
-          <label>Rota de Entrega ${editableRoute ? "" : lockTag(lockReason(p,"rota") || "Bloqueado")}</label>
-          <input value="${escapeHtml(p.rota)}" ${editableRoute ? "" : "readonly"} data-modal-field="rota" />
-        </div>
-        <div class="modal-form-field">
-          <label>Frete ${lockTag("Vem do SAP")}</label>
-          <input value="${escapeHtml(p.frete)}" readonly />
-        </div>
-      </div>
-    </div>
-
-    <div class="modal-form-section">
-      <div class="modal-form-section-title">Nota Fiscal</div>
-      <div class="modal-form-grid">
-        <div class="modal-form-field">
-          <label>NF Protocolo ${editableInvoice ? "" : lockTag(lockReason(p,"nf") || "Bloqueado")}</label>
-          <input value="${escapeHtml(p.nf)}" ${editableInvoice ? "" : "readonly"} data-modal-field="nf" />
-        </div>
-        <div class="modal-form-field">
-          <label>Data NF Protocolo ${editableInvoice ? "" : lockTag(lockReason(p,"dataNf") || "Bloqueado")}</label>
-          <input type="date" value="${escapeHtml(p.dataNf)}" ${editableInvoice ? "" : "readonly"} data-modal-field="dataNf" />
-        </div>
-        <div class="modal-form-field">
-          <label>Preço NF Unitário (R$) ${editableInvoice ? "" : lockTag(lockReason(p,"precoNf") || "Bloqueado")}</label>
-          <input type="number" step="0.01" value="${p.precoNf}" ${editableInvoice ? "" : "readonly"} data-modal-field="precoNf" />
-        </div>
-      </div>
-    </div>
+    <div class="edit-required-legend"><span class="req-star">*</span>= Informações obrigatórias</div>
+    ${sec1}
+    ${sec2}
+    ${sec3}
   `;
   document.getElementById("editModalBody").innerHTML = html;
   document.getElementById("editModal").classList.add("is-open");
@@ -1910,6 +2145,11 @@ function setupCollapsers() {
       sectHead.parentElement.classList.toggle("is-collapsed");
       return;
     }
+    const editSectHead = e.target.closest(".edit-section-head[data-toggle='edit-section']");
+    if (editSectHead) {
+      editSectHead.parentElement.classList.toggle("is-collapsed");
+      return;
+    }
     const cardHead = e.target.closest(".card-head[data-toggle='card']");
     if (cardHead) {
       cardHead.parentElement.classList.toggle("is-collapsed");
@@ -1928,13 +2168,13 @@ function setupCollapsers() {
   });
 }
 
-/* Detail panel uses event delegation for pencils */
+/* Detail panel uses event delegation for pencils — qualquer ✏️ ativa modo "bilhete" */
 function setupDetailPencils() {
   document.getElementById("detailsPanel").addEventListener("click", e => {
     const btn = e.target.closest("[data-field-edit]");
     if (!btn) return;
     e.stopPropagation();
-    startInlineEdit(btn.dataset.fieldEdit);
+    enterInlineEdit(btn.dataset.fieldEdit);
   });
 }
 
@@ -1961,6 +2201,11 @@ document.getElementById("saveAndNewBtn").addEventListener("click", () => {
   try { saveEditModal(); showToast("Salvo. Criando novo..."); } catch(_) {}
 });
 document.getElementById("confirmCancelBtn").addEventListener("click", confirmCancel);
+document.getElementById("inlineEditCancelBtn").addEventListener("click", cancelInlineEdit);
+document.getElementById("inlineEditSaveBtn").addEventListener("click", saveInlineEdit);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && inlineEditActive) cancelInlineEdit();
+});
 document.getElementById("markCompleteBtn").addEventListener("click", () => {
   const p = CURRENT;
   const idx = PATH_STEPS.indexOf(p.status);
