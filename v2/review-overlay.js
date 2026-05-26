@@ -716,6 +716,10 @@
     return !!el?.closest("[data-review-pin],[data-review-composer],[data-review-fab],[data-review-dialog],[data-review-admin]");
   }
   function stopEvent(e) {
+    // Só bloqueia eventos quando o modo revisão está ATIVO. Senão, mousedown/
+    // mouseup em inputs estavam sendo engolidos, impedindo focus (bug do
+    // volume input).
+    if (!state.enabled) return;
     if (isReviewUI(e.target)) return;
     e.preventDefault();
     e.stopPropagation();
