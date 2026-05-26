@@ -257,12 +257,14 @@ a:hover { text-decoration: underline; }
   display: inline-flex; align-items: center; gap: 6px;
 }
 .slds-btn:hover { background: var(--slds-bg-hover); }
+/* Brand button em verde Mosaic (alinhado com screenshot real Salesforce
+   Mosaic — botão "Marcar status como concluído", botão "Editar", etc.) */
 .slds-btn-brand {
-  background: var(--slds-blue);
-  border-color: var(--slds-blue);
+  background: var(--mosaic-green-800);
+  border-color: var(--mosaic-green-800);
   color: #fff;
 }
-.slds-btn-brand:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
+.slds-btn-brand:hover { background: #003e2a; border-color: #003e2a; }
 .slds-btn-destructive {
   background: var(--slds-error);
   border-color: var(--slds-error);
@@ -388,13 +390,18 @@ a:hover { text-decoration: underline; }
   z-index: 1;
 }
 .sales-path-step:first-child::before { display: none; }
-.sales-path-step.is-completed { background: #cce4f3; color: var(--slds-blue-hover); }
-.sales-path-step.is-completed::after { border-left-color: #cce4f3; }
+/* Sales Path em VERDE Mosaic (alinhado com screenshot real do Salesforce
+   da Mosaic — Contrato 00000103 — não usa azul SLDS aqui) */
+.sales-path-step.is-completed {
+  background: rgba(0, 88, 61, 0.22);
+  color: var(--mosaic-green-800);
+}
+.sales-path-step.is-completed::after { border-left-color: rgba(0, 88, 61, 0.22); }
 .sales-path-step.is-current {
-  background: var(--slds-blue);
+  background: var(--mosaic-green-800);
   color: #fff;
 }
-.sales-path-step.is-current::after { border-left-color: var(--slds-blue); }
+.sales-path-step.is-current::after { border-left-color: var(--mosaic-green-800); }
 .sales-path-step.is-cancelled { background: #fde2e4; color: var(--slds-error); }
 .sales-path-step.is-cancelled::after { border-left-color: #fde2e4; }
 .sales-path-step:last-child { padding-right: 18px; }
