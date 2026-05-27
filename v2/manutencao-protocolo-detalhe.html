@@ -586,6 +586,8 @@ a:hover { text-decoration: underline; }
 }
 .field-value.is-empty { color: var(--slds-text-3); }
 .field.is-editable:hover { background: var(--slds-bg-hover); }
+/* Lapizinho SEMPRE visível ao lado do campo editável (padrão Salesforce real,
+   não só no hover). Cada campo edita INDIVIDUALMENTE. */
 .field.is-editable .field-pencil {
   position: absolute;
   right: 4px;
@@ -597,38 +599,78 @@ a:hover { text-decoration: underline; }
   color: var(--slds-text-3);
   border-radius: 3px;
   cursor: pointer;
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  opacity: 0.65;
+  transition: opacity 120ms, color 120ms, background 120ms;
 }
-.field.is-editable:hover .field-pencil { display: inline-flex; }
-.field.is-editable .field-pencil:hover { color: var(--slds-blue); background: #fff; }
+.field.is-editable:hover .field-pencil { opacity: 1; }
+.field.is-editable .field-pencil:hover { color: var(--slds-blue); background: rgba(1,118,211,0.08); opacity: 1; }
 .field.is-locked .lock-icon {
   width: 11px; height: 11px;
   color: var(--slds-text-3);
   flex-shrink: 0;
   opacity: 0.7;
 }
-.field.is-editing {
+/* Edit individual de UM campo (padrão Salesforce real — click no lapizinho
+   abre só aquele campo, com mini botões ✓/✗ ao lado pra salvar/cancelar) */
+.field.is-editing-single {
   background: #fff;
   outline: 2px solid var(--slds-blue);
   outline-offset: -2px;
-  padding: 8px 26px 8px 4px;
+  padding: 6px 70px 6px 4px;
 }
-.field.is-editing input,
-.field.is-editing select {
+.field.is-editing-single .field-value-display { display: none; }
+.field.is-editing-single .field-value-input { display: block; }
+.field.is-editing-single .field-pencil { display: none; }
+.field.is-editing-single .field-inline-actions { display: inline-flex; }
+.field.is-editing-single input,
+.field.is-editing-single select {
   width: 100%;
-  height: 28px;
+  height: 30px;
   font-size: 13px;
   padding: 0 8px;
   border: 1px solid var(--slds-border);
   border-radius: 3px;
   outline: none;
+  font-family: inherit;
 }
-.field.is-editing input:focus,
-.field.is-editing select:focus {
+.field.is-editing-single input:focus,
+.field.is-editing-single select:focus {
   border-color: var(--slds-blue);
-  box-shadow: 0 0 2px var(--slds-blue);
+  box-shadow: 0 0 0 2px rgba(1,118,211,0.15);
+}
+.field-inline-actions {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  gap: 4px;
+  z-index: 2;
+}
+.field-inline-actions button {
+  width: 26px; height: 26px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--slds-text-2);
+  transition: background 120ms, border-color 120ms, color 120ms;
+}
+.field-inline-actions button[data-action="save"]:hover {
+  background: var(--mosaic-green-800);
+  border-color: var(--mosaic-green-800);
+  color: #fff;
+}
+.field-inline-actions button[data-action="cancel"]:hover {
+  background: #f3f3f3;
+  border-color: var(--slds-text-3);
+  color: var(--slds-error);
 }
 .field-inline-actions {
   display: inline-flex;
@@ -1005,7 +1047,8 @@ a:hover { text-decoration: underline; }
   align-items: center;
   justify-content: space-between;
 }
-.inline-edit-footer.is-visible { display: flex; }
+/* Footer flutuante NÃO USADO MAIS — agora edit é individual por campo */
+.inline-edit-footer.is-visible { display: none !important; }
 .inline-edit-footer .ief-legend {
   font-size: 12px;
   font-style: italic;
@@ -1689,12 +1732,23 @@ function fieldHTML(label, value, opts) {
   /* Input "shadow" pra inline-edit (escondido por default) */
   const inputHTML = editable ? buildInlineInput(key, CURRENT[key]) : "";
 
+  const actions = editable ? `
+    <div class="field-inline-actions">
+      <button type="button" data-action="cancel" data-field-edit-cancel="${escapeHtml(key)}" aria-label="Cancelar" title="Cancelar (Esc)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <button type="button" data-action="save" data-field-edit-save="${escapeHtml(key)}" aria-label="Salvar" title="Salvar (Enter)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+    </div>` : "";
+
   return `
     <div class="${cls}"${title} data-field="${escapeHtml(key)}">
       <div class="field-label">${escapeHtml(label)}</div>
       <div class="field-value field-value-display">${v} ${lockIcon}</div>
-      ${editable ? `<div class="field-value-input" data-input-for="${escapeHtml(key)}">${inputHTML}</div>` : ""}
+      ${editable ? `<div class="field-value-input" data-input-for="${escapeHtml(key)}" style="display:none">${inputHTML}</div>` : ""}
       ${pencil}
+      ${actions}
     </div>`;
 }
 
@@ -1846,84 +1900,97 @@ function renderRelated() {
    no tab Detalhes (todos os campos editáveis viram input simultaneamente,
    footer flutuante com Cancelar/Salvar aparece no rodapé)
    ================================================================= */
-let inlineEditActive = false;
-let inlineEditSnapshot = null;
+/* Inline edit INDIVIDUAL por campo — padrão Salesforce real.
+   Click no ✏️ ativa SÓ aquele campo; mini ✓/✗ ao lado salva/cancela. */
+let editingFieldKey = null;
+let editingFieldSnapshot = null;
 
-function enterInlineEdit(focusFieldKey) {
-  if (inlineEditActive) return;
+function startFieldEdit(key) {
   const p = CURRENT;
   if (p.status === "cancelado") {
     showToast("Protocolo cancelado: edição bloqueada.", true);
     return;
   }
-  inlineEditSnapshot = Object.assign({}, p);
-  const panel = document.getElementById("detailsPanel");
-  panel.classList.add("is-editing");
-  document.getElementById("inlineEditFooter").classList.add("is-visible");
-  inlineEditActive = true;
-  /* foca no campo clicado */
-  if (focusFieldKey) {
-    const target = panel.querySelector(`[data-input-for="${focusFieldKey}"] input, [data-input-for="${focusFieldKey}"] select`);
-    if (target) {
-      target.focus();
-      if (target.select) try { target.select(); } catch(_) {}
-    }
+  if (!isFieldEditable(p, key)) return;
+  /* Se já estava editando outro campo, descarta a edição anterior */
+  if (editingFieldKey && editingFieldKey !== key) cancelFieldEdit();
+
+  editingFieldKey = key;
+  editingFieldSnapshot = p[key];
+
+  const fieldEl = document.querySelector(`#detailsPanel .field[data-field="${key}"]`);
+  if (!fieldEl) return;
+  fieldEl.classList.add("is-editing-single");
+
+  /* Sincroniza o input com o valor atual */
+  const input = fieldEl.querySelector("[data-inline-field]");
+  if (input) {
+    input.value = p[key] == null ? "" : String(p[key]);
+    input.focus();
+    if (input.select) try { input.select(); } catch(_) {}
+    input.addEventListener("keydown", onFieldEditKey);
   }
 }
 
-function cancelInlineEdit() {
-  if (!inlineEditActive) return;
-  if (inlineEditSnapshot) Object.assign(CURRENT, inlineEditSnapshot);
-  exitInlineEdit();
-  renderDetails();
+function onFieldEditKey(e) {
+  if (e.key === "Enter") { e.preventDefault(); commitFieldEdit(); }
+  if (e.key === "Escape") { e.preventDefault(); cancelFieldEdit(); }
 }
 
-function saveInlineEdit() {
-  if (!inlineEditActive) return;
+function cancelFieldEdit() {
+  if (!editingFieldKey) return;
+  const fieldEl = document.querySelector(`#detailsPanel .field[data-field="${editingFieldKey}"]`);
+  if (fieldEl) fieldEl.classList.remove("is-editing-single");
+  editingFieldKey = null;
+  editingFieldSnapshot = null;
+}
+
+function commitFieldEdit() {
+  if (!editingFieldKey) return;
+  const key = editingFieldKey;
   const p = CURRENT;
-  const inputs = document.querySelectorAll("#detailsPanel.is-editing [data-inline-field]");
-  const changes = [];
-  for (const el of inputs) {
-    const key = el.dataset.inlineField;
-    /* Respeita regras: campo não editável continua intocado */
-    if (!isFieldEditable(p, key)) continue;
-    let v = el.value;
-    if (key === "qtd" || key === "precoNf") {
-      v = v === "" ? null : Number(v);
-      if (key === "qtd" && v != null && v < rules.minVolume(p)) {
-        showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
-        return;
-      }
-    }
-    if (p[key] !== v && !(p[key] == null && v === "")) {
-      changes.push({ key, label: labelForKey(key), old: p[key], neu: v });
-      p[key] = v;
+  const fieldEl = document.querySelector(`#detailsPanel .field[data-field="${key}"]`);
+  if (!fieldEl) { cancelFieldEdit(); return; }
+  const input = fieldEl.querySelector("[data-inline-field]");
+  if (!input) { cancelFieldEdit(); return; }
+
+  let v = input.value;
+  if (key === "qtd" || key === "precoNf") {
+    v = v === "" ? null : Number(v);
+    if (key === "qtd" && v != null && v < rules.minVolume(p)) {
+      showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
+      input.focus();
+      return;
     }
   }
-  if (changes.length) {
+
+  const oldVal = editingFieldSnapshot;
+  const changed = !(p[key] === v || (p[key] == null && v === ""));
+
+  if (changed) {
+    p[key] = v;
     p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
     HISTORY[p.id] = HISTORY[p.id] || [];
-    for (const c of changes) {
-      HISTORY[p.id].unshift({
-        dt: p.dataAlteracao,
-        field: c.label,
-        old: c.old == null || c.old === "" ? "—" : String(c.old),
-        neu: c.neu == null || c.neu === "" ? "—" : String(c.neu),
-        user: "Você"
-      });
-    }
+    HISTORY[p.id].unshift({
+      dt: p.dataAlteracao,
+      field: labelForKey(key),
+      old: oldVal == null || oldVal === "" ? "—" : String(oldVal),
+      neu: v == null || v === "" ? "—" : String(v),
+      user: "Você"
+    });
   }
-  exitInlineEdit();
+
+  editingFieldKey = null;
+  editingFieldSnapshot = null;
   renderAll();
-  showToast(changes.length ? "Alterações salvas com sucesso" : "Nenhuma alteração.");
+  if (changed) showToast("Alteração salva com sucesso");
 }
 
-function exitInlineEdit() {
-  document.getElementById("detailsPanel").classList.remove("is-editing");
-  document.getElementById("inlineEditFooter").classList.remove("is-visible");
-  inlineEditSnapshot = null;
-  inlineEditActive = false;
-}
+/* Alias para retrocompatibilidade com chamadas legadas */
+function enterInlineEdit(key) { startFieldEdit(key); }
+function cancelInlineEdit() { cancelFieldEdit(); }
+function saveInlineEdit() { commitFieldEdit(); }
+function exitInlineEdit() { cancelFieldEdit(); }
 
 function isFieldEditable(p, key) {
   if (p.status === "cancelado") return false;
@@ -2171,10 +2238,27 @@ function setupCollapsers() {
 /* Detail panel uses event delegation for pencils — qualquer ✏️ ativa modo "bilhete" */
 function setupDetailPencils() {
   document.getElementById("detailsPanel").addEventListener("click", e => {
-    const btn = e.target.closest("[data-field-edit]");
-    if (!btn) return;
-    e.stopPropagation();
-    enterInlineEdit(btn.dataset.fieldEdit);
+    /* Click no lapizinho ✏️ → ativa edit individual daquele campo */
+    const pencil = e.target.closest("[data-field-edit]");
+    if (pencil) {
+      e.stopPropagation();
+      startFieldEdit(pencil.dataset.fieldEdit);
+      return;
+    }
+    /* Click no ✓ (save) ao lado do campo em edit */
+    const saveBtn = e.target.closest("[data-field-edit-save]");
+    if (saveBtn) {
+      e.stopPropagation();
+      commitFieldEdit();
+      return;
+    }
+    /* Click no ✗ (cancel) ao lado do campo em edit */
+    const cancelBtn = e.target.closest("[data-field-edit-cancel]");
+    if (cancelBtn) {
+      e.stopPropagation();
+      cancelFieldEdit();
+      return;
+    }
   });
 }
 
