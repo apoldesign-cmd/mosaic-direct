@@ -9,32 +9,46 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 <style>
 /* ============================================================
-   Salesforce Lightning — design tokens
-   Cores oficiais aproximadas do SLDS (Lightning Design System)
+   Salesforce Lightning — design tokens (visual modernizado)
    ============================================================ */
 :root {
   --slds-blue:        #0176d3;
   --slds-blue-hover:  #014486;
   --slds-blue-light:  #cfe9fe;
-  --slds-navy:        #032e61;
-  --slds-header-bg:   #16325c;
+  --slds-blue-text:   #014486;
   --slds-border:      #c9c9c9;
   --slds-border-soft: #e5e5e5;
   --slds-bg-page:     #f3f3f3;
-  --slds-bg-section:  #f3f2f2;
-  --slds-bg-hover:    #f3f3f3;
-  --slds-bg-selected: #ecebea;
+  --slds-bg-card:     #ffffff;
+  --slds-bg-hover:    #f9fafb;
+  --slds-bg-strip:    #fafafa;
   --slds-text-1:      #080707;
   --slds-text-2:      #3e3e3c;
   --slds-text-3:      #706e6b;
   --slds-success:     #2e844a;
   --slds-warning:     #fe9339;
-  --slds-error:       #ea001e;
-  --slds-text-link:   #0176d3;
-  --slds-orange:      #ff9a3c; /* tag de protocolo */
+  --slds-error:       #ba0517;
+  --slds-orange:      #ff9a3c;
 
-  /* Mosaic accent (sub-marca) */
-  --mosaic-green:     #00583d;
+  --mosaic-green-800: #00583d;
+  --mosaic-green-700: #006a4d;
+
+  /* Banner amarelo de acesso restrito */
+  --warn-bg:          #fef9e6;
+  --warn-border:      #f5d76e;
+  --warn-text:        #3e3e3c;
+
+  /* Pílulas status */
+  --pill-novo-bg:     #cfe9fe;
+  --pill-novo-tx:     #014486;
+  --pill-lib-bg:      #cfe9fe;
+  --pill-lib-tx:      #014486;
+  --pill-agend-bg:    #fef3c7;
+  --pill-agend-tx:    #854d0e;
+  --pill-concl-bg:    #d1fae5;
+  --pill-concl-tx:    #065f46;
+  --pill-canc-bg:     #e5e7eb;
+  --pill-canc-tx:     #6b7280;
 }
 
 * { box-sizing: border-box; }
@@ -49,1199 +63,707 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-button, input, select, textarea { font-family: inherit; }
+button, input, select { font-family: inherit; }
+a { color: var(--slds-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
 /* ============================================================
-   GLOBAL HEADER (Lightning style — navy bar)
+   Sandbox strip (top thin bar)
    ============================================================ */
-.slds-header {
-  background: var(--slds-header-bg);
-  color: #fff;
+.sandbox-strip {
+  background: #ececec;
+  color: var(--slds-text-2);
+  font-size: 11px;
+  height: 22px;
   padding: 0 16px;
-  height: 48px;
   display: flex;
   align-items: center;
-  gap: 14px;
-  position: relative;
-  z-index: 50;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
 }
-.slds-app-launcher {
-  width: 32px; height: 32px;
-  border: none;
-  background: rgba(255,255,255,0.08);
-  border-radius: 4px;
-  color: #fff;
-  cursor: pointer;
-  display: inline-flex;
+.sandbox-strip strong { font-weight: 600; color: var(--slds-text-1); }
+.sandbox-strip .right { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.sandbox-strip .right:hover { color: var(--slds-blue); }
+
+/* ============================================================
+   Global header (white) — logo + search + ícones
+   ============================================================ */
+.global-header {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  height: 56px;
+  padding: 0 20px;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 18px;
 }
-.slds-app-launcher:hover { background: rgba(255,255,255,0.15); }
-.slds-app-brand {
+.global-logo {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  margin-right: 12px;
+  font-weight: 800;
+  color: var(--mosaic-green-800);
+  font-size: 16px;
+  letter-spacing: -0.01em;
 }
-.slds-app-brand-cloud {
-  background: linear-gradient(135deg, #009ddc 0%, #00a1e0 100%);
+.global-logo .logo-mark {
+  width: 28px; height: 28px;
+  background: var(--mosaic-green-800);
   color: #fff;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 4px 9px;
-  border-radius: 14px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  letter-spacing: 0.02em;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 4px;
 }
-.slds-app-brand-cloud::before {
-  content: "";
-  width: 12px; height: 12px;
-  background: #fff;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.slds-app-name {
-  font-size: 15px;
-  font-weight: 700;
-  color: #fff;
-  letter-spacing: 0.01em;
-}
-.slds-app-name-tag {
-  margin-left: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  color: #b5d0ff;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-.slds-search {
+.global-search {
   flex: 1;
-  max-width: 600px;
+  max-width: 720px;
   margin: 0 auto;
   position: relative;
 }
-.slds-search input {
+.global-search input {
   width: 100%;
-  height: 32px;
-  padding: 0 12px 0 36px;
-  background: rgba(255,255,255,0.95);
-  border: 1px solid transparent;
-  border-radius: 4px;
+  height: 36px;
+  padding: 0 12px 0 38px;
+  border: 1px solid var(--slds-border);
+  border-radius: 18px;
   font-size: 13px;
-  color: var(--slds-text-1);
+  background: #fff;
   outline: none;
 }
-.slds-search input:focus {
-  background: #fff;
+.global-search input:focus {
   border-color: var(--slds-blue);
-  box-shadow: 0 0 3px var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
 }
-.slds-search-icon {
+.global-search svg {
   position: absolute;
-  left: 10px;
+  left: 12px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--slds-text-3);
-  pointer-events: none;
 }
-.slds-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.slds-icon-btn {
-  width: 32px; height: 32px;
-  background: transparent;
+.global-icons { display: inline-flex; align-items: center; gap: 4px; }
+.global-icons .icon-btn {
+  width: 34px; height: 34px;
   border: none;
-  color: #fff;
-  border-radius: 4px;
+  background: transparent;
+  color: var(--slds-text-2);
   cursor: pointer;
+  border-radius: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
-.slds-icon-btn:hover { background: rgba(255,255,255,0.10); }
-.slds-avatar {
+.global-icons .icon-btn:hover { background: #f3f3f3; color: var(--slds-text-1); }
+.global-avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background: #f4b400;
-  color: var(--slds-text-1);
-  font-weight: 700;
-  font-size: 12px;
+  background: var(--mosaic-green-800);
+  color: #fff;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 6px;
   cursor: pointer;
 }
 
 /* ============================================================
-   APP NAVIGATION BAR (white, Lightning tabs)
+   App switcher row — Sales Cloud · Mosaic · INTERNAL
    ============================================================ */
-.slds-app-nav {
+.app-row {
   background: #fff;
   border-bottom: 1px solid var(--slds-border-soft);
-  padding: 0 16px;
-  height: 40px;
+  height: 44px;
+  padding: 0 20px;
   display: flex;
-  align-items: stretch;
-  position: relative;
-  z-index: 40;
+  align-items: center;
+  gap: 14px;
 }
-.slds-app-tab {
+.app-row .left { display: inline-flex; align-items: center; gap: 10px; }
+.app-cloud-pill {
+  background: #e3f3df;
+  color: #064d2c;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 0 14px;
-  font-size: 13px;
-  font-weight: 600;
+  gap: 6px;
+}
+.app-cloud-pill::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: #2e844a;
+  border-radius: 50%;
+  display: inline-block;
+}
+.app-name { font-weight: 700; font-size: 14px; color: var(--slds-text-1); }
+.app-badge-internal {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: #ececec;
   color: var(--slds-text-2);
-  text-decoration: none;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -1px;
+  padding: 3px 7px;
+  border-radius: 3px;
 }
-.slds-app-tab:hover { color: var(--slds-blue); background: var(--slds-bg-hover); }
-.slds-app-tab.is-active {
-  color: var(--slds-text-1);
-  border-bottom-color: var(--slds-blue);
+.app-row .center {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
 }
-.slds-app-tab-more {
-  display: inline-flex;
-  align-items: center;
-  padding: 0 10px;
+.app-row .center input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px 0 32px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 12.5px;
+  background: #fff;
+  outline: none;
+}
+.app-row .center svg {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
   color: var(--slds-text-3);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 13px;
 }
+.app-row .right { display: inline-flex; align-items: center; gap: 4px; }
 
 /* ============================================================
-   INTERNAL BANNER — Acesso restrito
+   Nav tabs row (Home, Accounts, Contracts, Protocols current, …)
+   ============================================================ */
+.nav-tabs {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 44px;
+  overflow-x: auto;
+}
+.nav-tab {
+  position: relative;
+  padding: 0 14px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--slds-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+.nav-tab:hover { color: var(--slds-blue); }
+.nav-tab.is-current {
+  color: var(--slds-blue);
+  font-weight: 600;
+}
+.nav-tab.is-current::after {
+  content: "";
+  position: absolute;
+  left: 10px; right: 10px; bottom: 0;
+  height: 3px;
+  background: var(--slds-blue);
+  border-radius: 2px 2px 0 0;
+}
+.nav-tab .caret { margin-left: 4px; opacity: 0.7; }
+
+/* ============================================================
+   Banner amarelo "Acesso restrito · Time Mosaic"
    ============================================================ */
 .access-banner {
-  background: #fff7e6;
-  border-bottom: 1px solid #ffd591;
-  padding: 8px 16px;
-  font-size: 12px;
-  color: #874d00;
+  background: var(--warn-bg);
+  border-top: 1px solid var(--warn-border);
+  border-bottom: 1px solid var(--warn-border);
+  color: var(--warn-text);
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   gap: 10px;
+  font-size: 12.5px;
 }
-.access-banner-icon {
-  width: 18px; height: 18px;
-  background: #fa8c16;
-  color: #fff;
-  border-radius: 50%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-.access-banner strong { color: #874d00; font-weight: 700; }
+.access-banner svg { color: #b88517; flex-shrink: 0; }
+.access-banner strong { font-weight: 700; color: var(--slds-text-1); }
 
 /* ============================================================
-   PAGE HEADER (object header with list view selector)
+   List view header
    ============================================================ */
-.page-header {
+.list-shell {
+  padding: 16px 20px 32px;
+}
+.list-header {
   background: #fff;
-  border-bottom: 1px solid var(--slds-border-soft);
-  padding: 14px 24px 0;
-}
-.page-header-top {
+  border: 1px solid var(--slds-border-soft);
+  border-bottom: none;
+  padding: 14px 18px 10px;
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  align-items: center;
+  gap: 14px;
 }
-.page-header-icon {
-  width: 36px; height: 36px;
+.list-header .obj-icon {
+  width: 40px; height: 40px;
   background: var(--slds-orange);
-  border-radius: 6px;
   color: #fff;
+  border-radius: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 }
-.page-header-meta { flex: 1; min-width: 0; }
-.page-header-objname {
+.list-header .titles { flex: 1; min-width: 0; }
+.list-header .obj-label {
   font-size: 11px;
   color: var(--slds-text-3);
+  text-transform: none;
   font-weight: 500;
-  margin-bottom: 1px;
+  line-height: 1.2;
 }
-.page-header-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--slds-text-1);
+.list-header .view-selector {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin: 0;
-}
-.page-header-listview {
-  background: transparent;
-  border: none;
-  color: var(--slds-text-1);
   font-size: 18px;
   font-weight: 700;
+  color: var(--slds-text-1);
   cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 4px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  line-height: 1.3;
 }
-.page-header-listview:hover { background: var(--slds-bg-hover); }
-.page-header-actions {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-.slds-btn {
-  height: 32px;
-  padding: 0 12px;
+.list-header .view-selector:hover { color: var(--slds-blue); }
+.list-header .view-selector svg { color: var(--slds-text-2); }
+.list-header .actions { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.list-header .actions .icon-btn {
+  width: 32px; height: 32px;
   border: 1px solid var(--slds-border);
   background: #fff;
+  color: var(--slds-text-2);
   border-radius: 4px;
-  color: var(--slds-blue);
-  font-size: 13px;
-  font-weight: 400;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
 }
-.slds-btn:hover { background: var(--slds-bg-hover); }
-.slds-btn-brand {
-  background: var(--slds-blue);
-  border-color: var(--slds-blue);
-  color: #fff;
-}
-.slds-btn-brand:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
-.slds-btn-icon {
-  width: 32px; padding: 0;
-  color: var(--slds-text-3);
-}
-.slds-btn-icon:hover { color: var(--slds-blue); }
-.page-header-counts {
-  padding: 8px 0;
-  font-size: 12px;
-  color: var(--slds-text-3);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.page-header-counts .count-label {
-  color: var(--slds-text-2);
-  font-weight: 500;
-}
-.page-header-counts strong {
+.list-header .actions .icon-btn:hover { background: var(--slds-bg-hover); color: var(--slds-text-1); }
+.list-header .actions .btn-text {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
   color: var(--slds-text-1);
-  font-weight: 700;
-}
-.page-header-counts .sep { color: var(--slds-border); }
-
-/* Quick filters row */
-.quick-filters {
-  padding: 0 0 12px;
-  display: flex;
-  gap: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
   align-items: center;
+}
+.list-header .actions .btn-text:hover { background: var(--slds-bg-hover); }
+.list-header .actions .btn-primary {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--slds-blue);
+  background: var(--slds-blue);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.list-header .actions .btn-primary:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
+
+/* Info row */
+.list-info {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
+  border-bottom: none;
+  padding: 0 18px 8px;
+  font-size: 11.5px;
+  color: var(--slds-text-3);
+}
+
+/* Filters row */
+.filters-row {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
+  border-bottom: none;
+  padding: 8px 18px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
   flex-wrap: wrap;
 }
-.qf-search {
+.list-search {
   position: relative;
   flex: 0 0 280px;
 }
-.qf-search input {
+.list-search input {
   width: 100%;
   height: 30px;
   padding: 0 10px 0 30px;
   border: 1px solid var(--slds-border);
   border-radius: 4px;
-  background: #fff;
   font-size: 12.5px;
+  background: #fff;
   outline: none;
 }
-.qf-search input:focus { border-color: var(--slds-blue); box-shadow: 0 0 3px var(--slds-blue); }
-.qf-search-icon {
-  position: absolute;
-  left: 9px; top: 50%; transform: translateY(-50%);
-  color: var(--slds-text-3);
-  pointer-events: none;
+.list-search input:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
 }
-.qf-pill {
+.list-search svg {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slds-text-3);
+}
+.filter-pills { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.filter-pill {
   height: 28px;
-  padding: 0 10px;
+  padding: 0 12px;
   border: 1px solid var(--slds-border);
-  border-radius: 999px;
   background: #fff;
+  color: var(--slds-text-2);
+  border-radius: 14px;
+  cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  color: var(--slds-text-1);
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 6px;
 }
-.qf-pill:hover { background: var(--slds-bg-hover); }
-.qf-pill.is-active {
-  background: var(--slds-blue-light);
-  border-color: var(--slds-blue);
-  color: var(--slds-blue-hover);
-}
-.qf-pill .qf-count {
-  background: rgba(0,0,0,0.08);
-  color: inherit;
+.filter-pill:hover { background: var(--slds-bg-hover); }
+.filter-pill .count {
+  background: #ececec;
+  color: var(--slds-text-2);
+  font-size: 11px;
   font-weight: 700;
-  font-size: 10.5px;
   padding: 1px 6px;
-  border-radius: 999px;
+  border-radius: 9px;
+  min-width: 18px;
+  text-align: center;
 }
-.qf-pill.is-active .qf-count { background: rgba(1,118,211,0.20); }
+.filter-pill.is-active {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.filter-pill.is-active .count {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
 
 /* ============================================================
-   TABLE — Lightning list view (inline edit)
+   Table
    ============================================================ */
 .list-table-wrap {
   background: #fff;
-  border-top: 1px solid var(--slds-border-soft);
-  border-bottom: 1px solid var(--slds-border-soft);
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
   overflow-x: auto;
 }
-.list-table {
+table.list-table {
   width: 100%;
-  min-width: 1800px;
   border-collapse: collapse;
-  font-size: 12.5px;
+  font-size: 13px;
+  min-width: 1300px;
 }
 .list-table thead th {
-  background: #fafaf9;
-  border-bottom: 1px solid var(--slds-border);
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
+  background: var(--slds-bg-strip);
   color: var(--slds-text-2);
+  font-size: 11px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
   white-space: nowrap;
-  position: sticky;
-  top: 0;
-  z-index: 3;
+  position: relative;
+  user-select: none;
 }
-.list-table thead th.num { text-align: right; }
+.list-table thead th.sortable { cursor: pointer; }
+.list-table thead th.sortable:hover { background: #f0f0f0; color: var(--slds-text-1); }
+.list-table thead th .th-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
 .list-table thead th .sort-arrow {
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.list-table thead th.is-sorted .sort-arrow { opacity: 1; color: var(--slds-blue); }
+.list-table thead th:first-child { width: 36px; padding-left: 14px; padding-right: 6px; }
+
+.list-table tbody td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  vertical-align: middle;
+  color: var(--slds-text-1);
+}
+.list-table tbody td:first-child { padding-left: 14px; padding-right: 6px; }
+.list-table tbody tr:hover { background: var(--slds-bg-hover); }
+.list-table tbody tr.is-cancelled td {
+  color: var(--slds-text-3);
+  background: #fafafa;
+}
+.list-table tbody tr.is-cancelled .cell-text-strike,
+.list-table tbody tr.is-cancelled .protocol-link {
+  text-decoration: line-through;
+}
+
+.protocol-link {
+  color: var(--slds-blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+.protocol-link:hover { text-decoration: underline; }
+
+.lock-ico {
+  display: inline-flex;
+  vertical-align: -1px;
   margin-left: 4px;
   color: var(--slds-text-3);
-  display: inline-block;
-  font-size: 8px;
+  opacity: 0.7;
 }
-.list-table tbody td {
-  padding: 0;
-  border-bottom: 1px solid var(--slds-border-soft);
-  height: 36px;
-  vertical-align: middle;
-  position: relative;
-}
-.list-table tbody td .cell-content {
-  padding: 8px 12px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  position: relative;
-  cursor: default;
-  min-height: 36px;
-}
-.list-table tbody td.editable .cell-content {
-  cursor: text;
-  padding-right: 32px;
-}
-.list-table tbody td.num .cell-content {
-  justify-content: flex-end;
-  font-variant-numeric: tabular-nums;
-}
-.list-table tbody tr:hover td { background: var(--slds-bg-hover); }
-.list-table tbody tr.is-row-selected td { background: var(--slds-bg-selected); }
 
-/* Cell content text */
-.cell-text {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: var(--slds-text-1);
-}
-.cell-text a { color: var(--slds-blue); text-decoration: none; font-weight: 500; }
-.cell-text a:hover { text-decoration: underline; }
-
-/* Edit pencil (inline edit affordance) */
-.cell-pencil {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 20px; height: 20px;
-  border: none;
-  background: transparent;
-  color: var(--slds-text-3);
+.checkbox {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--slds-border);
+  border-radius: 2px;
+  background: #fff;
   cursor: pointer;
-  display: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 3px;
+  vertical-align: middle;
 }
-.list-table tbody td.editable:hover .cell-pencil { display: inline-flex; }
-.cell-pencil:hover { background: rgba(0,0,0,0.06); color: var(--slds-blue); }
-
-/* Cell in editing state */
-.list-table tbody td.cell-editing {
-  background: #fff !important;
-  box-shadow: inset 0 0 0 2px var(--slds-blue);
-}
-.list-table tbody td.cell-editing .cell-content {
-  padding: 0;
-}
-.list-table tbody td.cell-editing input,
-.list-table tbody td.cell-editing select {
-  width: 100%;
-  height: 100%;
-  border: none;
-  outline: none;
-  padding: 8px 12px;
-  font-size: 12.5px;
-  font-family: inherit;
-  color: var(--slds-text-1);
-  background: transparent;
-}
-.list-table tbody td.cell-editing.num input { text-align: right; }
-.list-table tbody td.cell-editing select {
-  appearance: none;
-  -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 8px center;
-  padding-right: 26px;
+.checkbox.is-checked {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
 }
 
-/* Modified cell indicator (laranja triangulo no canto sup esq) */
-.list-table tbody td.cell-modified::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 0; height: 0;
-  border-top: 8px solid var(--slds-warning);
-  border-right: 8px solid transparent;
-  pointer-events: none;
-  z-index: 1;
-}
-
-/* Status badge */
+/* Status pills */
 .status-pill {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  white-space: nowrap;
-  border: 1px solid;
-}
-.status-pill::before {
-  content: "";
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.status-pill.novo        { background: #e3fcef; color: #1c6b5a; border-color: #b5e7c8; }
-.status-pill.novo::before { background: #1c6b5a; }
-.status-pill.liberado    { background: #d8eee6; color: #1c6b5a; border-color: #a8d8c8; }
-.status-pill.liberado::before { background: #1c6b5a; }
-.status-pill.em_agendamento { background: #fdf3d2; color: #8a6500; border-color: #f5e1a0; }
-.status-pill.em_agendamento::before { background: #8a6500; }
-.status-pill.concluido   { background: #cce0d4; color: #003e2a; border-color: #88b9a0; }
-.status-pill.concluido::before { background: #003e2a; }
-.status-pill.cancelado   { background: #ececea; color: #555; border-color: #c8c8c6; }
-.status-pill.cancelado::before { background: #555; }
-.status-pill.enviar_sap  { background: #f4f4f2; color: #706e6b; border-color: var(--slds-border); }
-.status-pill.enviar_sap::before { background: #706e6b; }
-
-/* Checkbox column */
-.col-check {
-  width: 36px;
-  min-width: 36px;
-  text-align: center;
-  padding: 0 !important;
-}
-.col-check .cell-content {
-  justify-content: center;
-  padding: 0;
-}
-.slds-check {
-  width: 16px; height: 16px;
-  border: 1px solid #706e6b;
-  border-radius: 2px;
-  background: #fff;
-  appearance: none;
-  -webkit-appearance: none;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 80ms;
-  margin: 0;
-}
-.slds-check:checked,
-.slds-check:indeterminate {
-  background: var(--slds-blue);
-  border-color: var(--slds-blue);
-}
-.slds-check:checked::after {
-  content: "";
-  width: 10px; height: 10px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round'><polyline points='20 6 9 17 4 12'/></svg>");
-  background-repeat: no-repeat;
-  background-position: center;
-}
-.slds-check:indeterminate::after {
-  content: "";
-  width: 8px; height: 2px;
-  background: #fff;
-}
-
-/* ============================================================
-   PENDING CHANGES BAR (bottom, when there are unsaved cells)
-   ============================================================ */
-.pending-bar {
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  background: #fff;
-  border-top: 1px solid var(--slds-border);
-  padding: 12px 24px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 -4px 14px rgba(0,0,0,0.06);
-  z-index: 80;
-  transform: translateY(100%);
-  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
-}
-.pending-bar.is-visible { transform: translateY(0); }
-.pending-bar-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: var(--slds-text-1);
-  margin-right: auto;
-}
-.pending-bar-status .pending-dot {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: var(--slds-warning);
-}
-.pending-bar-status strong {
-  color: var(--slds-text-1);
-  font-weight: 700;
-}
-.pending-bar-actions {
-  display: flex;
-  gap: 8px;
-}
-
-/* ============================================================
-   CONFIRMATION MODAL
-   ============================================================ */
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(8,7,7,0.55);
-  z-index: 200;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-.modal-backdrop.is-open { display: flex; }
-.slds-modal {
-  background: #fff;
-  border-radius: 4px;
-  width: 100%;
-  max-width: 480px;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
-}
-.slds-modal-head {
-  padding: 14px 20px;
-  border-bottom: 1px solid var(--slds-border-soft);
-  background: var(--slds-bg-section);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.slds-modal-head h2 {
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--slds-text-1);
-  margin: 0;
-}
-.slds-modal-body {
-  padding: 20px;
-  font-size: 13px;
-  color: var(--slds-text-2);
-  line-height: 1.5;
-}
-.slds-modal-body strong { color: var(--slds-text-1); font-weight: 700; }
-.slds-modal-foot {
-  padding: 12px 20px;
-  border-top: 1px solid var(--slds-border-soft);
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  background: var(--slds-bg-section);
-}
-.slds-btn-destructive {
-  background: var(--slds-error);
-  border-color: var(--slds-error);
-  color: #fff;
-}
-.slds-btn-destructive:hover {
-  background: #c70015;
-  border-color: #c70015;
-}
-
-/* Toast */
-.slds-toast {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%) translateY(120px);
-  background: var(--slds-success);
-  color: #fff;
-  padding: 11px 18px;
-  border-radius: 4px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.20);
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 13px;
-  font-weight: 600;
-  z-index: 220;
-  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
-  pointer-events: none;
-}
-.slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
-.slds-toast.is-error { background: var(--slds-error); }
-
-/* Container padding for scroll */
-.list-content { padding-bottom: 80px; }
-
-/* ============================================================
-   LOCKED CELLS (SMDP-161 — campos bloqueados por SAP/SO/OV/Billing)
-   ============================================================ */
-.list-table tbody td.is-locked {
-  background: #fafafa;
-}
-.list-table tbody td.is-locked .cell-content {
-  cursor: not-allowed;
-  padding-right: 28px;
-}
-.list-table tbody td.is-locked:hover { background: #fafafa; }
-.list-table tbody tr:hover td.is-locked { background: #fafafa; }
-.cell-lock-icon {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px; height: 12px;
-  color: var(--slds-text-3);
-  pointer-events: none;
-  flex-shrink: 0;
-}
-
-/* Linhas canceladas */
-.list-table tbody tr.row-cancelled td {
-  color: var(--slds-text-3);
-}
-.list-table tbody tr.row-cancelled td.is-locked { background: #f7f7f7; }
-.list-table tbody tr.row-cancelled .cell-text a,
-.list-table tbody tr.row-cancelled .cell-text strong { color: var(--slds-text-3); }
-.list-table tbody tr.row-cancelled td[data-field="id"] .cell-text a {
-  text-decoration: line-through;
-}
-/* Em linhas canceladas, esconde o ícone de cadeado — a pílula de status já comunica */
-.list-table tbody tr.row-cancelled .cell-lock-icon { display: none; }
-
-/* ============================================================
-   ROW ACTIONS (dropdown chevron na última coluna)
-   ============================================================ */
-.col-actions { width: 44px; min-width: 44px; }
-.col-actions .cell-content { justify-content: center; padding: 0; }
-.row-actions-btn {
-  width: 24px; height: 24px;
-  border: 1px solid transparent;
-  background: transparent;
-  border-radius: 3px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--slds-text-3);
-}
-.row-actions-btn:hover {
-  background: var(--slds-bg-hover);
-  border-color: var(--slds-border);
-  color: var(--slds-blue);
-}
-.row-actions-menu {
-  position: absolute;
-  right: 8px;
-  top: 30px;
-  background: #fff;
-  border: 1px solid var(--slds-border);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-  min-width: 180px;
-  z-index: 30;
-  padding: 4px 0;
-  display: none;
-}
-.row-actions-menu.is-open { display: block; }
-.row-actions-menu button {
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  padding: 8px 14px;
-  font-size: 12.5px;
-  color: var(--slds-text-1);
-  cursor: pointer;
-  font-family: inherit;
-}
-.row-actions-menu button:hover { background: var(--slds-bg-hover); }
-.row-actions-menu button:disabled {
-  color: var(--slds-text-3);
-  cursor: not-allowed;
-}
-.row-actions-menu button.is-destructive { color: var(--slds-error); }
-.row-actions-menu button.is-destructive:hover { background: #fef2f2; }
-.row-actions-menu .menu-reason {
-  font-size: 11px;
-  color: var(--slds-error);
-  padding: 2px 14px 8px;
-  line-height: 1.3;
-}
-
-/* ============================================================
-   MASS EDIT TOOLBAR
-   ============================================================ */
-.mass-toolbar {
-  background: var(--slds-blue-light);
-  border-bottom: 1px solid var(--slds-blue);
-  padding: 8px 24px;
-  display: none;
-  align-items: center;
-  gap: 12px;
-  font-size: 13px;
-}
-.mass-toolbar.is-visible { display: flex; }
-.mass-toolbar-status {
-  color: var(--slds-blue-hover);
-  font-weight: 600;
-  margin-right: auto;
-}
-.mass-toolbar-status strong { color: var(--slds-text-1); font-weight: 700; }
-
-/* ============================================================
-   MASS EDIT MODAL (form)
-   ============================================================ */
-.slds-modal.is-wide { max-width: 600px; }
-.mass-form { display: flex; flex-direction: column; gap: 14px; }
-.mass-form-warn {
-  background: #fff7e6;
-  border: 1px solid #ffd591;
-  color: #874d00;
-  padding: 9px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  line-height: 1.4;
-}
-.mass-form-row {
-  display: flex;
-  flex-direction: column;
   gap: 4px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
 }
-.mass-form-row label {
+.status-novo        { background: var(--pill-novo-bg);  color: var(--pill-novo-tx); }
+.status-liberado    { background: var(--pill-lib-bg);   color: var(--pill-lib-tx); }
+.status-em-agend    { background: var(--pill-agend-bg); color: var(--pill-agend-tx); }
+.status-concluido   { background: var(--pill-concl-bg); color: var(--pill-concl-tx); }
+.status-cancelado   { background: var(--pill-canc-bg);  color: var(--pill-canc-tx); }
+
+/* Cell stack (linha 1 forte + linha 2 fraca) */
+.cell-stack { display: flex; flex-direction: column; line-height: 1.3; }
+.cell-stack .sub { color: var(--slds-text-3); font-size: 11.5px; }
+
+/* Frete badge */
+.frete-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--slds-text-2);
-  text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.mass-form-row input,
-.mass-form-row select {
-  height: 32px;
-  border: 1px solid var(--slds-border);
-  border-radius: 4px;
-  padding: 0 10px;
-  font-size: 13px;
-  font-family: inherit;
-  background: #fff;
-  color: var(--slds-text-1);
-  outline: none;
-}
-.mass-form-row input:focus,
-.mass-form-row select:focus {
-  border-color: var(--slds-blue);
-  box-shadow: 0 0 3px var(--slds-blue);
-}
-.mass-form-row .hint {
-  font-size: 11px;
+.frete-badge.cif { background: #e0f2fe; color: #075985; }
+.frete-badge.fob { background: #fff0e6; color: #9a3412; }
+
+/* Empty state */
+.empty-row td {
+  text-align: center;
+  padding: 40px 16px;
   color: var(--slds-text-3);
-}
-.mass-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  font-size: 13px;
 }
 
-.cancel-list {
-  margin: 6px 0 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 12px;
-  color: var(--slds-text-2);
-}
-.cancel-list li {
-  padding: 4px 0;
-  border-bottom: 1px solid var(--slds-border-soft);
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-}
-.cancel-list li:last-child { border-bottom: none; }
-.cancel-list .cancel-reason {
-  color: var(--slds-error);
-  font-size: 11px;
-  font-weight: 600;
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .global-search { max-width: 240px; }
+  .app-row .center { display: none; }
+  .filters-row { flex-direction: column; align-items: stretch; }
+  .list-search { flex: 1 1 auto; }
 }
 </style>
 </head>
 <body>
 
-<!-- =================================================================
-     SALESFORCE HEADER (navy)
-     ================================================================= -->
-<header class="slds-header" role="banner">
-  <button class="slds-app-launcher" type="button" aria-label="App Launcher" title="App Launcher">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/>
-      <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
-      <circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/>
-    </svg>
-  </button>
-  <div class="slds-app-brand">
-    <span class="slds-app-brand-cloud">Sales Cloud</span>
-    <span class="slds-app-name">Mosaic <span class="slds-app-name-tag">Internal</span></span>
+<!-- Sandbox strip -->
+<div class="sandbox-strip">
+  <div><strong>Sandbox:</strong> IntDev</div>
+  <div class="right">Opções
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
-  <div class="slds-search">
-    <span class="slds-search-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </span>
-    <input type="search" placeholder="Search Salesforce…" aria-label="Search" />
+</div>
+
+<!-- Global header (white) -->
+<header class="global-header">
+  <div class="global-logo">
+    <span class="logo-mark">M</span>
+    <span>Mosaic</span>
   </div>
-  <div class="slds-header-actions">
-    <button class="slds-icon-btn" type="button" aria-label="Favorites" title="Favorites">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9 12 2"/></svg>
-    </button>
-    <button class="slds-icon-btn" type="button" aria-label="Setup" title="Setup">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-    </button>
-    <button class="slds-icon-btn" type="button" aria-label="Notifications" title="Notifications">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    </button>
-    <button class="slds-avatar" type="button" aria-label="Account">AH</button>
+  <div class="global-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Pesquisar..." />
+  </div>
+  <div class="global-icons">
+    <button class="icon-btn" title="Favoritos" aria-label="Favoritos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+    <button class="icon-btn" title="Novo" aria-label="Novo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></button>
+    <button class="icon-btn" title="Apps" aria-label="Apps"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+    <button class="icon-btn" title="Ajuda" aria-label="Ajuda"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+    <button class="icon-btn" title="Setup" aria-label="Setup"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="icon-btn" title="Notificações" aria-label="Notificações"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+    <span class="global-avatar" title="Victor Dias">VD</span>
   </div>
 </header>
 
-<!-- =================================================================
-     APP NAVIGATION TABS
-     ================================================================= -->
-<nav class="slds-app-nav" role="navigation">
-  <a href="#" class="slds-app-tab">Home</a>
-  <a href="#" class="slds-app-tab">Accounts</a>
-  <a href="#" class="slds-app-tab">Contracts</a>
-  <a href="#" class="slds-app-tab">Opportunities</a>
-  <a href="#" class="slds-app-tab is-active">Protocols</a>
-  <a href="#" class="slds-app-tab">Schedulings</a>
-  <a href="#" class="slds-app-tab">Reports</a>
-  <a href="#" class="slds-app-tab">Dashboards</a>
-  <button class="slds-app-tab-more" type="button" aria-label="More">More ▾</button>
-</nav>
-
-<!-- =================================================================
-     INTERNAL ACCESS BANNER
-     ================================================================= -->
-<div class="access-banner" role="status">
-  <span class="access-banner-icon">
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
-  </span>
-  <span>
-    <strong>Acesso restrito · Time Mosaic.</strong>
-    Esta tela é exclusiva da equipe interna Mosaic para manutenção de protocolos.
-    Não é visível para cooperados ou parceiros externos.
-  </span>
+<!-- App switcher row -->
+<div class="app-row">
+  <div class="left">
+    <span class="app-cloud-pill">Sales Cloud</span>
+    <span class="app-name">Mosaic</span>
+    <span class="app-badge-internal">INTERNAL</span>
+  </div>
+  <div class="center">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search Salesforce" />
+  </div>
+  <div class="right">
+    <button class="icon-btn" title="Favoritos"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+    <button class="icon-btn" title="Setup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="icon-btn" title="Notificações"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+    <span class="global-avatar" style="background:#1f5e9b">AH</span>
+  </div>
 </div>
 
-<!-- =================================================================
-     PAGE HEADER (object header)
-     ================================================================= -->
-<div class="page-header">
-  <div class="page-header-top">
-    <span class="page-header-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-    </span>
-    <div class="page-header-meta">
-      <div class="page-header-objname">Protocols</div>
-      <h1 class="page-header-title">
-        <button class="page-header-listview" type="button">
-          All Active Protocols
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </h1>
+<!-- Nav tabs row -->
+<nav class="nav-tabs" aria-label="Object navigation">
+  <button class="nav-tab">Home</button>
+  <button class="nav-tab">Accounts</button>
+  <button class="nav-tab">Contracts</button>
+  <button class="nav-tab">Opportunities</button>
+  <button class="nav-tab is-current">Protocols</button>
+  <button class="nav-tab">Schedulings</button>
+  <button class="nav-tab">Reports</button>
+  <button class="nav-tab">Dashboards</button>
+  <button class="nav-tab">More
+    <svg class="caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+</nav>
+
+<!-- Banner amarelo -->
+<div class="access-banner" role="note">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  <div><strong>Acesso restrito · Time Mosaic.</strong> Esta tela é exclusiva da equipe interna Mosaic para manutenção de protocolos. Não é visível para cooperados ou parceiros externos.</div>
+</div>
+
+<!-- List shell -->
+<main class="list-shell">
+
+  <!-- List header -->
+  <div class="list-header">
+    <div class="obj-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
     </div>
-    <div class="page-header-actions">
-      <button class="slds-btn slds-btn-icon" type="button" aria-label="List view controls" title="List view controls">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      </button>
-      <button class="slds-btn slds-btn-icon" type="button" aria-label="Refresh" title="Refresh">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-      </button>
-      <button class="slds-btn slds-btn-icon" type="button" aria-label="Edit list" title="Edit list">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </button>
-      <button class="slds-btn" type="button">Import</button>
-      <button class="slds-btn slds-btn-brand" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    <div class="titles">
+      <div class="obj-label">Protocols</div>
+      <div class="view-selector" id="viewSelector">
+        <span>All Active Protocols</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="icon-btn" title="Lista" aria-label="Lista"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <button class="icon-btn" id="btnRefresh" title="Atualizar" aria-label="Atualizar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+      <button class="icon-btn" title="Editar lista" aria-label="Editar lista"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-text" type="button">Import</button>
+      <button class="btn-primary" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New
       </button>
     </div>
   </div>
 
-  <div class="page-header-counts">
-    <span><strong id="totalCount">5</strong> items <span class="count-label">· Sorted by Protocol Number · Filtered by My Team · Updated a few seconds ago</span></span>
+  <!-- Info row -->
+  <div class="list-info" id="infoRow">
+    6 items · Sorted by Protocol Number · Filtered by My Team · Updated a few seconds ago
   </div>
 
-  <div class="quick-filters">
-    <div class="qf-search">
-      <span class="qf-search-icon">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-      <input id="quickSearch" type="search" placeholder="Search this list…" />
+  <!-- Filters row -->
+  <div class="filters-row">
+    <div class="list-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="listSearch" placeholder="Search this list..." />
     </div>
-    <button class="qf-pill is-active" type="button" data-filter="all">All <span class="qf-count" id="cntAll">5</span></button>
-    <button class="qf-pill" type="button" data-filter="novo">Novo <span class="qf-count" id="cntNovo">0</span></button>
-    <button class="qf-pill" type="button" data-filter="liberado">Liberado <span class="qf-count" id="cntLib">0</span></button>
-    <button class="qf-pill" type="button" data-filter="em_agendamento">Em Agend. <span class="qf-count" id="cntAg">0</span></button>
-    <button class="qf-pill" type="button" data-filter="concluido">Concluído <span class="qf-count" id="cntConc">0</span></button>
-    <button class="qf-pill" type="button" data-filter="cancelado">Cancelado <span class="qf-count" id="cntCanc">0</span></button>
+    <div class="filter-pills" id="filterPills">
+      <button class="filter-pill is-active" data-status="all">All <span class="count" id="count-all">6</span></button>
+      <button class="filter-pill" data-status="novo">Novo <span class="count" id="count-novo">1</span></button>
+      <button class="filter-pill" data-status="liberado">Liberado <span class="count" id="count-liberado">1</span></button>
+      <button class="filter-pill" data-status="em_agendamento">Em Agend. <span class="count" id="count-em_agendamento">2</span></button>
+      <button class="filter-pill" data-status="concluido">Concluído <span class="count" id="count-concluido">1</span></button>
+      <button class="filter-pill" data-status="cancelado">Cancelado <span class="count" id="count-cancelado">1</span></button>
+    </div>
   </div>
-</div>
 
-<!-- =================================================================
-     MASS EDIT TOOLBAR (only visible when ≥1 row selected)
-     ================================================================= -->
-<div class="mass-toolbar" id="massToolbar" role="region" aria-label="Mass edit toolbar">
-  <span class="mass-toolbar-status">
-    <strong id="massSelCount">0</strong> protocolo(s) selecionado(s)
-  </span>
-  <button class="slds-btn" id="massClearBtn" type="button">Limpar seleção</button>
-  <button class="slds-btn slds-btn-destructive" id="massCancelBtn" type="button">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-    Cancelar selecionados
-  </button>
-  <button class="slds-btn slds-btn-brand" id="massEditBtn" type="button">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    Edição em massa
-  </button>
-</div>
-
-<!-- =================================================================
-     LIST TABLE
-     ================================================================= -->
-<div class="list-content">
+  <!-- Table -->
   <div class="list-table-wrap">
-    <table class="list-table" id="listTable">
+    <table class="list-table" id="protocolTable">
       <thead>
-        <tr>
-          <th class="col-check">
-            <input type="checkbox" class="slds-check" id="checkAll" aria-label="Select all" />
-          </th>
-          <th>Protocol <span class="sort-arrow">▾</span></th>
-          <th>Status</th>
-          <th>Contrato SAP</th>
-          <th>Cotação</th>
-          <th>Cliente · Filial</th>
-          <th>CPF/CNPJ</th>
-          <th>Cidade · UF</th>
-          <th>Cooperado</th>
-          <th>Produto</th>
-          <th>Embalagem</th>
-          <th>Frete</th>
-          <th>Planta</th>
-          <th>Rota de entrega</th>
-          <th class="num">Qtd Protocolo (t)</th>
-          <th class="num">Saldo (t)</th>
-          <th class="num">Qtd Agendada (t)</th>
-          <th>NF</th>
-          <th>Data NF</th>
-          <th class="num">Preço NF (R$)</th>
-          <th>Owner</th>
-          <th>Última Modificação</th>
-          <th class="col-actions" aria-label="Ações"></th>
+        <tr id="theadRow">
+          <th><span class="checkbox" id="headCheckbox" role="checkbox" tabindex="0"></span></th>
+          <th class="sortable" data-sort="id"><span class="th-inner">Protocol <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="status"><span class="th-inner">Status <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="contratoSap"><span class="th-inner">Contrato SAP <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cotacao"><span class="th-inner">Cotação <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="clienteFilial"><span class="th-inner">Cliente · Filial <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cnpj"><span class="th-inner">CPF/CNPJ <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cidadeUf"><span class="th-inner">Cidade · UF <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cooperado"><span class="th-inner">Cooperado <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="produto"><span class="th-inner">Produto <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="embalagem"><span class="th-inner">Embalagem <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="frete"><span class="th-inner">Frete <span class="sort-arrow">▾</span></span></th>
         </tr>
       </thead>
-      <tbody id="listBody"><!-- rendered by JS --></tbody>
+      <tbody id="protocolTableBody"></tbody>
     </table>
   </div>
-</div>
 
-<!-- =================================================================
-     PENDING CHANGES BAR (bottom)
-     ================================================================= -->
-<div class="pending-bar" id="pendingBar" role="status" aria-live="polite">
-  <div class="pending-bar-status">
-    <span class="pending-dot"></span>
-    <span><strong id="pendingCount">0</strong> cell<span id="pendingPlural">s</span> modified · changes will be lost if you reload</span>
-  </div>
-  <div class="pending-bar-actions">
-    <button class="slds-btn" id="cancelAllBtn" type="button">Cancel</button>
-    <button class="slds-btn slds-btn-brand" id="applyAllBtn" type="button">Apply <span id="applyCount">0</span> updates</button>
-  </div>
-</div>
-
-<!-- =================================================================
-     CONFIRM DISCARD MODAL
-     ================================================================= -->
-<div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true">
-  <div class="slds-modal">
-    <div class="slds-modal-head">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-warning)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      <h2>Descartar alterações?</h2>
-    </div>
-    <div class="slds-modal-body">
-      Você está prestes a descartar <strong id="confirmModalCount">0</strong> alterações pendentes nesta lista. Essa ação não pode ser desfeita.
-    </div>
-    <div class="slds-modal-foot">
-      <button class="slds-btn" id="confirmNo" type="button">Voltar a editar</button>
-      <button class="slds-btn slds-btn-destructive" id="confirmYes" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        Descartar
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- =================================================================
-     CANCEL PROTOCOL MODAL (single or bulk)
-     ================================================================= -->
-<div class="modal-backdrop" id="cancelModal" role="dialog" aria-modal="true">
-  <div class="slds-modal">
-    <div class="slds-modal-head">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-error)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
-      <h2 id="cancelModalTitle">Cancelar protocolo?</h2>
-    </div>
-    <div class="slds-modal-body">
-      <p id="cancelModalBody">Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato. Não é reversível.</p>
-      <ul class="cancel-list" id="cancelList"></ul>
-    </div>
-    <div class="slds-modal-foot">
-      <button class="slds-btn" id="cancelModalBack" type="button">Voltar</button>
-      <button class="slds-btn slds-btn-destructive" id="cancelModalConfirm" type="button">
-        Cancelar protocolo
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- =================================================================
-     MASS EDIT MODAL (form)
-     ================================================================= -->
-<div class="modal-backdrop" id="massEditModal" role="dialog" aria-modal="true">
-  <div class="slds-modal is-wide">
-    <div class="slds-modal-head">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--slds-blue)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      <h2>Edição em massa · <span id="massEditCount">0</span> protocolo(s)</h2>
-    </div>
-    <div class="slds-modal-body">
-      <form class="mass-form" id="massEditForm" onsubmit="return false;">
-        <div class="mass-form-warn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span>Campos não editáveis em alguns protocolos (já enviados ao SAP, com OV gerada ou faturados) serão ignorados nessa linha.</span>
-        </div>
-
-        <div class="mass-form-row">
-          <label>Volume (t)</label>
-          <input type="number" id="massVol" min="0" step="1" placeholder="Deixe em branco para não alterar" />
-          <span class="hint" id="massVolHint">Apenas redução é permitida.</span>
-        </div>
-
-        <div class="mass-form-grid">
-          <div class="mass-form-row">
-            <label>Embalagem</label>
-            <select id="massEmb">
-              <option value="">— Não alterar —</option>
-            </select>
-          </div>
-          <div class="mass-form-row">
-            <label>Rota de entrega</label>
-            <input type="text" id="massRota" placeholder="Não alterar" />
-          </div>
-        </div>
-
-        <div class="mass-form-grid">
-          <div class="mass-form-row">
-            <label>NF</label>
-            <input type="text" id="massNf" placeholder="Não alterar" />
-          </div>
-          <div class="mass-form-row">
-            <label>Data NF</label>
-            <input type="date" id="massDataNf" />
-          </div>
-        </div>
-
-        <div class="mass-form-row">
-          <label>Preço NF (R$)</label>
-          <input type="number" id="massPreco" min="0" step="0.01" placeholder="Não alterar" />
-        </div>
-      </form>
-    </div>
-    <div class="slds-modal-foot">
-      <button class="slds-btn" id="massEditCancel" type="button">Voltar</button>
-      <button class="slds-btn slds-btn-brand" id="massEditApply" type="button">
-        Aplicar nas <span id="massApplyCount">0</span> selecionadas
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="slds-toast" id="toast" role="status">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-  <span id="toastText">Updated</span>
-</div>
+</main>
 
 <script>
 /* =================================================================
-   DATA — protocolos sample (mesma base do Relatorio de Protocolos)
+   DATA — protocolos sample (US SMDP-161)
    ================================================================= */
-/* SMDP-161 sample data:
+/*
+   Campos por protocolo:
    - qtdAgendada: soma dos requests ativos no SAP (mínimo do volume)
    - hasSO:      Sales Order já gerada (trava embalagem)
    - hasOV:      Ordem de Venda já gerada (trava rota)
@@ -1253,78 +775,46 @@ button, input, select, textarea { font-family: inherit; }
    até a geração da OV, sem distinção de frete.
 */
 const PROTOCOLS = [
-  // Novo, sem nada gerado — tudo editável
-  { id:"M9W38746", status:"novo",           contrato:"20084782", cotacao:"Q-394874",
-    filial:"Filial São Paulo",  cnpj:"12.345.678/0001-90", cidade:"São Paulo",  uf:"SP",
-    cooperado:"CARLOS ALVES",   produto:"FFALM 10 20 30",  embalagem:"Saco 50kg",
-    frete:"CIF", planta:"Limeira", rota:"BR-364 · Rota A",
-    qtd:300, saldo:300, qtdAgendada:0,
-    nf:"", dataNf:"", precoNf:0,
-    hasSO:false, hasOV:false, hasBilling:false, hasActiveRequests:false,
-    owner:"Alyssa Harris", updated:"5 min" },
-
-  // Em agendamento, SO já gerada, OV em andamento, faturamento parcial não — embalagem locked, rota locked
-  { id:"M9W47291", status:"em_agendamento", contrato:"20085391", cotacao:"Q-451220",
-    filial:"Filial Curitiba",   cnpj:"23.456.789/0001-01", cidade:"Curitiba",   uf:"PR",
-    cooperado:"BETO DOS SANTOS", produto:"DAP 18 46 00",   embalagem:"Granel",
-    frete:"FOB", planta:"Paranaguá", rota:"BR-277 · Rota Litoral",
-    qtd:500, saldo:200, qtdAgendada:200,
-    nf:"", dataNf:"", precoNf:0,
-    hasSO:true, hasOV:true, hasBilling:false, hasActiveRequests:true,
-    owner:"Marcos Lima",   updated:"23 min" },
-
-  // Concluído + faturado — TUDO locked, exceto talvez owner
-  { id:"M9W51038", status:"concluido",      contrato:"20086112", cotacao:"Q-512883",
-    filial:"Filial Porto Alegre", cnpj:"34.567.890/0001-34", cidade:"Porto Alegre", uf:"RS",
-    cooperado:"TEREZA AKEMI",   produto:"MAP 11 52 00",    embalagem:"Big Bag 1000kg",
-    frete:"CIF", planta:"Cubatão", rota:"BR-101 · Rota Sul",
-    qtd:200, saldo:0, qtdAgendada:200,
-    nf:"000123456", dataNf:"2026-04-18", precoNf:4280.50,
-    hasSO:true, hasOV:true, hasBilling:true, hasActiveRequests:false,
-    owner:"Patricia Vega", updated:"2h" },
-
-  // Cancelado — tudo locked (pílula de status já comunica)
-  { id:"M9W63847", status:"cancelado",      contrato:"20086901", cotacao:"Q-602114",
-    filial:"Filial Rio Verde",  cnpj:"45.678.901/0001-45", cidade:"Rio Verde",  uf:"GO",
-    cooperado:"JORGE DOS ANJOS", produto:"FFALM 10 20 30", embalagem:"Saco 50kg",
-    frete:"FOB", planta:"Rondonópolis", rota:"BR-364 · Rota A",
-    qtd:150, saldo:0, qtdAgendada:0,
-    nf:"", dataNf:"", precoNf:0,
-    hasSO:false, hasOV:false, hasBilling:false, hasActiveRequests:false,
-    owner:"Carlos Mendes", updated:"1d" },
-
-  // Liberado, SO gerada, sem OV — só embalagem locked
-  { id:"M9W71205", status:"liberado",       contrato:"20087445", cotacao:"Q-712005",
-    filial:"Filial Londrina",   cnpj:"56.789.012/0001-56", cidade:"Londrina",   uf:"PR",
-    cooperado:"RENATO CESAR",   produto:"KCl Granulado",   embalagem:"Granel",
-    frete:"CIF", planta:"Paranaguá", rota:"BR-277 · Rota Litoral",
-    qtd:400, saldo:400, qtdAgendada:0,
-    nf:"", dataNf:"", precoNf:0,
-    hasSO:true, hasOV:false, hasBilling:false, hasActiveRequests:false,
-    owner:"Alyssa Harris", updated:"3h" },
-
-  // Em agendamento, billing parcial gerado — NF locked, volume locked
-  { id:"M9W82914", status:"em_agendamento", contrato:"20088001", cotacao:"Q-803344",
-    filial:"Filial Uberlândia", cnpj:"67.890.123/0001-67", cidade:"Uberlândia", uf:"MG",
-    cooperado:"AGUINADO GOMES", produto:"NPK 04 14 08",    embalagem:"Saco 50kg",
-    frete:"CIF", planta:"Uberaba", rota:"BR-050 · Triângulo",
-    qtd:250, saldo:100, qtdAgendada:100,
-    nf:"000201339", dataNf:"2026-05-10", precoNf:3950.00,
-    hasSO:true, hasOV:true, hasBilling:true, hasActiveRequests:true,
-    owner:"Marcos Lima", updated:"45 min" },
+  { id: "M9W38746", status: "novo",            contratoSap: "20084782", cotacao: "Q-394874", clienteFilial: "Filial São Paulo",   cnpj: "12.345.678/0001-90", cidadeUf: "São Paulo · SP",    cooperado: "CARLOS ALVES",      produto: "FFALM 10 20 30", embalagem: "Saco 50kg",       frete: "CIF",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 1500 },
+  { id: "M9W47291", status: "em_agendamento",  contratoSap: "20085391", cotacao: "Q-451220", clienteFilial: "Filial Curitiba",    cnpj: "23.456.789/0001-01", cidadeUf: "Curitiba · PR",     cooperado: "BETO DOS SANTOS",   produto: "DAP 18 46 00",   embalagem: "Granel",          frete: "FOB",
+    qtdAgendada: 300, hasSO: true,  hasOV: false, hasBilling: false, hasActiveRequests: true,  volume: 800 },
+  { id: "M9W51038", status: "concluido",       contratoSap: "20086112", cotacao: "Q-512883", clienteFilial: "Filial Porto Alegre", cnpj: "34.567.890/0001-34", cidadeUf: "Porto Alegre · RS", cooperado: "TEREZA AKEMI",      produto: "MAP 11 52 00",   embalagem: "Big Bag 1000kg",  frete: "CIF",
+    qtdAgendada: 500, hasSO: true,  hasOV: true,  hasBilling: true,  hasActiveRequests: false, volume: 500 },
+  { id: "M9W63847", status: "cancelado",       contratoSap: "20086901", cotacao: "Q-602114", clienteFilial: "Filial Rio Verde",   cnpj: "45.678.901/0001-45", cidadeUf: "Rio Verde · GO",    cooperado: "JORGE DOS ANJOS",   produto: "FFALM 10 20 30", embalagem: "Saco 50kg",       frete: "FOB",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 1000 },
+  { id: "M9W71205", status: "liberado",        contratoSap: "20087445", cotacao: "Q-712005", clienteFilial: "Filial Londrina",    cnpj: "56.789.012/0001-56", cidadeUf: "Londrina · PR",     cooperado: "RENATO CESAR",      produto: "KCl Granulado",  embalagem: "Granel",          frete: "CIF",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 600 },
+  { id: "M9W82914", status: "em_agendamento",  contratoSap: "20088001", cotacao: "Q-803344", clienteFilial: "Filial Uberlândia",  cnpj: "67.890.123/0001-67", cidadeUf: "Uberlândia · MG",   cooperado: "AGUINADO GOMES",    produto: "NPK 04 14 08",   embalagem: "Saco 50kg",       frete: "CIF",
+    qtdAgendada: 150, hasSO: true,  hasOV: false, hasBilling: false, hasActiveRequests: true,  volume: 400 },
 ];
 
+const STATUS_LABEL = {
+  novo:           "Novo",
+  liberado:       "Liberado para agendar",
+  em_agendamento: "Em agendamento",
+  concluido:      "Concluído",
+  cancelado:      "Cancelado",
+};
+const STATUS_CLASS = {
+  novo:           "status-novo",
+  liberado:       "status-liberado",
+  em_agendamento: "status-em-agend",
+  concluido:      "status-concluido",
+  cancelado:      "status-cancelado",
+};
+
 /* =================================================================
-   RULES — SMDP-161
+   RULES — SMDP-161 (regras de edição reaproveitadas da v1)
    ================================================================= */
 const rules = {
-  canEditVolume: p => p.status !== "cancelado" && !p.hasBilling,
-  minVolume: p => p.qtdAgendada || 0,
+  canEditVolume:    p => p.status !== "cancelado" && !p.hasBilling,
+  minVolume:        p => p.qtdAgendada || 0,
   canEditPackaging: p => p.status !== "cancelado" && !p.hasSO,
-  canEditRoute: p => p.status !== "cancelado" && !p.hasOV,
-  canEditInvoice: p => p.status !== "cancelado" && !p.hasBilling,
-  canCancel: p => p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling,
-  cancelReason: p => {
+  canEditRoute:     p => p.status !== "cancelado" && !p.hasOV,
+  canEditInvoice:   p => p.status !== "cancelado" && !p.hasBilling,
+  canCancel:        p => p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling,
+  cancelReason:     p => {
     if (p.status === "cancelado") return "Protocolo já cancelado";
     if (p.hasBilling) return "Não permitido após faturamento";
     if (p.hasActiveRequests) return "Existem agendamentos ativos";
@@ -1332,823 +822,240 @@ const rules = {
   }
 };
 
-/* Lock reason por campo — usado no title (tooltip) das células bloqueadas. */
-function lockReason(p, field) {
-  if (p.status === "cancelado") return "Protocolo cancelado";
+/* Quais cells exibem cadeado (read-only por regra ou origem SAP). */
+function isLocked(p, field) {
+  if (p.status === "cancelado") return true;
   switch (field) {
-    case "qtd":
-      return p.hasBilling ? "Faturamento já realizado" : "";
+    // Sempre read-only (vêm do SAP / imutáveis SMDP-161)
+    case "contratoSap":
+    case "cotacao":
+    case "clienteFilial":
+    case "cnpj":
+    case "cidadeUf":
+    case "cooperado":
+    case "produto":
+      return true;
+    // Embalagem: editável antes da SO
     case "embalagem":
-      return p.hasSO ? "Sales Order já gerada" : "";
-    case "rota":
-      return p.hasOV ? "Ordem de Venda já gerada" : "";
-    case "nf":
-    case "dataNf":
-    case "precoNf":
-      return p.hasBilling ? "Faturamento já realizado" : "";
-    case "cooperado":
-    case "contrato":
-    case "cnpj":
-    case "filial":
-    case "cidade":
-    case "uf":
-    case "produto":
-    case "cotacao":
+      return !rules.canEditPackaging(p);
+    // Frete: vem do SAP, mas a ROTA segue a regra (não tratamos CIF/FOB — Marco Barbara 07/05/2026)
     case "frete":
-    case "planta":
-      return "Campo vindo do SAP — somente leitura";
+      return true;
     default:
-      return "";
+      return false;
   }
 }
-
-/* Determina se um campo é editável para um protocolo específico (regras SMDP-161). */
-function isFieldEditable(p, field) {
-  if (p.status === "cancelado") return false;
-  switch (field) {
-    case "qtd":       return rules.canEditVolume(p);
-    case "embalagem": return rules.canEditPackaging(p);
-    case "rota":      return rules.canEditRoute(p);
-    case "nf":
-    case "dataNf":
-    case "precoNf":   return rules.canEditInvoice(p);
-    case "status":
-    case "owner":     return true; // owner/status sempre mutáveis pelo CS
-    // Campos sempre locked (vêm do SAP)
-    case "cooperado":
-    case "contrato":
-    case "cotacao":
-    case "filial":
-    case "cnpj":
-    case "cidade":
-    case "uf":
-    case "produto":
-    case "frete":
-    case "planta":    return false;
-    default:          return false;
-  }
-}
-
-/* Pending changes registry: Map<protoId, {field: newValue}> */
-const PENDING = new Map();
-
-/* Mass-edit selection: Set<protoId> */
-const SELECTED = new Set();
 
 /* =================================================================
-   Field config — editable cells + options
+   State — list view (filter / search / sort)
    ================================================================= */
-const STATUS_OPTS = {
-  novo: "Novo", liberado: "Liberado para agendar", em_agendamento: "Em agendamento",
-  concluido: "Concluído", cancelado: "Cancelado", enviar_sap: "Enviar ao SAP"
+const state = {
+  statusFilter: "all",
+  search: "",
+  sortBy: "id",
+  sortDir: "asc",
+  selected: new Set(),
 };
-const EMBALAGEM_OPTS = ["Saco 50kg", "Saco 25kg", "Big Bag 1000kg", "Granel"];
-const FRETE_OPTS     = ["CIF", "FOB"];
-const PLANTA_OPTS    = ["Limeira", "Paranaguá", "Cubatão", "Rondonópolis", "Uberaba", "Candeias"];
-const UF_OPTS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
-
-/* Cells: which columns são potencialmente editáveis + tipo.
-   A editabilidade FINAL por linha é decidida em isFieldEditable() (SMDP-161). */
-const FIELDS = [
-  { key:"protocol",  label:"Protocol",       editable:false },
-  { key:"status",    label:"Status",         editable:true, type:"select", opts:STATUS_OPTS },
-  { key:"contrato",  label:"Contrato SAP",   editable:false, type:"text" },
-  { key:"cotacao",   label:"Cotação",        editable:false, type:"text" },
-  { key:"filial",    label:"Cliente · Filial", editable:false, type:"text" },
-  { key:"cnpj",      label:"CPF/CNPJ",       editable:false, type:"text" },
-  { key:"cidade_uf", label:"Cidade · UF",    editable:false },
-  { key:"cooperado", label:"Cooperado",      editable:false, type:"text" },
-  { key:"produto",   label:"Produto",        editable:false, type:"text" },
-  { key:"embalagem", label:"Embalagem",      editable:true,  type:"select-list", opts:EMBALAGEM_OPTS },
-  { key:"frete",     label:"Frete",          editable:false, type:"select-list", opts:FRETE_OPTS },
-  { key:"planta",    label:"Planta",         editable:false, type:"select-list", opts:PLANTA_OPTS },
-  { key:"rota",      label:"Rota de entrega", editable:true, type:"text" },
-  { key:"qtd",       label:"Qtd Protocolo (t)", editable:true, type:"number", num:true },
-  { key:"saldo",     label:"Saldo (t)",      editable:false, num:true },
-  { key:"qtdAgendada", label:"Qtd Agendada (t)", editable:false, num:true },
-  { key:"nf",        label:"NF",             editable:true,  type:"text" },
-  { key:"dataNf",    label:"Data NF",        editable:true,  type:"date" },
-  { key:"precoNf",   label:"Preço NF",       editable:true,  type:"number", num:true },
-  { key:"owner",     label:"Owner",          editable:true,  type:"text" },
-  { key:"updated",   label:"Última Modificação", editable:false },
-];
 
 /* =================================================================
-   Render
+   Render helpers
    ================================================================= */
-const tbody = document.getElementById("listBody");
-let currentFilter = "all";
-
-function getEffectiveValue(p, field) {
-  const pending = PENDING.get(p.id);
-  if (pending && field in pending) return pending[field];
-  return p[field];
-}
-
-function isModified(id, field) {
-  const pending = PENDING.get(id);
-  return pending && field in pending;
-}
-
-function statusBadge(s) {
-  const cls = s.replace(/[^a-z_]/g, "");
-  return `<span class="status-pill ${cls}">${STATUS_OPTS[s] || s}</span>`;
-}
-
-function fretePill(f) {
-  const color = f === "CIF" ? "background:#d8eee6;color:#1c6b5a;border:1px solid #a8d8c8"
-                            : "background:#fff5ec;color:#c76814;border:1px solid #ffd8b5";
-  return `<span class="status-pill" style="${color}">${f}</span>`;
-}
-
-const LOCK_ICON_SVG = `<svg class="cell-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
-
-function cellHTML(p, field, label, opts = {}) {
-  const v = getEffectiveValue(p, field);
-  // Editabilidade pode ser forçada falsa via opts (campos compostos / read-only),
-  // caso contrário consulta as regras SMDP-161 por linha+campo.
-  let isEdit;
-  if (opts.editable === false) isEdit = false;
-  else isEdit = isFieldEditable(p, field);
-
-  const reason = !isEdit ? lockReason(p, field) : "";
-  const isStructurallyLocked = !isEdit && opts.editable !== false;
-
-  const modCls = isModified(p.id, field) ? "cell-modified" : "";
-  const editCls = isEdit ? "editable" : "";
-  const lockCls = isStructurallyLocked ? "is-locked" : "";
-  const numCls = opts.num ? "num" : "";
-
-  let content;
-  if (opts.render) {
-    content = opts.render(v);
-  } else {
-    content = `<span class="cell-text">${v == null || v === "" ? '<span style="color:var(--slds-text-3)">—</span>' : escapeHtml(String(v))}</span>`;
-  }
-
-  const pencil = isEdit
-    ? `<button class="cell-pencil" type="button" tabindex="-1" aria-label="Edit"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>`
-    : (isStructurallyLocked ? LOCK_ICON_SVG : "");
-
-  const titleAttr = isStructurallyLocked && reason ? ` title="${escapeHtml(reason)}"` : "";
-
-  return `
-    <td class="${editCls} ${lockCls} ${modCls} ${numCls}" data-id="${p.id}" data-field="${field}"${titleAttr}>
-      <div class="cell-content">
-        ${content}
-        ${pencil}
-      </div>
-    </td>`;
-}
-
 function escapeHtml(s) {
-  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
-function applyFilter() {
-  const q = (document.getElementById("quickSearch").value || "").trim().toLowerCase();
-  return PROTOCOLS.filter(p => {
-    if (currentFilter !== "all" && getEffectiveValue(p, "status") !== currentFilter) return false;
-    if (q) {
-      const hay = [p.id, p.contrato, p.cotacao, p.filial, p.cooperado, p.produto].join(" ").toLowerCase();
-      if (!hay.includes(q)) return false;
-    }
-    return true;
+const LOCK_SVG = '<span class="lock-ico" title="Somente leitura"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
+
+function cellWithLock(text, locked) {
+  const esc = escapeHtml(text);
+  return locked ? `${esc}${LOCK_SVG}` : esc;
+}
+
+function statusPillHtml(status) {
+  const cls = STATUS_CLASS[status] || "status-novo";
+  const label = STATUS_LABEL[status] || status;
+  if (status === "cancelado") {
+    return `<span class="status-pill ${cls}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${escapeHtml(label)}</span>`;
+  }
+  return `<span class="status-pill ${cls}">${escapeHtml(label)}</span>`;
+}
+
+function freteBadgeHtml(frete) {
+  const cls = frete === "CIF" ? "cif" : "fob";
+  return `<span class="frete-badge ${cls}">${escapeHtml(frete)}</span>`;
+}
+
+/* =================================================================
+   Sort / filter / render
+   ================================================================= */
+function getFilteredRows() {
+  let rows = PROTOCOLS.slice();
+
+  if (state.statusFilter !== "all") {
+    rows = rows.filter(p => p.status === state.statusFilter);
+  }
+
+  if (state.search.trim()) {
+    const q = state.search.trim().toLowerCase();
+    rows = rows.filter(p =>
+      p.id.toLowerCase().includes(q) ||
+      p.cooperado.toLowerCase().includes(q) ||
+      p.cidadeUf.toLowerCase().includes(q) ||
+      p.clienteFilial.toLowerCase().includes(q) ||
+      p.contratoSap.toLowerCase().includes(q)
+    );
+  }
+
+  rows.sort((a, b) => {
+    const k = state.sortBy;
+    const av = String(a[k] || "").toLowerCase();
+    const bv = String(b[k] || "").toLowerCase();
+    if (av < bv) return state.sortDir === "asc" ? -1 : 1;
+    if (av > bv) return state.sortDir === "asc" ? 1 : -1;
+    return 0;
   });
+
+  return rows;
 }
 
-function formatMoney(v) {
-  if (!v) return '<span style="color:var(--slds-text-3)">—</span>';
-  return Number(v).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-function formatDate(v) {
-  if (!v) return '<span style="color:var(--slds-text-3)">—</span>';
-  // v esperado YYYY-MM-DD
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v);
-  if (!m) return escapeHtml(v);
-  return `${m[3]}/${m[2]}/${m[1]}`;
-}
+function renderTable() {
+  const tbody = document.getElementById("protocolTableBody");
+  const rows = getFilteredRows();
 
-function render() {
-  const list = applyFilter();
-  document.getElementById("totalCount").textContent = list.length;
-
-  // Atualiza contadores das pills
-  const counts = { all: PROTOCOLS.length, novo: 0, liberado: 0, em_agendamento: 0, concluido: 0, cancelado: 0 };
-  PROTOCOLS.forEach(p => {
-    const s = getEffectiveValue(p, "status");
-    if (s in counts) counts[s]++;
-  });
-  document.getElementById("cntAll").textContent  = counts.all;
-  document.getElementById("cntNovo").textContent = counts.novo;
-  document.getElementById("cntLib").textContent  = counts.liberado;
-  document.getElementById("cntAg").textContent   = counts.em_agendamento;
-  document.getElementById("cntConc").textContent = counts.concluido;
-  document.getElementById("cntCanc").textContent = counts.cancelado;
-
-  tbody.innerHTML = list.map(p => {
-    const isCancelled = getEffectiveValue(p, "status") === "cancelado";
-    const rowCls = (SELECTED.has(p.id) ? "is-row-selected " : "") + (isCancelled ? "row-cancelled " : "");
-    const checked = SELECTED.has(p.id) ? "checked" : "";
-    return `
-    <tr class="${rowCls}" data-id="${p.id}">
-      <td class="col-check"><div class="cell-content"><input type="checkbox" class="slds-check row-check" data-id="${p.id}" aria-label="Select ${p.id}" ${checked} /></div></td>
-      ${cellHTML(p, "id",        "Protocol",  { editable:false, render: v => `<span class="cell-text"><a href="manutencao-protocolo-detalhe.html?id=${encodeURIComponent(v)}">${v}</a></span>` })}
-      ${cellHTML(p, "status",    "Status",    { render: v => `<span class="cell-text">${statusBadge(v)}</span>` })}
-      ${cellHTML(p, "contrato",  "Contrato")}
-      ${cellHTML(p, "cotacao",   "Cotação")}
-      ${cellHTML(p, "filial",    "Cliente")}
-      ${cellHTML(p, "cnpj",      "CPF/CNPJ")}
-      ${cellHTML(p, "cidade",    "Cidade", { editable:false, render: v => `<span class="cell-text">${v} · <strong>${getEffectiveValue(p,'uf')}</strong></span>` })}
-      ${cellHTML(p, "cooperado", "Cooperado")}
-      ${cellHTML(p, "produto",   "Produto")}
-      ${cellHTML(p, "embalagem", "Embalagem")}
-      ${cellHTML(p, "frete",     "Frete", { render: v => `<span class="cell-text">${fretePill(v)}</span>` })}
-      ${cellHTML(p, "planta",    "Planta")}
-      ${cellHTML(p, "rota",      "Rota de entrega")}
-      ${cellHTML(p, "qtd",       "Qtd", { num:true, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
-      ${cellHTML(p, "saldo",     "Saldo", { num:true, editable:false, render: v => `<span class="cell-text">${Number(v).toLocaleString("pt-BR")}</span>` })}
-      ${cellHTML(p, "qtdAgendada", "Qtd Agendada", { num:true, editable:false, render: v => `<span class="cell-text">${Number(v || 0).toLocaleString("pt-BR")}</span>` })}
-      ${cellHTML(p, "nf",        "NF")}
-      ${cellHTML(p, "dataNf",    "Data NF", { render: v => `<span class="cell-text">${formatDate(v)}</span>` })}
-      ${cellHTML(p, "precoNf",   "Preço NF", { num:true, render: v => `<span class="cell-text">${formatMoney(v)}</span>` })}
-      ${cellHTML(p, "owner",     "Owner")}
-      ${cellHTML(p, "updated",   "Updated", { editable:false })}
-      <td class="col-actions">
-        <div class="cell-content">
-          <button class="row-actions-btn" type="button" data-id="${p.id}" aria-label="Ações do protocolo ${p.id}" title="Ações">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
-          </button>
-        </div>
-      </td>
-    </tr>
-  `;
-  }).join("");
-
-  // Header checkbox state
-  const checkAll = document.getElementById("checkAll");
-  if (list.length === 0) {
-    checkAll.checked = false;
-    checkAll.indeterminate = false;
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="12">Nenhum protocolo encontrado.</td></tr>`;
   } else {
-    const allSelected = list.every(p => SELECTED.has(p.id));
-    const someSelected = list.some(p => SELECTED.has(p.id));
-    checkAll.checked = allSelected;
-    checkAll.indeterminate = !allSelected && someSelected;
-  }
-
-  updateMassToolbar();
-}
-
-/* =================================================================
-   Inline edit (cell by cell, Lightning style)
-   ================================================================= */
-function startEditCell(td) {
-  if (td.classList.contains("cell-editing")) return;
-  if (!td.classList.contains("editable")) return;
-  const id = td.dataset.id;
-  const field = td.dataset.field;
-  const p = PROTOCOLS.find(x => x.id === id);
-  if (!p) return;
-  // Re-check de segurança — regras SMDP-161
-  if (!isFieldEditable(p, field)) {
-    showToast(lockReason(p, field) || "Campo bloqueado", true);
-    return;
-  }
-  const v = getEffectiveValue(p, field);
-  const fieldDef = FIELDS.find(f => f.key === field) || { type: "text" };
-
-  let inputHTML = "";
-  if (fieldDef.type === "select") {
-    const opts = Object.entries(fieldDef.opts).map(([k, lbl]) =>
-      `<option value="${k}"${k===v?' selected':''}>${lbl}</option>`).join("");
-    inputHTML = `<select class="edit-input">${opts}</select>`;
-  } else if (fieldDef.type === "select-list") {
-    const opts = fieldDef.opts.map(o =>
-      `<option value="${o}"${o===v?' selected':''}>${o}</option>`).join("");
-    inputHTML = `<select class="edit-input">${opts}</select>`;
-  } else if (fieldDef.type === "number") {
-    // Para volume (qtd), aplica mínimo = qtdAgendada e máximo = valor original (não pode aumentar)
-    if (field === "qtd") {
-      const min = rules.minVolume(p);
-      const max = p.qtd;
-      inputHTML = `<input class="edit-input" type="number" min="${min}" max="${max}" value="${v}" />`;
-    } else {
-      inputHTML = `<input class="edit-input" type="number" min="0" step="${field === 'precoNf' ? '0.01' : '1'}" value="${v}" />`;
-    }
-  } else if (fieldDef.type === "date") {
-    inputHTML = `<input class="edit-input" type="date" value="${escapeHtml(String(v ?? ''))}" />`;
-  } else {
-    inputHTML = `<input class="edit-input" type="text" value="${escapeHtml(String(v ?? ''))}" />`;
-  }
-
-  td.classList.add("cell-editing");
-  const content = td.querySelector(".cell-content");
-  content.innerHTML = inputHTML;
-  const input = content.querySelector(".edit-input");
-  input.focus();
-  if (input.select) input.select();
-
-  const commit = () => {
-    let newVal = input.value;
-    if (input.type === "number") newVal = newVal === "" ? 0 : Number(newVal);
-
-    // Validação SMDP-161 para volume
-    if (field === "qtd") {
-      const min = rules.minVolume(p);
-      const max = p.qtd;
-      if (Number(newVal) > max) {
-        showToast(`Volume não pode aumentar (máx ${max} t)`, true);
-        cleanupEditing();
-        render();
-        return;
-      }
-      if (Number(newVal) < min) {
-        showToast(`Volume mínimo = ${min} t (agendado no SAP)`, true);
-        cleanupEditing();
-        render();
-        return;
-      }
-    }
-
-    const original = p[field];
-    if (String(newVal) === String(original)) {
-      // Voltou ao original — limpa pending
-      const pending = PENDING.get(id);
-      if (pending) {
-        delete pending[field];
-        if (Object.keys(pending).length === 0) PENDING.delete(id);
-      }
-    } else {
-      // Marca como pending
-      const pending = PENDING.get(id) || {};
-      pending[field] = newVal;
-      PENDING.set(id, pending);
-    }
-    cleanupEditing();
-    render();
-    updatePendingBar();
-  };
-  const cancel = () => {
-    cleanupEditing();
-    render();
-  };
-  const cleanupEditing = () => {
-    td.classList.remove("cell-editing");
-  };
-
-  input.addEventListener("blur", commit);
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter")  { e.preventDefault(); input.blur(); }
-    if (e.key === "Escape") { e.preventDefault(); input.removeEventListener("blur", commit); cancel(); }
-    if (e.key === "Tab")    { /* deixa o blur disparar commit */ }
-  });
-}
-
-tbody.addEventListener("click", (e) => {
-  const td = e.target.closest("td.editable");
-  if (!td) return;
-  if (e.target.closest("a")) return; // não edita ao clicar em link (Protocol é não editável)
-  startEditCell(td);
-});
-
-/* =================================================================
-   Pending bar — apply / cancel
-   ================================================================= */
-const pendingBar    = document.getElementById("pendingBar");
-const pendingCount  = document.getElementById("pendingCount");
-const pendingPlural = document.getElementById("pendingPlural");
-const applyCountEl  = document.getElementById("applyCount");
-
-function countPending() {
-  let n = 0;
-  PENDING.forEach(obj => { n += Object.keys(obj).length; });
-  return n;
-}
-function updatePendingBar() {
-  const n = countPending();
-  pendingCount.textContent = n;
-  applyCountEl.textContent = n;
-  pendingPlural.textContent = n === 1 ? "" : "s";
-  pendingBar.classList.toggle("is-visible", n > 0);
-}
-
-document.getElementById("applyAllBtn").addEventListener("click", () => {
-  const n = countPending();
-  if (n === 0) return;
-  // Commit changes to PROTOCOLS
-  PENDING.forEach((updates, id) => {
-    const p = PROTOCOLS.find(x => x.id === id);
-    if (p) Object.assign(p, updates);
-  });
-  PENDING.clear();
-  render();
-  updatePendingBar();
-  showToast(`${n} update${n === 1 ? '' : 's'} saved`);
-});
-
-document.getElementById("cancelAllBtn").addEventListener("click", () => {
-  const n = countPending();
-  if (n === 0) return;
-  document.getElementById("confirmModalCount").textContent = n;
-  document.getElementById("confirmModal").classList.add("is-open");
-});
-
-document.getElementById("confirmYes").addEventListener("click", () => {
-  PENDING.clear();
-  render();
-  updatePendingBar();
-  document.getElementById("confirmModal").classList.remove("is-open");
-});
-document.getElementById("confirmNo").addEventListener("click", () => {
-  document.getElementById("confirmModal").classList.remove("is-open");
-});
-document.getElementById("confirmModal").addEventListener("click", (e) => {
-  if (e.target.id === "confirmModal") e.target.classList.remove("is-open");
-});
-
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape") return;
-  const modal = document.getElementById("confirmModal");
-  if (modal.classList.contains("is-open")) {
-    modal.classList.remove("is-open");
-  }
-});
-
-/* =================================================================
-   Filters
-   ================================================================= */
-document.querySelectorAll(".qf-pill").forEach(b => {
-  b.addEventListener("click", () => {
-    document.querySelectorAll(".qf-pill").forEach(x => x.classList.remove("is-active"));
-    b.classList.add("is-active");
-    currentFilter = b.dataset.filter;
-    render();
-  });
-});
-document.getElementById("quickSearch").addEventListener("input", render);
-
-/* =================================================================
-   Toast
-   ================================================================= */
-function showToast(msg, isError = false) {
-  const t = document.getElementById("toast");
-  document.getElementById("toastText").textContent = msg;
-  t.classList.toggle("is-error", !!isError);
-  t.classList.add("is-visible");
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => t.classList.remove("is-visible"), isError ? 3800 : 2800);
-}
-
-/* =================================================================
-   SELECTION — checkboxes + mass toolbar
-   ================================================================= */
-const massToolbar    = document.getElementById("massToolbar");
-const massSelCount   = document.getElementById("massSelCount");
-
-function updateMassToolbar() {
-  const n = SELECTED.size;
-  massSelCount.textContent = n;
-  massToolbar.classList.toggle("is-visible", n > 0);
-}
-
-tbody.addEventListener("change", (e) => {
-  const cb = e.target.closest(".row-check");
-  if (!cb) return;
-  const id = cb.dataset.id;
-  if (cb.checked) SELECTED.add(id); else SELECTED.delete(id);
-  // toggla classe na linha sem re-render completo
-  const tr = cb.closest("tr");
-  if (tr) tr.classList.toggle("is-row-selected", cb.checked);
-  // Atualiza estado do checkbox header
-  const visibleIds = applyFilter().map(p => p.id);
-  const checkAll = document.getElementById("checkAll");
-  const allSel = visibleIds.length > 0 && visibleIds.every(id => SELECTED.has(id));
-  const someSel = visibleIds.some(id => SELECTED.has(id));
-  checkAll.checked = allSel;
-  checkAll.indeterminate = !allSel && someSel;
-  updateMassToolbar();
-});
-
-document.getElementById("checkAll").addEventListener("change", (e) => {
-  const list = applyFilter();
-  if (e.target.checked) {
-    list.forEach(p => SELECTED.add(p.id));
-  } else {
-    list.forEach(p => SELECTED.delete(p.id));
-  }
-  render();
-});
-
-document.getElementById("massClearBtn").addEventListener("click", () => {
-  SELECTED.clear();
-  render();
-});
-
-/* =================================================================
-   ROW ACTIONS — menu (Cancelar protocolo)
-   ================================================================= */
-let openMenuEl = null;
-function closeRowMenu() {
-  if (openMenuEl) {
-    openMenuEl.remove();
-    openMenuEl = null;
-  }
-}
-
-tbody.addEventListener("click", (e) => {
-  const btn = e.target.closest(".row-actions-btn");
-  if (!btn) return;
-  e.stopPropagation();
-  const id = btn.dataset.id;
-  const p = PROTOCOLS.find(x => x.id === id);
-  if (!p) return;
-
-  // Toggle: se já tá aberto pra esse id, fecha
-  if (openMenuEl && openMenuEl.dataset.id === id) {
-    closeRowMenu();
-    return;
-  }
-  closeRowMenu();
-
-  const canCancel = rules.canCancel(p);
-  const reason = canCancel ? "" : rules.cancelReason(p);
-
-  const menu = document.createElement("div");
-  menu.className = "row-actions-menu is-open";
-  menu.dataset.id = id;
-  menu.innerHTML = `
-    <button type="button" data-action="edit">Editar campos da linha</button>
-    <button type="button" data-action="cancel" class="is-destructive" ${canCancel ? "" : "disabled"}>Cancelar protocolo</button>
-    ${reason ? `<div class="menu-reason">${escapeHtml(reason)}</div>` : ""}
-  `;
-  // Posiciona o menu absolute dentro da td.col-actions (já é position:relative? não — usa td posicao)
-  const td = btn.closest("td.col-actions");
-  td.style.position = "relative";
-  td.appendChild(menu);
-  openMenuEl = menu;
-
-  menu.addEventListener("click", (ev) => {
-    const actBtn = ev.target.closest("button[data-action]");
-    if (!actBtn) return;
-    ev.stopPropagation();
-    const action = actBtn.dataset.action;
-    closeRowMenu();
-    if (action === "edit") {
-      showToast("Clique em qualquer célula editável para alterá-la");
-    } else if (action === "cancel") {
-      if (!rules.canCancel(p)) return;
-      openCancelModal([p]);
-    }
-  });
-});
-
-document.addEventListener("click", () => closeRowMenu());
-
-/* =================================================================
-   CANCEL PROTOCOL MODAL — single ou em massa
-   ================================================================= */
-let cancelTargets = []; // array de protocolos
-
-function openCancelModal(targets) {
-  cancelTargets = targets;
-  const cancelable = targets.filter(p => rules.canCancel(p));
-  const blocked = targets.filter(p => !rules.canCancel(p));
-
-  const titleEl = document.getElementById("cancelModalTitle");
-  const bodyEl = document.getElementById("cancelModalBody");
-  const listEl = document.getElementById("cancelList");
-  const confirmBtn = document.getElementById("cancelModalConfirm");
-
-  if (targets.length === 1) {
-    const p = targets[0];
-    titleEl.textContent = `Cancelar protocolo ${p.id}?`;
-    bodyEl.textContent = "Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato. Não é reversível.";
-    listEl.innerHTML = "";
-    if (!rules.canCancel(p)) {
-      listEl.innerHTML = `<li><span>${escapeHtml(p.id)}</span><span class="cancel-reason">${escapeHtml(rules.cancelReason(p))}</span></li>`;
-      confirmBtn.disabled = true;
-      confirmBtn.style.opacity = "0.5";
-      confirmBtn.style.cursor = "not-allowed";
-    } else {
-      confirmBtn.disabled = false;
-      confirmBtn.style.opacity = "";
-      confirmBtn.style.cursor = "";
-      confirmBtn.textContent = "Cancelar protocolo";
-    }
-  } else {
-    titleEl.textContent = `Cancelar ${cancelable.length} de ${targets.length} protocolo(s)?`;
-    bodyEl.textContent = "Esta ação preserva a quantidade original mas exclui o volume do saldo do contrato em cada protocolo. Não é reversível. Protocolos que não atendem aos requisitos serão ignorados.";
-    listEl.innerHTML = targets.map(p => {
-      const can = rules.canCancel(p);
-      return `<li><span>${escapeHtml(p.id)} — ${escapeHtml(p.cooperado)}</span>${can ? '<span style="color:var(--slds-success);font-weight:600">Pronto p/ cancelar</span>' : `<span class="cancel-reason">${escapeHtml(rules.cancelReason(p))}</span>`}</li>`;
+    tbody.innerHTML = rows.map(p => {
+      const isCancel = p.status === "cancelado";
+      const trClass = isCancel ? "is-cancelled" : "";
+      const checked = state.selected.has(p.id);
+      const checkClass = checked ? "checkbox is-checked" : "checkbox";
+      const checkInner = checked
+        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '';
+      return `
+        <tr class="${trClass}" data-id="${escapeHtml(p.id)}">
+          <td><span class="${checkClass}" role="checkbox" tabindex="0" data-check="${escapeHtml(p.id)}">${checkInner}</span></td>
+          <td><a class="protocol-link" href="manutencao-protocolo-detalhe.html?id=${encodeURIComponent(p.id)}">${escapeHtml(p.id)}</a></td>
+          <td>${statusPillHtml(p.status)}</td>
+          <td>${cellWithLock(p.contratoSap, isLocked(p, "contratoSap"))}</td>
+          <td>${cellWithLock(p.cotacao,     isLocked(p, "cotacao"))}</td>
+          <td>${cellWithLock(p.clienteFilial, isLocked(p, "clienteFilial"))}</td>
+          <td>${cellWithLock(p.cnpj,        isLocked(p, "cnpj"))}</td>
+          <td>${cellWithLock(p.cidadeUf,    isLocked(p, "cidadeUf"))}</td>
+          <td>${cellWithLock(p.cooperado,   isLocked(p, "cooperado"))}</td>
+          <td>${cellWithLock(p.produto,     isLocked(p, "produto"))}</td>
+          <td>${cellWithLock(p.embalagem,   isLocked(p, "embalagem"))}</td>
+          <td>${freteBadgeHtml(p.frete)}${isLocked(p, "frete") ? " " + LOCK_SVG : ""}</td>
+        </tr>
+      `;
     }).join("");
-    confirmBtn.disabled = cancelable.length === 0;
-    confirmBtn.style.opacity = cancelable.length === 0 ? "0.5" : "";
-    confirmBtn.style.cursor = cancelable.length === 0 ? "not-allowed" : "";
-    confirmBtn.textContent = `Cancelar ${cancelable.length} protocolo(s)`;
   }
 
-  document.getElementById("cancelModal").classList.add("is-open");
+  // info row
+  const info = document.getElementById("infoRow");
+  info.textContent = `${rows.length} item${rows.length === 1 ? "" : "s"} · Sorted by ${state.sortBy} · Filtered by My Team · Updated a few seconds ago`;
+
+  // sort arrow indicator
+  document.querySelectorAll("#theadRow th.sortable").forEach(th => {
+    th.classList.remove("is-sorted");
+    const arrow = th.querySelector(".sort-arrow");
+    if (arrow) arrow.textContent = "▾";
+    if (th.dataset.sort === state.sortBy) {
+      th.classList.add("is-sorted");
+      if (arrow) arrow.textContent = state.sortDir === "asc" ? "▴" : "▾";
+    }
+  });
+
+  // head checkbox state
+  updateHeadCheckbox(rows);
 }
 
-document.getElementById("cancelModalBack").addEventListener("click", () => {
-  document.getElementById("cancelModal").classList.remove("is-open");
-});
-document.getElementById("cancelModal").addEventListener("click", (e) => {
-  if (e.target.id === "cancelModal") e.target.classList.remove("is-open");
-});
-document.getElementById("cancelModalConfirm").addEventListener("click", () => {
-  const cancelable = cancelTargets.filter(p => rules.canCancel(p));
-  if (cancelable.length === 0) return;
-  cancelable.forEach(p => {
-    p.status = "cancelado";
-    p.saldo = 0; // exclui volume do saldo do contrato (preserva qtd original)
-    // Limpa qualquer pending dessa linha
-    PENDING.delete(p.id);
-    SELECTED.delete(p.id);
-  });
-  document.getElementById("cancelModal").classList.remove("is-open");
-  render();
-  updatePendingBar();
-  showToast(cancelable.length === 1
-    ? `Protocolo ${cancelable[0].id} cancelado`
-    : `${cancelable.length} protocolos cancelados`);
-});
+function updateHeadCheckbox(rows) {
+  const hc = document.getElementById("headCheckbox");
+  const allSelected = rows.length > 0 && rows.every(r => state.selected.has(r.id));
+  hc.classList.toggle("is-checked", allSelected);
+  hc.innerHTML = allSelected
+    ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+    : '';
+}
 
-document.getElementById("massCancelBtn").addEventListener("click", () => {
-  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
-  if (targets.length === 0) return;
-  openCancelModal(targets);
-});
+function renderCounts() {
+  const counts = { all: PROTOCOLS.length, novo: 0, liberado: 0, em_agendamento: 0, concluido: 0, cancelado: 0 };
+  PROTOCOLS.forEach(p => { if (counts[p.status] != null) counts[p.status]++; });
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById("count-" + k);
+    if (el) el.textContent = counts[k];
+  });
+}
 
 /* =================================================================
-   MASS EDIT MODAL (CS-only feature)
+   Events
    ================================================================= */
-const massEditModal  = document.getElementById("massEditModal");
-const massApplyCount = document.getElementById("massApplyCount");
-const massEditCount  = document.getElementById("massEditCount");
-const massVol        = document.getElementById("massVol");
-const massVolHint    = document.getElementById("massVolHint");
-const massEmb        = document.getElementById("massEmb");
-const massRota       = document.getElementById("massRota");
-const massNf         = document.getElementById("massNf");
-const massDataNf     = document.getElementById("massDataNf");
-const massPreco      = document.getElementById("massPreco");
+document.getElementById("filterPills").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-pill");
+  if (!btn) return;
+  document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("is-active"));
+  btn.classList.add("is-active");
+  state.statusFilter = btn.dataset.status;
+  renderTable();
+});
 
-// Popular options de embalagem
-massEmb.innerHTML = '<option value="">— Não alterar —</option>' +
-  EMBALAGEM_OPTS.map(o => `<option value="${o}">${o}</option>`).join("");
+document.getElementById("listSearch").addEventListener("input", e => {
+  state.search = e.target.value;
+  renderTable();
+});
 
-function openMassEditModal() {
-  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
-  if (targets.length === 0) return;
-  massApplyCount.textContent = targets.length;
-  massEditCount.textContent = targets.length;
-
-  // Calcula mínimo permitido para volume = max das qtdAgendada das selecionadas
-  // (pois ao aplicar um volume, ele só pode ser >= maior qtdAgendada de qualquer linha)
-  const editableVolTargets = targets.filter(p => rules.canEditVolume(p));
-  let minAllowed = 0;
-  let maxAllowed = Infinity;
-  editableVolTargets.forEach(p => {
-    if (p.qtdAgendada > minAllowed) minAllowed = p.qtdAgendada;
-    if (p.qtd < maxAllowed) maxAllowed = p.qtd;
-  });
-  if (editableVolTargets.length === 0) {
-    massVol.disabled = true;
-    massVol.placeholder = "Nenhuma linha permite editar volume";
-    massVolHint.textContent = "Nenhuma das selecionadas permite alterar volume.";
+document.getElementById("theadRow").addEventListener("click", e => {
+  const th = e.target.closest("th.sortable");
+  if (!th) return;
+  const key = th.dataset.sort;
+  if (state.sortBy === key) {
+    state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
   } else {
-    massVol.disabled = false;
-    massVol.min = minAllowed;
-    massVol.max = maxAllowed;
-    massVol.value = "";
-    massVol.placeholder = `Entre ${minAllowed} e ${maxAllowed} (apenas redução)`;
-    massVolHint.textContent = `Apenas redução é permitida. Mínimo: ${minAllowed} t · Máximo atual: ${maxAllowed} t.`;
+    state.sortBy = key;
+    state.sortDir = "asc";
   }
-
-  // Reset outros campos
-  massEmb.value = "";
-  massRota.value = "";
-  massNf.value = "";
-  massDataNf.value = "";
-  massPreco.value = "";
-
-  massEditModal.classList.add("is-open");
-}
-
-document.getElementById("massEditBtn").addEventListener("click", openMassEditModal);
-document.getElementById("massEditCancel").addEventListener("click", () => {
-  massEditModal.classList.remove("is-open");
-});
-massEditModal.addEventListener("click", (e) => {
-  if (e.target.id === "massEditModal") e.target.classList.remove("is-open");
+  renderTable();
 });
 
-document.getElementById("massEditApply").addEventListener("click", () => {
-  const targets = PROTOCOLS.filter(p => SELECTED.has(p.id));
-  if (targets.length === 0) return;
-
-  const vol = massVol.value === "" ? null : Number(massVol.value);
-  const emb = massEmb.value || null;
-  const rota = massRota.value.trim() || null;
-  const nf = massNf.value.trim() || null;
-  const dataNf = massDataNf.value || null;
-  const preco = massPreco.value === "" ? null : Number(massPreco.value);
-
-  if (vol == null && !emb && !rota && !nf && !dataNf && preco == null) {
-    showToast("Preencha ao menos um campo para aplicar", true);
-    return;
+document.getElementById("protocolTableBody").addEventListener("click", e => {
+  const check = e.target.closest("[data-check]");
+  if (check) {
+    e.preventDefault();
+    e.stopPropagation();
+    const id = check.dataset.check;
+    if (state.selected.has(id)) state.selected.delete(id);
+    else state.selected.add(id);
+    renderTable();
   }
+});
 
-  let appliedFields = 0;
-  let touchedRows = 0;
-  targets.forEach(p => {
-    let touched = false;
-    if (vol != null && rules.canEditVolume(p)) {
-      // Respeita mínimo individual da linha
-      const min = rules.minVolume(p);
-      const max = p.qtd;
-      if (vol >= min && vol <= max && vol !== p.qtd) {
-        const pending = PENDING.get(p.id) || {};
-        pending.qtd = vol;
-        PENDING.set(p.id, pending);
-        appliedFields++;
-        touched = true;
-      }
-    }
-    if (emb && rules.canEditPackaging(p) && emb !== p.embalagem) {
-      const pending = PENDING.get(p.id) || {};
-      pending.embalagem = emb;
-      PENDING.set(p.id, pending);
-      appliedFields++;
-      touched = true;
-    }
-    if (rota && rules.canEditRoute(p) && rota !== p.rota) {
-      const pending = PENDING.get(p.id) || {};
-      pending.rota = rota;
-      PENDING.set(p.id, pending);
-      appliedFields++;
-      touched = true;
-    }
-    if (nf && rules.canEditInvoice(p) && nf !== p.nf) {
-      const pending = PENDING.get(p.id) || {};
-      pending.nf = nf;
-      PENDING.set(p.id, pending);
-      appliedFields++;
-      touched = true;
-    }
-    if (dataNf && rules.canEditInvoice(p) && dataNf !== p.dataNf) {
-      const pending = PENDING.get(p.id) || {};
-      pending.dataNf = dataNf;
-      PENDING.set(p.id, pending);
-      appliedFields++;
-      touched = true;
-    }
-    if (preco != null && rules.canEditInvoice(p) && preco !== p.precoNf) {
-      const pending = PENDING.get(p.id) || {};
-      pending.precoNf = preco;
-      PENDING.set(p.id, pending);
-      appliedFields++;
-      touched = true;
-    }
-    if (touched) touchedRows++;
-  });
-
-  massEditModal.classList.remove("is-open");
-  render();
-  updatePendingBar();
-
-  if (appliedFields === 0) {
-    showToast("Nenhuma alteração aplicada (regras de bloqueio)", true);
+document.getElementById("headCheckbox").addEventListener("click", () => {
+  const rows = getFilteredRows();
+  const allSelected = rows.length > 0 && rows.every(r => state.selected.has(r.id));
+  if (allSelected) {
+    rows.forEach(r => state.selected.delete(r.id));
   } else {
-    showToast(`${appliedFields} alterações pendentes em ${touchedRows} protocolo(s)`);
+    rows.forEach(r => state.selected.add(r.id));
   }
+  renderTable();
 });
 
-/* Fecha modais com Esc — extende handler existente */
-document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape") return;
-  ["cancelModal", "massEditModal"].forEach(id => {
-    const m = document.getElementById(id);
-    if (m && m.classList.contains("is-open")) m.classList.remove("is-open");
-  });
-  closeRowMenu();
+document.getElementById("btnRefresh").addEventListener("click", () => {
+  renderTable();
 });
 
 /* =================================================================
    Init
    ================================================================= */
-render();
-updatePendingBar();
-
-window.addEventListener("beforeunload", (e) => {
-  if (countPending() > 0) {
-    e.preventDefault();
-    e.returnValue = "";
-  }
-});
+renderCounts();
+renderTable();
 </script>
 
 <script src="review-overlay.js" defer></script>
