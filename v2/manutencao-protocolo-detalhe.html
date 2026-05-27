@@ -1469,6 +1469,7 @@ const PROTOCOLS = [
     dataCriacao: "2026-01-10 09:14",
     dataAlteracao: "2026-05-20 16:42",
     hasSO: true, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    activeRequestsList: [],
     cancelReason: ""
   },
   {
@@ -1497,7 +1498,11 @@ const PROTOCOLS = [
     dataFim: "2026-12-31",
     dataCriacao: "2026-02-25 11:02",
     dataAlteracao: "2026-05-22 10:08",
-    hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    hasSO: true, hasOV: false, hasBilling: false, hasActiveRequests: true,
+    activeRequestsList: [
+      { id: "R-12345", semana: "S23/2026", vol: 100 },
+      { id: "R-12389", semana: "S24/2026", vol: 200 }
+    ],
     cancelReason: ""
   },
   {
@@ -1721,11 +1726,19 @@ function renderHighlights() {
   document.getElementById("hlContrato").textContent  = `${p.contrato} · Item ${p.itemContrato}`;
   document.getElementById("hlSaldo").textContent     = fmtVolume(p.saldo);
 
-  /* Botões de header */
-  const canCancel = rules.canCancel(p);
+  /* Botões de header — AC #17/#18 SMDP-162: esconder Cancel se Completed/Cancelled */
   const btnCancel = document.getElementById("btnCancel");
-  btnCancel.disabled = !canCancel;
-  btnCancel.title = canCancel ? "" : rules.cancelReason(p);
+  const btnEdit = document.getElementById("btnEdit");
+  if (p.status === "cancelado" || p.status === "concluido") {
+    btnCancel.style.display = "none";
+  } else {
+    btnCancel.style.display = "";
+    const canCancel = rules.canCancel(p);
+    btnCancel.disabled = !canCancel;
+    btnCancel.title = canCancel ? "" : rules.cancelReason(p);
+  }
+  /* Edit também esconde quando cancelado (status terminal) */
+  if (btnEdit) btnEdit.style.display = (p.status === "cancelado") ? "none" : "";
 
   /* Cancelled banner */
   const banner = document.getElementById("cancelledBanner");

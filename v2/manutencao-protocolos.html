@@ -745,6 +745,82 @@ table.list-table {
   color: #fff;
 }
 .slds-modal-foot .slds-btn-brand:hover { background: #003e2a; border-color: #003e2a; }
+
+/* ============ Modal: Criar Protocolo (SMDP-162 / FSD-PROT-001) ============ */
+.form-legend {
+  text-align: right;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--slds-text-3);
+  padding: 0 6px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  margin-bottom: 14px;
+}
+.form-legend .req-star { color: var(--slds-error); font-style: normal; margin-right: 2px; }
+.form-section-head {
+  background: #f7f7f7;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  margin: 14px -6px 6px;
+}
+.form-section-head:first-child { margin-top: 0; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+  padding: 4px 6px;
+}
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field-wide { grid-column: 1 / -1; }
+.form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+}
+.form-field .req-star { color: var(--slds-error); margin-right: 2px; }
+.form-field input,
+.form-field select {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--slds-text-1);
+  outline: none;
+}
+.form-field input[readonly],
+.form-field input:disabled {
+  background: #fafafa;
+  color: var(--slds-text-3);
+  cursor: not-allowed;
+}
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 3px rgba(1,118,211,0.20);
+}
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+.form-help { font-size: 11px; color: var(--slds-text-3); }
+.form-err {
+  display: none;
+  font-size: 12px;
+  color: var(--slds-error);
+  margin-top: 2px;
+}
+.form-field.is-invalid input,
+.form-field.is-invalid select { border-color: var(--slds-error); }
+.form-field.is-invalid .form-err { display: block; }
 .slds-modal-foot .slds-btn-brand:disabled,
 .slds-modal-foot .slds-btn-destructive:disabled {
   background: #ecebea; border-color: var(--slds-border); color: var(--slds-text-3); cursor: not-allowed;
@@ -998,7 +1074,7 @@ table.list-table {
       <button class="icon-btn" id="btnRefresh" title="Atualizar" aria-label="Atualizar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
       <button class="icon-btn" title="Editar lista" aria-label="Editar lista"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
       <button class="btn-text" type="button">Import</button>
-      <button class="btn-primary" type="button">
+      <button class="btn-primary" type="button" id="btnNewProtocol">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New
       </button>
@@ -1097,6 +1173,124 @@ table.list-table {
       <div class="foot-left" id="massCancelFootInfo">—</div>
       <button class="slds-btn" type="button" data-close-modal="massCancelModal">Voltar</button>
       <button class="slds-btn slds-btn-destructive" type="button" id="massCancelApplyBtn">Cancelar protocolos</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal: Criar Protocolo (SMDP-162 / FSD-PROT-001) ====================== -->
+<div class="modal-backdrop" id="createModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <h2>Criar Protocolo</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="createModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body">
+      <div class="form-legend"><span class="req-star">*</span> = Informações obrigatórias</div>
+
+      <div class="form-section-head">Detalhes do Protocolo</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label><span class="req-star">*</span>Contrato SAP</label>
+          <select id="np_contrato">
+            <option value="">Selecione um contrato...</option>
+            <option value="20084782">20084782 — Filial São Paulo</option>
+            <option value="20085391">20085391 — Filial Curitiba</option>
+            <option value="20086112">20086112 — Filial Porto Alegre</option>
+            <option value="20086901">20086901 — Filial Rio Verde</option>
+            <option value="20087445">20087445 — Filial Londrina</option>
+            <option value="20088001">20088001 — Filial Uberlândia</option>
+          </select>
+          <div class="form-err" data-err-for="contrato">Contrato é obrigatório</div>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <input type="text" value="Novo" disabled />
+          <div class="form-help">Definido automaticamente na criação</div>
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Item do Contrato</label>
+          <select id="np_item">
+            <option value="">Selecione...</option>
+            <option value="10">Item 10</option>
+            <option value="20">Item 20</option>
+            <option value="30">Item 30</option>
+            <option value="50">Item 50</option>
+            <option value="80">Item 80</option>
+          </select>
+          <div class="form-err" data-err-for="item">Item é obrigatório</div>
+        </div>
+        <div class="form-field">
+          <label>Cooperado</label>
+          <input type="text" id="np_cooperado" placeholder="Auto-preenchido do contrato" readonly />
+        </div>
+
+        <div class="form-field">
+          <label>Cotação</label>
+          <input type="text" id="np_cotacao" placeholder="Auto-preenchido" readonly />
+        </div>
+        <div class="form-field">
+          <label>Cidade Recebedor</label>
+          <input type="text" id="np_cidade" placeholder="Auto-preenchido" readonly />
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Volume (t)</label>
+          <input type="number" id="np_volume" placeholder="0" min="0" step="0.01" />
+          <div class="form-err" data-err-for="volume">Volume deve ser maior que zero</div>
+        </div>
+        <div class="form-field">
+          <label>Frete</label>
+          <input type="text" id="np_frete" placeholder="Auto-preenchido do contrato" readonly />
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Embalagem</label>
+          <select id="np_embalagem">
+            <option value="">Selecione...</option>
+            <option>Saco 50kg</option>
+            <option>Granel</option>
+            <option>Big Bag 1000kg</option>
+            <option>BagOneWay Liner 1.40</option>
+          </select>
+          <div class="form-err" data-err-for="embalagem">Embalagem é obrigatória</div>
+        </div>
+        <div class="form-field">
+          <label>Planta</label>
+          <input type="text" id="np_planta" placeholder="Auto-preenchido" readonly />
+        </div>
+
+        <div class="form-field form-field-wide">
+          <label>Rota de Entrega</label>
+          <input type="text" id="np_rota" placeholder="Ex: Sertãozinho via BR-364" />
+          <div class="form-help">Editável após criação até a geração da OV</div>
+        </div>
+      </div>
+
+      <div class="form-section-head">Faturamento (opcional — pode preencher depois)</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>NF Protocolo</label>
+          <input type="text" id="np_nf" placeholder="—" />
+        </div>
+        <div class="form-field">
+          <label>Data NF</label>
+          <input type="date" id="np_dataNf" />
+        </div>
+        <div class="form-field">
+          <label>Preço NF Unitário</label>
+          <input type="number" id="np_precoNf" placeholder="R$ 0,00" step="0.01" min="0" />
+        </div>
+        <div class="form-field"></div>
+      </div>
+    </div>
+    <div class="slds-modal-foot">
+      <div class="foot-left">Criação envia o protocolo ao SAP via Protocol Interface</div>
+      <button class="slds-btn" type="button" data-close-modal="createModal">Cancelar</button>
+      <button class="slds-btn" type="button" id="createSaveAndNewBtn">Salvar e criar</button>
+      <button class="slds-btn slds-btn-brand" type="button" id="createSaveBtn">Salvar</button>
     </div>
   </div>
 </div>
@@ -1662,6 +1856,129 @@ renderTable = function() {
   _origRenderTable();
   updateMassActionsBar();
 };
+
+/* =================================================================
+   CRIAR PROTOCOLO — Modal (SMDP-162 / FSD-PROT-001)
+   ================================================================= */
+
+/* Mock: dados auto-preenchidos por contrato (em produção viriam do SAP) */
+const CONTRATO_AUTOFILL = {
+  "20084782": { cooperado: "CARLOS ALVES",    cotacao: "Q-394874", cidade: "São Paulo · SP",       frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20085391": { cooperado: "BETO DOS SANTOS", cotacao: "Q-451220", cidade: "Curitiba · PR",        frete: "FOB", planta: "Toll Cefértil — Cubatão" },
+  "20086112": { cooperado: "TEREZA AKEMI",    cotacao: "Q-512883", cidade: "Porto Alegre · RS",   frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20086901": { cooperado: "JORGE DOS ANJOS", cotacao: "Q-602114", cidade: "Rio Verde · GO",      frete: "FOB", planta: "Toll Cefértil — Cubatão" },
+  "20087445": { cooperado: "RENATO CESAR",    cotacao: "Q-712005", cidade: "Londrina · PR",       frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20088001": { cooperado: "AGUINADO GOMES",  cotacao: "Q-803344", cidade: "Uberlândia · MG",     frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+};
+
+const CREATE_FIELDS = ["np_contrato","np_item","np_cooperado","np_cotacao","np_cidade","np_volume","np_frete","np_embalagem","np_planta","np_rota","np_nf","np_dataNf","np_precoNf"];
+
+function resetCreateForm() {
+  CREATE_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  document.querySelectorAll("#createModal .form-field.is-invalid").forEach(f => f.classList.remove("is-invalid"));
+}
+
+function openCreateModal() {
+  resetCreateForm();
+  document.getElementById("createModal").classList.add("is-open");
+  setTimeout(() => document.getElementById("np_contrato").focus(), 50);
+}
+
+/* Auto-fill ao escolher contrato */
+document.getElementById("np_contrato").addEventListener("change", function() {
+  const info = CONTRATO_AUTOFILL[this.value];
+  if (!info) {
+    ["np_cooperado","np_cotacao","np_cidade","np_frete","np_planta"].forEach(id => document.getElementById(id).value = "");
+    return;
+  }
+  document.getElementById("np_cooperado").value = info.cooperado;
+  document.getElementById("np_cotacao").value   = info.cotacao;
+  document.getElementById("np_cidade").value    = info.cidade;
+  document.getElementById("np_frete").value     = info.frete;
+  document.getElementById("np_planta").value    = info.planta;
+  document.querySelector('#createModal .form-field[data-err-for]')?.classList.remove("is-invalid");
+});
+
+function validateCreateForm() {
+  let ok = true;
+  /* Required: contrato, item, volume (> 0), embalagem */
+  const required = [
+    { id: "np_contrato",  err: "contrato",  check: v => !!v },
+    { id: "np_item",      err: "item",      check: v => !!v },
+    { id: "np_volume",    err: "volume",    check: v => v && parseFloat(v) > 0 },
+    { id: "np_embalagem", err: "embalagem", check: v => !!v },
+  ];
+  required.forEach(r => {
+    const el = document.getElementById(r.id);
+    const field = el.closest(".form-field");
+    if (!r.check(el.value)) { field.classList.add("is-invalid"); ok = false; }
+    else field.classList.remove("is-invalid");
+  });
+  return ok;
+}
+
+function buildNewProtocol() {
+  const contratoSap  = document.getElementById("np_contrato").value;
+  const info         = CONTRATO_AUTOFILL[contratoSap] || {};
+  const item         = document.getElementById("np_item").value;
+  const volume       = parseFloat(document.getElementById("np_volume").value);
+  const embalagem    = document.getElementById("np_embalagem").value;
+  const rota         = document.getElementById("np_rota").value.trim();
+  const nf           = document.getElementById("np_nf").value.trim();
+  const dataNf       = document.getElementById("np_dataNf").value;
+  const precoNf      = document.getElementById("np_precoNf").value;
+
+  /* Gera ID novo no padrão MxxxxxxxX */
+  const seq = (PROTOCOLS.length + 1).toString(36).toUpperCase().padStart(2, "0");
+  const id = "M9W" + Math.floor(10000 + Math.random() * 89999) + seq;
+
+  const newP = {
+    id,
+    status: "novo",
+    contratoSap, cotacao: info.cotacao || "",
+    item: parseInt(item, 10) || 0,
+    clienteFilial: contratoSap, /* placeholder */
+    cnpj: "—",
+    cidadeUf: info.cidade || "",
+    cooperado: info.cooperado || "",
+    produto: "—",
+    embalagem,
+    frete: info.frete || "CIF",
+    qtdAgendada: 0,
+    hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    volume,
+    rota,
+    nf: nf || "—",
+    dataNf: dataNf || "—",
+    precoNf: precoNf ? "R$ " + parseFloat(precoNf).toFixed(2).replace(".", ",") : "—",
+  };
+  return newP;
+}
+
+function saveNewProtocol(stayOpen) {
+  if (!validateCreateForm()) {
+    showToast("Preencha todos os campos obrigatórios marcados com *", true);
+    return;
+  }
+  const newP = buildNewProtocol();
+  PROTOCOLS.unshift(newP);
+  renderCounts();
+  renderTable();
+  showToast(`Protocolo ${newP.id} criado. Enviado ao SAP.`);
+  if (stayOpen) {
+    resetCreateForm();
+    setTimeout(() => document.getElementById("np_contrato").focus(), 50);
+  } else {
+    document.getElementById("createModal").classList.remove("is-open");
+  }
+}
+
+document.getElementById("btnNewProtocol").addEventListener("click", openCreateModal);
+document.getElementById("createSaveBtn").addEventListener("click", () => saveNewProtocol(false));
+document.getElementById("createSaveAndNewBtn").addEventListener("click", () => saveNewProtocol(true));
 
 /* =================================================================
    Init
