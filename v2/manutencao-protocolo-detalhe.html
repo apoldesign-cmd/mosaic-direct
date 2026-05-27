@@ -613,36 +613,68 @@ a:hover { text-decoration: underline; }
   flex-shrink: 0;
   opacity: 0.7;
 }
-/* Edit multi-field (padrão real Salesforce):
+/* Edit multi-field (padrão real Salesforce com background amarelo + undo):
    - Click no ✏️ abre AQUELE campo individualmente
-   - User pode clicar em vários ✏️ pra abrir múltiplos inputs simultaneamente
-   - Footer flutuante (#inlineEditFooter) aparece com Cancelar/Salvar
-   - Save commita TODOS os abertos de uma vez
-   - Sem ✓/✗ inline ao lado de cada campo (footer flutuante substitui) */
+   - Field em edit ganha fundo amarelo sutil (highlight visual)
+   - Botão undo ↩ aparece no canto superior direito
+   - Múltiplos campos abertos simultaneamente
+   - Footer flutuante (#inlineEditFooter) com Cancelar/Salvar */
 .field.is-editing-single {
-  background: #fff;
-  padding: 4px 26px 4px 4px;
+  background: #fff9e6;
+  padding: 8px 32px 8px 8px;
+  margin: -2px;
+  border-radius: 3px;
 }
 .field.is-editing-single .field-value-display { display: none; }
 .field.is-editing-single .field-value-input { display: block; }
 .field.is-editing-single .field-pencil { display: none; }
+.field.is-editing-single .field-label { margin-bottom: 4px; }
 .field.is-editing-single input,
 .field.is-editing-single select {
   width: 100%;
-  height: 30px;
+  height: 32px;
   font-size: 13px;
   padding: 0 10px;
-  border: 1px solid var(--slds-blue);
-  border-radius: 3px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
   outline: none;
   font-family: inherit;
-  box-shadow: 0 0 0 2px rgba(1,118,211,0.10);
+  background: #fff;
+  color: var(--slds-text-1);
 }
 .field.is-editing-single input:focus,
 .field.is-editing-single select:focus {
   border-color: var(--slds-blue);
   box-shadow: 0 0 0 3px rgba(1,118,211,0.20);
 }
+.field.is-editing-single select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+
+/* Botão undo ↩ no canto superior direito do field em edit (padrão SF real) */
+.field-undo-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px; height: 22px;
+  background: transparent;
+  border: none;
+  color: var(--slds-text-3);
+  border-radius: 3px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.field.is-editing-single .field-undo-btn { display: inline-flex; }
+.field-undo-btn:hover { background: rgba(0,0,0,0.06); color: var(--slds-text-1); }
+
 /* Mini ✓/✗ ao lado removidos — footer flutuante toma lugar */
 .field-inline-actions { display: none !important; }
 .field-inline-actions {
@@ -1748,15 +1780,19 @@ function fieldHTML(label, value, opts) {
   /* Input "shadow" pra inline-edit (escondido por default) */
   const inputHTML = editable ? buildInlineInput(key, CURRENT[key]) : "";
 
+  /* Mini ✓/✗ inline removidos (não usar — footer toma lugar). Mantido só pra
+     compatibilidade visual se algum CSS legado referenciar. */
   const actions = editable ? `
     <div class="field-inline-actions">
-      <button type="button" data-action="cancel" data-field-edit-cancel="${escapeHtml(key)}" aria-label="Cancelar" title="Cancelar (Esc)">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-      <button type="button" data-action="save" data-field-edit-save="${escapeHtml(key)}" aria-label="Salvar" title="Salvar (Enter)">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-      </button>
+      <button type="button" data-action="cancel" data-field-edit-cancel="${escapeHtml(key)}" aria-label="Cancelar"></button>
+      <button type="button" data-action="save" data-field-edit-save="${escapeHtml(key)}" aria-label="Salvar"></button>
     </div>` : "";
+
+  /* Botão undo ↩ que reseta o input pro valor original */
+  const undoBtn = editable ? `
+    <button type="button" class="field-undo-btn" data-field-undo="${escapeHtml(key)}" aria-label="Desfazer alterações neste campo" title="Desfazer">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M3 13c1-5 5.5-8 10.5-8 4.97 0 9 4.03 9 9s-4.03 9-9 9c-3.5 0-6.5-2-8-5"/></svg>
+    </button>` : "";
 
   return `
     <div class="${cls}"${title} data-field="${escapeHtml(key)}">
@@ -1764,6 +1800,7 @@ function fieldHTML(label, value, opts) {
       <div class="field-value field-value-display">${v} ${lockIcon}</div>
       ${editable ? `<div class="field-value-input" data-input-for="${escapeHtml(key)}" style="display:none">${inputHTML}</div>` : ""}
       ${pencil}
+      ${undoBtn}
       ${actions}
     </div>`;
 }
@@ -2295,28 +2332,31 @@ function setupCollapsers() {
 /* Detail panel uses event delegation for pencils — qualquer ✏️ ativa modo "bilhete" */
 function setupDetailPencils() {
   document.getElementById("detailsPanel").addEventListener("click", e => {
-    /* Click no lapizinho ✏️ → ativa edit individual daquele campo */
+    /* Click no lapizinho ✏️ → abre edit do campo */
     const pencil = e.target.closest("[data-field-edit]");
     if (pencil) {
       e.stopPropagation();
       startFieldEdit(pencil.dataset.fieldEdit);
       return;
     }
-    /* Click no ✓ (save) ao lado do campo em edit */
-    const saveBtn = e.target.closest("[data-field-edit-save]");
-    if (saveBtn) {
+    /* Click no undo ↩ → reseta o input pro valor original e fecha edit do campo */
+    const undoBtn = e.target.closest("[data-field-undo]");
+    if (undoBtn) {
       e.stopPropagation();
-      commitFieldEdit();
-      return;
-    }
-    /* Click no ✗ (cancel) ao lado do campo em edit */
-    const cancelBtn = e.target.closest("[data-field-edit-cancel]");
-    if (cancelBtn) {
-      e.stopPropagation();
-      cancelFieldEdit();
+      undoFieldEdit(undoBtn.dataset.fieldUndo);
       return;
     }
   });
+}
+
+/* Desfaz um campo específico: restaura valor original no input + sai do edit
+   só desse campo (mantém outros campos em edit abertos) */
+function undoFieldEdit(key) {
+  if (!editingFields.has(key)) return;
+  const fieldEl = document.querySelector(`#detailsPanel .field[data-field="${key}"]`);
+  if (fieldEl) fieldEl.classList.remove("is-editing-single");
+  editingFields.delete(key);
+  refreshInlineEditFooter();
 }
 
 /* =================================================================
