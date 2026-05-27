@@ -1008,7 +1008,7 @@ a:hover { text-decoration: underline; }
 #detailsPanel.is-editing .field.is-editable .field-value-display { display: none; }
 #detailsPanel.is-editing .field.is-editable .field-value-input { display: flex; }
 
-.field-value-input { display: none; width: 100%; }
+.field-value-input { display: none; width: 100%; flex-direction: column; }
 .field-value-input input,
 .field-value-input select {
   width: 100%;
@@ -1073,9 +1073,32 @@ a:hover { text-decoration: underline; }
   z-index: 220;
   transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
   pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 .slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
 .slds-toast.is-error { background: var(--slds-error); }
+.slds-toast .sap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.18);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Helper text de mínimo no inline edit (volume) */
+.field-min-helper {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-style: italic;
+}
 
 </style>
 </head>
@@ -1644,13 +1667,23 @@ function fmtDate(v) {
 }
 function fmtVolume(v) { return v == null || v === "" ? "—" : Number(v).toLocaleString("pt-BR") + " t"; }
 
-function showToast(msg, isError) {
+const SAP_CHIP = '<span class="sap-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>SAP</span>';
+
+function showToast(msg, opts) {
+  /* Compat: 2º arg pode ser boolean (legacy) ou objeto { error, sap } */
+  let isError = false;
+  let withSap = true;
+  if (typeof opts === "boolean") { isError = opts; withSap = false; }
+  else if (opts && typeof opts === "object") {
+    isError = !!opts.error;
+    withSap = opts.sap !== false;
+  }
   const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.toggle("is-error", !!isError);
+  t.innerHTML = `<span>${escapeHtml(msg)}</span>${withSap ? SAP_CHIP : ""}`;
+  t.classList.toggle("is-error", isError);
   t.classList.add("is-visible");
   clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => t.classList.remove("is-visible"), 2400);
+  showToast._t = setTimeout(() => t.classList.remove("is-visible"), 2800);
 }
 
 const LOCK_ICON = `<svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
@@ -1759,7 +1792,14 @@ function buildInlineInput(key, raw) {
   if (key === "dataNf") {
     return `<input type="date" value="${escapeHtml(raw || "")}" data-inline-field="${key}" />`;
   }
-  if (key === "qtd" || key === "precoNf") {
+  if (key === "qtd") {
+    const minV = rules.minVolume(CURRENT);
+    const helper = minV > 0
+      ? `<span class="field-min-helper">Mínimo: ${minV} t (já agendado)</span>`
+      : "";
+    return `<input type="number" step="0.01" value="${escapeHtml(raw == null ? "" : String(raw))}" data-inline-field="${key}" />${helper}`;
+  }
+  if (key === "precoNf") {
     return `<input type="number" step="0.01" value="${escapeHtml(raw == null ? "" : String(raw))}" data-inline-field="${key}" />`;
   }
   return `<input type="text" value="${escapeHtml(raw == null ? "" : String(raw))}" data-inline-field="${key}" />`;
@@ -1958,7 +1998,7 @@ function commitFieldEdit() {
   if (key === "qtd" || key === "precoNf") {
     v = v === "" ? null : Number(v);
     if (key === "qtd" && v != null && v < rules.minVolume(p)) {
-      showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (qtd agendada).`, true);
+      showToast(`Volume não pode ser menor que ${rules.minVolume(p)} t (já agendado).`, { error: true, sap: false });
       input.focus();
       return;
     }
@@ -1983,7 +2023,7 @@ function commitFieldEdit() {
   editingFieldKey = null;
   editingFieldSnapshot = null;
   renderAll();
-  if (changed) showToast("Alteração salva com sucesso");
+  if (changed) showToast("Alteração salva. Enviada ao SAP.");
 }
 
 /* Alias para retrocompatibilidade com chamadas legadas */
@@ -2073,7 +2113,7 @@ function openEditModal() {
         Informações do Protocolo
       </div>
       <div class="edit-section-body">
-        ${fld({ label: "Volume Desejado", required: true, key: "qtd", type: "number", value: p.qtd, locked: !editableVolume })}
+        ${fld({ label: "Volume Desejado", required: true, key: "qtd", type: "number", value: p.qtd, locked: !editableVolume, helper: rules.minVolume(p) > 0 ? `Mínimo: ${rules.minVolume(p)} t (já agendado)` : "" })}
         ${fld({ label: "Status", value: STATUS_LABEL[p.status] || p.status, locked: true })}
         ${fld({ label: "Embalagem", required: true, key: "embalagem", value: p.embalagem, options: EMBALAGEM_OPTS, locked: !editablePackage })}
         ${fld({ label: "Cooperado", required: true, value: p.cooperado, locked: true })}
@@ -2136,7 +2176,7 @@ function saveEditModal() {
     if (key === "qtd" || key === "precoNf") {
       v = Number(v);
       if (key === "qtd" && v < rules.minVolume(p)) {
-        showToast(`Volume mínimo: ${rules.minVolume(p)} t.`, true);
+        showToast(`Volume mínimo: ${rules.minVolume(p)} t (já agendado).`, { error: true, sap: false });
         throw new Error("volume_invalido");
       }
     }
@@ -2145,7 +2185,7 @@ function saveEditModal() {
   p.dataAlteracao = new Date().toISOString().slice(0,16).replace("T"," ");
   document.getElementById("editModal").classList.remove("is-open");
   renderAll();
-  showToast("Protocolo atualizado.");
+  showToast("Protocolo atualizado. Enviado ao SAP.");
 }
 
 /* =================================================================
@@ -2179,7 +2219,7 @@ function confirmCancel() {
   });
   document.getElementById("cancelModal").classList.remove("is-open");
   renderAll();
-  showToast("Protocolo cancelado.");
+  showToast("Protocolo cancelado. Enviado ao SAP.");
 }
 
 /* =================================================================

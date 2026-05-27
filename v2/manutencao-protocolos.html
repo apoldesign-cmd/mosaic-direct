@@ -604,6 +604,299 @@ table.list-table {
 }
 
 /* ============================================================
+   Mass-action toolbar (aparece quando ≥1 linha selecionada)
+   ============================================================ */
+.mass-actions {
+  display: none;
+  background: var(--slds-blue-light);
+  border-left: 1px solid var(--slds-border-soft);
+  border-right: 1px solid var(--slds-border-soft);
+  border-bottom: 1px solid var(--slds-blue);
+  padding: 10px 18px;
+  align-items: center;
+  gap: 12px;
+}
+.mass-actions.is-visible { display: flex; }
+.mass-actions-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-blue-text);
+  flex: 1;
+}
+.mass-actions .slds-btn {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--slds-blue);
+  background: #fff;
+  color: var(--slds-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mass-actions .slds-btn:hover { background: #eaf4fc; }
+.mass-actions .slds-btn-destructive-outline {
+  border-color: var(--slds-error);
+  color: var(--slds-error);
+}
+.mass-actions .slds-btn-destructive-outline:hover { background: #fdeaec; }
+.mass-actions .clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--slds-blue-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 30px;
+  padding: 0 8px;
+}
+.mass-actions .clear-btn:hover { text-decoration: underline; }
+
+/* ============================================================
+   Modal (mass edit + mass cancel)
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,7,7,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.is-open { display: flex; }
+.slds-modal {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slds-modal.is-wide { max-width: 920px; }
+.slds-modal-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.slds-modal-head h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  color: var(--slds-text-1);
+}
+.slds-modal-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--slds-text-3);
+  border-radius: 4px;
+}
+.slds-modal-close:hover { background: rgba(0,0,0,0.06); color: var(--slds-text-1); }
+.slds-modal-body {
+  padding: 0;
+  font-size: 13px;
+  color: var(--slds-text-2);
+  line-height: 1.5;
+  overflow-y: auto;
+}
+.slds-modal-foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--slds-border-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f7f7f7;
+}
+.slds-modal-foot .foot-left { flex: 1; font-size: 12px; color: var(--slds-text-3); }
+.slds-modal-foot .slds-btn {
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  border-radius: 4px;
+  color: var(--slds-blue);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.slds-modal-foot .slds-btn:hover { background: var(--slds-bg-hover); }
+.slds-modal-foot .slds-btn-brand {
+  background: var(--mosaic-green-800);
+  border-color: var(--mosaic-green-800);
+  color: #fff;
+}
+.slds-modal-foot .slds-btn-brand:hover { background: #003e2a; border-color: #003e2a; }
+.slds-modal-foot .slds-btn-brand:disabled,
+.slds-modal-foot .slds-btn-destructive:disabled {
+  background: #ecebea; border-color: var(--slds-border); color: var(--slds-text-3); cursor: not-allowed;
+}
+.slds-modal-foot .slds-btn-destructive {
+  background: var(--slds-error);
+  border-color: var(--slds-error);
+  color: #fff;
+}
+.slds-modal-foot .slds-btn-destructive:hover { background: #98030f; border-color: #98030f; }
+
+/* Mass-edit form */
+.mass-warn-banner {
+  background: #fef9e6;
+  border-bottom: 1px solid #f5d76e;
+  color: #3e3e3c;
+  padding: 10px 18px;
+  font-size: 12.5px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.mass-warn-banner svg { color: #b88517; flex-shrink: 0; margin-top: 1px; }
+.mass-edit-form {
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+.mass-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mass-field-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+}
+.mass-field-head .mass-check {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--slds-border);
+  border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mass-field-head .mass-check.is-checked {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.mass-field input,
+.mass-field select {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  background: #fff;
+  color: var(--slds-text-1);
+}
+.mass-field input:focus,
+.mass-field select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
+}
+.mass-field input:disabled,
+.mass-field select:disabled {
+  background: #fafafa;
+  color: var(--slds-text-3);
+  cursor: not-allowed;
+}
+.mass-field-helper {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-style: italic;
+}
+
+/* Mass-cancel list */
+.mass-cancel-list {
+  padding: 8px 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.mass-cancel-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.mass-cancel-row:last-child { border-bottom: none; }
+.mass-cancel-row .mc-id {
+  font-weight: 700;
+  color: var(--slds-text-1);
+  min-width: 110px;
+}
+.mass-cancel-row .mc-status { flex: 1; }
+.mass-cancel-row.is-ok .mc-status { color: var(--slds-success); }
+.mass-cancel-row.is-blocked .mc-status { color: var(--slds-error); }
+.mass-cancel-row .mc-ico {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+}
+.mass-cancel-row.is-ok .mc-ico { color: var(--slds-success); }
+.mass-cancel-row.is-blocked .mc-ico { color: var(--slds-error); }
+
+/* Toast */
+.slds-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--slds-success);
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 220;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
+.slds-toast.is-error { background: var(--slds-error); }
+.slds-toast .sap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.18);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
    Responsive
    ============================================================ */
 @media (max-width: 900px) {
@@ -733,6 +1026,20 @@ table.list-table {
     </div>
   </div>
 
+  <!-- Mass-action toolbar (CS team) -->
+  <div class="mass-actions" id="massActions" role="region" aria-label="Ações em massa">
+    <div class="mass-actions-count" id="massActionsCount">0 protocolo(s) selecionado(s)</div>
+    <button class="slds-btn" type="button" id="btnMassEdit">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Edição em massa
+    </button>
+    <button class="slds-btn slds-btn-destructive-outline" type="button" id="btnMassCancel">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Cancelar selecionados
+    </button>
+    <button class="clear-btn" type="button" id="btnClearSelection">✗ Limpar seleção</button>
+  </div>
+
   <!-- Table -->
   <div class="list-table-wrap">
     <table class="list-table" id="protocolTable">
@@ -757,6 +1064,44 @@ table.list-table {
   </div>
 
 </main>
+
+<!-- ====================== Modal: Mass Edit ====================== -->
+<div class="modal-backdrop" id="massEditModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <h2 id="massEditTitle">Editar protocolos em massa</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="massEditModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body" id="massEditBody"></div>
+    <div class="slds-modal-foot">
+      <div class="foot-left" id="massEditFootInfo">—</div>
+      <button class="slds-btn" type="button" data-close-modal="massEditModal">Cancelar</button>
+      <button class="slds-btn slds-btn-brand" type="button" id="massEditApplyBtn">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal: Mass Cancel ====================== -->
+<div class="modal-backdrop" id="massCancelModal" role="dialog" aria-modal="true">
+  <div class="slds-modal">
+    <div class="slds-modal-head">
+      <h2 id="massCancelTitle">Cancelar protocolos?</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="massCancelModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body" id="massCancelBody"></div>
+    <div class="slds-modal-foot">
+      <div class="foot-left" id="massCancelFootInfo">—</div>
+      <button class="slds-btn" type="button" data-close-modal="massCancelModal">Voltar</button>
+      <button class="slds-btn slds-btn-destructive" type="button" id="massCancelApplyBtn">Cancelar protocolos</button>
+    </div>
+  </div>
+</div>
+
+<div class="slds-toast" id="toast"></div>
 
 <script>
 /* =================================================================
@@ -1050,6 +1395,273 @@ document.getElementById("headCheckbox").addEventListener("click", () => {
 document.getElementById("btnRefresh").addEventListener("click", () => {
   renderTable();
 });
+
+/* =================================================================
+   Toast — com chip "Enviado ao SAP"
+   ================================================================= */
+const SAP_CHIP = '<span class="sap-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>SAP</span>';
+
+function showToast(msg, opts) {
+  opts = opts || {};
+  const t = document.getElementById("toast");
+  const sap = opts.sap !== false;
+  t.classList.toggle("is-error", !!opts.error);
+  t.innerHTML = `<span>${escapeHtml(msg)}</span>${sap ? SAP_CHIP : ""}`;
+  t.classList.add("is-visible");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("is-visible"), 2800);
+}
+
+/* =================================================================
+   Mass-action toolbar
+   ================================================================= */
+function isFieldEditable(p, field) {
+  if (p.status === "cancelado") return false;
+  switch (field) {
+    case "volume":    return !p.hasBilling;
+    case "embalagem": return !p.hasSO;
+    case "rota":      return !p.hasOV;
+    case "nf":
+    case "dataNf":
+    case "precoNf":   return !p.hasBilling;
+    default: return false;
+  }
+}
+
+function canCancelProtocol(p) {
+  return p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling;
+}
+function cancelBlockReason(p) {
+  if (p.status === "cancelado") return "Protocolo já cancelado";
+  if (p.hasBilling) return "Não permitido após faturamento";
+  if (p.hasActiveRequests) return "Possui agendamentos ativos";
+  return "";
+}
+
+function getSelectedProtocols() {
+  return PROTOCOLS.filter(p => state.selected.has(p.id));
+}
+
+function updateMassActionsBar() {
+  const bar = document.getElementById("massActions");
+  const n = state.selected.size;
+  if (n === 0) {
+    bar.classList.remove("is-visible");
+    return;
+  }
+  bar.classList.add("is-visible");
+  document.getElementById("massActionsCount").textContent =
+    `${n} protocolo(s) selecionado(s)`;
+}
+
+document.getElementById("btnClearSelection").addEventListener("click", () => {
+  state.selected.clear();
+  renderTable();
+});
+
+/* ----------------- Mass Edit modal ----------------- */
+const EMBALAGEM_OPTS = ["Saco 50kg", "Saco 25kg", "Big Bag 1000kg", "BagOneWay Liner 1.40", "Granel"];
+const MASS_FIELDS = [
+  { key: "volume",    label: "Volume Desejado",  type: "number", suffix: "t",  rule: "volume"    },
+  { key: "embalagem", label: "Embalagem",        type: "select", options: EMBALAGEM_OPTS, rule: "embalagem" },
+  { key: "rota",      label: "Rota de Entrega",  type: "text",   rule: "rota" },
+  { key: "nf",        label: "NF Protocolo",     type: "text",   rule: "nf" },
+  { key: "dataNf",    label: "Data NF",          type: "date",   rule: "dataNf" },
+  { key: "precoNf",   label: "Preço NF Unitário",type: "number", suffix: "R$", rule: "precoNf" },
+];
+
+function openMassEditModal() {
+  const sel = getSelectedProtocols();
+  if (!sel.length) return;
+
+  /* Mínimo de volume aceito: maior qtdAgendada entre selecionados */
+  const minVolumeSelection = sel.reduce((m, p) => Math.max(m, p.qtdAgendada || 0), 0);
+
+  document.getElementById("massEditTitle").textContent =
+    `Editar ${sel.length} protocolo${sel.length === 1 ? "" : "s"} em massa`;
+
+  const body = document.getElementById("massEditBody");
+  body.innerHTML = `
+    <div class="mass-warn-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>Campos não editáveis em algum protocolo selecionado serão <strong>ignorados</strong> apenas para aquele protocolo. Cada protocolo respeita suas próprias regras (volume mín., status de SO/OV/billing).</div>
+    </div>
+    <div class="mass-edit-form" id="massEditForm">
+      ${MASS_FIELDS.map(f => {
+        let control;
+        if (f.type === "select") {
+          control = `<select disabled data-mfield="${f.key}"><option value="">— Selecione —</option>${f.options.map(o => `<option>${escapeHtml(o)}</option>`).join("")}</select>`;
+        } else {
+          control = `<input type="${f.type}" disabled data-mfield="${f.key}" />`;
+        }
+        const helper = f.key === "volume"
+          ? `<div class="mass-field-helper">Mínimo aceito para esta seleção: ${minVolumeSelection} t</div>`
+          : "";
+        return `
+          <div class="mass-field" data-mfield-wrap="${f.key}">
+            <div class="mass-field-head">
+              <span class="mass-check" role="checkbox" tabindex="0" data-mcheck="${f.key}" aria-checked="false"></span>
+              <span>Aplicar este campo · <strong>${escapeHtml(f.label)}</strong></span>
+            </div>
+            ${control}
+            ${helper}
+          </div>`;
+      }).join("")}
+    </div>
+  `;
+
+  /* checkbox handler */
+  body.querySelectorAll("[data-mcheck]").forEach(chk => {
+    chk.addEventListener("click", () => {
+      const key = chk.dataset.mcheck;
+      const on = !chk.classList.contains("is-checked");
+      chk.classList.toggle("is-checked", on);
+      chk.setAttribute("aria-checked", on ? "true" : "false");
+      chk.innerHTML = on ? '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : "";
+      const inp = body.querySelector(`[data-mfield="${key}"]`);
+      if (inp) inp.disabled = !on;
+      updateMassEditFootInfo();
+    });
+  });
+
+  document.getElementById("massEditModal").classList.add("is-open");
+  updateMassEditFootInfo();
+}
+
+function updateMassEditFootInfo() {
+  const sel = getSelectedProtocols();
+  const body = document.getElementById("massEditBody");
+  /* Quais campos foram marcados pra aplicar */
+  const fieldsOn = MASS_FIELDS
+    .map(f => f.key)
+    .filter(k => body.querySelector(`[data-mcheck="${k}"]`).classList.contains("is-checked"));
+
+  let info = "Nenhum campo selecionado para aplicar.";
+  if (fieldsOn.length) {
+    /* Para cada protocolo, verifica se algum dos campos marcados é editável */
+    const willApply = sel.filter(p => fieldsOn.some(f => isFieldEditable(p, f))).length;
+    const blocked = sel.length - willApply;
+    info = `Aplicará em ${willApply} de ${sel.length} selecionados${blocked > 0 ? ` (${blocked} sem nenhum campo aplicável)` : ""}.`;
+  }
+  document.getElementById("massEditFootInfo").textContent = info;
+  document.getElementById("massEditApplyBtn").textContent =
+    fieldsOn.length ? `Aplicar nas ${sel.length} selecionadas` : "Aplicar";
+  document.getElementById("massEditApplyBtn").disabled = !fieldsOn.length;
+}
+
+function applyMassEdit() {
+  const body = document.getElementById("massEditBody");
+  const sel = getSelectedProtocols();
+  const fieldsOn = MASS_FIELDS
+    .filter(f => body.querySelector(`[data-mcheck="${f.key}"]`).classList.contains("is-checked"));
+  if (!fieldsOn.length) return;
+
+  /* coleta valores */
+  const vals = {};
+  fieldsOn.forEach(f => {
+    const inp = body.querySelector(`[data-mfield="${f.key}"]`);
+    vals[f.key] = f.type === "number" ? Number(inp.value) : inp.value;
+  });
+
+  let changed = 0;
+  sel.forEach(p => {
+    let touched = false;
+    fieldsOn.forEach(f => {
+      if (!isFieldEditable(p, f.key)) return;
+      /* volume mínimo */
+      if (f.key === "volume") {
+        const minV = p.qtdAgendada || 0;
+        if (vals.volume < minV) return; // skip silently for this protocol
+        p.volume = vals.volume;
+        touched = true;
+        return;
+      }
+      p[f.key] = vals[f.key];
+      touched = true;
+    });
+    if (touched) changed++;
+  });
+
+  document.getElementById("massEditModal").classList.remove("is-open");
+  renderTable();
+  showToast(`${changed} protocolo${changed === 1 ? "" : "s"} atualizado${changed === 1 ? "" : "s"}. Enviado ao SAP.`);
+}
+
+document.getElementById("btnMassEdit").addEventListener("click", openMassEditModal);
+document.getElementById("massEditApplyBtn").addEventListener("click", applyMassEdit);
+
+/* ----------------- Mass Cancel modal ----------------- */
+function openMassCancelModal() {
+  const sel = getSelectedProtocols();
+  if (!sel.length) return;
+
+  document.getElementById("massCancelTitle").textContent =
+    `Cancelar ${sel.length} protocolo${sel.length === 1 ? "" : "s"}?`;
+
+  const body = document.getElementById("massCancelBody");
+  body.innerHTML = `<div class="mass-cancel-list">
+    ${sel.map(p => {
+      const ok = canCancelProtocol(p);
+      const rowCls = ok ? "is-ok" : "is-blocked";
+      const ico = ok
+        ? '<svg class="mc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg class="mc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      const text = ok ? "Pronto para cancelar" : `Não permitido: ${cancelBlockReason(p)}`;
+      return `<div class="mass-cancel-row ${rowCls}">
+        ${ico}
+        <span class="mc-id">${escapeHtml(p.id)}</span>
+        <span class="mc-status">${escapeHtml(text)}</span>
+      </div>`;
+    }).join("")}
+  </div>`;
+
+  const okCount = sel.filter(canCancelProtocol).length;
+  const blocked = sel.length - okCount;
+  document.getElementById("massCancelFootInfo").textContent =
+    `${okCount} canceláveis · ${blocked} bloqueado${blocked === 1 ? "" : "s"}`;
+  const btn = document.getElementById("massCancelApplyBtn");
+  btn.disabled = okCount === 0;
+  btn.textContent = okCount > 0 ? `Cancelar ${okCount} protocolo${okCount === 1 ? "" : "s"}` : "Cancelar protocolos";
+
+  document.getElementById("massCancelModal").classList.add("is-open");
+}
+
+function applyMassCancel() {
+  const sel = getSelectedProtocols();
+  let cancelled = 0;
+  sel.forEach(p => {
+    if (!canCancelProtocol(p)) return;
+    p.status = "cancelado";
+    cancelled++;
+  });
+  document.getElementById("massCancelModal").classList.remove("is-open");
+  state.selected.clear();
+  renderCounts();
+  renderTable();
+  showToast(`${cancelled} protocolo${cancelled === 1 ? "" : "s"} cancelado${cancelled === 1 ? "" : "s"}. Enviado ao SAP.`);
+}
+
+document.getElementById("btnMassCancel").addEventListener("click", openMassCancelModal);
+document.getElementById("massCancelApplyBtn").addEventListener("click", applyMassCancel);
+
+/* Modal close handlers (backdrop + X button) */
+document.body.addEventListener("click", (e) => {
+  const closeBtn = e.target.closest("[data-close-modal]");
+  if (closeBtn) {
+    document.getElementById(closeBtn.dataset.closeModal).classList.remove("is-open");
+    return;
+  }
+  if (e.target.classList.contains("modal-backdrop")) {
+    e.target.classList.remove("is-open");
+  }
+});
+
+/* Patch renderTable para também atualizar a toolbar de mass actions */
+const _origRenderTable = renderTable;
+renderTable = function() {
+  _origRenderTable();
+  updateMassActionsBar();
+};
 
 /* =================================================================
    Init
