@@ -139,20 +139,31 @@
   .proto-foot-arrow { transition: transform var(--ease-fast); display: flex; }
   .proto-card:hover .proto-foot-arrow { transform: translateX(4px); }
 
-  .section-block { margin-top: var(--space-6); }
+  .section-block { margin-top: var(--space-7); }
   .section-block-head {
     display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: var(--space-4);
+    align-items: center;
+    gap: 14px;
     margin-bottom: var(--space-4);
-    border-bottom: 1px solid var(--border-soft);
-    padding-bottom: 12px;
+    padding: 14px 16px;
+    background: var(--bg-section);
+    border-left: 4px solid var(--mosaic-green-700);
   }
+  .section-block-head .icon {
+    width: 36px; height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+  }
+  .section-block-head .titles { flex: 1; min-width: 0; }
   .section-block-head h2 {
     margin: 0;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 800;
     color: var(--text-1);
     letter-spacing: -0.005em;
   }
@@ -160,7 +171,28 @@
     color: var(--text-3);
     font-size: 12.5px;
     font-weight: 600;
+    display: block;
+    margin-top: 2px;
   }
+  .section-block-head .count {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
+  }
+  /* Variantes de grupo */
+  .section-block.sf .section-block-head { border-left-color: var(--slds-blue, #0176d3); }
+  .section-block.sf .section-block-head .icon { color: var(--slds-blue, #0176d3); }
+  .section-block.sf .section-block-head .count { background: var(--slds-blue, #0176d3); }
+  .section-block.variants .section-block-head { border-left-color: var(--mosaic-yellow); }
+  .section-block.variants .section-block-head .icon { color: var(--mosaic-orange); }
+  .section-block.variants .section-block-head .count { background: var(--mosaic-orange); }
+  .section-block.docs .section-block-head { border-left-color: var(--mosaic-teal); }
+  .section-block.docs .section-block-head .icon { color: var(--mosaic-teal); }
+  .section-block.docs .section-block-head .count { background: var(--mosaic-teal); }
 </style>
 </head>
 <body>
@@ -236,10 +268,19 @@
       </p>
     </div>
 
+    <!-- ============================================================
+         GRUPO 1: Mosaic Direct · Portal do Cliente (cooperado)
+         ============================================================ -->
     <section class="section-block">
       <div class="section-block-head">
-        <h2>Telas principais</h2>
-        <span class="lede">Versões recomendadas para validação</span>
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <div class="titles">
+          <h2>Mosaic Direct · Portal do Cliente</h2>
+          <span class="lede">Telas finais que o cooperado usa no portal Mosaic Direct</span>
+        </div>
+        <span class="count">4 telas</span>
       </div>
 
       <div class="grid-cards">
@@ -330,18 +371,104 @@
           </div>
         </a>
 
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GRUPO 2: Salesforce Sales Cloud · Time interno Mosaic
+         ============================================================ -->
+    <section class="section-block sf">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18"/><path d="M9 4v16"/></svg>
+        </span>
+        <div class="titles">
+          <h2>Salesforce Sales Cloud · Time Mosaic</h2>
+          <span class="lede">Telas internas (CS team) — não visíveis para cooperados. SMDP-161 + SMDP-162.</span>
+        </div>
+        <span class="count">2 telas</span>
+      </div>
+
+      <div class="grid-cards">
+
+        <a href="manutencao-protocolos.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-161</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-162</span>
+            </div>
+            <span class="proto-tag">🔒 Lista · Interno</span>
+          </div>
+          <div class="proto-title">Manutenção de Protocolos · Lista</div>
+          <div class="proto-desc">
+            List view Salesforce com filter pills (All / Novo / Liberado / Em Agend. /
+            Concluído / Cancelado), mass edit, mass cancel e botão <strong>+ New</strong>
+            funcional. Cadeados nos campos read-only (SAP).
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">manutencao-protocolos</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="manutencao-protocolo-detalhe.html?id=M9W38746" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-161</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-162</span>
+            </div>
+            <span class="proto-tag">🔒 Detalhe · Interno</span>
+          </div>
+          <div class="proto-title">Manutenção · Detalhe do Protocolo</div>
+          <div class="proto-desc">
+            Lightning Record Page com highlights, Sales Path verde Mosaic, tabs
+            Detalhes/Relacionado/Histórico/Atividade, inline edit multi-campo (fundo
+            amarelo + undo ↩), modal Editar e modal Cancelar com regras SMDP-162 v2.0.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">manutencao-protocolo-detalhe</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GRUPO 3: Variações experimentais · Relatório de Protocolos
+         ============================================================ -->
+    <section class="section-block variants">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v6m0 10v6m11-11h-6M7 12H1m17.5-6.5l-4.2 4.2m-4.6 4.6l-4.2 4.2m12.7 0l-4.2-4.2m-4.6-4.6L4.5 5.5"/></svg>
+        </span>
+        <div class="titles">
+          <h2>Variações experimentais · Relatório de Protocolos</h2>
+          <span class="lede">Iterações da mesma tela testando padrões de edição — usados pra comparação A/B com PO</span>
+        </div>
+        <span class="count">4 versões</span>
+      </div>
+
+      <div class="grid-cards">
+
         <a href="relatorio-protocolos.html" class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
-              <span class="proto-id-chip">v1</span>
+              <span class="proto-id-chip">base</span>
             </div>
             <span class="proto-tag">✏️ Célula + Modal</span>
           </div>
-          <div class="proto-title">Relatório de Protocolos · Célula + Modal</div>
+          <div class="proto-title">Relatório · Célula + Modal</div>
           <div class="proto-desc">
-            <strong>Apenas quantidades</strong> são editáveis. Clique direto na célula da
+            <strong>Apenas quantidades</strong> editáveis. Clique direto na célula da
             quantidade para editar inline, ou abra o modal pelo lápis para ajustar com
-            <strong>resumo das demais informações</strong> em modo view (só leitura).
+            <strong>resumo das demais informações</strong> em modo view.
           </div>
           <div class="proto-foot">
             <span class="proto-foot-meta">relatorio-protocolos</span>
@@ -356,11 +483,11 @@
             <div class="proto-id">
               <span class="proto-id-chip">snapshot</span>
             </div>
-            <span class="proto-tag">📌 Backup</span>
+            <span class="proto-tag">📌 Backup histórico</span>
           </div>
-          <div class="proto-title">Relatório de Protocolos · Snapshot v1</div>
+          <div class="proto-title">Relatório · Snapshot v1</div>
           <div class="proto-desc">
-            Cópia exata da versão com <strong>modal de edição</strong> + <strong>click-to-edit individual</strong> por célula. Arquivo de referência histórica.
+            Cópia exata da versão com <strong>modal de edição</strong> + <strong>click-to-edit individual</strong> por célula. Arquivo de referência histórica preservado.
           </div>
           <div class="proto-foot">
             <span class="proto-foot-meta">relatorio-protocolos-v1</span>
@@ -375,11 +502,11 @@
             <div class="proto-id">
               <span class="proto-id-chip" style="background:var(--mosaic-yellow);color:#000">novo</span>
             </div>
-            <span class="proto-tag">🖊 Edição inline completa</span>
+            <span class="proto-tag">🖊 Linha completa</span>
           </div>
-          <div class="proto-title">Relatório de Protocolos · v2 — Linha completa</div>
+          <div class="proto-title">Relatório · v2 — Linha completa</div>
           <div class="proto-desc">
-            Clicar em <strong>Editar</strong> no menu ativa <strong>todos os campos editáveis da linha simultaneamente</strong> como inputs inline. Sem modal, sem click-to-edit individual. Coluna Protocolo sticky corrigida.
+            Clicar em <strong>Editar</strong> no menu ativa <strong>todos os campos editáveis da linha</strong> simultaneamente como inputs inline. Sem modal, sem click-to-edit individual. Coluna Protocolo sticky.
           </div>
           <div class="proto-foot">
             <span class="proto-foot-meta">relatorio-protocolos-v2</span>
@@ -392,13 +519,13 @@
         <a href="relatorio-protocolos-modal.html" class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
-              <span class="proto-id-chip">v2</span>
+              <span class="proto-id-chip">modal</span>
             </div>
-            <span class="proto-tag">📝 Linha Inteira</span>
+            <span class="proto-tag">📝 Linha inteira</span>
           </div>
-          <div class="proto-title">Relatório de Protocolos · Linha</div>
+          <div class="proto-title">Relatório · Linha inteira</div>
           <div class="proto-desc">
-            <strong>Apenas quantidades</strong> são editáveis. O lápis abre os campos
+            <strong>Apenas quantidades</strong> editáveis. O lápis abre os campos
             <strong>direto na linha da tabela</strong> (3 inputs lado a lado). Botões
             Salvar / Cancelar substituem o lápis. Saldo recalcula ao vivo.
           </div>
@@ -410,12 +537,32 @@
           </div>
         </a>
 
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GRUPO 4: UX & Documentação
+         ============================================================ -->
+    <section class="section-block docs">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </span>
+        <div class="titles">
+          <h2>UX & Documentação</h2>
+          <span class="lede">Decisões de UX implementadas com referência ao vivo — para validação com PO</span>
+        </div>
+        <span class="count">1 doc</span>
+      </div>
+
+      <div class="grid-cards">
+
         <a href="usabilidade.html" class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">UX</span>
             </div>
-            <span class="proto-tag">📐 Documentação</span>
+            <span class="proto-tag">📐 Pontos de Usabilidade</span>
           </div>
           <div class="proto-title">Pontos de Usabilidade</div>
           <div class="proto-desc">
@@ -424,27 +571,6 @@
           </div>
           <div class="proto-foot">
             <span class="proto-foot-meta">usabilidade</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
-          </div>
-        </a>
-
-        <a href="manutencao-protocolos.html" class="proto-card">
-          <div class="proto-card-head">
-            <div class="proto-id">
-              <span class="proto-id-chip">INTERNO</span>
-            </div>
-            <span class="proto-tag">🔒 SalesCloud · Time Mosaic</span>
-          </div>
-          <div class="proto-title">Manutenção de Protocolos</div>
-          <div class="proto-desc">
-            Tela exclusiva do time interno Mosaic, no padrão Salesforce Lightning.
-            Edição inline célula a célula (clique no lápis), pending changes bar, modal de
-            confirmação. Não visível para cooperados.
-          </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">manutencao-protocolos</span>
             <span class="proto-foot-arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </span>
