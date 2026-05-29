@@ -2733,7 +2733,9 @@
   /* ================================================================
      V3 — View toggle (cards / table)
      ================================================================ */
-  .view-toggle {
+  /* Toggle Cards/Tabela removido — apenas tabela */
+  .view-toggle { display: none !important; }
+  .view-toggle.__legacy_unused {
     display: inline-flex;
     background: #fff;
     border: 1.5px solid var(--border);
@@ -4781,12 +4783,7 @@ const state = {
   selectedInModal: new Set(),
   searchTerm: "",
   collapsed: new Set(),   // indices of cards currently collapsed (accordion)
-  viewMode: (function() {
-    try {
-      const saved = localStorage.getItem("mosaicViewMode");
-      return saved === "table" || saved === "cards" ? saved : "cards";
-    } catch (_) { return "cards"; }
-  })(),
+  viewMode: "table",  // toggle Cards/Tabela removido — sempre tabela
   cardsLayout: (function() {
     try {
       const saved = "list" /* forced */;

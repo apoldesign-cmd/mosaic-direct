@@ -84,7 +84,9 @@
     margin-bottom: 18px;
   }
   .title-row .page-title { margin: 0; }
-  .view-toggle {
+  /* Toggle Cards/Tabela desabilitado — apenas tabela disponível */
+  .view-toggle { display: none !important; }
+  .view-toggle.__legacy_unused {
     display: inline-flex;
     background: #fff;
     border: 1.5px solid var(--border);
@@ -2001,12 +2003,7 @@ const PROTOCOLS = [
 const state = {
   rows: [],                       // [{ ...protoData, volume, semana, roteiro }]
   selectedInDrawer: new Set(),    // indices em PROTOCOLS
-  viewMode: (function() {
-    try {
-      const saved = localStorage.getItem("mosaicProtoViewMode");
-      return saved === "table" || saved === "cards" ? saved : "cards";
-    } catch (_) { return "cards"; }
-  })()
+  viewMode: "table"  // toggle Cards/Tabela removido — sempre tabela
 };
 
 /* SVGs */
