@@ -987,6 +987,39 @@ a:hover { text-decoration: underline; }
   font-style: italic;
 }
 
+/* Campo full-width: ocupa as 2 colunas do grid e expande textarea */
+.edit-form-field.is-full {
+  grid-column: 1 / -1;
+  grid-template-columns: 130px 1fr;
+  align-items: start;
+}
+.edit-form-field.is-full > label {
+  padding-top: 8px;
+}
+.edit-form-field textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 10px 12px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 1.5;
+  outline: none;
+  background: #fff;
+  color: var(--slds-text-1);
+  font-family: inherit;
+  resize: vertical;
+}
+.edit-form-field textarea:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 3px var(--slds-blue);
+}
+.edit-form-field textarea[readonly] {
+  background: #fafafa;
+  color: var(--slds-text-2);
+  cursor: not-allowed;
+}
+
 .slds-modal.is-edit .slds-modal-foot {
   background: #f7f7f7;
   padding: 14px 20px;
@@ -2148,22 +2181,27 @@ function openEditModal() {
     const value   = opts.value == null ? "" : opts.value;
     const helper  = opts.helper || "";
     const options = opts.options || null;
+    const fullWidth = !!opts.fullWidth;
+    const placeholder = opts.placeholder || "";
 
     let control;
-    if (options) {
+    if (type === "textarea") {
+      control = `<textarea ${locked ? "readonly" : ""} data-modal-field="${escapeHtml(key)}" placeholder="${escapeHtml(placeholder)}">${escapeHtml(String(value))}</textarea>`;
+    } else if (options) {
       control = `<select ${locked ? "disabled" : ""} data-modal-field="${escapeHtml(key)}">
         ${options.map(o => `<option ${o === value ? "selected" : ""}>${escapeHtml(o)}</option>`).join("")}
       </select>`;
     } else {
       control = `<input type="${type}" value="${escapeHtml(String(value))}" ${locked ? "readonly" : ""} data-modal-field="${escapeHtml(key)}" />`;
     }
-    const lockSvg = locked
+    const lockSvg = locked && type !== "textarea"
       ? `<svg class="edit-lock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`
       : "";
-    const wrapCls = locked ? "edit-form-input-wrap has-lock" : "edit-form-input-wrap";
+    const wrapCls = (locked && type !== "textarea") ? "edit-form-input-wrap has-lock" : "edit-form-input-wrap";
     const star = required ? `<span class="req-star">*</span>` : "";
+    const fieldCls = fullWidth ? "edit-form-field is-full" : "edit-form-field";
     return `
-      <div class="edit-form-field">
+      <div class="${fieldCls}">
         <label>${star}${escapeHtml(label)}</label>
         <div class="${wrapCls}">
           ${control}
@@ -2184,7 +2222,6 @@ function openEditModal() {
         ${fld({ label: "Status", value: STATUS_LABEL[p.status] || p.status, locked: true })}
         ${fld({ label: "Embalagem", required: true, key: "embalagem", value: p.embalagem, options: EMBALAGEM_OPTS, locked: !editablePackage })}
         ${fld({ label: "Cooperado", required: true, value: p.cooperado, locked: true })}
-        ${fld({ label: "Rota de Entrega", key: "rota", value: p.rota, locked: !editableRoute })}
         ${fld({ label: "Contrato SAP", required: true, value: p.contrato, locked: true })}
         ${fld({ label: "NF Protocolo", key: "nf", value: p.nf, locked: !editableInvoice })}
         ${fld({ label: "Data NF", key: "dataNf", type: "date", value: p.dataNf, locked: !editableInvoice })}
@@ -2192,6 +2229,7 @@ function openEditModal() {
         ${fld({ label: "Item Contrato", value: p.itemContrato, locked: true })}
         ${fld({ label: "Frete", value: p.frete, locked: true })}
         ${fld({ label: "Planta", value: p.planta, locked: true })}
+        ${fld({ label: "Rota de Entrega", key: "rota", type: "textarea", value: p.rota, locked: !editableRoute, fullWidth: true, placeholder: "Endereço completo, pontos de referência, instruções para o motorista…", helper: editableRoute ? "Editável enquanto o status estiver Active" : "" })}
       </div>
     </div>`;
 
