@@ -2246,13 +2246,198 @@
   .report-table tbody tr:hover td.col-sticky,
   .report-table tbody tr:nth-child(even):hover td.col-sticky { background: #ecf3ef; }
 
-  /* Cluster de 2 acoes lado a lado dentro de col-action */
+  /* Cluster de acoes lado a lado dentro de col-action */
   .action-cluster {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     justify-content: center;
+    position: relative;
   }
+  .cell-action.action-menu {
+    color: var(--text-2);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+  }
+  .cell-action.action-menu:hover {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+  }
+
+  /* Dropdown de acoes da linha — vive no <body> com position:fixed
+     (igual ao padrao da tela Relatorio de Protocolos). */
+  .action-menu-pop {
+    position: fixed;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md, 8px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
+    padding: 4px;
+    z-index: 9999;
+  }
+  .action-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-1);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    transition: background var(--ease-fast);
+  }
+  .action-menu-item:hover { background: rgba(0,106,77,0.08); }
+  .action-menu-item svg { color: var(--text-3); flex-shrink: 0; }
+  .action-menu-item:hover svg { color: var(--mosaic-green-700); }
+  .action-menu-item.is-danger { color: var(--mosaic-red); }
+  .action-menu-item.is-danger svg { color: var(--mosaic-red); }
+  .action-menu-item.is-danger:hover { background: rgba(185,32,42,0.08); }
+  .action-menu-sep {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 4px 0;
+  }
+
+  /* Modal Editar Solicitacao — versao simples (so qty editavel) */
+  .rsa-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,32,27,0.55);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .rsa-modal-backdrop.is-open { display: flex; }
+  .rsa-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 460px;
+    border-radius: var(--radius-md, 8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .rsa-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--bg-section, #f4f4f4);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .rsa-modal-head h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-1);
+  }
+  .rsa-modal-head .sub {
+    font-size: 11.5px;
+    color: var(--text-3);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .rsa-modal-x {
+    background: transparent;
+    border: none;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-3);
+    cursor: pointer;
+  }
+  .rsa-modal-x:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
+  .rsa-modal-body { padding: 20px; }
+  .rsa-modal-field { display: flex; flex-direction: column; gap: 6px; }
+  .rsa-modal-field label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .rsa-modal-field input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: inherit;
+    color: var(--text-1);
+    background: #fff;
+  }
+  .rsa-modal-field input:focus {
+    outline: none;
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.15);
+  }
+  .rsa-modal-field .helper {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .rsa-modal-info {
+    background: var(--bg-section, #f4f4f4);
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+    font-size: 11.5px;
+    color: var(--text-2);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 14px;
+  }
+  .rsa-modal-info b { color: var(--text-1); font-weight: 700; }
+  .rsa-modal-foot {
+    padding: 14px 20px;
+    background: var(--bg-section, #f4f4f4);
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .rsa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .rsa-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border-color: var(--border);
+  }
+  .rsa-btn-secondary:hover { background: var(--bg-section, #f4f4f4); }
+  .rsa-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .rsa-btn-primary:hover { background: var(--mosaic-green-900, #003e2a); }
+
+  /* Mantem o legado abaixo para compat — agora nao usado, mas evita
+     que renderizacoes antigas / cache quebrem visualmente.            */
   .cell-action {
     display: inline-flex;
     align-items: center;
@@ -3123,20 +3308,126 @@ const SVG_X          = `<svg width="13" height="13" viewBox="0 0 24 24" fill="no
 
 function rowKey(r) { return `${r.sol}|${r.semana}`; }
 
+const SVG_CHEV = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+
 function actionCellHTML(r) {
-  const isEditing = editingSol === rowKey(r);
-  if (isEditing) {
-    return `
-      <div class="action-cluster">
-        <button class="cell-action action-save" data-act="save" data-key="${rowKey(r)}" type="button" title="Salvar alterações" aria-label="Salvar">${SVG_CHECK}</button>
-        <button class="cell-action action-cancel" data-act="cancel" data-key="${rowKey(r)}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X}</button>
-      </div>`;
-  }
+  // Padrao chevron + dropdown (igual ao Relatorio de Protocolos).
+  // O dropdown abre como popup fixed via openActionMenu().
   return `
     <div class="action-cluster">
-      <button class="cell-action action-edit" data-act="edit" data-key="${rowKey(r)}" type="button" title="Editar" aria-label="Editar">${SVG_EDIT}</button>
+      <button class="cell-action action-menu" data-act="menu" data-key="${rowKey(r)}" type="button" title="Ações da solicitação" aria-label="Abrir menu de ações" aria-haspopup="true">
+        ${SVG_CHEV}
+      </button>
     </div>`;
 }
+
+/* ============== Dropdown chevron + modal Editar Solicitacao ============== */
+function openActionMenu(cluster, key) {
+  const r = findRequest(key);
+  if (!r) return;
+  const pop = document.createElement("div");
+  pop.className = "action-menu-pop";
+  pop.dataset.clusterKey = key;
+  const btn = cluster.querySelector("[data-act='menu']");
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    pop.style.top  = `${rect.bottom + 4}px`;
+    pop.style.left = `${rect.left}px`;
+  }
+  pop.innerHTML = `
+    <button class="action-menu-item" data-menu-act="edit" data-key="${key}" type="button">
+      ${SVG_EDIT_SMALL}
+      <span>Editar Solicitação</span>
+    </button>
+  `;
+  pop.addEventListener("click", (e) => {
+    const item = e.target.closest(".action-menu-item");
+    if (!item) return;
+    const itemKey = item.dataset.key;
+    const itemAct = item.dataset.menuAct;
+    closeAllActionMenus();
+    if (itemAct === "edit") openRsaEditModal(itemKey);
+  });
+  document.body.appendChild(pop);
+  cluster.classList.add("is-open");
+}
+
+function closeAllActionMenus() {
+  document.querySelectorAll(".action-cluster.is-open").forEach(c => c.classList.remove("is-open"));
+  document.querySelectorAll(".action-menu-pop").forEach(pop => pop.remove());
+}
+
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".action-cluster") && !e.target.closest(".action-menu-pop")) {
+    closeAllActionMenus();
+  }
+});
+window.addEventListener("scroll", closeAllActionMenus, true);
+window.addEventListener("resize", closeAllActionMenus);
+
+/* Modal Editar Solicitacao — versao simplificada (so qty editavel) */
+let rsaEditingKey = null;
+
+function openRsaEditModal(key) {
+  const r = findRequest(key);
+  if (!r) return;
+  rsaEditingKey = key;
+  document.getElementById("rsaEditSol").textContent    = r.sol;
+  document.getElementById("rsaEditProto").textContent  = r.protocolo;
+  document.getElementById("rsaEditSemana").textContent = r.semana;
+  document.getElementById("rsaEditStatus").textContent = STATUS_LABELS[r.status] || r.status;
+  document.getElementById("rsaEditTipo").textContent   = TIPO_LABELS[r.tipo]    || r.tipo;
+  const qtyInput = document.getElementById("rsaEditQty");
+  qtyInput.value = r.planned[0] != null ? r.planned[0] : "";
+  document.getElementById("rsaEditModal").classList.add("is-open");
+  setTimeout(() => qtyInput.focus(), 50);
+}
+
+function closeRsaEditModal() {
+  document.getElementById("rsaEditModal").classList.remove("is-open");
+  rsaEditingKey = null;
+}
+
+function saveRsaEditModal() {
+  if (!rsaEditingKey) return;
+  const r = findRequest(rsaEditingKey);
+  if (!r) { closeRsaEditModal(); return; }
+  const raw = document.getElementById("rsaEditQty").value;
+  const v = raw === "" ? 0 : Number(raw);
+  if (Number.isNaN(v) || v < 0) {
+    showInlineToast("Quantidade inválida");
+    return;
+  }
+  r.planned[0] = v;
+  // Recalcula diff se houver realizado
+  if (typeof r.realized?.[0] === "number") {
+    r.diff = r.diff || [0];
+    r.diff[0] = (r.realized[0] || 0) - v;
+  }
+  const sol = r.sol;
+  closeRsaEditModal();
+  render();
+  showInlineToast(`Solicitação ${sol} atualizada`);
+}
+
+/* Bind handlers do modal logo apos DOM montar */
+(function bindRsaEditModal() {
+  document.addEventListener("DOMContentLoaded", () => {
+    const m = document.getElementById("rsaEditModal");
+    if (!m) return;
+    document.getElementById("rsaEditClose").addEventListener("click", closeRsaEditModal);
+    document.getElementById("rsaEditCancel").addEventListener("click", closeRsaEditModal);
+    document.getElementById("rsaEditSave").addEventListener("click", saveRsaEditModal);
+    m.addEventListener("click", (e) => { if (e.target === m) closeRsaEditModal(); });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && m.classList.contains("is-open")) closeRsaEditModal();
+      if (e.key === "Enter"  && m.classList.contains("is-open")) {
+        const focused = document.activeElement;
+        if (focused && focused.id === "rsaEditQty") saveRsaEditModal();
+      }
+    });
+  });
+})();
 
 function selOptsObj(map, current) {
   return Object.entries(map).map(([k, v]) =>
@@ -3242,14 +3533,14 @@ function render() {
     });
   });
 
-  /* Edit/Save/Cancel handlers (delegation) */
-  elBody.querySelectorAll("[data-act]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const act = btn.dataset.act;
-      const key = btn.dataset.key;
-      if (act === "edit")   startEdit(key);
-      if (act === "save")   saveEdit(key);
-      if (act === "cancel") requestCancelEdit(key);
+  /* Chevron → abre dropdown (padrao igual ao Relatorio de Protocolos) */
+  elBody.querySelectorAll("[data-act='menu']").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const cluster = btn.closest(".action-cluster");
+      const wasOpen = cluster.classList.contains("is-open");
+      closeAllActionMenus();
+      if (!wasOpen) openActionMenu(cluster, btn.dataset.key);
     });
   });
 
@@ -3718,6 +4009,41 @@ bindConfirmModal();
       <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
         Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR SOLICITACAO (chevron → menu → Editar) -->
+<div class="rsa-modal-backdrop" id="rsaEditModal" role="dialog" aria-modal="true" aria-labelledby="rsaEditTitle">
+  <div class="rsa-modal">
+    <div class="rsa-modal-head">
+      <div>
+        <h2 id="rsaEditTitle">Editar Solicitação</h2>
+        <div class="sub">Solicitação <strong id="rsaEditSol">—</strong></div>
+      </div>
+      <button class="rsa-modal-x" id="rsaEditClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="rsa-modal-body">
+      <div class="rsa-modal-info">
+        <div>Protocolo<br><b id="rsaEditProto">—</b></div>
+        <div>Semana<br><b id="rsaEditSemana">—</b></div>
+        <div>Status<br><b id="rsaEditStatus">—</b></div>
+        <div>Tipo<br><b id="rsaEditTipo">—</b></div>
+      </div>
+      <div class="rsa-modal-field">
+        <label for="rsaEditQty">Qtd. Solicitada (t)</label>
+        <input type="number" id="rsaEditQty" min="0" step="0.1" />
+        <div class="helper">Único campo editável nesta tela — demais informações vêm do SAP e são read-only.</div>
+      </div>
+    </div>
+    <div class="rsa-modal-foot">
+      <button class="rsa-btn rsa-btn-secondary" id="rsaEditCancel" type="button">Cancelar</button>
+      <button class="rsa-btn rsa-btn-primary" id="rsaEditSave" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar
       </button>
     </div>
   </div>
