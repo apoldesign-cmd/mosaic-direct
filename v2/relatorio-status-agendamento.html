@@ -3758,9 +3758,11 @@ const semanaOpts = `
 `;
 elSemanaDe.innerHTML  = semanaOpts;
 elSemanaAte.innerHTML = semanaOpts;
-// Default: ambos = vigente (mostra apenas a semana atual)
-elSemanaDe.value  = SEMANA_VIGENTE;
-elSemanaAte.value = SEMANA_VIGENTE;
+// Default: sem filtro de semana (mostra tudo). Mock data tem dates fixas
+// que envelhecem em relação ao "hoje"; filtrar por semana vigente
+// esconde tudo. Em produção, manteríamos elSemanaDe = SEMANA_VIGENTE.
+elSemanaDe.value  = "";
+elSemanaAte.value = "";
 
 [elStatus, elSemanaDe, elSemanaAte, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", render);
@@ -3778,8 +3780,8 @@ const elSearchSuggest  = document.getElementById("searchSuggestions");
 
 function activeFilterCount() {
   let n = 0;
-  /* Conta range de semana só se mudou da vigente (De ou Até diferente) */
-  if (elSemanaDe.value !== SEMANA_VIGENTE || elSemanaAte.value !== SEMANA_VIGENTE) n++;
+  /* Conta range de semana só se houver valor selecionado */
+  if (elSemanaDe.value || elSemanaAte.value) n++;
   [elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
     if (el && el.value) n++;
   });
