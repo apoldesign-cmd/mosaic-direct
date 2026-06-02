@@ -2755,6 +2755,7 @@ const SVG_CAL        = `<svg width="13" height="13" viewBox="0 0 24 24" fill="no
 const SVG_CHEV       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 const SVG_X_ROUND    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
 const SVG_LOCK       = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
+const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
 function actionCell(p) {
   // Cluster com chevron único que abre dropdown de ações
@@ -2831,8 +2832,13 @@ function escAttr(v) {
   return String(v ?? "").replace(/"/g, "&quot;");
 }
 
+/* Estado da linha em edição (padrão "linha inteira"): clicar em qualquer
+   campo editável liga a linha toda; salva/cancela pelos botões. */
+let editingRowId = null;
+let editingRowSnapshot = null;
+
 function renderRow(p) {
-  return renderRowNormal(p);
+  return (p.id === editingRowId) ? renderRowEditing(p) : renderRowNormal(p);
 }
 
 function editableQtyCell(p, field, highlight) {
@@ -2917,8 +2923,85 @@ function renderRowNormal(p) {
   `;
 }
 
-/* (renderRowEditing removido — agora a linha tem 1 render só. Quantidades
-   editam célula-a-célula via click direto; demais campos editam via modal.) */
+/* ================================================================
+   Render da linha em EDIÇÃO (linha inteira)
+   ================================================================ */
+function editNumCell(p, field) {
+  const min = field === "qtdProtocolo" ? rules.minVolume(p) : 0;
+  const max = field === "qtdProtocolo" ? p.qtdProtocolo : "";
+  return `<td class="num"><input type="number" class="inline-edit num" data-f="${field}" min="${min}" ${max !== "" ? `max="${max}"` : ""} value="${p[field]}" /></td>`;
+}
+function editTextCell(p, field, asNum) {
+  const mask = MASKS[field];
+  let v = p[field] === "—" ? "" : (p[field] || "");
+  if (mask && mask.prefix && String(v).startsWith(mask.prefix)) v = String(v).slice(mask.prefix.length);
+  const inputmode = mask ? `inputmode="${mask.inputmode}"` : "";
+  const maxlen = mask ? `maxlength="${mask.maxlength}"` : "";
+  const ph = mask ? mask.placeholder : "—";
+  return `<td class="${asNum ? 'num' : ''}"><input type="text" class="inline-edit${asNum ? ' num' : ''}" data-f="${field}" ${inputmode} ${maxlen} value="${escAttr(v)}" placeholder="${ph}" /></td>`;
+}
+function editSelectCell(p, field, options) {
+  const v = p[field];
+  return `<td><select class="inline-edit" data-f="${field}">${
+    options.map(o => `<option value="${escAttr(o)}"${o === v ? ' selected' : ''}>${o}</option>`).join("")
+  }</select></td>`;
+}
+
+function renderRowEditing(p) {
+  // Mesmas regras do modo normal: campo só vira input se a regra permitir.
+  const embalagemCell = rules.canEditPackaging(p)
+    ? editSelectCell(p, "embalagem", EMBALAGEM_OPTIONS)
+    : readOnlyCell(p, "embalagem", "Sales Order já gerada");
+  const nfCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "nf")
+    : readOnlyCell(p, "nf", "Faturamento já concluído", { cls: p.nf === '—' ? 'muted' : '' });
+  const dataNfCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "dataNf")
+    : readOnlyCell(p, "dataNf", "Faturamento já concluído", { cls: p.dataNf === '—' ? 'muted' : '' });
+  const precoCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "preco", true)
+    : readOnlyCell(p, "preco", "Faturamento já concluído", { cls: "num" });
+  const qtdProtocoloCell = rules.canEditVolume(p)
+    ? editNumCell(p, "qtdProtocolo")
+    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+
+  return `
+    <tr data-proto-id="${p.id}" class="is-editing">
+      <td class="col-proto">
+        <div class="proto-cell">
+          <span class="proto-cell-number">${p.id}</span>
+          <div class="action-cluster">
+            <button class="cell-action action-save" data-act="save-row" data-id="${p.id}" type="button" title="Salvar alterações" aria-label="Salvar">${SVG_CHECK}</button>
+            <button class="cell-action action-cancel" data-act="cancel-row" data-id="${p.id}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X_ROUND}</button>
+          </div>
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      ${embalagemCell}
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      ${nfCell}
+      ${dataNfCell}
+      ${precoCell}
+      ${qtdProtocoloCell}
+      ${numCell(p.qtdAgendada, false)}
+      ${numCell(p.saldo, p.saldo > 0)}
+      ${numCell(p.qtdFaturada, false)}
+      ${numCell(p.qtdFaturar, false)}
+    </tr>
+  `;
+}
 
 /* ================================================================
    Events
@@ -3085,6 +3168,12 @@ document.getElementById("btnExport").addEventListener("click", () => {
 const tableBodyEl = document.getElementById("tableBody");
 
 tableBodyEl.addEventListener("click", (e) => {
+  // Botões Salvar / Cancelar da linha em edição
+  const saveBtn = e.target.closest("[data-act='save-row']");
+  if (saveBtn) { e.stopPropagation(); saveRowEdit(saveBtn.dataset.id); return; }
+  const cancelBtn = e.target.closest("[data-act='cancel-row']");
+  if (cancelBtn) { e.stopPropagation(); cancelRowEdit(); return; }
+
   // Botão chevron do cluster — toggle do menu
   const btn = e.target.closest("[data-act='menu']");
   if (btn) {
@@ -3098,13 +3187,11 @@ tableBodyEl.addEventListener("click", (e) => {
     }
     return;
   }
-  // Click em célula editável → inline edit (NF, Embalagem, Preço, etc.)
+  // Click em qualquer célula editável → liga a LINHA INTEIRA pra edição
   const td = e.target.closest("td.editable-qty");
   if (td) {
     e.stopPropagation();
-    // Pequeno timeout pra garantir que o handler do document de
-    // closeAllActionMenus rode primeiro (evita re-entradas).
-    startCellEdit(td);
+    startRowEdit(td.dataset.id);
   }
 });
 
@@ -3344,6 +3431,82 @@ function cancelCellEdit() {
   if (!editingCellEl) return;
   editingCellEl = null;
   editingCellOriginal = null;
+  render();
+}
+
+/* ============== Edição de LINHA INTEIRA ============== */
+function attachRowMasks(rowEl) {
+  rowEl.querySelectorAll("input.inline-edit[data-f]").forEach(input => {
+    const mask = MASKS[input.dataset.f];
+    if (mask) {
+      input.addEventListener("input", () => {
+        input.value = mask.fn(input.value);
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+    }
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter")  { e.preventDefault(); saveRowEdit(rowEl.dataset.protoId); }
+      if (e.key === "Escape") { e.preventDefault(); cancelRowEdit(); }
+    });
+  });
+}
+
+function startRowEdit(id) {
+  if (editingRowId === id) return;
+  // troca de linha em edição descarta a anterior (sem salvar)
+  const p = findProto(id);
+  if (!p) return;
+  editingRowId = id;
+  editingRowSnapshot = { ...p };
+  closeAllActionMenus();
+  render();
+  const rowEl = document.querySelector(`tr[data-proto-id="${CSS.escape(id)}"]`);
+  if (rowEl) {
+    attachRowMasks(rowEl);
+    const first = rowEl.querySelector(".inline-edit");
+    if (first) { first.focus(); if (first.select) first.select(); }
+  }
+}
+
+function saveRowEdit(id) {
+  const p = findProto(id);
+  if (!p) { editingRowId = null; editingRowSnapshot = null; render(); return; }
+  const rowEl = document.querySelector(`tr[data-proto-id="${CSS.escape(id)}"]`);
+  if (rowEl) {
+    rowEl.querySelectorAll(".inline-edit[data-f]").forEach(input => {
+      const field = input.dataset.f;
+      let val = input.value;
+      if (input.type === "number") {
+        val = val === "" ? 0 : Number(val);
+        if (field === "qtdProtocolo") {
+          const minV = rules.minVolume(p);
+          const origMax = editingRowSnapshot ? editingRowSnapshot.qtdProtocolo : p.qtdProtocolo;
+          if (val < minV) val = minV;       // não abaixo do já agendado
+          if (val > origMax) val = origMax; // Volume só pode reduzir
+        }
+      } else {
+        const mask = MASKS[field];
+        if (val === "" || val == null) val = "—";
+        else if (mask && mask.prefix) val = mask.prefix + val;
+      }
+      p[field] = val;
+    });
+    // recalcula derivados de Volume
+    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  }
+  editingRowId = null;
+  editingRowSnapshot = null;
+  render();
+  showBulkToast(`Protocolo ${id} atualizado · enviado ao SAP`);
+}
+
+function cancelRowEdit() {
+  if (!editingRowId) return;
+  // nada foi mutado em p durante a digitação (valores ficam no DOM),
+  // então basta sair do modo edição e re-renderizar.
+  editingRowId = null;
+  editingRowSnapshot = null;
   render();
 }
 
