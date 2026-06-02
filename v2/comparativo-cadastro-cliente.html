@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Comparativo · Modal vs Sidenav — Add New Customer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  body { background: var(--bg-page); }
+
+  /* ============== Hero ============== */
+  .cc-hero {
+    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
+    border-bottom: 1px solid var(--border-soft);
+    padding: var(--space-6) 0 var(--space-5);
+  }
+  .cc-eyebrow {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--mosaic-green-700);
+    margin-bottom: var(--space-2);
+  }
+  .cc-hero h1 { margin: 0 0 var(--space-2); font-size: 30px; font-weight: 800; color: var(--text-1); letter-spacing: -0.01em; }
+  .cc-hero p { margin: 0; max-width: 760px; color: var(--text-2); line-height: 1.55; font-size: 14px; }
+
+  /* ============== Switch bar ============== */
+  .cc-switch-bar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: var(--space-4) 0; border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .cc-switch {
+    display: inline-flex; gap: 4px;
+    background: var(--bg-section); padding: 4px;
+    border-radius: 8px; border: 1px solid var(--border-soft);
+  }
+  .cc-switch button {
+    border: none; background: transparent; cursor: pointer;
+    padding: 9px 18px; border-radius: 6px; font-family: inherit;
+    font-size: 13px; font-weight: 700; color: var(--text-2);
+    transition: all .15s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cc-switch button:hover { color: var(--text-1); }
+  .cc-switch button.is-active { background: #fff; color: var(--mosaic-green-800); box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .cc-switch button .verdict {
+    font-size: 10px; padding: 2px 6px; border-radius: 8px;
+    background: var(--bg-section); color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .cc-switch button.is-modal.is-active .verdict { background: rgba(185,32,42,0.12); color: var(--mosaic-red); }
+  .cc-switch button.is-sidenav.is-active .verdict { background: rgba(0,106,77,0.12); color: var(--mosaic-green-800); }
+  .cc-share {
+    margin-left: auto; font-size: 12px; color: var(--text-3);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .cc-share code { background: var(--bg-section); padding: 3px 7px; border-radius: 4px; font-size: 11px; color: var(--text-1); }
+
+  /* ============== Background "My Account" simulado ============== */
+  .ma-shell { position: relative; padding: var(--space-5) 0 var(--space-6); }
+  .ma-breadcrumb {
+    font-size: 13px; color: var(--text-3); margin-bottom: var(--space-3);
+  }
+  .ma-breadcrumb a { color: var(--mosaic-green-700); text-decoration: none; }
+  .ma-title { font-size: 28px; font-weight: 800; color: var(--text-1); margin: 0 0 var(--space-3); }
+  .ma-tabs { display: flex; gap: 24px; border-bottom: 2px solid var(--border-soft); margin-bottom: var(--space-4); }
+  .ma-tabs a {
+    padding: 10px 0; color: var(--text-3); font-weight: 600; font-size: 13px;
+    text-decoration: none; position: relative;
+  }
+  .ma-tabs a.is-active { color: var(--mosaic-green-800); }
+  .ma-tabs a.is-active::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 2px; background: var(--mosaic-green-800);
+  }
+  .ma-search-filters {
+    background: var(--bg-section); border: 1px solid var(--border-soft);
+    padding: 14px 16px; border-radius: 4px;
+    display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px;
+    align-items: end; margin-bottom: var(--space-4);
+  }
+  .ma-field { display: flex; flex-direction: column; gap: 4px; }
+  .ma-field label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+  .ma-field input, .ma-field select {
+    height: 32px; padding: 0 10px; border: 1px solid var(--border);
+    border-radius: 4px; font-family: inherit; font-size: 13px; background: #fff; color: var(--text-1);
+  }
+  .ma-btn-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--mosaic-green-800); color: #fff; border: none;
+    height: 36px; padding: 0 18px; border-radius: 4px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,88,61,0.18);
+  }
+  .ma-btn-add:hover { background: var(--mosaic-green-900); }
+
+  /* tabela mock */
+  .ma-table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--border-soft); font-size: 13px; }
+  .ma-table th, .ma-table td { padding: 11px 14px; text-align: left; border-bottom: 1px solid var(--border-soft); }
+  .ma-table th { background: var(--bg-section); font-weight: 700; color: var(--text-2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ma-table td { color: var(--text-1); }
+  .ma-table tr:hover td { background: rgba(0,106,77,0.03); }
+
+  /* ============== Overlay base (modal & sidenav) ============== */
+  .cc-overlay {
+    position: fixed; inset: 0; background: rgba(15,32,27,0.55);
+    z-index: 1000; display: none; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .15s;
+  }
+  .cc-overlay.is-open { display: flex; opacity: 1; }
+
+  /* ============== Variante MODAL (problemas demonstrados) ============== */
+  .cc-modal {
+    background: #fff; width: 100%; max-width: 740px;
+    border-radius: 6px; overflow: hidden; position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    max-height: calc(100vh - 80px);
+    display: flex; flex-direction: column;
+  }
+  .cc-modal-head {
+    padding: 18px 22px; display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .cc-modal-head h2 { margin: 0; font-size: 18px; font-weight: 800; color: var(--text-1); }
+  .cc-close {
+    background: transparent; border: none; width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer; color: var(--text-3);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .cc-close:hover { background: var(--bg-section); color: var(--text-1); }
+  .cc-modal-body {
+    padding: 20px 22px; overflow-y: auto; flex: 1; min-height: 0;
+  }
+  .cc-modal-form {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px 14px;
+  }
+  .cc-modal-form .full2 { grid-column: span 2; }
+  .cc-modal-form .full3 { grid-column: span 3; }
+  .cc-modal-foot {
+    /* PROBLEMA proposital: footer dentro do modal pode cortar fora da viewport
+       quando o conteudo eh longo */
+    padding: 14px 22px; border-top: 1px solid var(--border-soft);
+    background: #fff; display: flex; justify-content: flex-end;
+  }
+
+  /* ============== Variante SIDENAV (recomendada) ============== */
+  .cc-overlay.is-sidenav {
+    align-items: stretch; justify-content: flex-end;
+  }
+  .cc-sidenav {
+    background: #fff; width: 100%; max-width: 480px;
+    height: 100vh; box-shadow: -20px 0 50px rgba(0,0,0,0.20);
+    display: flex; flex-direction: column;
+    transform: translateX(100%); transition: transform .25s ease;
+  }
+  .cc-overlay.is-sidenav.is-open .cc-sidenav { transform: translateX(0); }
+  .cc-sidenav-head {
+    padding: 18px 22px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border-soft);
+    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
+  }
+  .cc-sidenav-head .icon-box {
+    width: 36px; height: 36px; border-radius: 4px;
+    background: var(--mosaic-green-800); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cc-sidenav-head .titles { flex: 1; min-width: 0; }
+  .cc-sidenav-head h2 { margin: 0; font-size: 16px; font-weight: 800; color: var(--text-1); }
+  .cc-sidenav-head .sub { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+  .cc-sidenav-body {
+    padding: 20px 22px; overflow-y: auto; flex: 1; min-height: 0;
+  }
+  .cc-sidenav-form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .cc-sidenav-form .full2 { grid-column: span 2; }
+  .cc-sidenav-section {
+    grid-column: span 2; font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--mosaic-green-800);
+    padding-top: 4px; border-top: 1px solid var(--border-soft); margin-top: 4px;
+  }
+  .cc-sidenav-section:first-child { border-top: none; padding-top: 0; margin-top: 0; }
+  .cc-sidenav-foot {
+    padding: 14px 22px; border-top: 1px solid var(--border-soft);
+    background: var(--bg-section);
+    display: flex; justify-content: flex-end; gap: 8px;
+    flex-shrink: 0; /* footer sempre visivel */
+  }
+
+  /* ============== Campos compartilhados ============== */
+  .ff-field { display: flex; flex-direction: column; gap: 4px; }
+  .ff-field label { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); }
+  .ff-field label .req { color: var(--mosaic-red); margin-right: 3px; }
+  .ff-field input, .ff-field select, .ff-field textarea {
+    height: 36px; padding: 0 10px; border: 1px solid var(--border);
+    border-radius: 4px; font-family: inherit; font-size: 13px; background: #fff; color: var(--text-1);
+    width: 100%; box-sizing: border-box;
+  }
+  .ff-field textarea { height: auto; padding: 8px 10px; min-height: 70px; resize: vertical; }
+  .ff-field input:focus, .ff-field select:focus, .ff-field textarea:focus {
+    outline: none; border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.15);
+  }
+
+  .ff-btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--mosaic-green-800); color: #fff; border: none;
+    height: 38px; padding: 0 20px; border-radius: 4px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .ff-btn-primary:hover { background: var(--mosaic-green-900); }
+  .ff-btn-secondary {
+    background: #fff; color: var(--text-1); border: 1px solid var(--border);
+    height: 38px; padding: 0 18px; border-radius: 4px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .ff-btn-secondary:hover { background: var(--bg-section); }
+
+  /* ============== Annotations (callouts) ============== */
+  .cc-annot {
+    position: absolute; background: var(--mosaic-red); color: #fff;
+    font-size: 11.5px; font-weight: 700; padding: 6px 10px; border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(185,32,42,0.35); white-space: nowrap;
+    z-index: 1100; pointer-events: none;
+  }
+  .cc-annot::before {
+    content: ''; position: absolute; width: 0; height: 0;
+    border-style: solid;
+  }
+  .cc-annot.is-good { background: var(--mosaic-green-800); box-shadow: 0 4px 12px rgba(0,88,61,0.30); }
+  /* Posições específicas */
+  .cc-annot.modal-cut {
+    bottom: -38px; left: 50%; transform: translateX(-50%);
+  }
+  .cc-annot.modal-cut::before {
+    top: -6px; left: 50%; margin-left: -6px;
+    border-width: 0 6px 6px 6px; border-color: transparent transparent var(--mosaic-red) transparent;
+  }
+  .cc-annot.modal-context {
+    top: 50%; left: -260px; transform: translateY(-50%);
+  }
+  .cc-annot.modal-context::before {
+    right: -6px; top: 50%; margin-top: -6px;
+    border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-red);
+  }
+  .cc-annot.sidenav-context {
+    top: 90px; left: -240px;
+  }
+  .cc-annot.sidenav-context::before {
+    right: -6px; top: 50%; margin-top: -6px;
+    border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-green-800);
+  }
+  .cc-annot.sidenav-foot {
+    bottom: 60px; left: -240px;
+  }
+  .cc-annot.sidenav-foot::before {
+    right: -6px; top: 50%; margin-top: -6px;
+    border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-green-800);
+  }
+
+  /* ============== Tabela comparativa ============== */
+  .cc-compare {
+    background: #fff; padding: var(--space-6) 0;
+    border-top: 1px solid var(--border-soft);
+  }
+  .cc-compare h2 { margin: 0 0 var(--space-4); font-size: 22px; font-weight: 800; color: var(--text-1); }
+  .cc-compare-table {
+    width: 100%; border-collapse: collapse; font-size: 13.5px;
+    border: 1px solid var(--border-soft); border-radius: 6px; overflow: hidden;
+  }
+  .cc-compare-table th, .cc-compare-table td {
+    padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-soft); vertical-align: top;
+  }
+  .cc-compare-table th { background: var(--bg-section); font-weight: 800; color: var(--text-1); }
+  .cc-compare-table th.col-crit { width: 26%; }
+  .cc-compare-table th.col-modal { width: 37%; }
+  .cc-compare-table th.col-side { width: 37%; }
+  .cc-compare-table tr:last-child td { border-bottom: none; }
+  .cc-compare-table .verdict-bad {
+    display: inline-block; background: rgba(185,32,42,0.10); color: var(--mosaic-red);
+    padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.04em; margin-right: 6px;
+  }
+  .cc-compare-table .verdict-good {
+    display: inline-block; background: rgba(0,88,61,0.10); color: var(--mosaic-green-800);
+    padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 0.04em; margin-right: 6px;
+  }
+  .cc-verdict-final {
+    margin-top: var(--space-5);
+    background: linear-gradient(135deg, var(--mosaic-green-800) 0%, var(--mosaic-green-900) 100%);
+    color: #fff; padding: 22px 26px; border-radius: 6px;
+  }
+  .cc-verdict-final h3 { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+  .cc-verdict-final p { margin: 0; font-size: 13.5px; line-height: 1.55; opacity: 0.95; }
+
+  /* SLDS reference card */
+  .cc-slds-ref {
+    margin-top: var(--space-4); padding: 16px 18px;
+    border: 1px dashed var(--border); border-radius: 6px;
+    background: var(--bg-section); font-size: 13px; color: var(--text-2);
+  }
+  .cc-slds-ref strong { color: var(--text-1); }
+  .cc-slds-ref code { background: #fff; padding: 2px 6px; border-radius: 3px; font-size: 12px; }
+  .cc-slds-ref a { color: var(--mosaic-green-700); font-weight: 700; }
+
+  /* Responsivo: empilha tabela */
+  @media (max-width: 720px) {
+    .cc-modal-form { grid-template-columns: 1fr; }
+    .cc-modal-form .full2, .cc-modal-form .full3 { grid-column: span 1; }
+    .cc-sidenav-form { grid-template-columns: 1fr; }
+    .cc-sidenav-form .full2 { grid-column: span 1; }
+    .cc-sidenav, .cc-sidenav-form .full2 { max-width: 100%; }
+    .ma-search-filters { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER simplificado pra contextualizar -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Search" aria-label="Search" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">EN <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Victor Dias</span>
+        <span class="user-org">COOPERCITRUS</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="cc-hero">
+  <div class="container container-main">
+    <div class="cc-eyebrow">Comparativo UX · defesa técnica</div>
+    <h1>Modal vs Sidenav — Add New Customer</h1>
+    <p>
+      Mesma funcionalidade, mesmo formulário, dois containers diferentes. Compare lado a lado
+      por que o <strong>Sidenav (SLDS Panel dockado)</strong> entrega melhor experiência que o Modal
+      central — preservação de contexto, altura fixa, footer sempre visível, consistência com as outras
+      seleções multi-item do Mosaic Direct (contratos, protocolos, cooperados).
+    </p>
+  </div>
+</section>
+
+<!-- SWITCH BAR -->
+<div class="cc-switch-bar">
+  <div class="container container-main" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;width:100%;">
+    <div class="cc-switch" role="tablist" aria-label="Variante">
+      <button type="button" class="is-modal" data-variant="modal" role="tab" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
+        Modal central
+        <span class="verdict">atual</span>
+      </button>
+      <button type="button" class="is-sidenav is-active" data-variant="sidenav" role="tab" aria-selected="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="14" y1="3" x2="14" y2="21"/></svg>
+        Sidenav (Panel SLDS)
+        <span class="verdict">recomendado</span>
+      </button>
+    </div>
+    <div class="cc-share">
+      Compartilhe esta URL com o time:
+      <code>/comparativo-cadastro-cliente.html</code>
+    </div>
+  </div>
+</div>
+
+<!-- BACKGROUND simulado: My Account / Ship-To Accounts -->
+<main class="ma-shell">
+  <div class="container container-main">
+    <div class="ma-breadcrumb">
+      <a href="#">Homepage</a> &nbsp;›&nbsp; <span>My Account</span>
+    </div>
+    <h1 class="ma-title">My Account</h1>
+    <div class="ma-tabs">
+      <a href="#" class="is-active">Ship To Accounts</a>
+      <a href="#">Bill To Accounts</a>
+      <a href="#">Users</a>
+    </div>
+
+    <div class="ma-search-filters">
+      <div class="ma-field">
+        <label>Search Addresses</label>
+        <input type="text" placeholder="Buscar endereço..." />
+      </div>
+      <div class="ma-field">
+        <label>State</label>
+        <select><option>Todos</option><option>São Paulo</option><option>Paraná</option></select>
+      </div>
+      <div class="ma-field">
+        <label>City</label>
+        <select><option>Todas</option></select>
+      </div>
+      <button class="ma-btn-add" id="btnOpenVariant" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add New Customer
+      </button>
+    </div>
+
+    <table class="ma-table">
+      <thead>
+        <tr>
+          <th>Address Name</th>
+          <th>CNPJ</th>
+          <th>Address</th>
+          <th>CEP</th>
+          <th>City</th>
+          <th>State/Province</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>ABRAMO BELTRAME</td><td>08.660.054/0001-12</td><td>RUA DAS PALMEIRAS, 145</td><td>17270-000</td><td>BORACEIA</td><td>São Paulo</td></tr>
+        <tr><td>ACADIA INVESTIMENTOS SA</td><td>47.406.541/0001-90</td><td>FAZENDA SANTA INÊS</td><td>15200-000</td><td>JOSE BONIFACIO</td><td>São Paulo</td></tr>
+        <tr><td>ACADIA INVESTIMENTOS SA</td><td>47.406.541/0001-90</td><td>FAZENDA RIO CLARO</td><td>17204-220</td><td>JAU</td><td>São Paulo</td></tr>
+        <tr><td>ACHILES PEDRO CAMILLI E OUTROS</td><td>08.162.110/0001-61</td><td>SITIO QUATRO IRMAOS</td><td>17300-000</td><td>DOIS CORREGOS</td><td>São Paulo</td></tr>
+        <tr><td>AGRIGEL AGRO-PECUARIA LTDA</td><td>49.903.446/0005-49</td><td>FAZENDA MORRO ALTO</td><td>17300-000</td><td>DOIS CORREGOS</td><td>São Paulo</td></tr>
+        <tr><td>AGRIVALE COMERCIO LTDA</td><td>52.301.118/0001-22</td><td>AV BRASIL, 4200</td><td>15400-000</td><td>OLIMPIA</td><td>São Paulo</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<!-- ============== OVERLAY: MODAL ============== -->
+<div class="cc-overlay" id="overlayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="cc-modal">
+    <div class="cc-modal-head">
+      <h2 id="modalTitle">Add New Customer</h2>
+      <button class="cc-close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="cc-modal-body">
+      <form class="cc-modal-form" onsubmit="event.preventDefault()">
+        <div class="ff-field"><label><span class="req">*</span>Customer Type</label><select><option>Customer Type</option><option>Cooperado</option><option>Cliente Direto</option></select></div>
+        <div class="ff-field"><label><span class="req">*</span>Person or Organization</label><select><option>Person or Organization</option><option>Person</option><option>Organization</option></select></div>
+        <div class="ff-field"><label><span class="req">*</span>Customer Name</label><input placeholder="Customer Name"/></div>
+        <div class="ff-field"><label>Property/Farm Name</label><input placeholder="Property/Farm Name"/></div>
+        <div class="ff-field full2"><label><span class="req">*</span>Address</label><input placeholder="Address"/></div>
+        <div class="ff-field"><label><span class="req">*</span>CEP</label><input placeholder="CEP"/></div>
+        <div class="ff-field"><label>Address Line 2 (optional)</label><input placeholder="Address Line 2"/></div>
+        <div class="ff-field"><label><span class="req">*</span>City</label><input placeholder="City"/></div>
+        <div class="ff-field"><label><span class="req">*</span>Country</label><select><option>Country</option><option>Brasil</option></select></div>
+        <div class="ff-field"><label><span class="req">*</span>District</label><input placeholder="District"/></div>
+        <div class="ff-field"><label><span class="req">*</span>Address Number</label><input placeholder="Address Number"/></div>
+        <div class="ff-field"><label><span class="req">*</span>State/Province</label><select><option>State/Province</option><option>SP</option><option>PR</option></select></div>
+        <div class="ff-field full2"><label><span class="req">*</span>State Subscription</label><input placeholder="State Subscription"/></div>
+        <div class="ff-field full3"><label>Delivery Instructions (optional)</label><textarea placeholder="Delivery Instructions"></textarea></div>
+      </form>
+    </div>
+    <div class="cc-modal-foot">
+      <button class="ff-btn-primary" type="button">Add New Customer</button>
+    </div>
+
+    <!-- Annotations -->
+    <div class="cc-annot modal-cut">⚠️ Em telas menores, footer some — botão "Add" fica cortado abaixo da viewport</div>
+    <div class="cc-annot modal-context">⚠️ Tabela de contexto bloqueada — usuário não consegue ver duplicatas existentes</div>
+  </div>
+</div>
+
+<!-- ============== OVERLAY: SIDENAV ============== -->
+<div class="cc-overlay is-sidenav" id="overlaySidenav" role="dialog" aria-modal="true" aria-labelledby="sideTitle">
+  <div class="cc-sidenav">
+    <div class="cc-sidenav-head">
+      <div class="icon-box">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+      </div>
+      <div class="titles">
+        <h2 id="sideTitle">Add New Customer</h2>
+        <div class="sub">Cadastre um novo Ship-To · campos com * são obrigatórios</div>
+      </div>
+      <button class="cc-close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="cc-sidenav-body">
+      <form class="cc-sidenav-form" onsubmit="event.preventDefault()">
+        <div class="cc-sidenav-section">Dados do cliente</div>
+        <div class="ff-field"><label><span class="req">*</span>Customer Type</label><select><option>Customer Type</option><option>Cooperado</option><option>Cliente Direto</option></select></div>
+        <div class="ff-field"><label><span class="req">*</span>Person or Organization</label><select><option>Person or Organization</option><option>Person</option><option>Organization</option></select></div>
+        <div class="ff-field full2"><label><span class="req">*</span>Customer Name</label><input placeholder="Customer Name"/></div>
+        <div class="ff-field full2"><label>Property/Farm Name</label><input placeholder="Property/Farm Name"/></div>
+
+        <div class="cc-sidenav-section">Endereço</div>
+        <div class="ff-field full2"><label><span class="req">*</span>Address</label><input placeholder="Address"/></div>
+        <div class="ff-field"><label><span class="req">*</span>Address Number</label><input placeholder="Number"/></div>
+        <div class="ff-field"><label>Address Line 2 (optional)</label><input placeholder="Apt, sala..."/></div>
+        <div class="ff-field"><label><span class="req">*</span>CEP</label><input placeholder="CEP"/></div>
+        <div class="ff-field"><label><span class="req">*</span>District</label><input placeholder="District"/></div>
+        <div class="ff-field"><label><span class="req">*</span>City</label><input placeholder="City"/></div>
+        <div class="ff-field"><label><span class="req">*</span>State/Province</label><select><option>State/Province</option><option>SP</option><option>PR</option></select></div>
+        <div class="ff-field full2"><label><span class="req">*</span>Country</label><select><option>Country</option><option>Brasil</option></select></div>
+
+        <div class="cc-sidenav-section">Fiscal & logística</div>
+        <div class="ff-field full2"><label><span class="req">*</span>State Subscription</label><input placeholder="IE"/></div>
+        <div class="ff-field full2"><label>Delivery Instructions (optional)</label><textarea placeholder="Instruções para o motorista, pontos de referência..."></textarea></div>
+      </form>
+    </div>
+    <div class="cc-sidenav-foot">
+      <button class="ff-btn-secondary" data-close type="button">Cancelar</button>
+      <button class="ff-btn-primary" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar cliente
+      </button>
+    </div>
+
+    <!-- Annotations boas -->
+    <div class="cc-annot is-good sidenav-context">✓ Tabela continua visível à esquerda — usuário compara antes de salvar</div>
+    <div class="cc-annot is-good sidenav-foot">✓ Footer sempre visível, sem risco de corte</div>
+  </div>
+</div>
+
+<!-- ============== TABELA COMPARATIVA ============== -->
+<section class="cc-compare">
+  <div class="container container-main">
+    <h2>Por que Sidenav vence — critério por critério</h2>
+    <table class="cc-compare-table">
+      <thead>
+        <tr>
+          <th class="col-crit">Critério</th>
+          <th class="col-modal">Modal central <span style="font-size:11px;font-weight:600;color:var(--text-3)">(atual)</span></th>
+          <th class="col-side">Sidenav (SLDS Panel) <span style="font-size:11px;font-weight:600;color:var(--mosaic-green-800)">(recomendado)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Preservação de contexto</strong></td>
+          <td><span class="verdict-bad">⚠ Bloqueia</span> Tabela "Ship-To Accounts" some atrás do overlay. Usuário não pode conferir se já tem cliente parecido cadastrado enquanto preenche.</td>
+          <td><span class="verdict-good">✓ Mantém</span> Tabela permanece visível à esquerda. Possível identificar duplicatas, copiar CEP, comparar antes de salvar.</td>
+        </tr>
+        <tr>
+          <td><strong>Altura & footer</strong></td>
+          <td><span class="verdict-bad">⚠ Quebra</span> Modal cresce com conteúdo. Em laptop de 13" o botão "Add New Customer" fica abaixo da viewport — usuário não vê CTA. <em>Exatamente o que o print mostra.</em></td>
+          <td><span class="verdict-good">✓ Estável</span> Altura fixa = viewport. Header + Body scrollable + Footer fixo. Botão "Salvar" sempre visível, qualquer monitor.</td>
+        </tr>
+        <tr>
+          <td><strong>Scroll & hierarquia</strong></td>
+          <td><span class="verdict-bad">⚠ Todo bloco</span> O modal inteiro scrolla — título e ações somem. Usuário se perde no formulário.</td>
+          <td><span class="verdict-good">✓ Só o body</span> Header (título) e footer (ações) permanecem fixos. Hierarquia preservada.</td>
+        </tr>
+        <tr>
+          <td><strong>Densidade de campos</strong></td>
+          <td><span class="verdict-bad">⚠ 3 colunas apertadas</span> Pra caber 13 campos sem virar Modal gigante, força grid 3 col. Labels longos quebram, campos curtos ficam estranhos.</td>
+          <td><span class="verdict-good">✓ 2 colunas + seções</span> Layout vertical natural. Agrupamento em "Dados / Endereço / Fiscal" reduz carga cognitiva e melhora preenchimento.</td>
+        </tr>
+        <tr>
+          <td><strong>Acessibilidade</strong></td>
+          <td><span class="verdict-bad">⚠ Focus trap rígido</span> Em formulários longos, leitor de tela navega 13 campos sem orientação. WCAG 2.4.3 (focus order) sofre.</td>
+          <td><span class="verdict-good">✓ Foco gerenciado</span> Panel permite live regions e seções marcadas. Foco previsível, suporta navegação por landmarks.</td>
+        </tr>
+        <tr>
+          <td><strong>Responsivo</strong></td>
+          <td><span class="verdict-bad">⚠ Mal aproveitado</span> Em tablet o modal vira "quase fullscreen" desperdiçando espaço; em mobile fica claustrofóbico.</td>
+          <td><span class="verdict-good">✓ Colapsa elegante</span> Em tablet ocupa 60% lateral; em mobile vira full-screen lateral fluido — padrão nativo.</td>
+        </tr>
+        <tr>
+          <td><strong>Consistência interna</strong></td>
+          <td><span class="verdict-bad">⚠ Quebra padrão</span> As outras 3 telas do Mosaic Direct (Agendar Normal, Agendar Protocolo, Criar Protocolo) já usam sidenav lateral. Modal aqui é exceção.</td>
+          <td><span class="verdict-good">✓ Aderente</span> Mesmo padrão visual, mesma posição, mesmo modelo mental do usuário. Reaproveita componente já validado com PO.</td>
+        </tr>
+        <tr>
+          <td><strong>Aderência SLDS</strong></td>
+          <td><span class="verdict-bad">⚠ Mau uso</span> Diretriz oficial: <em>"Modals are used to focus the user on a <strong>single task</strong>"</em>. Cadastrar 13 campos não é single task.</td>
+          <td><span class="verdict-good">✓ Componente certo</span> SLDS Panel dockado é o componente oficial pra workflows de formulário lateral. <code>slds-panel_docked-right</code>.</td>
+        </tr>
+        <tr>
+          <td><strong>Implementação</strong></td>
+          <td>Mesmo custo. <code>slds-modal</code>.</td>
+          <td>Mesmo custo. <code>slds-panel slds-panel_docked-right</code> ou <code>lightning-quick-action-panel</code>.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cc-slds-ref">
+      <strong>Referência SLDS oficial:</strong>
+      Panels → <a href="https://www.lightningdesignsystem.com/components/panels/" target="_blank" rel="noopener">lightningdesignsystem.com/components/panels</a>
+      &nbsp;·&nbsp;
+      Modals → <a href="https://www.lightningdesignsystem.com/components/modals/" target="_blank" rel="noopener">lightningdesignsystem.com/components/modals</a>
+      <br>
+      <strong>Salesforce usa Panel nativamente em:</strong> Service Console (Knowledge sidebar), Path Assistant, Utility Bar, Omni-Channel, Field-Level Help, CPQ Quote Line Editor.
+    </div>
+
+    <div class="cc-verdict-final">
+      <h3>Veredito</h3>
+      <p>
+        O Sidenav (SLDS Panel dockado à direita) é objetivamente superior para o fluxo "Adicionar Novo Cliente": preserva o contexto da tabela,
+        mantém footer/CTA sempre visíveis, agrupa campos em seções, aderente ao SLDS, consistente com as outras 3 telas do Mosaic Direct e
+        usado nativamente pela própria Salesforce em múltiplos produtos. Modal central é o componente errado para workflows de formulário multi-campo.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  const overlays = {
+    modal: document.getElementById("overlayModal"),
+    sidenav: document.getElementById("overlaySidenav"),
+  };
+  const switchBtns = document.querySelectorAll(".cc-switch button");
+  const btnOpen = document.getElementById("btnOpenVariant");
+  let currentVariant = "sidenav";
+
+  function setVariant(v) {
+    currentVariant = v;
+    switchBtns.forEach(b => {
+      const active = b.dataset.variant === v;
+      b.classList.toggle("is-active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  }
+
+  function openCurrent() {
+    Object.values(overlays).forEach(o => o.classList.remove("is-open"));
+    const el = overlays[currentVariant];
+    if (el) {
+      requestAnimationFrame(() => el.classList.add("is-open"));
+    }
+  }
+
+  function closeAll() {
+    Object.values(overlays).forEach(o => o.classList.remove("is-open"));
+  }
+
+  switchBtns.forEach(b => b.addEventListener("click", () => {
+    setVariant(b.dataset.variant);
+    openCurrent();
+  }));
+
+  btnOpen.addEventListener("click", openCurrent);
+
+  Object.values(overlays).forEach(o => {
+    o.addEventListener("click", (e) => {
+      if (e.target === o || e.target.closest("[data-close]")) closeAll();
+    });
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeAll();
+  });
+
+  // Abre o sidenav por padrão pra mostrar o vencedor de cara
+  setTimeout(openCurrent, 250);
+})();
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>
