@@ -2187,30 +2187,56 @@
   .report-table .stack-primary { font-weight: 700; color: var(--text-1); }
   .report-table .stack-secondary { font-size: 11px; color: var(--text-3); font-weight: 600; }
 
+  /* ================================================================
+     PARIDADE VISUAL com Relatório de Protocolos (.wide-table)
+     Overrides com !important pra vencer o base.css compartilhado.
+     ================================================================ */
+  /* 1) Remove as setas de ordenação herdadas do base.css */
+  .report-table thead th::after { content: none !important; }
+  /* 2) Header igual ao protocolos: verde-800 / 600 / 13px / padding 13x14 */
+  .report-table thead th {
+    padding: 13px 14px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: var(--mosaic-green-800) !important;
+  }
+  /* 3) Altura de linha igual ao protocolos (padding 14px) */
+  .report-table tbody td { padding: 14px 14px !important; }
+
   .tipo-tag {
     display: inline-flex; align-items: center;
     font-size: 9px; font-weight: 800;
     padding: 2px 7px; border: 1.5px solid;
     letter-spacing: 0.06em; text-transform: uppercase;
+    border-radius: var(--radius-pill);
   }
   .tipo-tag--plan    { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
   .tipo-tag--replan  { color: var(--mosaic-orange); border-color: var(--mosaic-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
   .tipo-tag--adicao  { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
 
+  /* Status badge IDÊNTICO ao protocolos: pill arredondada + bolinha + bg suave */
   .status-pill {
     display: inline-flex; align-items: center;
-    font-size: 11px; font-weight: 700;
-    padding: 3px 8px; border-radius: 0;
-    border: 1.5px solid; letter-spacing: 0.02em;
+    gap: 5px;
+    font-size: 11.5px; font-weight: 700;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    border: none;
+    letter-spacing: 0;
     white-space: nowrap;
+    line-height: 1.4;
   }
-  /* 6 status valores (cliente) — BR Rel Status Agendamento */
-  .status-pill--em_analise      { color: var(--text-1); border-color: var(--mosaic-yellow); background: var(--mosaic-yellow); }
-  .status-pill--rejeitado       { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
-  .status-pill--aprovado        { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
-  .status-pill--em_carregamento { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
-  .status-pill--faturado        { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
-  .status-pill--cancelado       { color: var(--text-3); border-color: var(--border); background: var(--bg-section); }
+  .status-pill::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+  /* 6 status mapeados pros mesmos tokens do protocolos */
+  .status-pill--em_analise      { background: var(--status-analise-bg) !important;    color: var(--status-analise-fg) !important;    }
+  .status-pill--aprovado        { background: var(--status-aprovado-bg) !important;   color: var(--status-aprovado-fg) !important;   }
+  .status-pill--em_carregamento { background: var(--status-carregando-bg) !important; color: var(--status-carregando-fg) !important; }
+  .status-pill--faturado        { background: var(--status-faturado-bg) !important;   color: var(--status-faturado-fg) !important;   }
+  .status-pill--rejeitado       { background: var(--status-cancelado-bg) !important;  color: var(--status-cancelado-fg) !important;  }
+  .status-pill--cancelado       { background: #f4f4f2 !important; color: var(--text-3) !important; border: 1px solid var(--border) !important; }
 
   /* Daily breakdown diff coloring */
   .report-table .vol-cell--pos  { color: var(--mosaic-green-700); }
@@ -2232,13 +2258,14 @@
   .report-table tbody tr:hover td.col-action,
   .report-table tbody tr:nth-child(even):hover td.col-action { background: #ecf3ef; }
 
-  /* Sticky first column (Solicitação) — deslocada pela col-action */
+  /* Sticky first column (Solicitação) — agora é a 1ª coluna (chevron embutido) */
   .report-table th.col-sticky,
   .report-table td.col-sticky {
-    position: sticky; left: 88px;
+    position: sticky; left: 0;
     background: #fff;
     z-index: 2;
-    box-shadow: 1px 0 0 var(--border-soft);
+    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
+    padding: 8px 14px !important;
   }
   .report-table thead th.col-sticky { background: var(--bg-section); z-index: 3; }
   .report-table tbody tr:nth-child(even) td.col-sticky { background: #fafaf8; }
@@ -2246,24 +2273,31 @@
   .report-table tbody tr:hover td.col-sticky,
   .report-table tbody tr:nth-child(even):hover td.col-sticky { background: #ecf3ef; }
 
-  /* Cluster de acoes lado a lado dentro de col-action */
+  /* Cluster + chevron IDÊNTICOS ao protocolos (caixinha arredondada ao lado do ID) */
+  .proto-cell { display: inline-flex; align-items: center; gap: 6px; }
   .action-cluster {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    justify-content: center;
+    gap: 2px;
+    padding: 2px 4px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.025);
+    margin-left: 8px;
     position: relative;
   }
+  .report-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
   .cell-action.action-menu {
     color: var(--text-2);
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+    width: 26px;
+    height: 22px;
+    border-radius: 5px;
+    border: none !important;
+    background: transparent !important;
   }
   .cell-action.action-menu:hover {
-    color: var(--mosaic-green-700);
-    border-color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.14) !important;
+    border: none !important;
   }
 
   /* Dropdown de acoes da linha — vive no <body> com position:fixed
@@ -3134,7 +3168,8 @@ const DAY_LABELS = ["Total", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 /* Build thead */
 function buildThead() {
-  let html = `<th class="col-action" aria-label="Ação"></th>`;
+  // Chevron de ações agora vive na própria célula Solicitação (igual protocolos)
+  let html = "";
   const main = [
     { l: "Solicitação", c: "col-sticky" },
     { l: "Protocolo" },
@@ -3446,19 +3481,20 @@ function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
 
-  /* 1 action + 20 main + 3 totals + 1 toggle = 25 cols (colspan da linha de detalhe) */
-  const COLSPAN = 25;
+  /* 20 main + 3 totals + 1 toggle = 24 cols (colspan da linha de detalhe).
+     Chevron de ações agora vive embutido na célula Solicitação. */
+  const COLSPAN = 24;
 
   elBody.innerHTML = list.map((r, idx) => {
     const editing = editingSol === rowKey(r);
-    let tds = `<td class="col-action">${actionCellHTML(r)}</td>`;
+    let tds = "";
 
     if (editing) {
       // Modo edição: apenas a Qtd. Solicitada vira input editável.
       // Todos os outros campos ficam read-only (igual ao modo normal),
       // pois Confirmada OV e Faturada vêm do SAP e os demais campos
       // sao imutaveis (Cooperado/Contrato/etc.).
-      tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
+      tds += `<td class="col-sticky cell-sol"><span class="proto-cell"><span>${r.sol}</span>${actionCellHTML(r)}</span></td>`;
       tds += `<td class="cell-mono">${r.protocolo}</td>`;
       tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
       tds += `<td class="cell-mono">${r.semana}</td>`;
@@ -3484,7 +3520,7 @@ function render() {
       tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
       tds += `<td class="col-toggle"></td>`;
     } else {
-      tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
+      tds += `<td class="col-sticky cell-sol"><span class="proto-cell"><span>${r.sol}</span>${actionCellHTML(r)}</span></td>`;
       tds += `<td class="cell-mono">${r.protocolo}</td>`;
       tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
       tds += `<td class="cell-mono">${r.semana}</td>`;
