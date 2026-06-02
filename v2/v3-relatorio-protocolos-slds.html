@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v3 · Relatório de Protocolos — SLDS real</title>
+
+<!-- ====================================================================
+     SLDS OFICIAL (Salesforce Lightning Design System) 2.30.4
+     CSS puro vindo do CDN. Mesmo design system que o dev usa na org —
+     as classes (slds-*) mapeiam 1:1 com os Lightning Base Components.
+     ==================================================================== -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css" />
+
+<style>
+  /* Apenas ajustes mínimos. TUDO o resto é SLDS puro, sem CSS custom. */
+  body { margin: 0; }
+
+  /* Banner de aviso (não faz parte do SLDS, só pra contextualizar a demo) */
+  .demo-banner {
+    background: #032d60; color: #fff; font-size: 13px;
+    padding: 10px 16px; display: flex; gap: 12px; align-items: center;
+    font-family: 'Salesforce Sans', Arial, sans-serif;
+  }
+  .demo-banner strong { font-weight: 700; }
+  .demo-banner .tag {
+    background: #fff; color: #032d60; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  }
+
+  /* célula de quantidade editável inline — usa tokens SLDS */
+  .qty-cell { cursor: pointer; position: relative; }
+  .qty-cell:hover { background: #f3f3f3; box-shadow: inset 0 0 0 1px #1b96ff; }
+</style>
+</head>
+
+<!-- slds-scope é OBRIGATÓRIO: ativa o reset e os tokens do SLDS -->
+<body class="slds-scope">
+
+<div class="demo-banner">
+  <span class="tag">v3 · PILOTO SLDS</span>
+  <span><strong>Relatório de Protocolos</strong> construído 100% com SLDS oficial 2.30.4 (CSS do CDN). As classes <code>slds-*</code> mapeiam 1:1 com os Lightning Base Components que o dev usa na org.</span>
+</div>
+
+<div class="slds-scope">
+
+  <!-- ====================== PAGE HEADER ====================== -->
+  <div class="slds-page-header slds-m-around_medium">
+    <div class="slds-page-header__row">
+      <div class="slds-page-header__col-title">
+        <div class="slds-media">
+          <div class="slds-media__figure">
+            <span class="slds-icon_container slds-icon-standard-orders">
+              <svg class="slds-icon slds-icon_medium" aria-hidden="true">
+                <use xlink:href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/standard-sprite/svg/symbols.svg#orders"></use>
+              </svg>
+            </span>
+          </div>
+          <div class="slds-media__body">
+            <div class="slds-page-header__name">
+              <div class="slds-page-header__name-title">
+                <h1>
+                  <span class="slds-page-header__title slds-truncate" title="Relatório de Protocolos">Relatório de Protocolos</span>
+                </h1>
+              </div>
+            </div>
+            <p class="slds-page-header__name-meta">Consulta de protocolos · quantidades editáveis inline</p>
+          </div>
+        </div>
+      </div>
+      <div class="slds-page-header__col-actions">
+        <div class="slds-page-header__controls">
+          <div class="slds-page-header__control">
+            <button class="slds-button slds-button_neutral">
+              <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                <use xlink:href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg#filterList"></use>
+              </svg>
+              Filtros
+            </button>
+          </div>
+          <div class="slds-page-header__control">
+            <button class="slds-button slds-button_neutral">
+              <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                <use xlink:href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg#download"></use>
+              </svg>
+              Exportar XLS
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="slds-page-header__row slds-page-header__row_gutters">
+      <div class="slds-page-header__col-meta">
+        <p class="slds-page-header__meta-text" id="recordCount">6 protocolos · 1 selecionado</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== SEARCH BAR ====================== -->
+  <div class="slds-m-horizontal_medium slds-m-bottom_medium">
+    <div class="slds-form-element">
+      <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left">
+        <svg class="slds-icon slds-input__icon slds-input__icon_left slds-icon-text-default" aria-hidden="true">
+          <use xlink:href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+        </svg>
+        <input type="text" id="searchInput" class="slds-input" placeholder="Buscar Protocolo, Contrato SAP ou Cotação..." />
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== DATA TABLE ====================== -->
+  <div class="slds-m-horizontal_medium slds-m-bottom_large">
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Protocolos">
+      <thead>
+        <tr class="slds-line-height_reset">
+          <th class="slds-text-title_caps" scope="col" style="width:3.25rem">
+            <div class="slds-truncate slds-assistive-text">Selecionar</div>
+          </th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="Protocolo">Protocolo</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="Status">Status</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="Contrato SAP">Contrato SAP</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="Filial">Filial</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="UF">UF</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="Cooperado">Cooperado</div></th>
+          <th class="slds-text-title_caps" scope="col"><div class="slds-truncate" title="CPF/CNPJ">CPF/CNPJ</div></th>
+          <th class="slds-text-title_caps" scope="col" style="text-align:right"><div class="slds-truncate" title="Quantidade (t)">Qtd. (t)</div></th>
+          <th class="slds-text-title_caps" scope="col" style="text-align:right"><div class="slds-truncate" title="Saldo (t)">Saldo (t)</div></th>
+          <th class="slds-text-title_caps" scope="col" style="width:3.25rem"><div class="slds-truncate slds-assistive-text">Ações</div></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- preenchido via JS -->
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ====================== MODAL CANCELAR (SLDS) ====================== -->
+<section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="cancelModalHeading" class="slds-modal" id="cancelModal">
+  <div class="slds-modal__container">
+    <div class="slds-modal__header">
+      <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Fechar" id="cancelModalClose">
+        <svg class="slds-button__icon slds-button__icon_large" aria-hidden="true">
+          <use xlink:href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+        </svg>
+        <span class="slds-assistive-text">Fechar</span>
+      </button>
+      <h2 id="cancelModalHeading" class="slds-modal__title slds-hyphenate">Cancelar protocolo</h2>
+      <p class="slds-m-top_x-small slds-text-color_weak">Esta ação não pode ser desfeita.</p>
+    </div>
+    <div class="slds-modal__content slds-p-around_medium">
+      <p>
+        Você está prestes a cancelar o protocolo
+        <strong id="cancelProtoId">—</strong> do contrato <strong id="cancelContrato">—</strong>.
+        O volume <strong id="cancelVolume">—</strong> deste protocolo será
+        <strong class="slds-text-color_success">devolvido ao saldo disponível do contrato</strong>.
+      </p>
+      <div class="slds-box slds-box_x-small slds-theme_warning slds-m-top_small">
+        <strong>Importante:</strong> O status será alterado para <strong>"Cancelado"</strong> e a mudança será permanente.
+      </div>
+    </div>
+    <div class="slds-modal__footer">
+      <button class="slds-button slds-button_neutral" id="cancelModalKeep">Manter protocolo</button>
+      <button class="slds-button slds-button_destructive" id="cancelModalConfirm">Confirmar cancelamento</button>
+    </div>
+  </div>
+</section>
+<div class="slds-backdrop" id="cancelBackdrop"></div>
+
+<!-- ====================== TOAST CONTAINER ====================== -->
+<div class="slds-notify_container slds-is-relative" id="toastContainer"></div>
+
+<script>
+/* ====================================================================
+   Dados de exemplo (mesmos protocolos do relatorio-protocolos.html)
+   ==================================================================== */
+const PROTOCOLS = [
+  { id:"M9W38746", status:"Novo",                  statusTheme:"", contrato:"C-001-2024", filial:"Filial Sertãozinho", uf:"SP", coop:"CARLOS ALVES",     doc:"123.456.789-00", qtd:300, saldo:1200 },
+  { id:"M9W47291", status:"Em agendamento",        statusTheme:"warning", contrato:"C-002-2024", filial:"Filial Bebedouro", uf:"PR", coop:"AGUINALDO GOMES", doc:"234.567.890-11", qtd:150, saldo:600 },
+  { id:"M9W51038", status:"Concluído",             statusTheme:"success", contrato:"C-003-2024", filial:"Filial Porto Alegre", uf:"RS", coop:"TEREZA AKEMI",  doc:"345.678.901-22", qtd:500, saldo:0 },
+  { id:"M9W63847", status:"Cancelado",             statusTheme:"error",   contrato:"C-004-2024", filial:"Filial São Paulo", uf:"SP", coop:"BETO DOS SANTOS", doc:"456.789.012-33", qtd:0,   saldo:800 },
+  { id:"M9W71205", status:"Liberado para agendar", statusTheme:"success", contrato:"C-005-2024", filial:"Filial Londrina", uf:"PR", coop:"RENATO CESAR",   doc:"567.890.123-44", qtd:400, saldo:400 },
+  { id:"M9W82910", status:"Novo",                  statusTheme:"", contrato:"C-006-2024", filial:"Filial Uberaba", uf:"MG", coop:"JORGE DOS ANJOS", doc:"678.901.234-55", qtd:250, saldo:1000 },
+];
+
+const CDN = "https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg";
+
+/* status pill: usa slds-badge + temas SLDS */
+function statusBadge(p) {
+  const themeCls = p.statusTheme ? `slds-theme_${p.statusTheme}` : "";
+  return `<span class="slds-badge ${themeCls}">${p.status}</span>`;
+}
+
+const STATUS_PODE_AGENDAR = new Set(["Novo", "Liberado para agendar"]);
+
+function rowHTML(p, idx) {
+  const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
+  const podeCancelar = p.status !== "Cancelado" && p.status !== "Concluído";
+  return `
+    <tr class="slds-hint-parent" data-id="${p.id}">
+      <td role="gridcell" style="text-align:center">
+        <span class="slds-checkbox">
+          <input type="checkbox" name="sel-${idx}" id="sel-${idx}" />
+          <label class="slds-checkbox__label" for="sel-${idx}"><span class="slds-checkbox_faux"></span><span class="slds-assistive-text">Selecionar ${p.id}</span></label>
+        </span>
+      </td>
+      <th scope="row"><div class="slds-truncate" title="${p.id}"><a href="javascript:void(0)" class="slds-text-link">${p.id}</a></div></th>
+      <td role="gridcell">${statusBadge(p)}</td>
+      <td role="gridcell"><div class="slds-truncate" title="${p.contrato}">${p.contrato}</div></td>
+      <td role="gridcell"><div class="slds-truncate" title="${p.filial}">${p.filial}</div></td>
+      <td role="gridcell"><div class="slds-truncate">${p.uf}</div></td>
+      <td role="gridcell"><div class="slds-truncate" title="${p.coop}">${p.coop}</div></td>
+      <td role="gridcell"><div class="slds-truncate" title="${p.doc}">${p.doc}</div></td>
+      <td role="gridcell" class="qty-cell" data-qty-id="${p.id}" style="text-align:right">
+        <div class="slds-truncate" title="${p.qtd} t"><strong>${p.qtd.toLocaleString('pt-BR')}</strong></div>
+      </td>
+      <td role="gridcell" style="text-align:right">
+        <div class="slds-truncate slds-text-color_success" title="${p.saldo} t"><strong>${p.saldo.toLocaleString('pt-BR')}</strong></div>
+      </td>
+      <td role="gridcell" style="text-align:center">
+        <div class="slds-dropdown-trigger slds-dropdown-trigger_click" data-menu-id="${p.id}">
+          <button class="slds-button slds-button_icon slds-button_icon-border-filled" aria-haspopup="true" title="Ações">
+            <svg class="slds-button__icon" aria-hidden="true"><use xlink:href="${CDN}#down"></use></svg>
+            <span class="slds-assistive-text">Ações de ${p.id}</span>
+          </button>
+          <div class="slds-dropdown slds-dropdown_right slds-dropdown_actions" role="menu" hidden>
+            <ul class="slds-dropdown__list" role="presentation">
+              <li class="slds-dropdown__item" role="presentation">
+                <a href="javascript:void(0)" role="menuitem" data-act="edit" data-id="${p.id}" tabindex="0">
+                  <span class="slds-truncate"><svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true"><use xlink:href="${CDN}#edit"></use></svg>Editar protocolo</span>
+                </a>
+              </li>
+              <li class="slds-dropdown__item ${podeAgendar ? '' : 'slds-is-disabled'}" role="presentation">
+                <a href="javascript:void(0)" role="menuitem" data-act="agendar" data-id="${p.id}" tabindex="${podeAgendar?'0':'-1'}" aria-disabled="${podeAgendar?'false':'true'}">
+                  <span class="slds-truncate"><svg class="slds-icon slds-icon_x-small slds-icon-text-default slds-m-right_x-small" aria-hidden="true"><use xlink:href="${CDN}#event"></use></svg>Agendar protocolo</span>
+                </a>
+              </li>
+              <li class="slds-has-divider_top-space" role="separator"></li>
+              <li class="slds-dropdown__item ${podeCancelar ? '' : 'slds-is-disabled'}" role="presentation">
+                <a href="javascript:void(0)" role="menuitem" data-act="cancel" data-id="${p.id}" tabindex="${podeCancelar?'0':'-1'}" aria-disabled="${podeCancelar?'false':'true'}">
+                  <span class="slds-truncate slds-text-color_destructive"><svg class="slds-icon slds-icon_x-small slds-m-right_x-small" style="fill:#ba0517" aria-hidden="true"><use xlink:href="${CDN}#delete"></use></svg>Cancelar protocolo</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </td>
+    </tr>`;
+}
+
+function render() {
+  document.getElementById("tableBody").innerHTML = PROTOCOLS.map((p,i) => rowHTML(p,i)).join("");
+}
+render();
+
+/* ============== Dropdown de ações ============== */
+function closeAllMenus() {
+  document.querySelectorAll(".slds-dropdown-trigger.slds-is-open").forEach(t => {
+    t.classList.remove("slds-is-open");
+    const dd = t.querySelector(".slds-dropdown");
+    if (dd) dd.hidden = true;
+  });
+}
+
+document.getElementById("tableBody").addEventListener("click", (e) => {
+  // toggle menu
+  const trigger = e.target.closest(".slds-dropdown-trigger");
+  const menuBtn = e.target.closest("button[aria-haspopup]");
+  if (menuBtn && trigger) {
+    e.stopPropagation();
+    const wasOpen = trigger.classList.contains("slds-is-open");
+    closeAllMenus();
+    if (!wasOpen) {
+      trigger.classList.add("slds-is-open");
+      trigger.querySelector(".slds-dropdown").hidden = false;
+    }
+    return;
+  }
+  // ação do menu
+  const act = e.target.closest("[data-act]");
+  if (act) {
+    e.stopPropagation();
+    if (act.getAttribute("aria-disabled") === "true") return;
+    const id = act.dataset.id;
+    closeAllMenus();
+    if (act.dataset.act === "cancel") openCancelModal(id);
+    if (act.dataset.act === "edit") showToast(`Abrir edição de ${id} (mockup)`, "info");
+    if (act.dataset.act === "agendar") showToast(`Agendar ${id} (mockup)`, "info");
+    return;
+  }
+  // inline edit de quantidade
+  const qtyCell = e.target.closest(".qty-cell");
+  if (qtyCell) { startQtyEdit(qtyCell); }
+});
+document.addEventListener("click", closeAllMenus);
+
+/* ============== Inline edit quantidade ============== */
+let editingCell = null;
+function startQtyEdit(cell) {
+  if (editingCell) return;
+  editingCell = cell;
+  const id = cell.dataset.qtyId;
+  const p = PROTOCOLS.find(x => x.id === id);
+  cell.innerHTML = `
+    <div class="slds-form-element">
+      <div class="slds-form-element__control">
+        <input type="number" class="slds-input" value="${p.qtd}" style="text-align:right;height:1.8rem" />
+      </div>
+    </div>`;
+  const input = cell.querySelector("input");
+  input.focus(); input.select();
+  const commit = () => {
+    const v = Number(input.value) || 0;
+    p.qtd = v;
+    editingCell = null;
+    render();
+    showToast("Quantidade atualizada · enviado ao SAP", "success");
+  };
+  input.addEventListener("blur", commit);
+  input.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter") commit();
+    if (ev.key === "Escape") { editingCell = null; render(); }
+  });
+}
+
+/* ============== Modal Cancelar ============== */
+const cancelModal = document.getElementById("cancelModal");
+const cancelBackdrop = document.getElementById("cancelBackdrop");
+let cancelTargetId = null;
+
+function openCancelModal(id) {
+  const p = PROTOCOLS.find(x => x.id === id);
+  if (!p) return;
+  cancelTargetId = id;
+  document.getElementById("cancelProtoId").textContent = p.id;
+  document.getElementById("cancelContrato").textContent = p.contrato;
+  document.getElementById("cancelVolume").textContent = p.qtd.toLocaleString('pt-BR') + " t";
+  cancelModal.classList.add("slds-fade-in-open");
+  cancelBackdrop.classList.add("slds-backdrop_open");
+}
+function closeCancelModal() {
+  cancelModal.classList.remove("slds-fade-in-open");
+  cancelBackdrop.classList.remove("slds-backdrop_open");
+  cancelTargetId = null;
+}
+document.getElementById("cancelModalClose").addEventListener("click", closeCancelModal);
+document.getElementById("cancelModalKeep").addEventListener("click", closeCancelModal);
+document.getElementById("cancelBackdrop").addEventListener("click", closeCancelModal);
+document.getElementById("cancelModalConfirm").addEventListener("click", () => {
+  const p = PROTOCOLS.find(x => x.id === cancelTargetId);
+  if (p) {
+    p.saldo += p.qtd;  // devolve ao saldo
+    p.qtd = 0;
+    p.status = "Cancelado";
+    p.statusTheme = "error";
+  }
+  closeCancelModal();
+  render();
+  showToast("Protocolo cancelado · volume devolvido ao contrato", "success");
+});
+
+/* ============== Toast SLDS ============== */
+function showToast(msg, theme) {
+  const t = theme || "info";
+  const icon = t === "success" ? "success" : (t === "error" ? "error" : "info");
+  const div = document.createElement("div");
+  div.className = `slds-notify slds-notify_toast slds-theme_${t}`;
+  div.setAttribute("role", "status");
+  div.innerHTML = `
+    <span class="slds-assistive-text">${t}</span>
+    <span class="slds-icon_container slds-icon-utility-${icon} slds-m-right_small slds-no-flex slds-align-top">
+      <svg class="slds-icon slds-icon_small" aria-hidden="true"><use xlink:href="${CDN}#${icon}"></use></svg>
+    </span>
+    <div class="slds-notify__content"><h2 class="slds-text-heading_small">${msg}</h2></div>`;
+  const c = document.getElementById("toastContainer");
+  c.innerHTML = "";
+  c.appendChild(div);
+  setTimeout(() => { if (div.parentNode) div.remove(); }, 3200);
+}
+</script>
+
+</body>
+</html>
