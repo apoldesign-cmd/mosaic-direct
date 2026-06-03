@@ -155,11 +155,9 @@ a:hover { text-decoration: underline; }
   white-space: nowrap;
 }
 .md-nav .nav-item:hover { color: var(--md-green-900); text-decoration: none; }
-.md-nav .nav-item.is-active { color: var(--md-green-900); }
-.md-nav .nav-item.is-active::after {
-  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
-  height: 3px; background: var(--md-green-800);
-}
+/* item ativo em LARANJA, igual ao portal real */
+.md-nav .nav-item.is-active { color: var(--md-orange, #D56B1A); }
+.md-nav .nav-item.is-active:hover { color: var(--md-orange, #D56B1A); }
 .md-nav .nav-item .chev {
   width: 0; height: 0;
   border-left: 4px solid transparent; border-right: 4px solid transparent;
@@ -200,30 +198,52 @@ a:hover { text-decoration: underline; }
 /* ============================================================
    Week picker popup (Semana) — funcional
    ============================================================ */
-.week-popup {
+/* Calendário real (igual o datepicker do portal Mosaic) */
+.cal-popup {
   position: fixed;
   background: #fff;
   border: 1px solid var(--md-gray-300);
-  border-radius: 8px;
-  box-shadow: 0 12px 28px rgba(9,53,50,0.18);
-  padding: 6px;
+  border-radius: 10px;
+  box-shadow: 0 16px 40px rgba(9,53,50,0.22);
+  padding: 14px 16px 10px;
   z-index: 1200;
-  min-width: 220px;
-  max-height: 280px; overflow-y: auto;
+  width: 300px;
+  font-family: var(--md-font);
 }
-.week-popup .wk-title {
-  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--md-gray-600); padding: 6px 10px 8px;
+.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.cal-title { font-weight: 700; font-size: 16px; color: var(--md-green-900); }
+.cal-nav {
+  width: 40px; height: 40px; border: 1px solid var(--md-gray-300); border-radius: 8px;
+  background: #fff; cursor: pointer; color: var(--md-green-900);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 18px;
 }
-.week-popup button {
-  display: block; width: 100%; text-align: left;
-  padding: 9px 12px; border: none; background: transparent; cursor: pointer;
-  border-radius: 6px; font-family: var(--md-font); font-size: 13.5px;
-  color: var(--md-green-900); font-weight: 500;
+.cal-nav:hover { background: var(--md-gray-200); border-color: var(--md-green-300); }
+.cal-wd { display: grid; grid-template-columns: repeat(7, 1fr); margin-bottom: 4px; }
+.cal-wd span {
+  text-align: center; font-size: 11px; font-weight: 600; color: var(--md-gray-600);
+  text-transform: uppercase; letter-spacing: 0.03em; padding: 6px 0;
 }
-.week-popup button:hover { background: rgba(29,98,92,0.08); color: var(--md-green-800); }
-.week-popup button.is-current { font-weight: 700; }
-.week-popup button.is-current::after { content: ' · vigente'; color: var(--md-gray-600); font-weight: 500; font-size: 11px; }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.cal-day {
+  aspect-ratio: 1; border: none; background: transparent; cursor: pointer;
+  border-radius: 8px; font-family: var(--md-font); font-size: 14px; font-weight: 600;
+  color: var(--md-green-900); display: inline-flex; align-items: center; justify-content: center;
+}
+.cal-day:hover { background: rgba(29,98,92,0.10); }
+.cal-day.out { color: #c9cfce; font-weight: 400; }
+.cal-day.today { box-shadow: inset 0 0 0 1.5px var(--md-green-800); color: var(--md-green-800); }
+.cal-day.in-week { background: rgba(29,98,92,0.10); }
+.cal-day.selected { background: var(--md-green-800); color: #fff; }
+.cal-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--md-gray-300); margin-top: 10px; padding-top: 10px;
+}
+.cal-link {
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--md-font); font-size: 13px; font-weight: 700;
+  color: var(--md-green-800); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.cal-link:hover { text-decoration: underline; }
 .row-date { cursor: pointer; }
 
 /* ============================================================
@@ -797,8 +817,8 @@ a:hover { text-decoration: underline; }
     <div class="md-user-cluster">
       <button class="md-lang-switch" type="button">PT <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
       <div class="md-user-info">
-        <span class="name">Victor Dias</span>
-        <span class="org">COOPERCITRUS COOP DE PROD RURAIS</span>
+        <span class="name">Alyssa Harris</span>
+        <span class="org">MAR JAC POULT...</span>
       </div>
       <span class="md-icon-circle" title="Conta">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
@@ -1156,67 +1176,104 @@ roteiroBackdrop.addEventListener("click", e => {
   if (e.target === roteiroBackdrop || e.target.closest("[data-roteiro-close]")) closeRoteiro();
 });
 
-// =================== Week picker (campo Semana) ===================
-function buildWeeks() {
-  const weeks = [];
-  const today = new Date();
-  const day = today.getDay();
-  const diffToMonday = day === 0 ? -6 : 1 - day;
-  const baseMon = new Date(today);
-  baseMon.setDate(today.getDate() + diffToMonday);
-  baseMon.setHours(0,0,0,0);
-  const pad = n => String(n).padStart(2, "0");
-  const f = d => `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
-  for (let i = 0; i < 10; i++) {
-    const mon = new Date(baseMon); mon.setDate(baseMon.getDate() + i*7);
-    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-    weeks.push({ label: `${f(mon)} — ${f(sun)}`, current: i === 0 });
-  }
-  return weeks;
+// =================== Datepicker de CALENDÁRIO real (campo Semana) ===================
+// Clica no campo → abre calendário do mês (igual portal). Selecionar um dia
+// resolve a SEMANA (segunda→domingo) que contém aquele dia e preenche o campo.
+const MONTHS = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const WD = ["DOM","SEG","TER","QUA","QUI","SEX","SÁB"];
+const pad2 = n => String(n).padStart(2, "0");
+const fmtDate = d => `${pad2(d.getDate())}/${pad2(d.getMonth()+1)}/${d.getFullYear()}`;
+function mondayOf(d){ const x=new Date(d); const w=x.getDay(); x.setDate(x.getDate()+(w===0?-6:1-w)); x.setHours(0,0,0,0); return x; }
+function weekRangeOf(d){ const mon=mondayOf(d); const sun=new Date(mon); sun.setDate(mon.getDate()+6); return `${fmtDate(mon)} — ${fmtDate(sun)}`; }
+function parseStart(semana){ // "11/05/2026 — ..." → Date
+  const m = (semana||"").match(/(\d{2})\/(\d{2})\/(\d{4})/);
+  return m ? new Date(+m[3], +m[2]-1, +m[1]) : null;
 }
-const WEEKS = buildWeeks();
 
-let weekPopupEl = null;
-function closeWeekPopup() {
-  if (weekPopupEl) { weekPopupEl.remove(); weekPopupEl = null; }
+let calEl = null, calIdx = null, calView = null, calSelMon = null;
+function closeCal(){ if(calEl){ calEl.remove(); calEl=null; calIdx=null; } }
+
+function renderCal(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  const y = calView.getFullYear(), m = calView.getMonth();
+  const first = new Date(y, m, 1);
+  const gridStart = new Date(first); gridStart.setDate(1 - first.getDay());
+  let cells = "";
+  for(let i=0;i<42;i++){
+    const d = new Date(gridStart); d.setDate(gridStart.getDate()+i); d.setHours(0,0,0,0);
+    const out = d.getMonth() !== m;
+    const isToday = d.getTime() === today.getTime();
+    const inWeek = calSelMon && mondayOf(d).getTime() === calSelMon.getTime();
+    const cls = ["cal-day", out?"out":"", isToday?"today":"", inWeek?"in-week":""].filter(Boolean).join(" ");
+    cells += `<button type="button" class="${cls}" data-d="${y}-${m}-${d.getDate()}-${out?1:0}-${d.getMonth()}-${d.getFullYear()}">${d.getDate()}</button>`;
+  }
+  calEl.innerHTML = `
+    <div class="cal-head">
+      <button type="button" class="cal-nav" data-cal="prev" aria-label="Mês anterior">‹</button>
+      <span class="cal-title">${MONTHS[m]} ${y}</span>
+      <button type="button" class="cal-nav" data-cal="next" aria-label="Próximo mês">›</button>
+    </div>
+    <div class="cal-wd">${WD.map(w=>`<span>${w}</span>`).join("")}</div>
+    <div class="cal-grid">${cells}</div>
+    <div class="cal-foot">
+      <button type="button" class="cal-link" data-cal="clear">Limpar</button>
+      <button type="button" class="cal-link" data-cal="today">Hoje</button>
+    </div>`;
 }
-function openWeekPopup(input, idx) {
-  closeWeekPopup();
-  const pop = document.createElement("div");
-  pop.className = "week-popup";
-  pop.innerHTML = `<div class="wk-title">Selecionar semana</div>` +
-    WEEKS.map(w => `<button type="button" class="${w.current ? 'is-current' : ''}" data-week="${w.label}">${w.label}</button>`).join("");
-  document.body.appendChild(pop);
+
+function openCal(input, idx){
+  closeCal();
+  calIdx = idx;
+  const existing = parseStart(ROWS[idx].semana);
+  calView = existing ? new Date(existing.getFullYear(), existing.getMonth(), 1) : new Date();
+  calSelMon = existing ? mondayOf(existing) : null;
+  calEl = document.createElement("div");
+  calEl.className = "cal-popup";
+  document.body.appendChild(calEl);
+  renderCal();
   const r = input.getBoundingClientRect();
-  // posiciona abaixo; se não couber, acima
-  const popH = Math.min(280, 40 + WEEKS.length * 38);
   let top = r.bottom + 4;
-  if (top + popH > window.innerHeight) top = Math.max(8, r.top - popH - 4);
-  pop.style.top = `${top}px`;
-  pop.style.left = `${Math.min(r.left, window.innerWidth - 240)}px`;
-  weekPopupEl = pop;
-  pop.addEventListener("click", e => {
-    const b = e.target.closest("button[data-week]");
-    if (!b) return;
-    ROWS[idx].semana = b.dataset.week;
-    closeWeekPopup();
-    render();
-  });
+  if (top + 360 > window.innerHeight) top = Math.max(8, r.top - 360);
+  calEl.style.top = `${top}px`;
+  calEl.style.left = `${Math.min(r.left, window.innerWidth - 312)}px`;
 }
+
 document.getElementById("rowsBody").addEventListener("click", e => {
   const dateInput = e.target.closest(".row-date");
   if (!dateInput) return;
   e.stopPropagation();
-  const tr = dateInput.closest("tr");
-  const idx = Number(tr.dataset.idx);
-  if (weekPopupEl) { closeWeekPopup(); return; }
-  openWeekPopup(dateInput, idx);
+  const idx = Number(dateInput.closest("tr").dataset.idx);
+  if (calEl && calIdx === idx) { closeCal(); return; }
+  openCal(dateInput, idx);
 });
+
 document.addEventListener("click", e => {
-  if (weekPopupEl && !e.target.closest(".week-popup") && !e.target.closest(".row-date")) closeWeekPopup();
+  if (!calEl) return;
+  const navBtn = e.target.closest("[data-cal]");
+  if (navBtn) {
+    e.stopPropagation();
+    const act = navBtn.dataset.cal;
+    if (act === "prev") { calView.setMonth(calView.getMonth()-1); renderCal(); }
+    else if (act === "next") { calView.setMonth(calView.getMonth()+1); renderCal(); }
+    else if (act === "today") { calView = new Date(); renderCal(); }
+    else if (act === "clear") { if(calIdx!=null){ROWS[calIdx].semana="";} closeCal(); render(); }
+    return;
+  }
+  const dayBtn = e.target.closest(".cal-day");
+  if (dayBtn) {
+    e.stopPropagation();
+    const [, , dd, , mm, yy] = dayBtn.dataset.d.split("-").map(Number);
+    const picked = new Date(yy, mm, dd);
+    if (calIdx != null) ROWS[calIdx].semana = weekRangeOf(picked);
+    closeCal();
+    render();
+    return;
+  }
+  // click fora fecha
+  if (!e.target.closest(".cal-popup") && !e.target.closest(".row-date")) closeCal();
 });
-window.addEventListener("scroll", closeWeekPopup, true);
-window.addEventListener("resize", closeWeekPopup);
+window.addEventListener("scroll", closeCal, true);
+window.addEventListener("resize", closeCal);
 
 // =================== Drawer com busca + status bloqueado ===================
 const backdrop = document.getElementById("drawerBackdrop");
@@ -1381,6 +1438,7 @@ document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDrawer();
     closeRoteiro();
+    closeCal();
     confirmModal.classList.remove("is-open");
     successModal.classList.remove("is-open");
   }
