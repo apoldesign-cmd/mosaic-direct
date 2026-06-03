@@ -120,7 +120,11 @@ a:hover { text-decoration: underline; }
 }
 .md-icon-circle.is-outline { background: transparent; color: var(--md-green-900); border: 1px solid var(--md-green-300); }
 
-/* Nav inferior (HOME / CONTRACTS / etc) — TUDO verde Mosaic, Barlow Regular 14px */
+/* ============================================================
+   Nav PT completo (igual original v2): Home / Produtos / Cotações /
+   Contratos▼ / Agendamento▼ / Faturamento / Documentos / Financeiro /
+   Suporte — com submenus em hover. Estilizado com tokens reais Mosaic.
+   ============================================================ */
 .md-nav {
   border-top: 1px solid #eaeded;
   border-bottom: 1px solid #eaeded;
@@ -134,26 +138,93 @@ a:hover { text-decoration: underline; }
   max-width: 1480px; margin: 0 auto;
   padding: 0 40px;
   display: flex; align-items: center; justify-content: center;
-  gap: 56px;
+  gap: 40px;
 }
-.md-nav a {
-  padding: 18px 4px;
+.md-nav .nav-item {
+  padding: 18px 2px;
   font-family: var(--md-font);
-  font-weight: 400;
+  font-weight: 600;
   font-size: 14px;
   color: var(--md-green-800);
   text-transform: uppercase;
-  letter-spacing: normal;
+  letter-spacing: 0.3px;
   text-decoration: none;
   position: relative;
   display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
 }
-.md-nav a:hover { color: var(--md-green-900); text-decoration: none; }
-.md-nav a.is-active::after {
+.md-nav .nav-item:hover { color: var(--md-green-900); text-decoration: none; }
+.md-nav .nav-item.is-active { color: var(--md-green-900); }
+.md-nav .nav-item.is-active::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0;
   height: 3px; background: var(--md-green-800);
 }
-.md-nav .chev { font-size: 9px; opacity: 0.7; }
+.md-nav .nav-item .chev {
+  width: 0; height: 0;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-top: 5px solid currentColor; opacity: 0.7;
+  transition: transform .15s;
+}
+.md-nav .nav-item:hover .chev,
+.md-nav .nav-item:focus-within .chev { transform: rotate(180deg); }
+
+/* Submenu dropdown */
+.md-nav .nav-submenu {
+  position: absolute; top: 100%; left: 50%; transform: translateX(-50%) translateY(6px);
+  min-width: 230px;
+  background: #fff;
+  border: 1px solid var(--md-gray-300);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(9,53,50,0.16);
+  padding: 6px;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .15s, transform .15s, visibility .15s;
+  z-index: 60;
+}
+.md-nav .nav-item:hover .nav-submenu,
+.md-nav .nav-item:focus-within .nav-submenu {
+  opacity: 1; visibility: visible; pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.md-nav .nav-submenu a {
+  display: block;
+  padding: 10px 14px; border-radius: 6px;
+  font-family: var(--md-font); font-weight: 500; font-size: 13.5px;
+  color: var(--md-green-900); text-transform: none; letter-spacing: normal;
+  text-decoration: none; white-space: nowrap;
+}
+.md-nav .nav-submenu a:hover { background: rgba(29,98,92,0.08); color: var(--md-green-800); }
+.md-nav .nav-submenu a.is-active { background: rgba(29,98,92,0.10); color: var(--md-green-800); font-weight: 700; }
+
+/* ============================================================
+   Week picker popup (Semana) — funcional
+   ============================================================ */
+.week-popup {
+  position: fixed;
+  background: #fff;
+  border: 1px solid var(--md-gray-300);
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(9,53,50,0.18);
+  padding: 6px;
+  z-index: 1200;
+  min-width: 220px;
+  max-height: 280px; overflow-y: auto;
+}
+.week-popup .wk-title {
+  font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--md-gray-600); padding: 6px 10px 8px;
+}
+.week-popup button {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 12px; border: none; background: transparent; cursor: pointer;
+  border-radius: 6px; font-family: var(--md-font); font-size: 13.5px;
+  color: var(--md-green-900); font-weight: 500;
+}
+.week-popup button:hover { background: rgba(29,98,92,0.08); color: var(--md-green-800); }
+.week-popup button.is-current { font-weight: 700; }
+.week-popup button.is-current::after { content: ' · vigente'; color: var(--md-gray-600); font-weight: 500; font-size: 11px; }
+.row-date { cursor: pointer; }
 
 /* ============================================================
    MAIN
@@ -662,13 +733,30 @@ a:hover { text-decoration: underline; }
   </div>
 
   <!-- Top nav verde Mosaic — Barlow Regular 14px uppercase -->
-  <nav class="md-nav">
+  <nav class="md-nav" aria-label="Principal">
     <div class="md-nav-inner">
-      <a href="#">HOME</a>
-      <a href="#">CONTRACTS <span class="chev">▼</span></a>
-      <a href="#" class="is-active">ORDER</a>
-      <a href="#">DOCUMENTS</a>
-      <a href="#">MY ACCOUNT</a>
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item is-active" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html" class="is-active">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
     </div>
   </nav>
 </header>
@@ -927,7 +1015,69 @@ document.getElementById("rowsBody").addEventListener("click", e => {
   render();
 });
 
-// =================== Drawer com busca + filtros + status bloqueado ===================
+// =================== Week picker (campo Semana) ===================
+function buildWeeks() {
+  const weeks = [];
+  const today = new Date();
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const baseMon = new Date(today);
+  baseMon.setDate(today.getDate() + diffToMonday);
+  baseMon.setHours(0,0,0,0);
+  const pad = n => String(n).padStart(2, "0");
+  const f = d => `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  for (let i = 0; i < 10; i++) {
+    const mon = new Date(baseMon); mon.setDate(baseMon.getDate() + i*7);
+    const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+    weeks.push({ label: `${f(mon)} — ${f(sun)}`, current: i === 0 });
+  }
+  return weeks;
+}
+const WEEKS = buildWeeks();
+
+let weekPopupEl = null;
+function closeWeekPopup() {
+  if (weekPopupEl) { weekPopupEl.remove(); weekPopupEl = null; }
+}
+function openWeekPopup(input, idx) {
+  closeWeekPopup();
+  const pop = document.createElement("div");
+  pop.className = "week-popup";
+  pop.innerHTML = `<div class="wk-title">Selecionar semana</div>` +
+    WEEKS.map(w => `<button type="button" class="${w.current ? 'is-current' : ''}" data-week="${w.label}">${w.label}</button>`).join("");
+  document.body.appendChild(pop);
+  const r = input.getBoundingClientRect();
+  // posiciona abaixo; se não couber, acima
+  const popH = Math.min(280, 40 + WEEKS.length * 38);
+  let top = r.bottom + 4;
+  if (top + popH > window.innerHeight) top = Math.max(8, r.top - popH - 4);
+  pop.style.top = `${top}px`;
+  pop.style.left = `${Math.min(r.left, window.innerWidth - 240)}px`;
+  weekPopupEl = pop;
+  pop.addEventListener("click", e => {
+    const b = e.target.closest("button[data-week]");
+    if (!b) return;
+    ROWS[idx].semana = b.dataset.week;
+    closeWeekPopup();
+    render();
+  });
+}
+document.getElementById("rowsBody").addEventListener("click", e => {
+  const dateInput = e.target.closest(".row-date");
+  if (!dateInput) return;
+  e.stopPropagation();
+  const tr = dateInput.closest("tr");
+  const idx = Number(tr.dataset.idx);
+  if (weekPopupEl) { closeWeekPopup(); return; }
+  openWeekPopup(dateInput, idx);
+});
+document.addEventListener("click", e => {
+  if (weekPopupEl && !e.target.closest(".week-popup") && !e.target.closest(".row-date")) closeWeekPopup();
+});
+window.addEventListener("scroll", closeWeekPopup, true);
+window.addEventListener("resize", closeWeekPopup);
+
+// =================== Drawer com busca + status bloqueado ===================
 const backdrop = document.getElementById("drawerBackdrop");
 const drawerList = document.getElementById("drawerList");
 const drawerSearch = document.getElementById("drawerSearch");
