@@ -494,34 +494,39 @@ a:hover { text-decoration: underline; }
 .md-drawer-head h2 { margin: 0; font-family: var(--md-font); font-size: 18px; font-weight: 700; color: var(--md-green-900); flex: 1; }
 .md-drawer-head .close { background: transparent; border: none; cursor: pointer; color: var(--md-gray-600); padding: 6px; border-radius: 50%; }
 .md-drawer-head .close:hover { background: rgba(0,0,0,0.06); color: var(--md-green-900); }
-/* Barra de busca + filtros dentro do drawer */
-.md-drawer-filters {
-  padding: 14px 22px;
-  border-bottom: 1px solid var(--md-gray-300);
-  background: var(--md-green-50, #f6faf9);
-  display: grid; grid-template-columns: 1fr 160px 140px; gap: 10px; align-items: end;
+/* Barra de busca do drawer — só search, igual original */
+.md-drawer-search {
+  padding: 16px 22px 10px;
+  position: relative;
 }
-.md-drawer-filters .ff-field { display: flex; flex-direction: column; gap: 5px; }
-.md-drawer-filters .ff-field label {
-  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--md-gray-600);
+.md-drawer-search .search-ico {
+  position: absolute; left: 36px; top: 50%; transform: translateY(-50%);
+  color: var(--md-gray-600); pointer-events: none;
 }
-.md-drawer-filters input,
-.md-drawer-filters select {
-  width: 100%; height: 38px; padding: 0 12px;
-  border: 1px solid var(--md-green-300); border-radius: 5px;
-  background: #fff; font-family: var(--md-font); font-size: 14px; color: var(--md-green-900);
+.md-drawer-search input {
+  width: 100%; height: 44px; padding: 0 14px 0 44px;
+  border: 1px solid var(--md-green-300); border-radius: 8px;
+  background: #fff; font-family: var(--md-font); font-size: 15px; color: var(--md-green-900);
   box-shadow: var(--md-shadow-input);
 }
-.md-drawer-filters input:focus, .md-drawer-filters select:focus {
+.md-drawer-search input::placeholder { color: var(--md-gray-600); }
+.md-drawer-search input:focus {
   outline: none; border-color: var(--md-green-800);
   box-shadow: 0 0 0 3px rgba(29,98,92,0.15), var(--md-shadow-input);
 }
-.md-drawer-filters select {
-  appearance: none; -webkit-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376716b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-  background-repeat: no-repeat; background-position: right 10px center;
-  padding-right: 32px;
+.md-drawer-meta {
+  padding: 4px 22px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; color: var(--md-green-700);
+  border-bottom: 1px solid var(--md-gray-300);
 }
+.md-drawer-meta strong { color: var(--md-green-900); font-weight: 700; }
+.md-drawer-selectall {
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--md-font); font-size: 12.5px; font-weight: 700;
+  color: var(--md-green-800); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.md-drawer-selectall:hover { text-decoration: underline; }
 
 .md-drawer-body { padding: 14px 22px; overflow-y: auto; flex: 1; }
 .md-drawer-foot { padding: 14px 22px; border-top: 1px solid var(--md-gray-300); background: var(--md-gray-200); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -772,31 +777,20 @@ a:hover { text-decoration: underline; }
 <div class="md-drawer-backdrop" id="drawerBackdrop">
   <div class="md-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
     <div class="md-drawer-head">
-      <h2 id="drawerTitle">Buscar contratos</h2>
+      <div style="flex:1">
+        <h2 id="drawerTitle">Selecionar contratos</h2>
+        <div style="font-size:12px;color:var(--md-gray-600);margin-top:2px;font-weight:500">Escolha um ou mais contratos para adicionar ao agendamento.</div>
+      </div>
       <button class="close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
     </div>
-    <div class="md-drawer-filters">
-      <div class="ff-field">
-        <label for="drawerSearch">Buscar</label>
-        <input id="drawerSearch" type="text" placeholder="Ex.: Q-20303, EXCLN, MPANITRO, Sertãozinho..."/>
-      </div>
-      <div class="ff-field">
-        <label for="drawerFilterStatus">Status</label>
-        <select id="drawerFilterStatus">
-          <option value="">Todos</option>
-          <option value="ativo">Ativo</option>
-          <option value="amendment">Amendment</option>
-          <option value="unsigned">Não assinado</option>
-        </select>
-      </div>
-      <div class="ff-field">
-        <label for="drawerFilterFrete">Frete</label>
-        <select id="drawerFilterFrete">
-          <option value="">Todos</option>
-          <option value="CIF">CIF</option>
-          <option value="FOB">FOB</option>
-        </select>
-      </div>
+    <!-- Apenas barra de busca, igual ao agendar-contrato-normal.html original -->
+    <div class="md-drawer-search">
+      <span class="search-ico" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
+      <input id="drawerSearch" type="text" placeholder="Buscar por contrato, item, produto, planta, frete..." autocomplete="off"/>
+    </div>
+    <div class="md-drawer-meta">
+      <span><strong id="drawerResultCount">0</strong> resultado(s)</span>
+      <button class="md-drawer-selectall" id="drawerSelectAll" type="button">Selecionar todos</button>
     </div>
     <div class="md-drawer-body" id="drawerList"></div>
     <div class="md-drawer-foot">
@@ -951,21 +945,17 @@ document.getElementById("rowsBody").addEventListener("click", e => {
 const backdrop = document.getElementById("drawerBackdrop");
 const drawerList = document.getElementById("drawerList");
 const drawerSearch = document.getElementById("drawerSearch");
-const drawerFilterStatus = document.getElementById("drawerFilterStatus");
-const drawerFilterFrete = document.getElementById("drawerFilterFrete");
 const drawerCountEl = document.getElementById("drawerCount");
 const drawerConfirm = document.getElementById("drawerConfirm");
+const drawerResultCount = document.getElementById("drawerResultCount");
+const drawerSelectAll = document.getElementById("drawerSelectAll");
 
 // índices do catálogo CONTRACTS selecionados no drawer (durante a sessão de seleção)
 const drawerSelection = new Set();
 
 function drawerFilteredIndices() {
   const q = (drawerSearch.value || "").trim().toLowerCase();
-  const fs = drawerFilterStatus.value;
-  const ff = drawerFilterFrete.value;
   return CONTRACTS.map((c, i) => ({ c, i })).filter(({ c }) => {
-    if (fs && c.status !== fs) return false;
-    if (ff && c.frete !== ff) return false;
     if (q) {
       const hay = [c.id, c.item, c.ref, c.prod, c.emb, c.frete, c.planta, c.dest, c.cnpj, c.ie].join(" ").toLowerCase();
       if (!hay.includes(q)) return false;
@@ -1016,16 +1006,28 @@ function renderDrawer() {
       `;
     }).join("");
   }
+  // contador de resultados (igual original)
+  drawerResultCount.textContent = indices.length;
   // footer count
   const n = drawerSelection.size;
   drawerCountEl.textContent = n === 0 ? "Nenhum contrato selecionado" : `${n} contrato${n>1?'s':''} selecionado${n>1?'s':''}`;
   drawerCountEl.classList.toggle("empty", n === 0);
   drawerConfirm.disabled = n === 0;
+  // "Selecionar todos" vira "Limpar seleção" quando todos os selecionáveis já estão marcados
+  const selectable = indices.filter(i => CONTRACTS[i].status === "ativo");
+  const allSelected = selectable.length > 0 && selectable.every(i => drawerSelection.has(i));
+  drawerSelectAll.textContent = allSelected ? "Limpar seleção" : "Selecionar todos";
 }
 
 drawerSearch.addEventListener("input", renderDrawer);
-drawerFilterStatus.addEventListener("change", renderDrawer);
-drawerFilterFrete.addEventListener("change", renderDrawer);
+
+drawerSelectAll.addEventListener("click", () => {
+  const indices = drawerFilteredIndices().filter(i => CONTRACTS[i].status === "ativo");
+  const allSelected = indices.length > 0 && indices.every(i => drawerSelection.has(i));
+  if (allSelected) indices.forEach(i => drawerSelection.delete(i));
+  else indices.forEach(i => drawerSelection.add(i));
+  renderDrawer();
+});
 
 drawerList.addEventListener("click", e => {
   const item = e.target.closest(".drawer-item");
@@ -1040,8 +1042,6 @@ drawerList.addEventListener("click", e => {
 function openDrawer() {
   drawerSelection.clear();
   drawerSearch.value = "";
-  drawerFilterStatus.value = "";
-  drawerFilterFrete.value = "";
   renderDrawer();
   backdrop.classList.add("is-open");
   setTimeout(() => drawerSearch.focus(), 150);
