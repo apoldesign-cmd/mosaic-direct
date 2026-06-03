@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v3 · Tabela compacta — SLDS 100% nativo (sem scroll horizontal)</title>
+
+<!-- SLDS OFICIAL 2.30.4 — mesmo CSS que a org Salesforce usa.
+     Tudo abaixo são classes slds-* nativas: o dev troca <table> por
+     <lightning-datatable> e o markup já está na linguagem dele. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/styles/salesforce-lightning-design-system.min.css" />
+
+<style>
+  body { margin: 0; }
+  .demo-bar {
+    background: #032d60; color: #fff; padding: 10px 20px;
+    font-family: 'Salesforce Sans', Arial, sans-serif; font-size: 13px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .demo-bar .tag { background:#fff; color:#032d60; font-weight:700; padding:2px 8px; border-radius:10px; font-size:11px; }
+  .wrap { padding: 20px; }
+
+  /* === Compound cell (CONCATENAÇÃO) — empilha campos numa coluna ===
+     Reduz 24 colunas → 9. É a técnica que MATA o scroll horizontal.
+     Tudo com tokens/utilities SLDS nativos. */
+  .cmp { display: flex; flex-direction: column; line-height: 1.25; }
+  .cmp .p { font-weight: 700; color: #181818; }
+  .cmp .s { font-size: 11px; color: #706e6b; margin-top: 1px; }
+  .mono { font-feature-settings: "tnum"; font-variant-numeric: tabular-nums; }   /* DIFERENCIAÇÃO de caracteres */
+  /* Garante que a tabela CABE na largura sem scroll horizontal */
+  table.slds-table { table-layout: fixed; width: 100%; }
+  table.slds-table th, table.slds-table td { vertical-align: top; }
+  .num { text-align: right; }
+  .saldo { color: #2e844a; font-weight: 700; }
+  /* larguras compactas por coluna */
+  .col-proto { width: 9%; } .col-contrato { width: 10%; } .col-filial { width: 14%; }
+  .col-coop { width: 14%; } .col-prod { width: 16%; } .col-planta { width: 9%; }
+  .col-nf { width: 12%; } .col-qtd { width: 12%; } .col-acao { width: 4%; }
+</style>
+</head>
+<body class="slds-scope">
+
+<div class="demo-bar">
+  <span class="tag">v3 · SLDS NATIVO</span>
+  <span>Relatório de Protocolos <strong>compactado</strong>: 24 colunas → 9 via <strong>concatenação</strong>. Zebra (<code>slds-table_striped</code>), truncate (<code>slds-truncate</code>), badges nativos, números monospace. <strong>Sem scroll horizontal.</strong> 100% classes SLDS — o dev troca por <code>&lt;lightning-datatable&gt;</code>.</span>
+</div>
+
+<div class="wrap slds-scope">
+  <!-- ====== TABELA: slds-table + _bordered + _striped (zebra) + _cell-buffer ====== -->
+  <table class="slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer slds-table_fixed-layout" aria-label="Protocolos">
+    <thead>
+      <tr class="slds-line-height_reset">
+        <th class="col-proto"  scope="col"><div class="slds-truncate" title="Protocolo / Status">Protocolo / Status</div></th>
+        <th class="col-contrato" scope="col"><div class="slds-truncate" title="Contrato / Cotação">Contrato / Cotação</div></th>
+        <th class="col-filial" scope="col"><div class="slds-truncate" title="Filial / CNPJ / Cidade">Filial / CNPJ / Cidade</div></th>
+        <th class="col-coop"   scope="col"><div class="slds-truncate" title="Cooperado / CPF-CNPJ / IE">Cooperado / Doc / IE</div></th>
+        <th class="col-prod"   scope="col"><div class="slds-truncate" title="Produto / Embalagem / Frete">Produto / Embalagem</div></th>
+        <th class="col-planta" scope="col"><div class="slds-truncate" title="Planta">Planta</div></th>
+        <th class="col-nf"     scope="col"><div class="slds-truncate" title="NF / Data / Preço">NF / Data / Preço</div></th>
+        <th class="col-qtd num" scope="col"><div class="slds-truncate" title="Qtd / Saldo">Qtd / Saldo (t)</div></th>
+        <th class="col-acao"   scope="col"><div class="slds-truncate slds-assistive-text">Ações</div></th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+
+  <p class="slds-text-body_small slds-text-color_weak slds-m-top_small">
+    Exibindo <span id="count">0</span> protocolos · sem rolagem horizontal em telas ≥ 1280px.
+  </p>
+</div>
+
+<script>
+const CDN = "https://cdn.jsdelivr.net/npm/@salesforce-ux/design-system@2.30.4/assets/icons/utility-sprite/svg/symbols.svg";
+
+const DATA = [
+  { id:"M9W38746", status:"Novo", statusTheme:"", contrato:"C-001-2024", cotacao:"Q-12345", filial:"Filial São Paulo", cnpjF:"12.345.678/0001-90", cidade:"São Paulo/SP", coop:"CARLOS ALVES", doc:"123.456.789-00", ie:"287.456.987.114", prod:"EXCLN 24 05 24 UR", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Limeira", nf:"—", dataNf:"—", preco:"1.450,00", qtd:300, saldo:1200 },
+  { id:"M9W47291", status:"Em agendamento", statusTheme:"warning", contrato:"C-002-2024", cotacao:"Q-23456", filial:"Filial Curitiba", cnpjF:"23.456.789/0001-12", cidade:"Curitiba/PR", coop:"AGUINALDO GOMES", doc:"234.567.890-11", ie:"415.728.633.020", prod:"MPANITRO 20 05 20 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Paranaguá", nf:"—", dataNf:"—", preco:"1.380,00", qtd:500, saldo:300 },
+  { id:"M9W51038", status:"Concluído", statusTheme:"success", contrato:"C-003-2024", cotacao:"Q-34567", filial:"Filial Porto Alegre", cnpjF:"34.567.890/0001-34", cidade:"Porto Alegre/RS", coop:"TEREZA AKEMI", doc:"345.678.901-22", ie:"192.554.418.336", prod:"FFALM 04 30 10", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Três Lagoas", nf:"NF-2024-089", dataNf:"20/03/2025", preco:"1.620,00", qtd:200, saldo:0 },
+  { id:"M9W63847", status:"Cancelado", statusTheme:"error", contrato:"C-004-2024", cotacao:"Q-45678", filial:"Filial São Paulo", cnpjF:"12.345.678/0001-90", cidade:"São Paulo/SP", coop:"BETO DOS SANTOS", doc:"456.789.012-33", ie:"556.108.332.774", prod:"STRAF 04 30 10 STR + 50 BMI2", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Paranaguá", nf:"—", dataNf:"—", preco:"890,00", qtd:0, saldo:800 },
+  { id:"M9W71205", status:"Liberado para agendar", statusTheme:"success", contrato:"C-005-2024", cotacao:"Q-56789", filial:"Filial Londrina", cnpjF:"45.678.901/0001-56", cidade:"Londrina/PR", coop:"RENATO CESAR", doc:"567.890.123-44", ie:"638.092.514.275", prod:"EXCLN 18 09 27 UR", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Rondonópolis", nf:"—", dataNf:"—", preco:"2.380,00", qtd:400, saldo:400 },
+];
+
+const fmt = n => n.toLocaleString("pt-BR");
+
+function badge(s, theme) {
+  const t = theme ? `slds-theme_${theme}` : "";
+  return `<span class="slds-badge ${t}" style="font-size:10px">${s}</span>`;
+}
+
+function row(p) {
+  return `
+  <tr class="slds-hint-parent">
+    <th scope="row" class="col-proto">
+      <div class="cmp">
+        <a href="javascript:void(0)" class="p mono slds-truncate" title="${p.id}">${p.id}</a>
+        <span class="s">${badge(p.status, p.statusTheme)}</span>
+      </div>
+    </th>
+    <td class="col-contrato"><div class="cmp">
+      <span class="p slds-truncate" title="${p.contrato}">${p.contrato}</span>
+      <span class="s mono slds-truncate" title="${p.cotacao}">${p.cotacao}</span>
+    </div></td>
+    <td class="col-filial"><div class="cmp">
+      <span class="p slds-truncate" title="${p.filial}">${p.filial}</span>
+      <span class="s mono slds-truncate" title="${p.cnpjF}">${p.cnpjF}</span>
+      <span class="s slds-truncate" title="${p.cidade}">${p.cidade}</span>
+    </div></td>
+    <td class="col-coop"><div class="cmp">
+      <span class="p slds-truncate" title="${p.coop}">${p.coop}</span>
+      <span class="s mono slds-truncate" title="${p.doc}">${p.doc}</span>
+      <span class="s mono slds-truncate" title="IE ${p.ie}">IE ${p.ie}</span>
+    </div></td>
+    <td class="col-prod"><div class="cmp">
+      <span class="p slds-truncate" title="${p.prod}">${p.prod}</span>
+      <span class="s slds-truncate" title="${p.emb}">${p.emb} · <strong style="color:${p.frete==='CIF'?'#9a5b1e':'#2e844a'}">${p.frete}</strong></span>
+    </div></td>
+    <td class="col-planta"><div class="slds-truncate" title="${p.planta}">${p.planta}</div></td>
+    <td class="col-nf"><div class="cmp">
+      <span class="p slds-truncate" title="${p.nf}">${p.nf}</span>
+      <span class="s mono slds-truncate" title="${p.dataNf}">${p.dataNf} · R$ ${p.preco}</span>
+    </div></td>
+    <td class="col-qtd num"><div class="cmp" style="align-items:flex-end">
+      <span class="p mono" title="Qtd ${fmt(p.qtd)} t">${fmt(p.qtd)}</span>
+      <span class="s saldo mono" title="Saldo ${fmt(p.saldo)} t">saldo ${fmt(p.saldo)}</span>
+    </div></td>
+    <td class="col-acao">
+      <button class="slds-button slds-button_icon slds-button_icon-border-filled" title="Ações">
+        <svg class="slds-button__icon" aria-hidden="true"><use xlink:href="${CDN}#down"></use></svg>
+        <span class="slds-assistive-text">Ações</span>
+      </button>
+    </td>
+  </tr>`;
+}
+
+document.getElementById("tbody").innerHTML = DATA.map(row).join("");
+document.getElementById("count").textContent = DATA.length;
+</script>
+</body>
+</html>
