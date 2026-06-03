@@ -575,6 +575,65 @@ a:hover { text-decoration: underline; }
 .cookie-bar .cookie-text a { color: var(--md-green-800); font-weight: 600; }
 .cookie-bar .cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
+/* ============================================================
+   Roteiro drawer (lateral) — igual padrão original
+   ============================================================ */
+.roteiro-backdrop {
+  position: fixed; inset: 0; background: rgba(24,24,24,0.50);
+  z-index: 1150; display: none; justify-content: flex-end;
+  opacity: 0; transition: opacity .18s ease;
+}
+.roteiro-backdrop.is-open { display: flex; opacity: 1; }
+.roteiro-drawer {
+  background: #fff; width: 460px; max-width: 92vw; height: 100vh;
+  display: flex; flex-direction: column;
+  box-shadow: -20px 0 60px rgba(9,53,50,0.20);
+  transform: translateX(20px); transition: transform .25s ease;
+}
+.roteiro-backdrop.is-open .roteiro-drawer { transform: translateX(0); }
+.roteiro-drawer-head {
+  padding: 18px 22px; border-bottom: 1px solid var(--md-gray-300);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.roteiro-drawer-head .ico {
+  width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
+  background: rgba(29,98,92,0.10); color: var(--md-green-800);
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.roteiro-drawer-head .titles { flex: 1; }
+.roteiro-drawer-head h2 { margin: 0; font-family: var(--md-font); font-size: 18px; font-weight: 700; color: var(--md-green-900); }
+.roteiro-drawer-head .sub { font-size: 12px; color: var(--md-gray-600); margin-top: 2px; }
+.roteiro-drawer-head .close { background: transparent; border: none; cursor: pointer; color: var(--md-gray-600); padding: 6px; border-radius: 50%; }
+.roteiro-drawer-head .close:hover { background: rgba(0,0,0,0.06); color: var(--md-green-900); }
+.roteiro-drawer-body { padding: 20px 22px; flex: 1; overflow-y: auto; }
+.roteiro-drawer-body .ctx {
+  background: var(--md-gray-200); border-radius: 8px; padding: 12px 14px;
+  font-size: 13px; color: var(--md-green-700); margin-bottom: 16px;
+}
+.roteiro-drawer-body .ctx b { color: var(--md-green-900); font-weight: 700; }
+.roteiro-drawer-body label {
+  display: block; font-family: var(--md-font);
+  font-size: 13px; font-weight: 600; color: var(--md-green-900); margin-bottom: 8px;
+}
+.roteiro-drawer-body textarea {
+  width: 100%; min-height: 200px; resize: vertical;
+  padding: 12px 14px; border: 1px solid var(--md-green-300); border-radius: 8px;
+  font-family: var(--md-font); font-size: 14px; line-height: 1.5; color: var(--md-green-900);
+  box-shadow: var(--md-shadow-input);
+}
+.roteiro-drawer-body textarea:focus { outline: none; border-color: var(--md-green-800); box-shadow: 0 0 0 3px rgba(29,98,92,0.15), var(--md-shadow-input); }
+.roteiro-drawer-body .hint { font-size: 12px; color: var(--md-gray-600); margin-top: 8px; }
+.roteiro-drawer-foot {
+  padding: 14px 22px; border-top: 1px solid var(--md-gray-300); background: var(--md-gray-200);
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.roteiro-drawer-foot .btn-clear {
+  background: transparent; border: none; cursor: pointer;
+  font-family: var(--md-font); font-size: 13px; font-weight: 600; color: var(--md-red);
+}
+.roteiro-drawer-foot .btn-clear:hover { text-decoration: underline; }
+.roteiro-drawer-foot .right { display: flex; gap: 8px; }
+
 /* Drawer simplificado pra ilustrar fluxo */
 .md-drawer-backdrop {
   position: fixed; inset: 0; background: rgba(24,24,24,0.50);
@@ -888,6 +947,33 @@ a:hover { text-decoration: underline; }
   </div>
 </div>
 
+<!-- Roteiro drawer (lateral) -->
+<div class="roteiro-backdrop" id="roteiroBackdrop">
+  <aside class="roteiro-drawer" role="dialog" aria-modal="true" aria-labelledby="roteiroTitle">
+    <div class="roteiro-drawer-head">
+      <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+      <div class="titles">
+        <h2 id="roteiroTitle">Roteiro de entrega</h2>
+        <div class="sub" id="roteiroSub">—</div>
+      </div>
+      <button class="close" data-roteiro-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="roteiro-drawer-body">
+      <div class="ctx" id="roteiroCtx">—</div>
+      <label for="roteiroText">Instruções de entrega <span style="font-weight:500;color:var(--md-gray-600)">(opcional)</span></label>
+      <textarea id="roteiroText" placeholder="Endereço completo, pontos de referência, instruções para o motorista, horários de recebimento..."></textarea>
+      <div class="hint">Esse roteiro acompanha a Sales Order gerada para o agendamento.</div>
+    </div>
+    <div class="roteiro-drawer-foot">
+      <button class="btn-clear" id="roteiroClear" type="button">Limpar roteiro</button>
+      <div class="right">
+        <button class="md-btn md-btn-link" data-roteiro-close type="button">Cancelar</button>
+        <button class="md-btn md-btn-primary" id="roteiroSave" type="button">Salvar roteiro</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
 <!-- Modal de confirmação Agendar -->
 <div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true">
   <div class="modal-box">
@@ -970,8 +1056,8 @@ function rowStatus(r) {
 function renderRow(r, idx) {
   const status = rowStatus(r);
   const roteiroHtml = r.roteiro
-    ? `<button class="row-roteiro-btn has-value" type="button" title="${r.roteiro}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${r.roteiro.length > 18 ? r.roteiro.slice(0,18)+"…" : r.roteiro}</button>`
-    : `<button class="row-roteiro-btn" type="button"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar</button>`;
+    ? `<button class="row-roteiro-btn has-value" type="button" data-roteiro-idx="${idx}" title="${r.roteiro}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${r.roteiro.length > 18 ? r.roteiro.slice(0,18)+"…" : r.roteiro}</button>`
+    : `<button class="row-roteiro-btn" type="button" data-roteiro-idx="${idx}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar</button>`;
   return `
     <tr data-idx="${idx}" class="row-${status}">
       <td><div class="cell-stack"><span class="primary">${r.id}</span><span class="secondary">Item <strong>${r.item}</strong></span></div></td>
@@ -1031,6 +1117,43 @@ document.getElementById("rowsBody").addEventListener("click", e => {
     ROWS.splice(idx + 1, 0, dup);
   }
   render();
+});
+
+// =================== Roteiro drawer ===================
+const roteiroBackdrop = document.getElementById("roteiroBackdrop");
+const roteiroText = document.getElementById("roteiroText");
+let roteiroEditIdx = null;
+
+function openRoteiro(idx) {
+  roteiroEditIdx = idx;
+  const r = ROWS[idx];
+  document.getElementById("roteiroSub").textContent = `${r.id} · Item ${r.item}`;
+  document.getElementById("roteiroCtx").innerHTML =
+    `<b>${r.prod}</b> · ${r.frete} · ${r.planta} → ${r.dest}`;
+  roteiroText.value = r.roteiro || "";   // pré-preenche com valor existente
+  roteiroBackdrop.classList.add("is-open");
+  setTimeout(() => roteiroText.focus(), 180);
+}
+function closeRoteiro() { roteiroBackdrop.classList.remove("is-open"); roteiroEditIdx = null; }
+
+document.getElementById("rowsBody").addEventListener("click", e => {
+  const btn = e.target.closest("[data-roteiro-idx]");
+  if (!btn) return;
+  e.stopPropagation();
+  openRoteiro(Number(btn.dataset.roteiroIdx));
+});
+document.getElementById("roteiroSave").addEventListener("click", () => {
+  if (roteiroEditIdx != null) { ROWS[roteiroEditIdx].roteiro = roteiroText.value.trim(); }
+  closeRoteiro();
+  render();
+});
+document.getElementById("roteiroClear").addEventListener("click", () => {
+  if (roteiroEditIdx != null) { ROWS[roteiroEditIdx].roteiro = ""; }
+  closeRoteiro();
+  render();
+});
+roteiroBackdrop.addEventListener("click", e => {
+  if (e.target === roteiroBackdrop || e.target.closest("[data-roteiro-close]")) closeRoteiro();
 });
 
 // =================== Week picker (campo Semana) ===================
@@ -1257,6 +1380,7 @@ document.getElementById("confirmYes").addEventListener("click", () => {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     closeDrawer();
+    closeRoteiro();
     confirmModal.classList.remove("is-open");
     successModal.classList.remove("is-open");
   }
