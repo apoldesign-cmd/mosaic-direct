@@ -33,9 +33,11 @@
   .num { text-align: right; }
   .saldo { color: #2e844a; font-weight: 700; }
   /* larguras compactas por coluna */
-  .col-proto { width: 9%; } .col-contrato { width: 10%; } .col-filial { width: 14%; }
-  .col-coop { width: 14%; } .col-prod { width: 16%; } .col-planta { width: 9%; }
+  .col-proto { width: 12%; } .col-contrato { width: 9%; } .col-filial { width: 14%; }
+  .col-coop { width: 14%; } .col-prod { width: 15%; } .col-planta { width: 8%; }
   .col-nf { width: 12%; } .col-qtd { width: 12%; } .col-acao { width: 4%; }
+  /* badge de status pode quebrar linha dentro da célula (não vaza pra coluna vizinha) */
+  .cmp .slds-badge { white-space: normal; max-width: 100%; line-height: 1.2; }
 </style>
 </head>
 <body class="slds-scope">
