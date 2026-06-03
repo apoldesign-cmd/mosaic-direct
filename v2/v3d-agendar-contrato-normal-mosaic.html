@@ -1263,10 +1263,14 @@ document.addEventListener("keydown", e => {
 });
 
 // =================== Cookie consent banner ===================
-const cookieBar = document.getElementById("cookieBar");
-setTimeout(() => cookieBar.classList.add("is-visible"), 700);
-cookieBar.addEventListener("click", e => {
-  if (e.target.closest("[data-cookie]")) cookieBar.classList.remove("is-visible");
+// (o markup vem depois deste script no DOM — espera o parse terminar)
+window.addEventListener("DOMContentLoaded", () => {
+  const cookieBar = document.getElementById("cookieBar");
+  if (!cookieBar) return;
+  setTimeout(() => cookieBar.classList.add("is-visible"), 700);
+  cookieBar.addEventListener("click", e => {
+    if (e.target.closest("[data-cookie]")) cookieBar.classList.remove("is-visible");
+  });
 });
 </script>
 
