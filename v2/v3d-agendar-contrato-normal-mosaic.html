@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>v3d · Agendar Contrato Normal — Mosaic real + funcional 100%</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Barlow completo (italic + 900) pra acompanhar o "Mosaic" italic black da logo -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,800;1,900&display=swap">
+
+<style>
+/* ============================================================
+   TOKENS REAIS — extraídos do sandbox QA2 via inspeção DOM real
+   (atravessando shadowRoots dos LWC do portal de produção)
+   ============================================================ */
+:root {
+  /* Cores capturadas in vivo via getComputedStyle */
+  --md-green-900: #093532;  /* texto títulos, banner, header card, link forte */
+  --md-green-800: #1D625C;  /* botão primário + top nav links */
+  --md-green-700: #436462;  /* texto body, breadcrumb */
+  --md-green-300: #BFD0CE;  /* border inputs, divisores sutis */
+  --md-green-100: #E9EFEE;  /* header tabela */
+  --md-gray-900:  #444444;  /* texto header tabela */
+  --md-gray-700:  #747474;  /* secondary text */
+  --md-gray-600:  #76716B;  /* ícones, placeholder */
+  --md-gray-300:  #D6D6D6;  /* border row */
+  --md-gray-200:  #F0F0F0;  /* bg card header / bg banner info */
+  --md-gray-100:  #F2F2F2;  /* bg footer */
+  --md-red:       #C23934;  /* * asterisco required (SLDS red) */
+  --md-orange:    #D56B1A;  /* CIF */
+  --md-amber:     #F0C020;  /* warning */
+  /* Cores institucionais Mosaic (gradiente bandeira) */
+  --mc-flag-1:    #1D625C;
+  --mc-flag-2:    #6BAF54;
+  --mc-flag-3:    #F0C020;
+  --mc-flag-4:    #D56B1A;
+
+  --md-shadow-card:  0 0 15px rgba(0,0,0,0.10);
+  --md-shadow-input: 0 2px 5px rgba(110,132,130,0.15);
+
+  --md-radius-sm: 5px;
+  --md-radius-md: 8px;
+
+  --md-font: 'Barlow', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: var(--md-font);
+  font-size: 16px;
+  color: var(--md-green-700);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+::selection { background: rgba(29,98,92,0.18); color: var(--md-green-900); }
+a { color: var(--md-green-800); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============================================================
+   HEADER (page-header) — 2 linhas idêntico ao real
+   ============================================================ */
+.page-header { background: #fff; }
+.page-header-top {
+  display: grid;
+  grid-template-columns: minmax(180px, 200px) minmax(380px, 1fr) auto;
+  gap: 36px;
+  align-items: center;
+  padding: 20px 40px 12px;
+  max-width: 1480px; margin: 0 auto;
+}
+
+/* Logo SVG igual ao Mosaic real */
+.brand-logo {
+  display: inline-block;
+  width: 170px; height: 64px;
+}
+
+.md-search { position: relative; max-width: 540px; width: 100%; justify-self: center; }
+.md-search input {
+  width: 100%; height: 50px;
+  padding: 0 50px 0 22px;
+  border: 1px solid var(--md-green-300);
+  border-radius: var(--md-radius-md);
+  font-family: inherit; font-size: 16px; color: var(--md-green-900);
+  background: #fff;
+  box-shadow: var(--md-shadow-input);
+}
+.md-search input::placeholder { color: var(--md-gray-600); }
+.md-search input:focus { outline: none; border-color: var(--md-green-800); box-shadow: 0 0 0 3px rgba(29,98,92,0.10); }
+.md-search .icon {
+  position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+  color: var(--md-gray-600); pointer-events: none;
+}
+
+.md-user-cluster { display: inline-flex; align-items: center; gap: 14px; }
+.md-lang-switch {
+  border: 1px solid var(--md-green-300); background: #fff;
+  padding: 9px 14px; border-radius: var(--md-radius-md);
+  font-family: inherit; font-weight: 500; font-size: 14px;
+  color: var(--md-green-900); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.md-user-info { display: flex; flex-direction: column; line-height: 1.15; max-width: 180px; }
+.md-user-info .name { font-weight: 700; font-size: 15px; color: var(--md-green-900); font-family: var(--md-font); }
+.md-user-info .org {
+  font-size: 12px; color: var(--md-gray-700); margin-top: 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.md-icon-circle {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--md-green-800); color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+}
+.md-icon-circle.is-outline { background: transparent; color: var(--md-green-900); border: 1px solid var(--md-green-300); }
+
+/* Nav inferior (HOME / CONTRACTS / etc) — TUDO verde Mosaic, Barlow Regular 14px */
+.md-nav {
+  border-top: 1px solid #eaeded;
+  border-bottom: 1px solid #eaeded;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-shadow: 0 1px 3px rgba(9,53,50,0.04);
+}
+.md-nav-inner {
+  max-width: 1480px; margin: 0 auto;
+  padding: 0 40px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 56px;
+}
+.md-nav a {
+  padding: 18px 4px;
+  font-family: var(--md-font);
+  font-weight: 400;
+  font-size: 14px;
+  color: var(--md-green-800);
+  text-transform: uppercase;
+  letter-spacing: normal;
+  text-decoration: none;
+  position: relative;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.md-nav a:hover { color: var(--md-green-900); text-decoration: none; }
+.md-nav a.is-active::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0;
+  height: 3px; background: var(--md-green-800);
+}
+.md-nav .chev { font-size: 9px; opacity: 0.7; }
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+.md-shell { max-width: 1480px; margin: 0 auto; padding: 20px 40px 100px; }
+
+.md-breadcrumb { font-size: 14px; color: var(--md-green-700); margin-bottom: 8px; font-family: var(--md-font); }
+.md-breadcrumb a { color: var(--md-green-700); }
+.md-breadcrumb a:hover { color: var(--md-green-800); }
+.md-breadcrumb .sep { margin: 0 6px; color: var(--md-green-700); }
+
+/* P.header-text — exatamente como produção: Barlow Bold 26px, line-height 1 */
+.header-text {
+  font-family: var(--md-font);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 26px;
+  color: var(--md-green-900);
+  margin: 16px 0 32px;
+  padding: 0;
+}
+
+/* Banner info — bg cinza claro, ícone preto com "i", texto verde escuro */
+.md-info-banner {
+  background: var(--md-gray-200);
+  border-radius: var(--md-radius-md);
+  padding: 18px 24px;
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 24px;
+  font-family: var(--md-font); font-size: 18px; color: var(--md-green-900);
+}
+.md-info-banner .ico {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: #000; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  font-size: 13px; font-weight: 700; font-style: italic;
+  font-family: serif;
+}
+
+/* ============================================================
+   CARD — custom-card (igual classe real do portal)
+   bg #FFF, radius 8, shadow cinza, header #F0F0F0, header text #093532
+   font Barlow-Medium 18px (fw 500)
+   ============================================================ */
+.custom-card {
+  background: #fff;
+  border-radius: var(--md-radius-md);
+  box-shadow: var(--md-shadow-card);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--md-gray-200);
+  color: var(--md-green-900);
+  font-family: var(--md-font);
+  font-weight: 500;
+  font-size: 18px;
+  padding: 13px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-radius: 8px 8px 0 0;
+}
+.card-header .filter-icon { color: var(--md-gray-600); }
+.card-body {
+  padding: 24px;
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto auto; gap: 18px;
+  align-items: end;
+}
+.md-field { display: flex; flex-direction: column; gap: 8px; }
+.md-field label {
+  font-family: var(--md-font);
+  font-size: 14px; font-weight: 400;
+  color: var(--md-green-900);
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.md-field label .req { color: var(--md-red); font-weight: 400; font-size: 14px; }
+.md-input, .md-select {
+  width: 100%; height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--md-green-300);
+  border-radius: var(--md-radius-sm);
+  background: #fff;
+  font-family: var(--md-font); font-size: 16px; font-weight: 500; color: var(--md-green-900);
+  box-shadow: var(--md-shadow-input);
+}
+.md-input::placeholder { color: var(--md-gray-600); }
+.md-input:focus, .md-select:focus { outline: none; border-color: var(--md-green-800); box-shadow: 0 0 0 3px rgba(29,98,92,0.15), var(--md-shadow-input); }
+.md-input:hover:not(:focus) { border-color: var(--md-green-700); }
+.md-input.has-icon { padding-right: 42px; }
+.md-field-wrap { position: relative; }
+.md-field-wrap .field-icon {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--md-gray-600); pointer-events: none;
+}
+.md-select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376716b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px;
+}
+
+/* Botões — SLDS brand exato */
+.md-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--md-font); font-size: 14px; font-weight: 600;
+  height: 45px; padding: 0 24px;
+  border-radius: var(--md-radius-md);
+  cursor: pointer; letter-spacing: 0.4px;
+  transition: filter .15s, transform .05s;
+  border: 1px solid transparent;
+}
+.md-btn:active { transform: translateY(1px); }
+.md-btn-primary {
+  background: var(--md-green-800); color: #fff; border-color: var(--md-green-800);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04), 0 0 0 transparent;
+  transition: box-shadow .15s ease, filter .15s ease, transform .05s;
+}
+.md-btn-primary:hover { filter: brightness(1.08); box-shadow: 0 2px 8px rgba(29,98,92,0.25); }
+.md-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(29,98,92,0.30); }
+.md-btn-link {
+  background: transparent; color: var(--md-green-800); border: none;
+  height: 45px; padding: 0 8px;
+}
+.md-btn-link:hover { text-decoration: underline; }
+
+/* Action row acima da tabela */
+.md-action-row {
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 20px;
+}
+.md-action-row .count {
+  font-family: var(--md-font);
+  font-size: 14px; color: var(--md-green-700); flex: 1;
+}
+.md-action-row .count strong { color: var(--md-green-900); font-weight: 700; }
+
+/* ============================================================
+   TABELA — slds-table slds-table_cell-buffer slds-table_bordered
+   Header #E9EFEE / #444 / Barlow 700 16px / NÃO uppercase
+   Padding 14.5px 16px / 14.5px 8px / row height 51px
+   Shadow 0 0 15px rgba(9,53,50,0.10) / radius 8
+   ============================================================ */
+.tbl-container {
+  background: #fff;
+  border-radius: var(--md-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--md-gray-300);
+  box-shadow: 0 0 15px rgba(9,53,50,0.10);
+}
+.slds-table {
+  width: 100%;
+  border-collapse: separate; border-spacing: 0;
+  font-family: var(--md-font);
+  font-size: 16px;
+  color: var(--md-green-700);
+}
+.slds-table thead th {
+  background: var(--md-green-100);
+  color: var(--md-gray-900);
+  font-family: var(--md-font);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: left;
+  padding: 14.5px 8px;
+  height: 51px;
+  border: none;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+.slds-table thead th:first-child { padding-left: 16px; }
+.slds-table thead th:last-child  { padding-right: 16px; text-align: right; }
+.slds-table thead th .sort { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.slds-table thead th .sort svg { color: var(--md-green-800); }
+
+.slds-table tbody td {
+  padding: 14.5px 8px;
+  height: 51px;
+  vertical-align: middle;
+  border-top: 1px solid var(--md-gray-300);
+  font-family: var(--md-font);
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--md-green-900);
+  transition: background-color .12s ease;
+}
+.slds-table tbody td:first-child { padding-left: 16px; }
+.slds-table tbody td:last-child  { padding-right: 16px; text-align: right; }
+.slds-table tbody tr { transition: background-color .12s ease; }
+.slds-table tbody tr:hover td { background: rgba(233,239,238,0.55); }
+.slds-table tbody tr:focus-within td { background: rgba(29,98,92,0.06); }
+
+/* Cell helpers */
+.cell-stack { display: flex; flex-direction: column; line-height: 1.3; }
+.cell-stack .primary { font-weight: 700; color: var(--md-green-900); font-size: 15px; }
+.cell-stack .secondary { font-size: 12.5px; color: var(--md-green-700); font-weight: 500; margin-top: 2px; }
+.cell-num-big {
+  text-align: right; font-variant-numeric: tabular-nums;
+  font-weight: 700; font-size: 17px; color: var(--md-green-800);
+}
+.cell-num-big small { font-size: 12px; color: var(--md-gray-600); font-weight: 500; margin-left: 2px; }
+
+/* Pill Frete — formato badge fechado, igual padrão Mosaic */
+.pill-frete {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-family: var(--md-font);
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 999px;
+  letter-spacing: 0.3px; line-height: 1;
+}
+.pill-frete::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor;
+}
+.pill-frete.cif { color: var(--md-orange); background: rgba(213,107,26,0.10); }
+.pill-frete.fob { color: var(--md-green-800); background: rgba(29,98,92,0.10); }
+
+/* Inputs dentro da linha */
+.row-input {
+  width: 100%; max-width: 110px;
+  height: 36px; padding: 0 24px 0 10px;
+  border: 1px solid var(--md-green-300);
+  border-radius: var(--md-radius-sm);
+  background: #fff;
+  font-family: var(--md-font); font-size: 14px; font-weight: 600;
+  color: var(--md-green-900); text-align: right;
+  box-shadow: var(--md-shadow-input);
+}
+.row-input:focus { outline: none; border-color: var(--md-green-800); box-shadow: 0 0 0 2px rgba(29,98,92,0.15); }
+.row-input-wrap { position: relative; display: inline-flex; }
+.row-input-wrap .suffix {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 12px; color: var(--md-gray-600); pointer-events: none; font-weight: 600;
+}
+.row-date {
+  height: 36px; padding: 0 32px 0 10px;
+  border: 1px solid var(--md-green-300); border-radius: var(--md-radius-sm);
+  background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2376716b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>") no-repeat right 10px center;
+  font-family: var(--md-font); font-size: 13px; font-weight: 600; color: var(--md-green-900);
+  box-shadow: var(--md-shadow-input);
+  min-width: 168px;
+}
+.row-roteiro-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 36px; padding: 0 12px;
+  border: 1px dashed var(--md-green-300); border-radius: var(--md-radius-sm);
+  background: #fff; cursor: pointer; font-family: var(--md-font);
+  font-size: 13px; font-weight: 600; color: var(--md-green-800);
+  box-shadow: var(--md-shadow-input);
+}
+.row-roteiro-btn.has-value { border-style: solid; border-color: var(--md-green-800); background: rgba(29,98,92,0.04); }
+.row-roteiro-btn:hover { background: rgba(29,98,92,0.06); }
+.row-actions { display: inline-flex; gap: 6px; }
+.row-icon-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid var(--md-green-300); background: #fff; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--md-gray-600); transition: all .12s;
+}
+.row-icon-btn:hover { color: var(--md-green-800); border-color: var(--md-green-800); background: rgba(29,98,92,0.04); }
+.row-icon-btn.is-danger:hover { color: var(--md-red); border-color: var(--md-red); }
+
+/* Status border-left */
+.slds-table tbody tr { position: relative; }
+.slds-table tbody tr td:first-child { border-left: 3px solid transparent; padding-left: 13px; }
+.slds-table tbody tr.row-complete   td:first-child { border-left-color: #14563B; }
+.slds-table tbody tr.row-progress   td:first-child { border-left-color: var(--md-amber); }
+.slds-table tbody tr.row-incomplete td:first-child { border-left-color: var(--md-gray-300); }
+
+/* ============================================================
+   FOOTER MOSAIC (page-footer real — bg #F2F2F2)
+   ============================================================ */
+.page-footer {
+  background: var(--md-gray-100);
+  padding: 32px 40px 24px;
+  margin-top: 60px;
+  font-family: var(--md-font);
+  color: var(--md-green-700);
+}
+.page-footer-inner {
+  max-width: 1480px; margin: 0 auto;
+  display: grid; grid-template-columns: auto 1fr auto; gap: 40px;
+  align-items: center;
+}
+.page-footer .brand-logo { width: 150px; height: 56px; }
+.page-footer-links {
+  display: flex; gap: 36px; flex-wrap: wrap;
+  font-size: 14px; font-weight: 500;
+}
+.page-footer-links a { color: var(--md-green-700); }
+.page-footer-links a:hover { color: var(--md-green-800); }
+.page-footer-copy { font-size: 13px; color: var(--md-green-700); text-align: right; }
+
+/* Footer fixo de ação (acima do page-footer) */
+.md-fixed-foot {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  background: #fff;
+  border-top: 1px solid var(--md-gray-300);
+  box-shadow: 0 -4px 20px rgba(9,53,50,0.08);
+  padding: 14px 40px;
+  z-index: 50;
+}
+.md-fixed-foot-inner {
+  max-width: 1480px; margin: 0 auto;
+  display: flex; align-items: center; gap: 24px;
+}
+.md-fixed-foot .summary { flex: 1; display: flex; align-items: center; gap: 32px; }
+.md-fixed-foot .stat .lbl { font-size: 11px; color: var(--md-gray-600); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+.md-fixed-foot .stat .val { font-size: 20px; font-weight: 700; color: var(--md-green-900); font-family: var(--md-font); }
+.md-fixed-foot .stat .val small { font-size: 12px; color: var(--md-gray-600); font-weight: 500; margin-left: 2px; }
+
+/* Demo banner (não vai pra produção) */
+.demo-banner {
+  background: var(--md-green-900); color: #fff; font-size: 13px;
+  padding: 10px 40px; display: flex; gap: 12px; align-items: center;
+  font-family: var(--md-font);
+}
+.demo-banner .tag {
+  background: #fff; color: var(--md-green-900); font-weight: 700;
+  padding: 2px 8px; border-radius: 10px; font-size: 11px;
+}
+.demo-banner code { background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+
+/* Drawer simplificado pra ilustrar fluxo */
+.md-drawer-backdrop {
+  position: fixed; inset: 0; background: rgba(24,24,24,0.50);
+  z-index: 1000; display: none; justify-content: flex-end;
+  opacity: 0; transition: opacity .18s ease;
+}
+.md-drawer-backdrop.is-open { display: flex; opacity: 1; }
+.md-drawer {
+  background: #fff; width: 720px; max-width: 96vw; height: 100vh;
+  display: flex; flex-direction: column;
+  box-shadow: -20px 0 60px rgba(9,53,50,0.20);
+  transform: translateX(20px); transition: transform .25s ease;
+}
+.md-drawer-backdrop.is-open .md-drawer { transform: translateX(0); }
+.md-drawer-head { padding: 18px 22px; border-bottom: 1px solid var(--md-gray-300); display: flex; gap: 12px; align-items: center; }
+.md-drawer-head h2 { margin: 0; font-family: var(--md-font); font-size: 18px; font-weight: 700; color: var(--md-green-900); flex: 1; }
+.md-drawer-head .close { background: transparent; border: none; cursor: pointer; color: var(--md-gray-600); padding: 6px; border-radius: 50%; }
+.md-drawer-head .close:hover { background: rgba(0,0,0,0.06); color: var(--md-green-900); }
+/* Barra de busca + filtros dentro do drawer */
+.md-drawer-filters {
+  padding: 14px 22px;
+  border-bottom: 1px solid var(--md-gray-300);
+  background: var(--md-green-50, #f6faf9);
+  display: grid; grid-template-columns: 1fr 160px 140px; gap: 10px; align-items: end;
+}
+.md-drawer-filters .ff-field { display: flex; flex-direction: column; gap: 5px; }
+.md-drawer-filters .ff-field label {
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--md-gray-600);
+}
+.md-drawer-filters input,
+.md-drawer-filters select {
+  width: 100%; height: 38px; padding: 0 12px;
+  border: 1px solid var(--md-green-300); border-radius: 5px;
+  background: #fff; font-family: var(--md-font); font-size: 14px; color: var(--md-green-900);
+  box-shadow: var(--md-shadow-input);
+}
+.md-drawer-filters input:focus, .md-drawer-filters select:focus {
+  outline: none; border-color: var(--md-green-800);
+  box-shadow: 0 0 0 3px rgba(29,98,92,0.15), var(--md-shadow-input);
+}
+.md-drawer-filters select {
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2376716b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.md-drawer-body { padding: 14px 22px; overflow-y: auto; flex: 1; }
+.md-drawer-foot { padding: 14px 22px; border-top: 1px solid var(--md-gray-300); background: var(--md-gray-200); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.md-drawer-foot .count { font-size: 13px; font-weight: 600; color: var(--md-green-900); }
+.md-drawer-foot .count.empty { color: var(--md-gray-600); font-weight: 500; }
+
+.drawer-item {
+  display: flex; gap: 14px; padding: 14px 16px;
+  border: 1px solid var(--md-gray-300);
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--md-font);
+  margin-bottom: 10px;
+  background: #fff;
+  transition: border-color .12s, background .12s;
+}
+.drawer-item:hover { border-color: var(--md-green-700); background: rgba(233,239,238,0.30); }
+.drawer-item.is-checked { border-color: var(--md-green-800); background: rgba(29,98,92,0.04); box-shadow: 0 0 0 1px var(--md-green-800) inset; }
+.drawer-item.is-blocked { cursor: not-allowed; opacity: 0.72; background: var(--md-gray-200); border-style: dashed; }
+.drawer-item.is-blocked:hover { border-color: var(--md-gray-300); background: var(--md-gray-200); }
+.drawer-check { width: 20px; height: 20px; border: 2px solid var(--md-green-300); border-radius: 4px; flex-shrink: 0; margin-top: 2px; display: inline-flex; align-items: center; justify-content: center; color: #fff; transition: all .12s; }
+.drawer-item.is-checked .drawer-check { background: var(--md-green-800); border-color: var(--md-green-800); }
+.drawer-item.is-blocked .drawer-check { background: var(--md-gray-300); border-color: var(--md-gray-600); }
+.drawer-body { flex: 1; min-width: 0; }
+.drawer-line1 { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+.drawer-line1-left { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.drawer-id { font-size: 15px; font-weight: 700; color: var(--md-green-900); }
+.drawer-item-num { font-size: 12px; color: var(--md-gray-600); font-weight: 600; }
+.drawer-saldo { font-size: 16px; font-weight: 700; color: var(--md-green-800); white-space: nowrap; }
+.drawer-saldo small { font-size: 11px; color: var(--md-gray-600); font-weight: 500; margin-left: 1px; }
+.drawer-prod { font-size: 14px; font-weight: 700; color: var(--md-green-900); margin: 6px 0 4px; }
+.drawer-meta {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;
+  font-size: 12px; color: var(--md-green-700); line-height: 1.5;
+}
+.drawer-meta b { color: var(--md-green-900); font-weight: 700; }
+.drawer-status-badge {
+  display: inline-block; font-size: 10.5px; font-weight: 700;
+  padding: 3px 8px; border-radius: 4px; letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.drawer-status-badge.status-ativo { background: rgba(29,98,92,0.10); color: var(--md-green-800); }
+.drawer-status-badge.status-amendment { background: rgba(240,192,32,0.18); color: #8A6A0E; }
+.drawer-status-badge.status-unsigned { background: rgba(194,57,52,0.10); color: var(--md-red); }
+.drawer-block-reason {
+  font-size: 11.5px; color: var(--md-red); font-weight: 600;
+  margin-top: 6px; display: inline-flex; align-items: center; gap: 4px;
+}
+.drawer-empty {
+  padding: 32px 18px; text-align: center; color: var(--md-gray-600);
+  font-size: 13.5px;
+}
+
+/* Modais (confirmação, sucesso) */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(24,24,24,0.55);
+  z-index: 1100; display: none; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .18s ease;
+}
+.modal-backdrop.is-open { display: flex; opacity: 1; }
+.modal-box {
+  background: #fff; width: 100%; max-width: 460px;
+  border-radius: 8px; overflow: hidden;
+  box-shadow: 0 24px 60px rgba(9,53,50,0.25);
+  transform: translateY(10px); transition: transform .25s ease;
+}
+.modal-backdrop.is-open .modal-box { transform: translateY(0); }
+.modal-head {
+  padding: 18px 22px; background: var(--md-gray-200);
+  border-bottom: 1px solid var(--md-gray-300);
+  display: flex; align-items: center; gap: 12px;
+}
+.modal-head .ico {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; color: #fff;
+}
+.modal-head .ico.info { background: var(--md-green-800); }
+.modal-head .ico.success { background: #14563B; }
+.modal-head .ico.warning { background: #c8aa28; color: #000; }
+.modal-head h3 { margin: 0; font-family: var(--md-font); font-size: 17px; font-weight: 700; color: var(--md-green-900); flex: 1; }
+.modal-head .close { background: transparent; border: none; cursor: pointer; color: var(--md-gray-600); padding: 6px; border-radius: 50%; }
+.modal-body { padding: 22px; font-family: var(--md-font); font-size: 14.5px; color: var(--md-green-700); line-height: 1.55; }
+.modal-body b { color: var(--md-green-900); }
+.modal-foot { padding: 14px 22px; border-top: 1px solid var(--md-gray-300); background: var(--md-gray-200); display: flex; justify-content: flex-end; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="demo-banner">
+  <span class="tag">v3d · FUNCIONAL + MOSAIC REAL</span>
+  <span><strong>Agendar Contrato Normal</strong> — estética da v3c (logo PNG, Barlow, polish) + funcionalidades 100% do original: drawer com 11 contratos completos (Item, Ref. Cliente, Embalagem, Frete, Planta, CNPJ, IE, Preço, Status, Vigência, Saldo), busca + filtros, status amendment/unsigned bloqueados, modais de confirmação e sucesso.</span>
+</div>
+
+<!-- HEADER (page-header) — exato do portal -->
+<header class="page-header">
+  <div class="page-header-top">
+    <!-- Logo Mosaic — PNG ORIGINAL extraído do CDN do portal de produção
+         (mosaic_logo_BZ.png, 2848x1073, baixado do sandbox QA2) -->
+    <a href="index.html" class="brand-logo" aria-label="Mosaic">
+      <img src="mosaic-logo-real.png" alt="Logotipo da MOSAIC" width="170" height="64" style="object-fit:contain;object-position:left center;display:block;width:170px;height:64px"/>
+    </a>
+
+    <div class="md-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global"/>
+      <span class="icon" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+
+    <div class="md-user-cluster">
+      <button class="md-lang-switch" type="button">PT <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="md-user-info">
+        <span class="name">Victor Dias</span>
+        <span class="org">COOPERCITRUS COOP DE PROD RURAIS</span>
+      </div>
+      <span class="md-icon-circle" title="Conta">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg>
+      </span>
+      <span class="md-icon-circle is-outline" title="Carrinho">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </span>
+    </div>
+  </div>
+
+  <!-- Top nav verde Mosaic — Barlow Regular 14px uppercase -->
+  <nav class="md-nav">
+    <div class="md-nav-inner">
+      <a href="#">HOME</a>
+      <a href="#">CONTRACTS <span class="chev">▼</span></a>
+      <a href="#" class="is-active">ORDER</a>
+      <a href="#">DOCUMENTS</a>
+      <a href="#">MY ACCOUNT</a>
+    </div>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main class="md-shell">
+  <div class="md-breadcrumb">
+    <a href="#">Página inicial</a> <span class="sep">&gt;</span> <span>Agendar Contratos Normais</span>
+  </div>
+
+  <p class="header-text">Agendar Contratos Normais</p>
+
+  <!-- Banner info bg #F0F0F0, ícone preto com i, texto Barlow 18px verde escuro -->
+  <div class="md-info-banner">
+    <span class="ico"><em>i</em></span>
+    <span>Selecione os contratos ativos abaixo e preencha <strong>Volume</strong>, <strong>Semana</strong> e <strong>Roteiro</strong> (opcional) para cada linha. Os agendamentos serão enviados ao SAP após confirmação.</span>
+  </div>
+
+  <!-- custom-card (classe REAL do portal) -->
+  <section class="custom-card">
+    <div class="card-header">
+      <span>Filtros de pesquisa</span>
+      <span class="filter-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+      </span>
+    </div>
+    <div class="card-body">
+      <div class="md-field">
+        <label>Pesquisar contratos</label>
+        <div class="md-field-wrap">
+          <input class="md-input has-icon" type="text" placeholder="Contrato, item, produto, planta, frete..."/>
+          <span class="field-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+        </div>
+      </div>
+      <div class="md-field">
+        <label>Frete</label>
+        <select class="md-select"><option>Todos</option><option>CIF</option><option>FOB</option></select>
+      </div>
+      <div class="md-field">
+        <label><span class="req">*</span>De</label>
+        <input class="md-input" type="text" placeholder="MM/DD/YYYY"/>
+      </div>
+      <div class="md-field">
+        <label><span class="req">*</span>Para</label>
+        <input class="md-input" type="text" placeholder="MM/DD/YYYY"/>
+      </div>
+      <button class="md-btn md-btn-primary" type="button">Pesquisa</button>
+      <button class="md-btn md-btn-link" type="button">Limpar</button>
+    </div>
+  </section>
+
+  <!-- Action row -->
+  <div class="md-action-row">
+    <span class="count"><strong>5 contratos</strong> selecionados · <strong>4</strong> com volume e semana preenchidos</span>
+    <button class="md-btn md-btn-primary" type="button" id="btnOpenDrawer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Selecionar contratos
+    </button>
+  </div>
+
+  <!-- TABELA -->
+  <div class="tbl-container">
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Contratos selecionados">
+      <thead>
+        <tr>
+          <th><span class="sort">Contrato / Item <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg></span></th>
+          <th>Produto / Embalagem</th>
+          <th>Frete</th>
+          <th>Planta / Destino</th>
+          <th style="text-align:right"><span class="sort">Saldo <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span></th>
+          <th>Volume (t)</th>
+          <th>Semana</th>
+          <th>Roteiro</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="rowsBody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Footer fixo de ação -->
+<footer class="md-fixed-foot">
+  <div class="md-fixed-foot-inner">
+    <div class="summary">
+      <div class="stat"><div class="lbl">Contratos</div><div class="val" id="statRows">5</div></div>
+      <div class="stat"><div class="lbl">Volume total</div><div class="val" id="statVolume">2.890 <small>t</small></div></div>
+      <div class="stat"><div class="lbl">Prontos para agendar</div><div class="val" id="statReady">4 <small>/ 5</small></div></div>
+    </div>
+    <button class="md-btn md-btn-link" type="button">Cancelar</button>
+    <button class="md-btn md-btn-primary" type="button" id="btnAgendar">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      Agendar contratos
+    </button>
+  </div>
+</footer>
+
+<!-- Page footer (Mosaic real) -->
+<footer class="page-footer">
+  <div class="page-footer-inner">
+    <a href="#" class="brand-logo" aria-label="Mosaic">
+      <img src="mosaic-logo-real.png" alt="Logotipo da MOSAIC" width="150" height="56" style="object-fit:contain;object-position:left center;display:block;width:150px;height:56px"/>
+    </a>
+    <div class="page-footer-links">
+      <a href="#">política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="page-footer-copy">Copyright © 2024 Mosaic</div>
+  </div>
+</footer>
+
+<!-- Drawer Selecionar contratos (com busca + filtros, igual original) -->
+<div class="md-drawer-backdrop" id="drawerBackdrop">
+  <div class="md-drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle">
+    <div class="md-drawer-head">
+      <h2 id="drawerTitle">Buscar contratos</h2>
+      <button class="close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="md-drawer-filters">
+      <div class="ff-field">
+        <label for="drawerSearch">Buscar</label>
+        <input id="drawerSearch" type="text" placeholder="Ex.: Q-20303, EXCLN, MPANITRO, Sertãozinho..."/>
+      </div>
+      <div class="ff-field">
+        <label for="drawerFilterStatus">Status</label>
+        <select id="drawerFilterStatus">
+          <option value="">Todos</option>
+          <option value="ativo">Ativo</option>
+          <option value="amendment">Amendment</option>
+          <option value="unsigned">Não assinado</option>
+        </select>
+      </div>
+      <div class="ff-field">
+        <label for="drawerFilterFrete">Frete</label>
+        <select id="drawerFilterFrete">
+          <option value="">Todos</option>
+          <option value="CIF">CIF</option>
+          <option value="FOB">FOB</option>
+        </select>
+      </div>
+    </div>
+    <div class="md-drawer-body" id="drawerList"></div>
+    <div class="md-drawer-foot">
+      <span class="count empty" id="drawerCount">Nenhum contrato selecionado</span>
+      <div style="display:flex;gap:8px">
+        <button class="md-btn md-btn-link" data-close type="button">Cancelar</button>
+        <button class="md-btn md-btn-primary" type="button" id="drawerConfirm" disabled>Adicionar selecionados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmação Agendar -->
+<div class="modal-backdrop" id="confirmModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="ico info"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
+      <h3>Confirmar agendamento</h3>
+      <button class="close" data-close-modal type="button" aria-label="Fechar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      Você está prestes a agendar <b id="confirmCount">—</b> contrato(s), totalizando <b id="confirmVolume">—</b>. Pronto para continuar?
+    </div>
+    <div class="modal-foot">
+      <button class="md-btn md-btn-link" data-close-modal type="button">Voltar</button>
+      <button class="md-btn md-btn-primary" type="button" id="confirmYes">Confirmar agendamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de sucesso -->
+<div class="modal-backdrop" id="successModal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span class="ico success"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+      <h3>Seus agendamentos foram criados!</h3>
+      <button class="close" data-close-modal type="button" aria-label="Fechar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <b id="successCount">—</b> agendamento(s) enviado(s) ao SAP. Você pode acompanhar o status pelo Relatório de Status de Agendamento.
+    </div>
+    <div class="modal-foot">
+      <button class="md-btn md-btn-link" data-close-modal type="button">Continuar agendando</button>
+      <button class="md-btn md-btn-primary" type="button" data-close-modal>Ver Relatório</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===========================================================================
+// CATÁLOGO COMPLETO DE CONTRATOS — 11 itens com TODAS as colunas do original
+// (dados extraídos do agendar-contrato-normal.html linhas 4758-4768)
+// ===========================================================================
+const CONTRACTS = [
+  { id:"Q-20303", item:"10", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", status:"ativo",     vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20303", item:"20", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", status:"ativo",     vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20303", item:"30", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", status:"ativo",     vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20303", item:"40", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", status:"ativo",     vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20385", item:"10", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.480,00", status:"amendment", statusReason:"Aditivo em andamento — bloqueado", vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20385", item:"20", ref:"474663", prod:"EXCLN 24 05 24 UR",            emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.480,00", status:"amendment", statusReason:"Aditivo em andamento — bloqueado", vigenciaIni:"01/08/2025", vigenciaFim:"30/10/2025", saldo:1000 },
+  { id:"Q-20392", item:"10", ref:"488221", prod:"MPANITRO 20 05 20 UR",         emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão",  dest:"Bebedouro/SP",   cnpj:"71.320.915/0006-37", ie:"415.728.633.020", preco:"2.190,00", status:"ativo",     vigenciaIni:"15/08/2025", vigenciaFim:"15/11/2025", saldo:750 },
+  { id:"Q-20392", item:"20", ref:"488221", prod:"MPANITRO 20 05 20 UR",         emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Bebedouro/SP",   cnpj:"71.320.915/0006-37", ie:"415.728.633.020", preco:"2.190,00", status:"ativo",     vigenciaIni:"15/08/2025", vigenciaFim:"15/11/2025", saldo:500 },
+  { id:"Q-38542", item:"10", ref:"501993", prod:"FFALM 04 30 10",               emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão",  dest:"Limeira/SP",     cnpj:"71.320.915/0006-37", ie:"192.554.418.336", preco:"1.980,00", status:"unsigned",  statusReason:"Contrato não assinado — bloqueado", vigenciaIni:"01/09/2025", vigenciaFim:"30/12/2025", saldo:320 },
+  { id:"Q-85721", item:"10", ref:"612847", prod:"STRAF 04 30 10 STR + 50 BMI2", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão",  dest:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.620,00", status:"ativo",     vigenciaIni:"01/07/2025", vigenciaFim:"30/09/2025", saldo:1500 },
+  { id:"Q-39742", item:"10", ref:"729104", prod:"EXCLN 18 09 27 UR",            emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão",  dest:"Alfenas/MG",     cnpj:"71.320.915/0006-37", ie:"638.092.514.275", preco:"2.380,00", status:"ativo",     vigenciaIni:"10/08/2025", vigenciaFim:"30/10/2025", saldo:640 },
+];
+
+const STATUS_LABEL = { ativo: "Ativo", amendment: "Amendment", unsigned: "Não assinado" };
+const PRESELECTED = [0, 1, 6]; // Q-20303 item 10, Q-20303 item 20, Q-20392 item 10
+
+// Estado da tabela principal (linhas em agendamento)
+const ROWS = PRESELECTED.map((idx, n) => {
+  const c = CONTRACTS[idx];
+  return {
+    catIdx: idx,
+    id: c.id, item: c.item, ref: c.ref, prod: c.prod, emb: c.emb, frete: c.frete,
+    planta: c.planta, dest: c.dest, cnpj: c.cnpj, ie: c.ie, preco: c.preco,
+    vigencia: `${c.vigenciaIni} → ${c.vigenciaFim}`, saldo: c.saldo,
+    // estados editáveis
+    volume: n === 0 ? 300 : (n === 1 ? 200 : 0),
+    semana: n === 0 ? "11/05/2026 — 17/05/2026" : (n === 1 ? "18/05/2026 — 24/05/2026" : ""),
+    roteiro: ""
+  };
+});
+
+const fmt = n => n.toLocaleString("pt-BR");
+function rowStatus(r) {
+  if (r.volume === 0 && !r.semana) return "incomplete";
+  if (r.volume > 0 && r.semana) return "complete";
+  return "progress";
+}
+function renderRow(r, idx) {
+  const status = rowStatus(r);
+  const roteiroHtml = r.roteiro
+    ? `<button class="row-roteiro-btn has-value" type="button" title="${r.roteiro}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${r.roteiro.length > 18 ? r.roteiro.slice(0,18)+"…" : r.roteiro}</button>`
+    : `<button class="row-roteiro-btn" type="button"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Adicionar</button>`;
+  return `
+    <tr data-idx="${idx}" class="row-${status}">
+      <td><div class="cell-stack"><span class="primary">${r.id}</span><span class="secondary">Item <strong>${r.item}</strong></span></div></td>
+      <td><div class="cell-stack"><span class="primary">${r.prod}</span><span class="secondary">${r.emb}</span></div></td>
+      <td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>
+      <td><div class="cell-stack"><span class="primary">${r.planta}</span><span class="secondary">→ ${r.dest}</span></div></td>
+      <td class="cell-num-big">${fmt(r.saldo)} <small>t</small></td>
+      <td><div class="row-input-wrap"><input class="row-input" type="number" min="0" max="${r.saldo}" value="${r.volume||''}" data-f="volume" placeholder="0"/><span class="suffix">t</span></div></td>
+      <td><input class="row-date" type="text" readonly value="${r.semana || ''}" placeholder="Selecionar semana" data-f="semana"/></td>
+      <td>${roteiroHtml}</td>
+      <td><div class="row-actions">
+        <button class="row-icon-btn" type="button" title="Duplicar"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg></button>
+        <button class="row-icon-btn is-danger" type="button" title="Remover"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg></button>
+      </div></td>
+    </tr>`;
+}
+function render() {
+  document.getElementById("rowsBody").innerHTML = ROWS.map(renderRow).join("");
+  document.getElementById("statRows").textContent = ROWS.length;
+  const totalVol = ROWS.reduce((s,r)=>s+(Number(r.volume)||0),0);
+  document.getElementById("statVolume").innerHTML = `${fmt(totalVol)} <small>t</small>`;
+  const ready = ROWS.filter(r => Number(r.volume) > 0 && r.semana).length;
+  document.getElementById("statReady").innerHTML = `${ready} <small>/ ${ROWS.length}</small>`;
+}
+render();
+
+// =================== Inline edit (Volume, Semana) ===================
+document.getElementById("rowsBody").addEventListener("input", e => {
+  const inp = e.target.closest("[data-f]");
+  if (!inp) return;
+  const tr = inp.closest("tr");
+  const idx = Number(tr.dataset.idx);
+  const f = inp.dataset.f;
+  ROWS[idx][f] = inp.type === "number" ? (Number(inp.value) || 0) : inp.value;
+  render();
+});
+
+// =================== Row actions: duplicar / remover ===================
+document.getElementById("rowsBody").addEventListener("click", e => {
+  const btn = e.target.closest(".row-icon-btn");
+  if (!btn) return;
+  const tr = btn.closest("tr");
+  const idx = Number(tr.dataset.idx);
+  if (btn.classList.contains("is-danger")) {
+    // remover
+    ROWS.splice(idx, 1);
+  } else {
+    // duplicar
+    const dup = { ...ROWS[idx], volume: 0, semana: "", roteiro: "" };
+    ROWS.splice(idx + 1, 0, dup);
+  }
+  render();
+});
+
+// =================== Drawer com busca + filtros + status bloqueado ===================
+const backdrop = document.getElementById("drawerBackdrop");
+const drawerList = document.getElementById("drawerList");
+const drawerSearch = document.getElementById("drawerSearch");
+const drawerFilterStatus = document.getElementById("drawerFilterStatus");
+const drawerFilterFrete = document.getElementById("drawerFilterFrete");
+const drawerCountEl = document.getElementById("drawerCount");
+const drawerConfirm = document.getElementById("drawerConfirm");
+
+// índices do catálogo CONTRACTS selecionados no drawer (durante a sessão de seleção)
+const drawerSelection = new Set();
+
+function drawerFilteredIndices() {
+  const q = (drawerSearch.value || "").trim().toLowerCase();
+  const fs = drawerFilterStatus.value;
+  const ff = drawerFilterFrete.value;
+  return CONTRACTS.map((c, i) => ({ c, i })).filter(({ c }) => {
+    if (fs && c.status !== fs) return false;
+    if (ff && c.frete !== ff) return false;
+    if (q) {
+      const hay = [c.id, c.item, c.ref, c.prod, c.emb, c.frete, c.planta, c.dest, c.cnpj, c.ie].join(" ").toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  }).map(({ i }) => i);
+}
+
+function renderDrawer() {
+  const indices = drawerFilteredIndices();
+  if (!indices.length) {
+    drawerList.innerHTML = `<div class="drawer-empty">Nenhum contrato encontrado com os filtros aplicados.</div>`;
+  } else {
+    drawerList.innerHTML = indices.map(i => {
+      const c = CONTRACTS[i];
+      const blocked = c.status !== "ativo";
+      const checked = drawerSelection.has(i);
+      const alreadyInRows = ROWS.some(r => r.catIdx === i);
+      const stateCls = blocked ? "is-blocked" : (checked ? "is-checked" : "");
+      const checkSvg = checked ? '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : (blocked ? '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>' : '');
+      return `
+        <div class="drawer-item ${stateCls}" data-idx="${i}" ${blocked ? 'data-blocked="1"' : ''}>
+          <span class="drawer-check">${checkSvg}</span>
+          <div class="drawer-body">
+            <div class="drawer-line1">
+              <div class="drawer-line1-left">
+                <span class="drawer-id">${c.id}</span>
+                <span class="drawer-item-num">· Item ${c.item} · Ref. ${c.ref}</span>
+                <span class="pill-frete ${c.frete.toLowerCase()}">${c.frete}</span>
+                <span class="drawer-status-badge status-${c.status}">${STATUS_LABEL[c.status]}</span>
+                ${alreadyInRows ? '<span class="drawer-status-badge" style="background:rgba(29,98,92,0.10);color:var(--md-green-800)">Já adicionado</span>' : ''}
+              </div>
+              <span class="drawer-saldo">${fmt(c.saldo)} <small>t</small></span>
+            </div>
+            <div class="drawer-prod">${c.prod}</div>
+            <div class="drawer-meta">
+              <div><b>Embalagem:</b> ${c.emb}</div>
+              <div><b>Planta:</b> ${c.planta}</div>
+              <div><b>Enviar para:</b> ${c.dest}</div>
+              <div><b>CNPJ Filial:</b> ${c.cnpj}</div>
+              <div><b>IE:</b> ${c.ie}</div>
+              <div><b>Preço/Ton:</b> R$ ${c.preco}</div>
+              <div style="grid-column:1/-1"><b>Vigência:</b> ${c.vigenciaIni} → ${c.vigenciaFim}</div>
+            </div>
+            ${blocked ? `<div class="drawer-block-reason"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg> ${c.statusReason || 'Bloqueado'}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+  // footer count
+  const n = drawerSelection.size;
+  drawerCountEl.textContent = n === 0 ? "Nenhum contrato selecionado" : `${n} contrato${n>1?'s':''} selecionado${n>1?'s':''}`;
+  drawerCountEl.classList.toggle("empty", n === 0);
+  drawerConfirm.disabled = n === 0;
+}
+
+drawerSearch.addEventListener("input", renderDrawer);
+drawerFilterStatus.addEventListener("change", renderDrawer);
+drawerFilterFrete.addEventListener("change", renderDrawer);
+
+drawerList.addEventListener("click", e => {
+  const item = e.target.closest(".drawer-item");
+  if (!item) return;
+  if (item.dataset.blocked === "1") return; // não permite seleção
+  const i = Number(item.dataset.idx);
+  if (drawerSelection.has(i)) drawerSelection.delete(i);
+  else drawerSelection.add(i);
+  renderDrawer();
+});
+
+function openDrawer() {
+  drawerSelection.clear();
+  drawerSearch.value = "";
+  drawerFilterStatus.value = "";
+  drawerFilterFrete.value = "";
+  renderDrawer();
+  backdrop.classList.add("is-open");
+  setTimeout(() => drawerSearch.focus(), 150);
+}
+function closeDrawer() { backdrop.classList.remove("is-open"); }
+
+document.getElementById("btnOpenDrawer").addEventListener("click", openDrawer);
+backdrop.addEventListener("click", e => {
+  if (e.target === backdrop || e.target.closest("[data-close]")) closeDrawer();
+});
+
+drawerConfirm.addEventListener("click", () => {
+  // adiciona os selecionados em ROWS (evita duplicar se já está lá)
+  Array.from(drawerSelection).forEach(i => {
+    if (ROWS.some(r => r.catIdx === i)) return;
+    const c = CONTRACTS[i];
+    ROWS.push({
+      catIdx: i,
+      id: c.id, item: c.item, ref: c.ref, prod: c.prod, emb: c.emb, frete: c.frete,
+      planta: c.planta, dest: c.dest, cnpj: c.cnpj, ie: c.ie, preco: c.preco,
+      vigencia: `${c.vigenciaIni} → ${c.vigenciaFim}`, saldo: c.saldo,
+      volume: 0, semana: "", roteiro: ""
+    });
+  });
+  closeDrawer();
+  render();
+});
+
+// =================== Modal Confirmar / Sucesso ===================
+const confirmModal = document.getElementById("confirmModal");
+const successModal = document.getElementById("successModal");
+
+document.getElementById("btnAgendar").addEventListener("click", () => {
+  // validação: pelo menos 1 linha pronta
+  const ready = ROWS.filter(r => Number(r.volume) > 0 && r.semana);
+  if (!ready.length) {
+    alert("Preencha Volume e Semana de pelo menos uma linha antes de agendar.");
+    return;
+  }
+  const total = ready.reduce((s, r) => s + Number(r.volume), 0);
+  document.getElementById("confirmCount").textContent = ready.length;
+  document.getElementById("confirmVolume").textContent = fmt(total) + " t";
+  confirmModal.classList.add("is-open");
+});
+
+document.getElementById("confirmYes").addEventListener("click", () => {
+  const ready = ROWS.filter(r => Number(r.volume) > 0 && r.semana);
+  document.getElementById("successCount").textContent = ready.length;
+  confirmModal.classList.remove("is-open");
+  successModal.classList.add("is-open");
+});
+
+[confirmModal, successModal].forEach(m => {
+  m.addEventListener("click", e => {
+    if (e.target === m || e.target.closest("[data-close-modal]")) m.classList.remove("is-open");
+  });
+});
+
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    closeDrawer();
+    confirmModal.classList.remove("is-open");
+    successModal.classList.remove("is-open");
+  }
+});
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>
