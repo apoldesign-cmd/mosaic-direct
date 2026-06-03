@@ -544,17 +544,36 @@ a:hover { text-decoration: underline; }
 .md-fixed-foot .stat .val { font-size: 20px; font-weight: 700; color: var(--md-green-900); font-family: var(--md-font); }
 .md-fixed-foot .stat .val small { font-size: 12px; color: var(--md-gray-600); font-weight: 500; margin-left: 2px; }
 
-/* Demo banner (não vai pra produção) */
-.demo-banner {
-  background: var(--md-green-900); color: #fff; font-size: 13px;
-  padding: 10px 40px; display: flex; gap: 12px; align-items: center;
+/* Badge flutuante discreto (substitui o banner full-width pra imersão) */
+.demo-badge {
+  position: fixed; bottom: 18px; left: 18px; z-index: 1300;
+  background: var(--md-green-900); color: #fff;
+  font-family: var(--md-font); font-size: 11px; font-weight: 700;
+  padding: 7px 12px; border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(9,53,50,0.30);
+  display: inline-flex; align-items: center; gap: 7px;
+  letter-spacing: 0.3px; opacity: 0.85; transition: opacity .15s;
+  cursor: default;
+}
+.demo-badge:hover { opacity: 1; }
+.demo-badge .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mc-flag-3, #F0C020); }
+
+/* Cookie consent banner (igual portais Salesforce Experience Cloud) */
+.cookie-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 1250;
+  background: #fff; border-top: 1px solid var(--md-gray-300);
+  box-shadow: 0 -6px 24px rgba(9,53,50,0.10);
+  padding: 16px 40px;
+  display: flex; align-items: center; gap: 20px;
   font-family: var(--md-font);
+  transform: translateY(100%); transition: transform .35s ease;
 }
-.demo-banner .tag {
-  background: #fff; color: var(--md-green-900); font-weight: 700;
-  padding: 2px 8px; border-radius: 10px; font-size: 11px;
+.cookie-bar.is-visible { transform: translateY(0); }
+.cookie-bar .cookie-text {
+  flex: 1; font-size: 13px; color: var(--md-green-700); line-height: 1.5;
 }
-.demo-banner code { background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+.cookie-bar .cookie-text a { color: var(--md-green-800); font-weight: 600; }
+.cookie-bar .cookie-actions { display: flex; gap: 10px; flex-shrink: 0; }
 
 /* Drawer simplificado pra ilustrar fluxo */
 .md-drawer-backdrop {
@@ -696,9 +715,8 @@ a:hover { text-decoration: underline; }
 </head>
 <body>
 
-<div class="demo-banner">
-  <span class="tag">v3d · FUNCIONAL + MOSAIC REAL</span>
-  <span><strong>Agendar Contrato Normal</strong> — estética da v3c (logo PNG, Barlow, polish) + funcionalidades 100% do original: drawer com 11 contratos completos (Item, Ref. Cliente, Embalagem, Frete, Planta, CNPJ, IE, Preço, Status, Vigência, Saldo), busca + filtros, status amendment/unsigned bloqueados, modais de confirmação e sucesso.</span>
+<div class="demo-badge" title="Protótipo v3d — Agendar Contrato Normal, padrão visual Mosaic real, 100% funcional">
+  <span class="dot"></span> v3d · protótipo
 </div>
 
 <!-- HEADER (page-header) — exato do portal -->
@@ -1243,7 +1261,25 @@ document.addEventListener("keydown", e => {
     successModal.classList.remove("is-open");
   }
 });
+
+// =================== Cookie consent banner ===================
+const cookieBar = document.getElementById("cookieBar");
+setTimeout(() => cookieBar.classList.add("is-visible"), 700);
+cookieBar.addEventListener("click", e => {
+  if (e.target.closest("[data-cookie]")) cookieBar.classList.remove("is-visible");
+});
 </script>
+
+<!-- Cookie consent (padrão Experience Cloud) -->
+<div class="cookie-bar" id="cookieBar">
+  <div class="cookie-text">
+    Utilizamos cookies para melhorar sua experiência no portal Mosaic Direct. Ao continuar navegando, você concorda com nossa <a href="#">Política de Privacidade</a>.
+  </div>
+  <div class="cookie-actions">
+    <button class="md-btn md-btn-link" type="button" data-cookie="reject">Recusar não essenciais</button>
+    <button class="md-btn md-btn-primary" type="button" data-cookie="accept">Aceitar cookies</button>
+  </div>
+</div>
 
 <script src="review-overlay.js" defer></script>
 </body>
