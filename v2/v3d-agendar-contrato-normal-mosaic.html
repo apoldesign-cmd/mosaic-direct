@@ -655,19 +655,24 @@ a:hover { text-decoration: underline; }
 .roteiro-drawer-foot .right { display: flex; gap: 8px; }
 
 /* Drawer simplificado pra ilustrar fluxo */
+/* "Selecionar contratos" agora é MODAL centralizado (não sidenav).
+   Mapeia direto em lightning-modal nativo do Salesforce. */
 .md-drawer-backdrop {
   position: fixed; inset: 0; background: rgba(24,24,24,0.50);
-  z-index: 1000; display: none; justify-content: flex-end;
+  z-index: 1000; display: none; align-items: center; justify-content: center;
+  padding: 28px;
   opacity: 0; transition: opacity .18s ease;
 }
 .md-drawer-backdrop.is-open { display: flex; opacity: 1; }
 .md-drawer {
-  background: #fff; width: 720px; max-width: 96vw; height: 100vh;
+  background: #fff; width: 820px; max-width: 96vw; max-height: calc(100vh - 56px);
+  border-radius: 10px; overflow: hidden;
   display: flex; flex-direction: column;
-  box-shadow: -20px 0 60px rgba(9,53,50,0.20);
-  transform: translateX(20px); transition: transform .25s ease;
+  box-shadow: 0 24px 70px rgba(9,53,50,0.32);
+  transform: translateY(14px) scale(.98); transition: transform .22s ease, opacity .18s ease;
+  opacity: 0;
 }
-.md-drawer-backdrop.is-open .md-drawer { transform: translateX(0); }
+.md-drawer-backdrop.is-open .md-drawer { transform: translateY(0) scale(1); opacity: 1; }
 .md-drawer-head { padding: 18px 22px; border-bottom: 1px solid var(--md-gray-300); display: flex; gap: 12px; align-items: center; }
 .md-drawer-head h2 { margin: 0; font-family: var(--md-font); font-size: 18px; font-weight: 700; color: var(--md-green-900); flex: 1; }
 .md-drawer-head .close { background: transparent; border: none; cursor: pointer; color: var(--md-gray-600); padding: 6px; border-radius: 50%; }
