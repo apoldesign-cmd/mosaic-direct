@@ -126,13 +126,13 @@ a:hover { text-decoration: underline; }
    Suporte — com submenus em hover. Estilizado com tokens reais Mosaic.
    ============================================================ */
 .md-nav {
-  border-top: 1px solid #eaeded;
-  border-bottom: 1px solid #eaeded;
+  /* sem linhas de cima/baixo, a pedido */
+  border-top: none;
+  border-bottom: none;
   background: #fff;
   position: sticky;
   top: 0;
   z-index: 40;
-  box-shadow: 0 1px 3px rgba(9,53,50,0.04);
 }
 .md-nav-inner {
   max-width: 1480px; margin: 0 auto;
@@ -1384,6 +1384,8 @@ drawerList.addEventListener("click", e => {
 
 function openDrawer() {
   drawerSelection.clear();
+  // pré-seleciona os contratos que JÁ estão no agendamento (já adicionados)
+  ROWS.forEach(r => { if (r.catIdx != null) drawerSelection.add(r.catIdx); });
   drawerSearch.value = "";
   renderDrawer();
   backdrop.classList.add("is-open");
