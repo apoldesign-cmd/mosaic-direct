@@ -711,7 +711,7 @@ a:hover { text-decoration: underline; }
 }
 .md-drawer-selectall:hover { text-decoration: underline; }
 
-.md-drawer-body { padding: 14px 22px; overflow-y: auto; flex: 1; }
+.md-drawer-body { padding: 14px 22px; overflow-y: auto; overflow-x: hidden; flex: 1; }
 .md-drawer-foot { padding: 14px 22px; border-top: 1px solid var(--md-gray-300); background: var(--md-gray-200); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .md-drawer-foot .count { font-size: 13px; font-weight: 600; color: var(--md-green-900); }
 .md-drawer-foot .count.empty { color: var(--md-gray-600); font-weight: 500; }
@@ -724,6 +724,7 @@ a:hover { text-decoration: underline; }
   font-family: var(--md-font);
   margin-bottom: 10px;
   background: #fff;
+  width: 100%; box-sizing: border-box; min-width: 0;
   transition: border-color .12s, background .12s;
 }
 .drawer-item:hover { border-color: var(--md-green-700); background: rgba(233,239,238,0.30); }
@@ -742,9 +743,12 @@ a:hover { text-decoration: underline; }
 .drawer-saldo small { font-size: 11px; color: var(--md-gray-600); font-weight: 500; margin-left: 1px; }
 .drawer-prod { font-size: 14px; font-weight: 700; color: var(--md-green-900); margin: 6px 0 4px; }
 .drawer-meta {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px;
+  /* minmax(0,1fr) impede o grid de crescer pela largura do conteúdo
+     (CNPJ/IE longos) — sem isso o card estoura e gera scroll horizontal */
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 4px 16px;
   font-size: 12px; color: var(--md-green-700); line-height: 1.5;
 }
+.drawer-meta > div { min-width: 0; overflow-wrap: anywhere; }
 .drawer-meta b { color: var(--md-green-900); font-weight: 700; }
 .drawer-status-badge {
   display: inline-block; font-size: 10.5px; font-weight: 700;
