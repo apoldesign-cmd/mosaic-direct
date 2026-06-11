@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Relatório de Protocolos · Mosaic Direct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --md-green-900:#093532;--md-green-800:#1D625C;--md-green-700:#436462;--md-green-300:#BFD0CE;
+    --md-green-100:#E9EFEE;--md-gray-900:#444;--md-gray-600:#76716B;--md-gray-300:#D6D6D6;
+    --md-gray-200:#F0F0F0;--md-gray-100:#F2F2F2;--md-orange:#D56B1A;--md-green:#2e844a;--md-red:#ba0517;--md-amber:#F0C020;
+    --md-font:'Barlow',-apple-system,sans-serif;--md-mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --md-shadow-input:0 2px 5px rgba(110,132,130,.15);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;padding:0} body{font-family:var(--md-font);font-size:16px;color:var(--md-green-700);background:#fff;-webkit-font-smoothing:antialiased}
+  a{color:var(--md-green-800);text-decoration:none}a:hover{text-decoration:underline}
+  /* HEADER */
+  .page-header{background:#fff}
+  .page-header-top{display:grid;grid-template-columns:1fr minmax(0,560px) 1fr;gap:36px;align-items:center;padding:20px 40px 12px;max-width:1480px;margin:0 auto}
+  .brand-logo{justify-self:start} .brand-logo img{width:170px;height:64px;object-fit:contain;object-position:left center;display:block}
+  .md-search{position:relative;width:100%;justify-self:stretch}
+  .md-search input{width:100%;height:50px;padding:0 50px 0 22px;border:1px solid var(--md-green-300);border-radius:8px;font-family:inherit;font-size:16px;color:var(--md-green-900);background:#fff;box-shadow:var(--md-shadow-input)}
+  .md-search input::placeholder{color:var(--md-gray-600)} .md-search input:focus{outline:none;border-color:var(--md-green-800);box-shadow:0 0 0 3px rgba(29,98,92,.10)}
+  .md-search .icon{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--md-gray-600);pointer-events:none}
+  .md-user-cluster{display:inline-flex;align-items:center;gap:14px;justify-self:end}
+  .md-lang-switch{border:1px solid var(--md-green-300);background:#fff;padding:9px 14px;border-radius:8px;font-family:inherit;font-weight:500;font-size:14px;color:var(--md-green-900);cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+  .md-user-info{display:flex;flex-direction:column;line-height:1.15;max-width:180px}
+  .md-user-info .name{font-weight:700;font-size:15px;color:var(--md-green-900)} .md-user-info .org{font-size:12px;color:var(--md-gray-600);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .md-icon-circle{width:38px;height:38px;border-radius:50%;background:var(--md-green-800);color:#fff;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+  .md-icon-circle.is-outline{background:transparent;color:var(--md-green-900);border:1px solid var(--md-green-300)}
+  .md-nav{background:#fff;position:sticky;top:0;z-index:40}
+  .md-nav-inner{max-width:1480px;margin:0 auto;padding:0 40px;display:flex;align-items:center;justify-content:center;gap:40px}
+  .md-nav .nav-item{padding:18px 2px;font-family:var(--md-font);font-weight:600;font-size:14px;color:var(--md-green-800);text-transform:uppercase;letter-spacing:.3px;position:relative;display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
+  .md-nav .nav-item:hover{color:var(--md-green-900)} .md-nav .nav-item.is-active{color:var(--md-orange)}
+  .md-nav .nav-item .chev{width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid currentColor;opacity:.7}
+  .md-nav .nav-submenu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(6px);min-width:230px;background:#fff;border:1px solid var(--md-gray-300);border-radius:8px;box-shadow:0 12px 28px rgba(9,53,50,.16);padding:6px;opacity:0;visibility:hidden;pointer-events:none;transition:.15s;z-index:60}
+  .md-nav .nav-item:hover .nav-submenu,.md-nav .nav-item:focus-within .nav-submenu{opacity:1;visibility:visible;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+  .md-nav .nav-submenu a{display:block;padding:10px 14px;border-radius:6px;font-weight:500;font-size:13.5px;color:var(--md-green-900);text-transform:none;letter-spacing:normal}
+  .md-nav .nav-submenu a:hover{background:rgba(29,98,92,.08);color:var(--md-green-800)} .md-nav .nav-submenu a.is-active{background:rgba(29,98,92,.10);color:var(--md-green-800);font-weight:700}
+  /* MAIN */
+  .shell{max-width:1480px;margin:0 auto;padding:20px 40px 90px}
+  .bc{font-size:14px;color:var(--md-green-700);margin-bottom:8px}.bc a{color:var(--md-green-700)}.bc .sep{margin:0 6px}
+  .htext{font-family:var(--md-font);font-weight:700;font-size:26px;color:var(--md-green-900);margin:16px 0 22px}
+  .toolbar{display:flex;gap:12px;align-items:center;margin-bottom:18px}
+  .search-wrap{position:relative;flex:1;max-width:560px}
+  .search-wrap input{width:100%;height:44px;padding:0 14px 0 44px;border:1px solid var(--md-green-300);border-radius:8px;font-family:var(--md-font);font-size:15px;color:var(--md-green-900);box-shadow:var(--md-shadow-input)}
+  .search-wrap input:focus{outline:none;border-color:var(--md-green-800);box-shadow:0 0 0 3px rgba(29,98,92,.15)}
+  .search-wrap .ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--md-gray-600);pointer-events:none}
+  .count-line{font-size:13.5px;color:var(--md-green-700);margin-bottom:10px}.count-line strong{color:var(--md-green-900)}
+  /* TABLE */
+  .tbl-shell{background:#fff;border:1px solid var(--md-gray-300);border-radius:8px;box-shadow:0 0 15px rgba(9,53,50,.10);overflow:hidden}
+  table.t{width:100%;table-layout:fixed;border-collapse:separate;border-spacing:0;font-family:var(--md-font)}
+  table.t thead th{background:var(--md-green-100);color:var(--md-gray-900);font-weight:700;font-size:14px;text-align:left;padding:13px 12px;height:48px;border:none;vertical-align:middle}
+  table.t thead th:first-child{padding-left:16px} table.t thead th.num{text-align:right}
+  table.t tbody td,table.t tbody th{padding:12px;vertical-align:top;border-top:1px solid var(--md-gray-300);font-size:14px;color:var(--md-green-900);font-weight:500}
+  table.t tbody td:first-child,table.t tbody th:first-child{padding-left:16px}
+  table.t tbody tr:nth-child(even) td,table.t tbody tr:nth-child(even) th{background:#f6faf9}
+  table.t tbody tr:hover td,table.t tbody tr:hover th{background:rgba(233,239,238,.55)}
+  .cmp{display:flex;flex-direction:column;line-height:1.3}.cmp .p{font-weight:700;color:var(--md-green-900)}.cmp .s{font-size:11.5px;color:var(--md-green-700);margin-top:1px}
+  .mono{font-family:var(--md-mono);font-variant-numeric:tabular-nums}
+  .num{text-align:right}.saldo{color:var(--md-green);font-weight:700}
+  .st{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;line-height:1.2;white-space:normal}
+  .st .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+  .st.novo{background:#eef1f0;color:var(--md-gray-900)}.st.novo .dot{background:var(--md-gray-600)}
+  .st.agend{background:#fff6e3;color:#8a6a0e}.st.agend .dot{background:var(--md-amber)}
+  .st.concl{background:#e5f1ed;color:#14563b}.st.concl .dot{background:#14563b}
+  .st.canc{background:#fbe7e5;color:var(--md-red)}.st.canc .dot{background:var(--md-red)}
+  .st.lib{background:rgba(29,98,92,.10);color:var(--md-green-800)}.st.lib .dot{background:var(--md-green-800)}
+  .qty-cell{cursor:pointer;position:relative}.qty-cell:hover{box-shadow:inset 0 0 0 1px var(--md-amber);background:#fffdf5}
+  .qty-cell .pencil{opacity:0;position:absolute;right:8px;top:50%;transform:translateY(-50%);color:var(--md-green-700)}.qty-cell:hover .pencil{opacity:1}
+  .qty-input{width:100%;border:1px solid var(--md-green-800);border-radius:5px;padding:6px 8px;text-align:right;font-family:var(--md-mono);font-weight:700;font-size:14px;color:var(--md-green-900);outline:none}
+  .chev-btn{width:30px;height:30px;border-radius:50%;border:1px solid var(--md-green-300);background:#fff;display:inline-flex;align-items:center;justify-content:center;color:var(--md-gray-600);cursor:pointer}
+  .chev-btn:hover{border-color:var(--md-green-800);color:var(--md-green-800);background:rgba(29,98,92,.05)}
+  .col-proto{width:13%}.col-contrato{width:11%}.col-coop{width:16%}.col-prod{width:15%}.col-emb{width:13%}.col-nf{width:13%}.col-qtd{width:9%}.col-saldo{width:8%}.col-acao{width:4%}
+  /* Action menu popup */
+  .menu-pop{position:fixed;min-width:210px;background:#fff;border:1px solid var(--md-gray-300);border-radius:8px;box-shadow:0 12px 28px rgba(9,53,50,.18);padding:5px;z-index:1200}
+  .menu-pop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:9px 11px;border:none;background:transparent;cursor:pointer;border-radius:6px;font-family:var(--md-font);font-size:13.5px;color:var(--md-green-900);font-weight:500}
+  .menu-pop button:hover{background:rgba(29,98,92,.08)} .menu-pop button.danger{color:var(--md-red)}.menu-pop button.danger:hover{background:rgba(186,5,23,.08)}
+  .menu-pop button:disabled{color:var(--md-gray-600);opacity:.5;cursor:not-allowed}.menu-pop button:disabled:hover{background:transparent}
+  .menu-sep{height:1px;background:var(--md-gray-300);margin:4px 0}
+  /* Modal */
+  .modal-bd{position:fixed;inset:0;background:rgba(24,24,24,.5);z-index:1100;display:none;align-items:center;justify-content:center;padding:24px;opacity:0;transition:opacity .18s}
+  .modal-bd.is-open{display:flex;opacity:1}
+  .modal{background:#fff;width:100%;max-width:480px;border-radius:10px;overflow:hidden;box-shadow:0 24px 60px rgba(9,53,50,.3);transform:translateY(10px);transition:transform .22s}
+  .modal-bd.is-open .modal{transform:translateY(0)}
+  .modal-head{padding:18px 22px;background:var(--md-gray-200);border-bottom:1px solid var(--md-gray-300);display:flex;align-items:center;gap:12px}
+  .modal-head .ico{width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff}
+  .modal-head .ico.edit{background:var(--md-green-800)}.modal-head .ico.danger{background:var(--md-red)}
+  .modal-head h3{margin:0;font-size:17px;font-weight:700;color:var(--md-green-900);flex:1}
+  .modal-head .sub{font-size:11.5px;color:var(--md-gray-600);margin-top:2px}
+  .modal-head .x{background:transparent;border:none;cursor:pointer;color:var(--md-gray-600);padding:6px;border-radius:50%}.modal-head .x:hover{background:rgba(0,0,0,.06)}
+  .modal-body{padding:22px;font-size:14px;color:var(--md-green-700);line-height:1.55}.modal-body b{color:var(--md-green-900)}
+  .modal-body .fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .modal-body .fld label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--md-gray-600)}
+  .modal-body .fld input{height:40px;padding:0 12px;border:1px solid var(--md-green-300);border-radius:6px;font-family:var(--md-font);font-size:14px;color:var(--md-green-900)}
+  .modal-body .fld input:focus{outline:none;border-color:var(--md-green-800);box-shadow:0 0 0 3px rgba(29,98,92,.15)}
+  .modal-body .warn{background:rgba(240,192,32,.15);border-left:3px solid var(--md-amber);border-radius:0 6px 6px 0;padding:10px 12px;font-size:12.5px}
+  .modal-foot{padding:14px 22px;border-top:1px solid var(--md-gray-300);background:var(--md-gray-200);display:flex;justify-content:flex-end;gap:8px}
+  .btn{display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 18px;border-radius:8px;font-family:var(--md-font);font-size:14px;font-weight:600;cursor:pointer;border:1px solid transparent;letter-spacing:.3px}
+  .btn-primary{background:var(--md-green-800);color:#fff}.btn-primary:hover{filter:brightness(1.08)}
+  .btn-danger{background:var(--md-red);color:#fff}.btn-danger:hover{filter:brightness(1.05)}
+  .btn-link{background:transparent;color:var(--md-green-800);border:none}.btn-link:hover{text-decoration:underline}
+  /* toast */
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--md-green-900);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(9,53,50,.3);opacity:0;transition:.25s;z-index:1300;display:inline-flex;align-items:center;gap:10px}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .page-footer{background:var(--md-gray-100);padding:32px 40px 24px;margin-top:40px}
+  .page-footer-inner{max-width:1480px;margin:0 auto;display:grid;grid-template-columns:auto 1fr auto;gap:40px;align-items:center}
+  .page-footer .brand-logo img{width:150px;height:50px}
+  .page-footer-links{display:flex;gap:36px;flex-wrap:wrap;font-size:14px;font-weight:500}.page-footer-links a{color:var(--md-green-700)}.page-footer-copy{font-size:13px;color:var(--md-green-700);text-align:right}
+  .demo-badge{position:fixed;bottom:18px;left:18px;z-index:1300;background:var(--md-green-900);color:#fff;font-size:11px;font-weight:700;padding:7px 12px;border-radius:999px;box-shadow:0 4px 14px rgba(9,53,50,.3);display:inline-flex;align-items:center;gap:7px;opacity:.85}.demo-badge .dot{width:7px;height:7px;border-radius:50%;background:#F0C020}
+</style>
+</head>
+<body>
+<header class="page-header">
+  <div class="page-header-top">
+    <a href="index.html" class="brand-logo"><img src="mosaic-logo-real.png" alt="Mosaic"/></a>
+    <div class="md-search"><input type="text" placeholder="Pesquisa"/><span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span></div>
+    <div class="md-user-cluster">
+      <button class="md-lang-switch">PT <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="md-user-info"><span class="name">Alyssa Harris</span><span class="org">MAR JAC POULT...</span></div>
+      <span class="md-icon-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/></svg></span>
+      <span class="md-icon-circle is-outline"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
+    </div>
+  </div>
+  <nav class="md-nav"><div class="md-nav-inner">
+    <a href="index.html" class="nav-item">Home</a>
+    <a href="#" class="nav-item">Produtos</a>
+    <a href="#" class="nav-item">Cotações</a>
+    <span class="nav-item is-active" tabindex="0">Contratos<span class="chev"></span><div class="nav-submenu"><a href="criar-protocolo.html">Criar Protocolo</a><a href="relatorio-protocolos.html" class="is-active">Relatório de Protocolos</a></div></span>
+    <span class="nav-item" tabindex="0">Agendamento<span class="chev"></span><div class="nav-submenu"><a href="agendar-contrato-normal.html">Agendar Contratos Normais</a><a href="agendar-protocolo.html">Agendar Protocolo</a><a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a></div></span>
+    <a href="#" class="nav-item">Faturamento</a><a href="#" class="nav-item">Documentos</a><a href="#" class="nav-item">Financeiro</a><a href="#" class="nav-item">Suporte</a>
+  </div></nav>
+</header>
+
+<main class="shell">
+  <div class="bc"><a href="index.html">Página inicial</a> <span class="sep">&gt;</span> <a href="#">Contratos</a> <span class="sep">&gt;</span> <span>Relatório de Protocolos</span></div>
+  <p class="htext">Relatório de Protocolos</p>
+  <div class="toolbar">
+    <div class="search-wrap"><span class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><input id="search" type="text" placeholder="Buscar Protocolo, Contrato SAP ou Cotação..."/></div>
+  </div>
+  <div class="count-line"><strong id="count">0</strong> protocolos encontrados · clique direto na <strong>quantidade</strong> para editar, ou use o menu (▾) para mais ações.</div>
+  <div class="tbl-shell">
+    <table class="t" aria-label="Protocolos">
+      <thead><tr>
+        <th class="col-proto">Protocolo / Status</th><th class="col-contrato">Contrato / Cotação</th>
+        <th class="col-coop">Cooperado / Doc</th><th class="col-prod">Produto</th><th class="col-emb">Embalagem / Frete</th>
+        <th class="col-nf">NF / Data / Preço</th><th class="col-qtd num">Qtd. (t)</th><th class="col-saldo num">Saldo</th><th class="col-acao"></th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+</main>
+
+<!-- Modal Editar -->
+<div class="modal-bd" id="editModal"><div class="modal">
+  <div class="modal-head"><span class="ico edit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span>
+    <div style="flex:1"><h3>Editar protocolo</h3><div class="sub" id="editSub">—</div></div>
+    <button class="x" data-close><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="modal-body">
+    <div class="fld"><label>Qtd. Protocolo (t)</label><input id="editQtd" type="number" min="0"/></div>
+    <div class="fld"><label>NF Protocolo</label><input id="editNf" type="text" placeholder="—"/></div>
+    <div class="warn">Apenas quantidade e dados de NF são editáveis. Cooperado e Contrato são imutáveis — para alterá-los, cancele e recrie o protocolo.</div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-link" data-close>Cancelar</button><button class="btn btn-primary" id="editSave">Salvar</button></div>
+</div></div>
+
+<!-- Modal Cancelar -->
+<div class="modal-bd" id="cancelModal"><div class="modal">
+  <div class="modal-head"><span class="ico danger"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></span>
+    <div style="flex:1"><h3>Cancelar protocolo</h3><div class="sub">Esta ação não pode ser desfeita.</div></div>
+    <button class="x" data-close><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="modal-body">Você está prestes a cancelar o protocolo <b id="cancelId">—</b>. O volume <b id="cancelVol">—</b> deste protocolo será <b style="color:var(--md-green)">devolvido ao saldo disponível do contrato</b>.<div class="warn" style="margin-top:12px">O status será alterado para <b>"Cancelado"</b> e a mudança será permanente.</div></div>
+  <div class="modal-foot"><button class="btn btn-link" data-close>Manter protocolo</button><button class="btn btn-danger" id="cancelConfirm">Confirmar cancelamento</button></div>
+</div></div>
+
+<div class="toast" id="toast"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span id="toastTxt">—</span></div>
+
+<footer class="page-footer"><div class="page-footer-inner">
+  <a href="index.html" class="brand-logo"><img src="mosaic-logo-real.png" alt="Mosaic"/></a>
+  <div class="page-footer-links"><a href="#">política de Privacidade</a><a href="#">Termos e Condições</a><a href="#">Sobre nós</a><a href="#">Entre em contato conosco</a></div>
+  <div class="page-footer-copy">Copyright © 2024 Mosaic</div>
+</div></footer>
+<div class="demo-badge"><span class="dot"></span> v3 · protótipo</div>
+
+<script>
+const DATA=[
+ {id:"M9W38746",status:"Novo",st:"novo",contrato:"C-001-2024",cotacao:"Q-12345",coop:"CARLOS ALVES",doc:"123.456.789-00",prod:"EXCLN 24 05 24 UR",emb:"BagOneWay Liner 1,40",frete:"CIF",nf:"—",dataNf:"—",preco:"1.450,00",qtd:300,agendada:250,saldo:50},
+ {id:"M9W47291",status:"Em agendamento",st:"agend",contrato:"C-002-2024",cotacao:"Q-23456",coop:"AGUINALDO GOMES",doc:"234.567.890-11",prod:"MPANITRO 20 05 20 UR",emb:"BagOneWay Liner 1,40",frete:"FOB",nf:"—",dataNf:"—",preco:"1.380,00",qtd:500,agendada:200,saldo:300},
+ {id:"M9W51038",status:"Concluído",st:"concl",contrato:"C-003-2024",cotacao:"Q-34567",coop:"TEREZA AKEMI",doc:"345.678.901-22",prod:"FFALM 04 30 10",emb:"BagOneWay Liner 1,40",frete:"CIF",nf:"NF-2024-089",dataNf:"20/03/2025",preco:"1.620,00",qtd:200,agendada:200,saldo:0},
+ {id:"M9W63847",status:"Cancelado",st:"canc",contrato:"C-004-2024",cotacao:"Q-45678",coop:"BETO DOS SANTOS",doc:"456.789.012-33",prod:"STRAF 04 30 10 STR + 50 BMI2",emb:"BagOneWay Liner 1,40",frete:"FOB",nf:"—",dataNf:"—",preco:"890,00",qtd:0,agendada:0,saldo:0},
+ {id:"M9W71205",status:"Liberado para agendar",st:"lib",contrato:"C-005-2024",cotacao:"Q-56789",coop:"RENATO CESAR",doc:"567.890.123-44",prod:"EXCLN 18 09 27 UR",emb:"BagOneWay Liner 1,40",frete:"CIF",nf:"—",dataNf:"—",preco:"2.380,00",qtd:400,agendada:0,saldo:400},
+];
+const fmt=n=>n.toLocaleString("pt-BR");
+const PODE_AGENDAR=new Set(["Novo","Liberado para agendar","Em agendamento"]);
+const PODE_CANCEL=s=>s!=="Cancelado"&&s!=="Concluído";
+
+function rowHTML(p,i){
+  return `<tr data-i="${i}">
+    <th scope="row" class="col-proto"><div class="cmp"><a href="javascript:void(0)" class="p mono">${p.id}</a><span class="s"><span class="st ${p.st}"><span class="dot"></span>${p.status}</span></span></div></th>
+    <td class="col-contrato"><div class="cmp"><span class="p">${p.contrato}</span><span class="s mono">${p.cotacao}</span></div></td>
+    <td class="col-coop"><div class="cmp"><span class="p">${p.coop}</span><span class="s mono">${p.doc}</span></div></td>
+    <td class="col-prod">${p.prod}</td>
+    <td class="col-emb"><div class="cmp"><span class="p" style="font-weight:500">${p.emb}</span><span class="s" style="font-weight:700;color:${p.frete==='CIF'?'var(--md-orange)':'var(--md-green-800)'}">${p.frete}</span></div></td>
+    <td class="col-nf"><div class="cmp"><span class="p">${p.nf}</span><span class="s mono">${p.dataNf} · R$ ${p.preco}</span></div></td>
+    <td class="col-qtd num qty-cell" data-qty="${i}"><strong class="mono">${fmt(p.qtd)}</strong><span class="pencil"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></span></td>
+    <td class="col-saldo num"><strong class="mono saldo">${fmt(p.saldo)}</strong></td>
+    <td class="col-acao"><button class="chev-btn" data-menu="${i}" title="Ações"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button></td>
+  </tr>`;
+}
+function render(){
+  const q=(document.getElementById("search").value||"").trim().toLowerCase();
+  const rows=DATA.map((p,i)=>({p,i})).filter(({p})=>!q||[p.id,p.contrato,p.cotacao,p.coop].some(v=>v.toLowerCase().includes(q)));
+  document.getElementById("tbody").innerHTML=rows.map(({p,i})=>rowHTML(p,i)).join("")||`<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--md-gray-600)">Nenhum protocolo encontrado.</td></tr>`;
+  document.getElementById("count").textContent=rows.length;
+}
+render();
+document.getElementById("search").addEventListener("input",render);
+
+// inline qty edit
+let editingCell=null;
+document.getElementById("tbody").addEventListener("click",e=>{
+  const menuBtn=e.target.closest("[data-menu]");
+  if(menuBtn){e.stopPropagation();openMenu(menuBtn,Number(menuBtn.dataset.menu));return;}
+  const qc=e.target.closest(".qty-cell");
+  if(qc&&!editingCell){startQtyEdit(qc,Number(qc.dataset.qty));}
+});
+function startQtyEdit(cell,i){
+  editingCell=cell;const p=DATA[i];
+  cell.innerHTML=`<input class="qty-input" type="number" min="0" value="${p.qtd}"/>`;
+  const inp=cell.querySelector("input");inp.focus();inp.select();
+  const commit=()=>{const v=Number(inp.value)||0;p.qtd=v;p.saldo=Math.max(0,v-p.agendada);editingCell=null;render();toast(`Protocolo ${p.id} · quantidade atualizada · enviado ao SAP`);};
+  inp.addEventListener("blur",commit);
+  inp.addEventListener("keydown",ev=>{if(ev.key==="Enter")commit();if(ev.key==="Escape"){editingCell=null;render();}});
+}
+// action menu
+let menuEl=null;
+function closeMenu(){if(menuEl){menuEl.remove();menuEl=null;}}
+function openMenu(btn,i){
+  closeMenu();const p=DATA[i];
+  const podeAg=p.saldo>0&&PODE_AGENDAR.has(p.status);const podeCan=PODE_CANCEL(p.status);
+  const m=document.createElement("div");m.className="menu-pop";
+  m.innerHTML=`
+   <button data-act="edit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>Editar protocolo</button>
+   <button data-act="agendar" ${podeAg?'':'disabled'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Agendar protocolo</button>
+   <div class="menu-sep"></div>
+   <button class="danger" data-act="cancel" ${podeCan?'':'disabled'}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Cancelar protocolo</button>`;
+  document.body.appendChild(m);
+  const r=btn.getBoundingClientRect();let top=r.bottom+4;if(top+160>innerHeight)top=r.top-160;
+  m.style.top=top+"px";m.style.left=Math.min(r.left-180,innerWidth-220)+"px";
+  menuEl=m;
+  m.addEventListener("click",e=>{const b=e.target.closest("button[data-act]");if(!b||b.disabled)return;const act=b.dataset.act;closeMenu();if(act==="edit")openEdit(i);if(act==="cancel")openCancel(i);if(act==="agendar")location.href="agendar-protocolo.html";});
+}
+document.addEventListener("click",e=>{if(menuEl&&!e.target.closest(".menu-pop")&&!e.target.closest("[data-menu]"))closeMenu();});
+window.addEventListener("scroll",closeMenu,true);window.addEventListener("resize",closeMenu);
+
+// modals
+let editIdx=null,cancelIdx=null;
+function openEdit(i){editIdx=i;const p=DATA[i];document.getElementById("editSub").textContent=`${p.id} · ${p.contrato}`;document.getElementById("editQtd").value=p.qtd;document.getElementById("editNf").value=p.nf==="—"?"":p.nf;document.getElementById("editModal").classList.add("is-open");}
+function openCancel(i){cancelIdx=i;const p=DATA[i];document.getElementById("cancelId").textContent=p.id;document.getElementById("cancelVol").textContent=fmt(p.qtd)+" t";document.getElementById("cancelModal").classList.add("is-open");}
+document.getElementById("editSave").addEventListener("click",()=>{const p=DATA[editIdx];p.qtd=Number(document.getElementById("editQtd").value)||0;p.nf=document.getElementById("editNf").value.trim()||"—";p.saldo=Math.max(0,p.qtd-p.agendada);document.getElementById("editModal").classList.remove("is-open");render();toast(`Protocolo ${p.id} atualizado · enviado ao SAP`);});
+document.getElementById("cancelConfirm").addEventListener("click",()=>{const p=DATA[cancelIdx];p.status="Cancelado";p.st="canc";p.qtd=0;p.agendada=0;document.getElementById("cancelModal").classList.remove("is-open");render();toast(`Protocolo ${p.id} cancelado · volume devolvido ao contrato`);});
+document.querySelectorAll(".modal-bd").forEach(m=>m.addEventListener("click",e=>{if(e.target===m||e.target.closest("[data-close]"))m.classList.remove("is-open");}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeMenu();document.querySelectorAll(".modal-bd").forEach(m=>m.classList.remove("is-open"));}});
+
+function toast(msg){const t=document.getElementById("toast");document.getElementById("toastTxt").textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3000);}
+</script>
+<script src="../review-overlay.js" defer></script>
+</body>
+</html>
