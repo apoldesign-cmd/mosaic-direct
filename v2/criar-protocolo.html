@@ -3981,18 +3981,21 @@
     gap: 16px;
     align-items: center;
   }
-  .btn-cadastrar-coop {
+  /* Secundário com contraste correto — vence a regra .btn-secondary duplicada
+     via especificidade (button.classe). Default: fundo branco + verde;
+     hover: preenche verde + branco. */
+  button.btn-cadastrar-coop {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    border: 1.5px solid var(--mosaic-green-800);
+  }
+  button.btn-cadastrar-coop:hover {
     background: var(--mosaic-green-800);
-    color: #fff;
     border-color: var(--mosaic-green-800);
-  }
-  .btn-cadastrar-coop:hover {
-    background: var(--mosaic-green-900);
-    border-color: var(--mosaic-green-900);
     color: #fff;
   }
-  /* Ícone do botão também em branco (override padrão de .btn-with-icon) */
-  .btn-cadastrar-coop svg { color: #fff; stroke: #fff; }
+  button.btn-cadastrar-coop svg { color: var(--mosaic-green-800); stroke: var(--mosaic-green-800); }
+  button.btn-cadastrar-coop:hover svg { color: #fff; stroke: #fff; }
   .proto-table-wrap {
     border: 1px solid var(--border-soft);
     background: #fff;
