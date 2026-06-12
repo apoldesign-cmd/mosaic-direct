@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spec · UX → Componentes SLDS nativos (copia-e-cola)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    --g900:#093532; --g800:#1D625C; --g700:#436462; --g100:#E9EFEE;
+    --blue:#0176d3; --amber:#fe9339; --red:#ba0517; --green:#2e844a;
+    --bg:#f7f9f9; --card:#fff; --bd:#e3e8e7; --txt:#1a2b27; --mut:#6b7570;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --font:'Barlow',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box} body{margin:0;font-family:var(--font);background:var(--bg);color:var(--txt);line-height:1.55}
+  .hero{background:linear-gradient(135deg,#093532,#1D625C);color:#fff;padding:48px 40px 40px}
+  .hero .eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8}
+  .hero h1{margin:8px 0 12px;font-size:32px;font-weight:800;letter-spacing:-.5px}
+  .hero p{margin:0;max-width:820px;font-size:15px;opacity:.95}
+  .wrap{max-width:1100px;margin:0 auto;padding:36px 40px 80px}
+  .lead{font-size:16px;color:var(--g700);max-width:820px}
+
+  h2{font-size:22px;font-weight:800;color:var(--g900);margin:42px 0 16px;letter-spacing:-.3px}
+  h2 .n{display:inline-flex;width:30px;height:30px;border-radius:50%;background:var(--g800);color:#fff;font-size:15px;align-items:center;justify-content:center;margin-right:10px;vertical-align:middle}
+
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0}
+  .layer{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:18px 20px}
+  .layer .lvl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--g800)}
+  .layer h3{margin:6px 0 8px;font-size:17px;font-weight:800;color:var(--g900)}
+  .layer p{margin:0;font-size:13px;color:var(--g700)}
+  .layer .tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px}
+  .tag.cfg{background:#e6f4ec;color:var(--green)} .tag.custom{background:#fdeceb;color:var(--red)}
+
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;font-size:14px;margin-top:8px}
+  th,td{text-align:left;padding:14px 16px;border-bottom:1px solid var(--bd);vertical-align:top}
+  th{background:var(--g100);color:var(--g900);font-weight:800;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em}
+  tr:last-child td{border-bottom:none}
+  .imp{font-weight:700;color:var(--g900)}
+  code{font-family:var(--mono);font-size:12.5px;background:#f0f3f2;color:var(--g900);padding:2px 6px;border-radius:4px}
+  pre{font-family:var(--mono);font-size:12px;background:#0d2b27;color:#d4ede7;padding:12px 14px;border-radius:8px;overflow-x:auto;margin:6px 0 0;line-height:1.5}
+  pre .k{color:#7fd8c4} pre .a{color:#f0c987} pre .c{color:#6b8f88}
+  .eff{display:inline-block;font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;white-space:nowrap}
+  .eff.none{background:#e6f4ec;color:var(--green)} .eff.low{background:#fff4e5;color:#9a5b1e} .eff.mid{background:#eaf3fb;color:var(--blue)}
+
+  .callout{background:#fff;border-left:4px solid var(--g800);border-radius:0 10px 10px 0;padding:18px 22px;margin:22px 0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .callout.warn{border-left-color:var(--amber)}
+  .callout h3{margin:0 0 6px;font-size:15px;font-weight:800;color:var(--g900)}
+  .callout p{margin:0;font-size:14px;color:var(--g700)}
+  .links{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+  .links a{display:inline-flex;align-items:center;gap:8px;background:var(--g800);color:#fff;text-decoration:none;font-weight:700;font-size:13px;padding:10px 16px;border-radius:8px}
+  .links a.alt{background:#fff;color:var(--g800);border:1px solid var(--g800)}
+  .ref a{color:var(--g800);font-weight:600}
+  @media(max-width:760px){.layers{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="eyebrow">Mosaic Direct · Spec técnica para Arquitetura</div>
+  <h1>Cada melhoria de UX = um componente Salesforce nativo</h1>
+  <p>Este documento prova que as melhorias propostas no protótipo <strong>não são design custom</strong> — são <strong>configuração de componentes SLDS/LWC que já existem</strong> na plataforma. Objetivo: o time de desenvolvimento <strong>copia, cola e configura</strong>, sem construir do zero.</p>
+</div>
+
+<div class="wrap">
+  <p class="lead">O ponto de atrito atual é tratar <strong>configuração</strong> como se fosse <strong>desenvolvimento</strong>. O Salesforce entrega a UI em três camadas componentizadas. A grande maioria do que pedimos vive nas duas primeiras — ou seja, <strong>já está pronto</strong>.</p>
+
+  <h2><span class="n">1</span>As 3 camadas do Salesforce</h2>
+  <div class="layers">
+    <div class="layer">
+      <div class="lvl">Camada 1 · CSS</div>
+      <h3>SLDS</h3>
+      <p>Design System oficial. Zebra, truncate, badges, cores, grid — tudo são <strong>classes prontas</strong>. O dev aplica a classe, não escreve CSS.</p>
+      <span class="tag cfg">Configuração</span>
+    </div>
+    <div class="layer">
+      <div class="lvl">Camada 2 · Componentes</div>
+      <h3>Base Components</h3>
+      <p><code>lightning-datatable</code>, <code>lightning-input</code>, <code>lightning-modal</code>… Componentes prontos da Salesforce. O dev <strong>configura propriedades</strong>.</p>
+      <span class="tag cfg">Configuração</span>
+    </div>
+    <div class="layer">
+      <div class="lvl">Camada 3 · Código</div>
+      <h3>LWC custom</h3>
+      <p>Só quando precisa de algo realmente novo (ex: um cell-type composto). É a <strong>minoria</strong> do trabalho.</p>
+      <span class="tag custom">Dev leve</span>
+    </div>
+  </div>
+
+  <h2><span class="n">2</span>Mapeamento: melhoria → componente nativo → código</h2>
+  <table>
+    <thead>
+      <tr><th style="width:18%">Melhoria</th><th style="width:24%">Componente nativo</th><th style="width:42%">O que o dev copia</th><th style="width:16%">Esforço</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="imp">Linha zebrada</td>
+        <td><code>slds-table_striped</code></td>
+        <td><pre><span class="k">&lt;table</span> <span class="a">class</span>=<span class="a">"slds-table slds-table_bordered slds-table_striped slds-table_cell-buffer"</span><span class="k">&gt;</span></pre></td>
+        <td><span class="eff none">Nenhum · 1 classe</span></td>
+      </tr>
+      <tr>
+        <td class="imp">Truncate</td>
+        <td><code>slds-truncate</code></td>
+        <td><pre><span class="k">&lt;div</span> <span class="a">class</span>=<span class="a">"slds-truncate"</span> <span class="a">title</span>=<span class="a">"texto completo"</span><span class="k">&gt;</span>texto<span class="k">&lt;/div&gt;</span>
+<span class="c">// lightning-datatable já trunca por padrão (wrapText=false)</span></pre></td>
+        <td><span class="eff none">Nenhum · built-in</span></td>
+      </tr>
+      <tr>
+        <td class="imp">Concatenação<br>(compound)</td>
+        <td><code>lightning-datatable</code> custom cell type · ou Formula Field</td>
+        <td><pre><span class="c">// 1 cellType reutilizável, ou empilhar 2 campos na coluna:</span>
+<span class="k">&lt;div</span> <span class="a">class</span>=<span class="a">"slds-line-height_reset"</span><span class="k">&gt;</span>
+  <span class="k">&lt;div&gt;</span>{contrato}<span class="k">&lt;/div&gt;</span>
+  <span class="k">&lt;div</span> <span class="a">class</span>=<span class="a">"slds-text-color_weak"</span><span class="k">&gt;</span>{cotacao}<span class="k">&lt;/div&gt;</span>
+<span class="k">&lt;/div&gt;</span></pre></td>
+        <td><span class="eff low">Leve · 1 cellType</span></td>
+      </tr>
+      <tr>
+        <td class="imp">Side-nav<br>(drawer)</td>
+        <td>SLDS <code>slds-panel slds-panel_docked-right</code> · ou <code>lightning-quick-action-panel</code></td>
+        <td><pre><span class="k">&lt;div</span> <span class="a">class</span>=<span class="a">"slds-panel slds-panel_docked slds-panel_docked-right slds-is-open"</span><span class="k">&gt;</span> … <span class="k">&lt;/div&gt;</span></pre></td>
+        <td><span class="eff mid">Médio-leve</span></td>
+      </tr>
+      <tr>
+        <td class="imp">Diferenciação<br>de caracteres</td>
+        <td><code>slds-badge</code> · <code>slds-text-color_*</code> · <code>tabular-nums</code></td>
+        <td><pre><span class="k">&lt;span</span> <span class="a">class</span>=<span class="a">"slds-badge slds-theme_success"</span><span class="k">&gt;</span>Concluído<span class="k">&lt;/span&gt;</span>
+<span class="k">&lt;span</span> <span class="a">style</span>=<span class="a">"font-variant-numeric:tabular-nums"</span><span class="k">&gt;</span>1.200<span class="k">&lt;/span&gt;</span></pre></td>
+        <td><span class="eff none">Nenhum · classes</span></td>
+      </tr>
+      <tr>
+        <td class="imp">Sem scroll<br>horizontal</td>
+        <td>consequência da concatenação + larguras do <code>lightning-datatable</code></td>
+        <td><pre><span class="c">// menos colunas (24 → 9) cabe na viewport.</span>
+<span class="c">// datatable: columns[].initialWidth + fixedLayout</span>
+columns = [{ label:<span class="a">'Contrato / Cotação'</span>, fieldName:<span class="a">'contrato'</span>, initialWidth: <span class="a">160</span> }, …]</pre></td>
+        <td><span class="eff none">Nenhum · config</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <h3>Por que a concatenação resolve o scroll horizontal</h3>
+    <p>A tabela hoje rola lateralmente porque tem ~24 colunas. Agrupando campos relacionados numa célula só (Produto / Embalagem / Frete → 1 coluna; Filial / CNPJ / Cidade → 1 coluna) caímos para ~9 colunas e <strong>cabe na tela</strong>. É exatamente o padrão que o próprio Salesforce usa no Kanban de Oportunidades e no Service Console — não é invenção nossa.</p>
+  </div>
+
+  <div class="callout warn">
+    <h3>Honestidade técnica: o que é config vs. dev leve</h3>
+    <p><strong>Config puro (zero código):</strong> zebra, truncate, badges, cores, monospace, larguras de coluna, sem-scroll. <strong>Dev leve (pontual):</strong> o custom cell type da concatenação e o posicionamento do panel lateral — ambos são padrões documentados do LWC, feitos uma vez e reutilizados em todas as telas. Nada disso é "design fora do escopo".</p>
+  </div>
+
+  <h2><span class="n">3</span>Prova viva</h2>
+  <p class="lead">Tabela do Relatório de Protocolos reconstruída em <strong>SLDS 100% nativo</strong> (CSS oficial via CDN), compactada de 24 → 9 colunas, com zebra + truncate + badges + números monospace e <strong>sem scroll horizontal</strong>. É copia-e-cola: troca <code>&lt;table class="slds-table"&gt;</code> por <code>&lt;lightning-datatable&gt;</code>.</p>
+  <div class="links">
+    <a href="v3-tabela-compacta-slds.html" target="_blank">Ver tabela compacta (SLDS nativo) →</a>
+    <a class="alt" href="v3-relatorio-protocolos-slds.html" target="_blank">Ver relatório completo SLDS →</a>
+    <a class="alt" href="comparativo-selecao-contratos.html" target="_blank">Modal vs Sidenav (Panel SLDS) →</a>
+  </div>
+
+  <h2><span class="n">4</span>Referências oficiais Salesforce</h2>
+  <p class="ref" style="font-size:14px;color:var(--g700)">
+    Data Tables → <a href="https://www.lightningdesignsystem.com/components/data-tables/" target="_blank">lightningdesignsystem.com/components/data-tables</a><br>
+    lightning-datatable (LWC) → <a href="https://developer.salesforce.com/docs/component-library/bundle/lightning-datatable/documentation" target="_blank">developer.salesforce.com · lightning-datatable</a><br>
+    Custom cell types → <a href="https://developer.salesforce.com/docs/component-library/documentation/en/lwc/lwc.data_table_custom_types" target="_blank">data_table_custom_types</a><br>
+    Panels → <a href="https://www.lightningdesignsystem.com/components/panels/" target="_blank">lightningdesignsystem.com/components/panels</a> ·
+    Truncate → <a href="https://www.lightningdesignsystem.com/utilities/truncate/" target="_blank">utilities/truncate</a>
+  </p>
+</div>
+
+</body>
+</html>

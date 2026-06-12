@@ -1,0 +1,1992 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Protocols · Mosaic SalesCloud</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<style>
+/* ============================================================
+   Salesforce Lightning — design tokens (visual modernizado)
+   ============================================================ */
+:root {
+  --slds-blue:        #0176d3;
+  --slds-blue-hover:  #014486;
+  --slds-blue-light:  #cfe9fe;
+  --slds-blue-text:   #014486;
+  --slds-border:      #c9c9c9;
+  --slds-border-soft: #e5e5e5;
+  --slds-bg-page:     #f3f3f3;
+  --slds-bg-card:     #ffffff;
+  --slds-bg-hover:    #f9fafb;
+  --slds-bg-strip:    #fafafa;
+  --slds-text-1:      #080707;
+  --slds-text-2:      #3e3e3c;
+  --slds-text-3:      #706e6b;
+  --slds-success:     #2e844a;
+  --slds-warning:     #fe9339;
+  --slds-error:       #ba0517;
+  --slds-orange:      #ff9a3c;
+
+  --mosaic-green-800: #00583d;
+  --mosaic-green-700: #006a4d;
+
+  /* Banner amarelo de acesso restrito */
+  --warn-bg:          #fef9e6;
+  --warn-border:      #f5d76e;
+  --warn-text:        #3e3e3c;
+
+  /* Pílulas status */
+  --pill-novo-bg:     #cfe9fe;
+  --pill-novo-tx:     #014486;
+  --pill-lib-bg:      #cfe9fe;
+  --pill-lib-tx:      #014486;
+  --pill-agend-bg:    #fef3c7;
+  --pill-agend-tx:    #854d0e;
+  --pill-concl-bg:    #d1fae5;
+  --pill-concl-tx:    #065f46;
+  --pill-canc-bg:     #e5e7eb;
+  --pill-canc-tx:     #6b7280;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0; padding: 0;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Salesforce Sans", "Segoe UI", sans-serif;
+  font-size: 13px;
+  color: var(--slds-text-1);
+  background: var(--slds-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button, input, select { font-family: inherit; }
+a { color: var(--slds-blue); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ============================================================
+   Sandbox strip (top thin bar)
+   ============================================================ */
+.sandbox-strip {
+  background: #ececec;
+  color: var(--slds-text-2);
+  font-size: 11px;
+  height: 22px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e0e0e0;
+}
+.sandbox-strip strong { font-weight: 600; color: var(--slds-text-1); }
+.sandbox-strip .right { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.sandbox-strip .right:hover { color: var(--slds-blue); }
+
+/* ============================================================
+   Global header (white) — logo + search + ícones
+   ============================================================ */
+.global-header {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  height: 56px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.global-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  color: var(--mosaic-green-800);
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+.global-logo .logo-mark {
+  width: 28px; height: 28px;
+  background: var(--mosaic-green-800);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  border-radius: 4px;
+}
+.global-search {
+  flex: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+.global-search input {
+  width: 100%;
+  height: 36px;
+  padding: 0 12px 0 38px;
+  border: 1px solid var(--slds-border);
+  border-radius: 18px;
+  font-size: 13px;
+  background: #fff;
+  outline: none;
+}
+.global-search input:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
+}
+.global-search svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slds-text-3);
+}
+.global-icons { display: inline-flex; align-items: center; gap: 4px; }
+.global-icons .icon-btn {
+  width: 34px; height: 34px;
+  border: none;
+  background: transparent;
+  color: var(--slds-text-2);
+  cursor: pointer;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.global-icons .icon-btn:hover { background: #f3f3f3; color: var(--slds-text-1); }
+.global-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--mosaic-green-800);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-left: 6px;
+  cursor: pointer;
+}
+
+/* ============================================================
+   App switcher row — Sales Cloud · Mosaic · INTERNAL
+   ============================================================ */
+.app-row {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  height: 44px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.app-row .left { display: inline-flex; align-items: center; gap: 10px; }
+.app-cloud-pill {
+  background: #e3f3df;
+  color: #064d2c;
+  font-weight: 700;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.app-cloud-pill::before {
+  content: "";
+  width: 8px; height: 8px;
+  background: #2e844a;
+  border-radius: 50%;
+  display: inline-block;
+}
+.app-name { font-weight: 700; font-size: 14px; color: var(--slds-text-1); }
+.app-badge-internal {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: #ececec;
+  color: var(--slds-text-2);
+  padding: 3px 7px;
+  border-radius: 3px;
+}
+.app-row .center {
+  flex: 1;
+  max-width: 480px;
+  margin: 0 auto;
+  position: relative;
+}
+.app-row .center input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px 0 32px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 12.5px;
+  background: #fff;
+  outline: none;
+}
+.app-row .center svg {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slds-text-3);
+}
+.app-row .right { display: inline-flex; align-items: center; gap: 4px; }
+
+/* ============================================================
+   Nav tabs row (Home, Accounts, Contracts, Protocols current, …)
+   ============================================================ */
+.nav-tabs {
+  background: #fff;
+  border-bottom: 1px solid var(--slds-border-soft);
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 44px;
+  overflow-x: auto;
+}
+.nav-tab {
+  position: relative;
+  padding: 0 14px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--slds-text-2);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  border: none;
+  background: transparent;
+}
+.nav-tab:hover { color: var(--slds-blue); }
+.nav-tab.is-current {
+  color: var(--slds-blue);
+  font-weight: 600;
+}
+.nav-tab.is-current::after {
+  content: "";
+  position: absolute;
+  left: 10px; right: 10px; bottom: 0;
+  height: 3px;
+  background: var(--slds-blue);
+  border-radius: 2px 2px 0 0;
+}
+.nav-tab .caret { margin-left: 4px; opacity: 0.7; }
+
+/* ============================================================
+   Banner amarelo "Acesso restrito · Time Mosaic"
+   ============================================================ */
+.access-banner {
+  background: var(--warn-bg);
+  border-top: 1px solid var(--warn-border);
+  border-bottom: 1px solid var(--warn-border);
+  color: var(--warn-text);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12.5px;
+}
+.access-banner svg { color: #b88517; flex-shrink: 0; }
+.access-banner strong { font-weight: 700; color: var(--slds-text-1); }
+
+/* ============================================================
+   List view header
+   ============================================================ */
+.list-shell {
+  padding: 16px 20px 32px;
+}
+.list-header {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-bottom: none;
+  padding: 14px 18px 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.list-header .obj-icon {
+  width: 40px; height: 40px;
+  background: var(--slds-orange);
+  color: #fff;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.list-header .titles { flex: 1; min-width: 0; }
+.list-header .obj-label {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  text-transform: none;
+  font-weight: 500;
+  line-height: 1.2;
+}
+.list-header .view-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  cursor: pointer;
+  line-height: 1.3;
+}
+.list-header .view-selector:hover { color: var(--slds-blue); }
+.list-header .view-selector svg { color: var(--slds-text-2); }
+.list-header .actions { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.list-header .actions .icon-btn {
+  width: 32px; height: 32px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  color: var(--slds-text-2);
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.list-header .actions .icon-btn:hover { background: var(--slds-bg-hover); color: var(--slds-text-1); }
+.list-header .actions .btn-text {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  color: var(--slds-text-1);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+}
+.list-header .actions .btn-text:hover { background: var(--slds-bg-hover); }
+.list-header .actions .btn-primary {
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--slds-blue);
+  background: var(--slds-blue);
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.list-header .actions .btn-primary:hover { background: var(--slds-blue-hover); border-color: var(--slds-blue-hover); }
+
+/* Info row */
+.list-info {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
+  border-bottom: none;
+  padding: 0 18px 8px;
+  font-size: 11.5px;
+  color: var(--slds-text-3);
+}
+
+/* Filters row */
+.filters-row {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
+  border-bottom: none;
+  padding: 8px 18px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.list-search {
+  position: relative;
+  flex: 0 0 280px;
+}
+.list-search input {
+  width: 100%;
+  height: 30px;
+  padding: 0 10px 0 30px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 12.5px;
+  background: #fff;
+  outline: none;
+}
+.list-search input:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
+}
+.list-search svg {
+  position: absolute;
+  left: 9px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slds-text-3);
+}
+.filter-pills { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.filter-pill {
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  color: var(--slds-text-2);
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.filter-pill:hover { background: var(--slds-bg-hover); }
+.filter-pill .count {
+  background: #ececec;
+  color: var(--slds-text-2);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 9px;
+  min-width: 18px;
+  text-align: center;
+}
+.filter-pill.is-active {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.filter-pill.is-active .count {
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+}
+
+/* ============================================================
+   Table
+   ============================================================ */
+.list-table-wrap {
+  background: #fff;
+  border: 1px solid var(--slds-border-soft);
+  border-top: none;
+  overflow-x: auto;
+}
+table.list-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  min-width: 1300px;
+}
+.list-table thead th {
+  background: var(--slds-bg-strip);
+  color: var(--slds-text-2);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  white-space: nowrap;
+  position: relative;
+  user-select: none;
+}
+.list-table thead th.sortable { cursor: pointer; }
+.list-table thead th.sortable:hover { background: #f0f0f0; color: var(--slds-text-1); }
+.list-table thead th .th-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.list-table thead th .sort-arrow {
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.list-table thead th.is-sorted .sort-arrow { opacity: 1; color: var(--slds-blue); }
+.list-table thead th:first-child { width: 36px; padding-left: 14px; padding-right: 6px; }
+
+.list-table tbody td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  vertical-align: middle;
+  color: var(--slds-text-1);
+}
+.list-table tbody td:first-child { padding-left: 14px; padding-right: 6px; }
+.list-table tbody tr:hover { background: var(--slds-bg-hover); }
+.list-table tbody tr.is-cancelled td {
+  color: var(--slds-text-3);
+  background: #fafafa;
+}
+.list-table tbody tr.is-cancelled .cell-text-strike,
+.list-table tbody tr.is-cancelled .protocol-link {
+  text-decoration: line-through;
+}
+
+.protocol-link {
+  color: var(--slds-blue);
+  font-weight: 600;
+  text-decoration: none;
+}
+.protocol-link:hover { text-decoration: underline; }
+
+.lock-ico {
+  display: inline-flex;
+  vertical-align: -1px;
+  margin-left: 4px;
+  color: var(--slds-text-3);
+  opacity: 0.7;
+}
+
+.checkbox {
+  width: 16px; height: 16px;
+  border: 1.5px solid var(--slds-border);
+  border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+.checkbox.is-checked {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+
+/* Status pills */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.status-novo        { background: var(--pill-novo-bg);  color: var(--pill-novo-tx); }
+.status-liberado    { background: var(--pill-lib-bg);   color: var(--pill-lib-tx); }
+.status-em-agend    { background: var(--pill-agend-bg); color: var(--pill-agend-tx); }
+.status-concluido   { background: var(--pill-concl-bg); color: var(--pill-concl-tx); }
+.status-cancelado   { background: var(--pill-canc-bg);  color: var(--pill-canc-tx); }
+
+/* Cell stack (linha 1 forte + linha 2 fraca) */
+.cell-stack { display: flex; flex-direction: column; line-height: 1.3; }
+.cell-stack .sub { color: var(--slds-text-3); font-size: 11.5px; }
+
+/* Frete badge */
+.frete-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.frete-badge.cif { background: #e0f2fe; color: #075985; }
+.frete-badge.fob { background: #fff0e6; color: #9a3412; }
+
+/* Empty state */
+.empty-row td {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--slds-text-3);
+  font-size: 13px;
+}
+
+/* ============================================================
+   Mass-action toolbar (aparece quando ≥1 linha selecionada)
+   ============================================================ */
+.mass-actions {
+  display: none;
+  background: var(--slds-blue-light);
+  border-left: 1px solid var(--slds-border-soft);
+  border-right: 1px solid var(--slds-border-soft);
+  border-bottom: 1px solid var(--slds-blue);
+  padding: 10px 18px;
+  align-items: center;
+  gap: 12px;
+}
+.mass-actions.is-visible { display: flex; }
+.mass-actions-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-blue-text);
+  flex: 1;
+}
+.mass-actions .slds-btn {
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--slds-blue);
+  background: #fff;
+  color: var(--slds-blue);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mass-actions .slds-btn:hover { background: #eaf4fc; }
+.mass-actions .slds-btn-destructive-outline {
+  border-color: var(--slds-error);
+  color: var(--slds-error);
+}
+.mass-actions .slds-btn-destructive-outline:hover { background: #fdeaec; }
+.mass-actions .clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--slds-blue-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  height: 30px;
+  padding: 0 8px;
+}
+.mass-actions .clear-btn:hover { text-decoration: underline; }
+
+/* ============================================================
+   Modal (mass edit + mass cancel)
+   ============================================================ */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8,7,7,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-backdrop.is-open { display: flex; }
+.slds-modal {
+  background: #fff;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.slds-modal.is-wide { max-width: 920px; }
+.slds-modal-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+.slds-modal-head h2 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  color: var(--slds-text-1);
+}
+.slds-modal-close {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px; height: 28px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--slds-text-3);
+  border-radius: 4px;
+}
+.slds-modal-close:hover { background: rgba(0,0,0,0.06); color: var(--slds-text-1); }
+.slds-modal-body {
+  padding: 0;
+  font-size: 13px;
+  color: var(--slds-text-2);
+  line-height: 1.5;
+  overflow-y: auto;
+}
+.slds-modal-foot {
+  padding: 12px 20px;
+  border-top: 1px solid var(--slds-border-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f7f7f7;
+}
+.slds-modal-foot .foot-left { flex: 1; font-size: 12px; color: var(--slds-text-3); }
+.slds-modal-foot .slds-btn {
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid var(--slds-border);
+  background: #fff;
+  border-radius: 4px;
+  color: var(--slds-blue);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+.slds-modal-foot .slds-btn:hover { background: var(--slds-bg-hover); }
+.slds-modal-foot .slds-btn-brand {
+  background: var(--mosaic-green-800);
+  border-color: var(--mosaic-green-800);
+  color: #fff;
+}
+.slds-modal-foot .slds-btn-brand:hover { background: #003e2a; border-color: #003e2a; }
+
+/* ============ Modal: Criar Protocolo (SMDP-162 / FSD-PROT-001) ============ */
+.form-legend {
+  text-align: right;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--slds-text-3);
+  padding: 0 6px 10px;
+  border-bottom: 1px solid var(--slds-border-soft);
+  margin-bottom: 14px;
+}
+.form-legend .req-star { color: var(--slds-error); font-style: normal; margin-right: 2px; }
+.form-section-head {
+  background: #f7f7f7;
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--slds-text-1);
+  margin: 14px -6px 6px;
+}
+.form-section-head:first-child { margin-top: 0; }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+  padding: 4px 6px;
+}
+.form-field { display: flex; flex-direction: column; gap: 4px; }
+.form-field-wide { grid-column: 1 / -1; }
+.form-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+}
+.form-field .req-star { color: var(--slds-error); margin-right: 2px; }
+.form-field input,
+.form-field select {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--slds-text-1);
+  outline: none;
+}
+.form-field input[readonly],
+.form-field input:disabled {
+  background: #fafafa;
+  color: var(--slds-text-3);
+  cursor: not-allowed;
+}
+.form-field input:focus,
+.form-field select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 3px rgba(1,118,211,0.20);
+}
+.form-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23706e6b' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  padding-right: 28px;
+}
+.form-help { font-size: 11px; color: var(--slds-text-3); }
+.form-err {
+  display: none;
+  font-size: 12px;
+  color: var(--slds-error);
+  margin-top: 2px;
+}
+.form-field.is-invalid input,
+.form-field.is-invalid select { border-color: var(--slds-error); }
+.form-field.is-invalid .form-err { display: block; }
+.slds-modal-foot .slds-btn-brand:disabled,
+.slds-modal-foot .slds-btn-destructive:disabled {
+  background: #ecebea; border-color: var(--slds-border); color: var(--slds-text-3); cursor: not-allowed;
+}
+.slds-modal-foot .slds-btn-destructive {
+  background: var(--slds-error);
+  border-color: var(--slds-error);
+  color: #fff;
+}
+.slds-modal-foot .slds-btn-destructive:hover { background: #98030f; border-color: #98030f; }
+
+/* Mass-edit form */
+.mass-warn-banner {
+  background: #fef9e6;
+  border-bottom: 1px solid #f5d76e;
+  color: #3e3e3c;
+  padding: 10px 18px;
+  font-size: 12.5px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.mass-warn-banner svg { color: #b88517; flex-shrink: 0; margin-top: 1px; }
+.mass-edit-form {
+  padding: 14px 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+.mass-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mass-field-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--slds-text-2);
+}
+.mass-field-head .mass-check {
+  width: 14px; height: 14px;
+  border: 1.5px solid var(--slds-border);
+  border-radius: 2px;
+  background: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.mass-field-head .mass-check.is-checked {
+  background: var(--slds-blue);
+  border-color: var(--slds-blue);
+  color: #fff;
+}
+.mass-field input,
+.mass-field select {
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--slds-border);
+  border-radius: 4px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  background: #fff;
+  color: var(--slds-text-1);
+}
+.mass-field input:focus,
+.mass-field select:focus {
+  border-color: var(--slds-blue);
+  box-shadow: 0 0 0 1px var(--slds-blue);
+}
+.mass-field input:disabled,
+.mass-field select:disabled {
+  background: #fafafa;
+  color: var(--slds-text-3);
+  cursor: not-allowed;
+}
+.mass-field-helper {
+  font-size: 11px;
+  color: var(--slds-text-3);
+  font-style: italic;
+}
+
+/* Mass-cancel list */
+.mass-cancel-list {
+  padding: 8px 0;
+  max-height: 360px;
+  overflow-y: auto;
+}
+.mass-cancel-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--slds-border-soft);
+}
+.mass-cancel-row:last-child { border-bottom: none; }
+.mass-cancel-row .mc-id {
+  font-weight: 700;
+  color: var(--slds-text-1);
+  min-width: 110px;
+}
+.mass-cancel-row .mc-status { flex: 1; }
+.mass-cancel-row.is-ok .mc-status { color: var(--slds-success); }
+.mass-cancel-row.is-blocked .mc-status { color: var(--slds-error); }
+.mass-cancel-row .mc-ico {
+  width: 16px; height: 16px;
+  flex-shrink: 0;
+}
+.mass-cancel-row.is-ok .mc-ico { color: var(--slds-success); }
+.mass-cancel-row.is-blocked .mc-ico { color: var(--slds-error); }
+
+/* Toast */
+.slds-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--slds-success);
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.20);
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 220;
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.slds-toast.is-visible { transform: translateX(-50%) translateY(0); }
+.slds-toast.is-error { background: var(--slds-error); }
+.slds-toast .sap-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.18);
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 900px) {
+  .global-search { max-width: 240px; }
+  .app-row .center { display: none; }
+  .filters-row { flex-direction: column; align-items: stretch; }
+  .list-search { flex: 1 1 auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- Sandbox strip -->
+<div class="sandbox-strip">
+  <div><strong>Sandbox:</strong> IntDev</div>
+  <div class="right">Opções
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+</div>
+
+<!-- Global header (white) -->
+<header class="global-header">
+  <div class="global-logo">
+    <span class="logo-mark">M</span>
+    <span>Mosaic</span>
+  </div>
+  <div class="global-search">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Pesquisar..." />
+  </div>
+  <div class="global-icons">
+    <button class="icon-btn" title="Favoritos" aria-label="Favoritos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+    <button class="icon-btn" title="Novo" aria-label="Novo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg></button>
+    <button class="icon-btn" title="Apps" aria-label="Apps"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></button>
+    <button class="icon-btn" title="Ajuda" aria-label="Ajuda"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></button>
+    <button class="icon-btn" title="Setup" aria-label="Setup"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="icon-btn" title="Notificações" aria-label="Notificações"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+    <span class="global-avatar" title="Victor Dias">VD</span>
+  </div>
+</header>
+
+<!-- App switcher row -->
+<div class="app-row">
+  <div class="left">
+    <span class="app-cloud-pill">Sales Cloud</span>
+    <span class="app-name">Mosaic</span>
+    <span class="app-badge-internal">INTERNAL</span>
+  </div>
+  <div class="center">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" placeholder="Search Salesforce" />
+  </div>
+  <div class="right">
+    <button class="icon-btn" title="Favoritos"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+    <button class="icon-btn" title="Setup"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+    <button class="icon-btn" title="Notificações"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+    <span class="global-avatar" style="background:#1f5e9b">AH</span>
+  </div>
+</div>
+
+<!-- Nav tabs row -->
+<nav class="nav-tabs" aria-label="Object navigation">
+  <button class="nav-tab">Home</button>
+  <button class="nav-tab">Accounts</button>
+  <button class="nav-tab">Contracts</button>
+  <button class="nav-tab">Opportunities</button>
+  <button class="nav-tab is-current">Protocols</button>
+  <button class="nav-tab">Schedulings</button>
+  <button class="nav-tab">Reports</button>
+  <button class="nav-tab">Dashboards</button>
+  <button class="nav-tab">More
+    <svg class="caret" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </button>
+</nav>
+
+<!-- Banner amarelo -->
+<div class="access-banner" role="note">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  <div><strong>Acesso restrito · Time Mosaic.</strong> Esta tela é exclusiva da equipe interna Mosaic para manutenção de protocolos. Não é visível para cooperados ou parceiros externos.</div>
+</div>
+
+<!-- List shell -->
+<main class="list-shell">
+
+  <!-- List header -->
+  <div class="list-header">
+    <div class="obj-icon" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+    </div>
+    <div class="titles">
+      <div class="obj-label">Protocols</div>
+      <div class="view-selector" id="viewSelector">
+        <span>All Active Protocols</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="icon-btn" title="Lista" aria-label="Lista"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <button class="icon-btn" id="btnRefresh" title="Atualizar" aria-label="Atualizar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg></button>
+      <button class="icon-btn" title="Editar lista" aria-label="Editar lista"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+      <button class="btn-text" type="button">Import</button>
+      <button class="btn-primary" type="button" id="btnNewProtocol">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New
+      </button>
+    </div>
+  </div>
+
+  <!-- Info row -->
+  <div class="list-info" id="infoRow">
+    6 items · Sorted by Protocol Number · Filtered by My Team · Updated a few seconds ago
+  </div>
+
+  <!-- Filters row -->
+  <div class="filters-row">
+    <div class="list-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="listSearch" placeholder="Search this list..." />
+    </div>
+    <div class="filter-pills" id="filterPills">
+      <button class="filter-pill is-active" data-status="all">All <span class="count" id="count-all">6</span></button>
+      <button class="filter-pill" data-status="novo">Novo <span class="count" id="count-novo">1</span></button>
+      <button class="filter-pill" data-status="liberado">Liberado <span class="count" id="count-liberado">1</span></button>
+      <button class="filter-pill" data-status="em_agendamento">Em Agend. <span class="count" id="count-em_agendamento">2</span></button>
+      <button class="filter-pill" data-status="concluido">Concluído <span class="count" id="count-concluido">1</span></button>
+      <button class="filter-pill" data-status="cancelado">Cancelado <span class="count" id="count-cancelado">1</span></button>
+    </div>
+  </div>
+
+  <!-- Mass-action toolbar (CS team) -->
+  <div class="mass-actions" id="massActions" role="region" aria-label="Ações em massa">
+    <div class="mass-actions-count" id="massActionsCount">0 protocolo(s) selecionado(s)</div>
+    <button class="slds-btn" type="button" id="btnMassEdit">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      Edição em massa
+    </button>
+    <button class="slds-btn slds-btn-destructive-outline" type="button" id="btnMassCancel">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Cancelar selecionados
+    </button>
+    <button class="clear-btn" type="button" id="btnClearSelection">✗ Limpar seleção</button>
+  </div>
+
+  <!-- Table -->
+  <div class="list-table-wrap">
+    <table class="list-table" id="protocolTable">
+      <thead>
+        <tr id="theadRow">
+          <th><span class="checkbox" id="headCheckbox" role="checkbox" tabindex="0"></span></th>
+          <th class="sortable" data-sort="id"><span class="th-inner">Protocol <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="status"><span class="th-inner">Status <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="contratoSap"><span class="th-inner">Contrato SAP <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cotacao"><span class="th-inner">Cotação <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="clienteFilial"><span class="th-inner">Cliente · Filial <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cnpj"><span class="th-inner">CPF/CNPJ <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cidadeUf"><span class="th-inner">Cidade · UF <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="cooperado"><span class="th-inner">Cooperado <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="produto"><span class="th-inner">Produto <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="embalagem"><span class="th-inner">Embalagem <span class="sort-arrow">▾</span></span></th>
+          <th class="sortable" data-sort="frete"><span class="th-inner">Frete <span class="sort-arrow">▾</span></span></th>
+        </tr>
+      </thead>
+      <tbody id="protocolTableBody"></tbody>
+    </table>
+  </div>
+
+</main>
+
+<!-- ====================== Modal: Mass Edit ====================== -->
+<div class="modal-backdrop" id="massEditModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <h2 id="massEditTitle">Editar protocolos em massa</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="massEditModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body" id="massEditBody"></div>
+    <div class="slds-modal-foot">
+      <div class="foot-left" id="massEditFootInfo">—</div>
+      <button class="slds-btn" type="button" data-close-modal="massEditModal">Cancelar</button>
+      <button class="slds-btn slds-btn-brand" type="button" id="massEditApplyBtn">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal: Mass Cancel ====================== -->
+<div class="modal-backdrop" id="massCancelModal" role="dialog" aria-modal="true">
+  <div class="slds-modal">
+    <div class="slds-modal-head">
+      <h2 id="massCancelTitle">Cancelar protocolos?</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="massCancelModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body" id="massCancelBody"></div>
+    <div class="slds-modal-foot">
+      <div class="foot-left" id="massCancelFootInfo">—</div>
+      <button class="slds-btn" type="button" data-close-modal="massCancelModal">Voltar</button>
+      <button class="slds-btn slds-btn-destructive" type="button" id="massCancelApplyBtn">Cancelar protocolos</button>
+    </div>
+  </div>
+</div>
+
+<!-- ====================== Modal: Criar Protocolo (SMDP-162 / FSD-PROT-001) ====================== -->
+<div class="modal-backdrop" id="createModal" role="dialog" aria-modal="true">
+  <div class="slds-modal is-wide">
+    <div class="slds-modal-head">
+      <h2>Criar Protocolo</h2>
+      <button class="slds-modal-close" type="button" data-close-modal="createModal" aria-label="Fechar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slds-modal-body">
+      <div class="form-legend"><span class="req-star">*</span> = Informações obrigatórias</div>
+
+      <div class="form-section-head">Detalhes do Protocolo</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label><span class="req-star">*</span>Contrato SAP</label>
+          <select id="np_contrato">
+            <option value="">Selecione um contrato...</option>
+            <option value="20084782">20084782 — Filial São Paulo</option>
+            <option value="20085391">20085391 — Filial Curitiba</option>
+            <option value="20086112">20086112 — Filial Porto Alegre</option>
+            <option value="20086901">20086901 — Filial Rio Verde</option>
+            <option value="20087445">20087445 — Filial Londrina</option>
+            <option value="20088001">20088001 — Filial Uberlândia</option>
+          </select>
+          <div class="form-err" data-err-for="contrato">Contrato é obrigatório</div>
+        </div>
+        <div class="form-field">
+          <label>Status</label>
+          <input type="text" value="Novo" disabled />
+          <div class="form-help">Definido automaticamente na criação</div>
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Item do Contrato</label>
+          <select id="np_item">
+            <option value="">Selecione...</option>
+            <option value="10">Item 10</option>
+            <option value="20">Item 20</option>
+            <option value="30">Item 30</option>
+            <option value="50">Item 50</option>
+            <option value="80">Item 80</option>
+          </select>
+          <div class="form-err" data-err-for="item">Item é obrigatório</div>
+        </div>
+        <div class="form-field">
+          <label>Cooperado</label>
+          <input type="text" id="np_cooperado" placeholder="Auto-preenchido do contrato" readonly />
+        </div>
+
+        <div class="form-field">
+          <label>Cotação</label>
+          <input type="text" id="np_cotacao" placeholder="Auto-preenchido" readonly />
+        </div>
+        <div class="form-field">
+          <label>Cidade Recebedor</label>
+          <input type="text" id="np_cidade" placeholder="Auto-preenchido" readonly />
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Volume (t)</label>
+          <input type="number" id="np_volume" placeholder="0" min="0" step="0.01" />
+          <div class="form-err" data-err-for="volume">Volume deve ser maior que zero</div>
+        </div>
+        <div class="form-field">
+          <label>Frete</label>
+          <input type="text" id="np_frete" placeholder="Auto-preenchido do contrato" readonly />
+        </div>
+
+        <div class="form-field">
+          <label><span class="req-star">*</span>Embalagem</label>
+          <select id="np_embalagem">
+            <option value="">Selecione...</option>
+            <option>Saco 50kg</option>
+            <option>Granel</option>
+            <option>Big Bag 1000kg</option>
+            <option>BagOneWay Liner 1.40</option>
+          </select>
+          <div class="form-err" data-err-for="embalagem">Embalagem é obrigatória</div>
+        </div>
+        <div class="form-field">
+          <label>Planta</label>
+          <input type="text" id="np_planta" placeholder="Auto-preenchido" readonly />
+        </div>
+
+        <div class="form-field form-field-wide">
+          <label>Rota de Entrega</label>
+          <input type="text" id="np_rota" placeholder="Ex: Sertãozinho via BR-364" />
+          <div class="form-help">Editável após criação até a geração da OV</div>
+        </div>
+      </div>
+
+      <div class="form-section-head">Faturamento (opcional — pode preencher depois)</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label>NF Protocolo</label>
+          <input type="text" id="np_nf" placeholder="—" />
+        </div>
+        <div class="form-field">
+          <label>Data NF</label>
+          <input type="date" id="np_dataNf" />
+        </div>
+        <div class="form-field">
+          <label>Preço NF Unitário</label>
+          <input type="number" id="np_precoNf" placeholder="R$ 0,00" step="0.01" min="0" />
+        </div>
+        <div class="form-field"></div>
+      </div>
+    </div>
+    <div class="slds-modal-foot">
+      <div class="foot-left">Criação envia o protocolo ao SAP via Protocol Interface</div>
+      <button class="slds-btn" type="button" data-close-modal="createModal">Cancelar</button>
+      <button class="slds-btn" type="button" id="createSaveAndNewBtn">Salvar e criar</button>
+      <button class="slds-btn slds-btn-brand" type="button" id="createSaveBtn">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="slds-toast" id="toast"></div>
+
+<script>
+/* =================================================================
+   DATA — protocolos sample (US SMDP-161)
+   ================================================================= */
+/*
+   Campos por protocolo:
+   - qtdAgendada: soma dos requests ativos no SAP (mínimo do volume)
+   - hasSO:      Sales Order já gerada (trava embalagem)
+   - hasOV:      Ordem de Venda já gerada (trava rota)
+   - hasBilling: faturamento realizado (trava NF/Data/Preço + volume)
+   - hasActiveRequests: tem agendamentos ativos (impede cancelamento)
+
+   NOTA: A regra original distinguia CIF/FOB para edição de rota,
+   mas Marco Barbara em 07/05/2026 sobrescreveu isso — rota é editável
+   até a geração da OV, sem distinção de frete.
+*/
+const PROTOCOLS = [
+  { id: "M9W38746", status: "novo",            contratoSap: "20084782", cotacao: "Q-394874", clienteFilial: "Filial São Paulo",   cnpj: "12.345.678/0001-90", cidadeUf: "São Paulo · SP",    cooperado: "CARLOS ALVES",      produto: "FFALM 10 20 30", embalagem: "Saco 50kg",       frete: "CIF",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 1500 },
+  { id: "M9W47291", status: "em_agendamento",  contratoSap: "20085391", cotacao: "Q-451220", clienteFilial: "Filial Curitiba",    cnpj: "23.456.789/0001-01", cidadeUf: "Curitiba · PR",     cooperado: "BETO DOS SANTOS",   produto: "DAP 18 46 00",   embalagem: "Granel",          frete: "FOB",
+    qtdAgendada: 300, hasSO: true,  hasOV: false, hasBilling: false, hasActiveRequests: true,  volume: 800 },
+  { id: "M9W51038", status: "concluido",       contratoSap: "20086112", cotacao: "Q-512883", clienteFilial: "Filial Porto Alegre", cnpj: "34.567.890/0001-34", cidadeUf: "Porto Alegre · RS", cooperado: "TEREZA AKEMI",      produto: "MAP 11 52 00",   embalagem: "Big Bag 1000kg",  frete: "CIF",
+    qtdAgendada: 500, hasSO: true,  hasOV: true,  hasBilling: true,  hasActiveRequests: false, volume: 500 },
+  { id: "M9W63847", status: "cancelado",       contratoSap: "20086901", cotacao: "Q-602114", clienteFilial: "Filial Rio Verde",   cnpj: "45.678.901/0001-45", cidadeUf: "Rio Verde · GO",    cooperado: "JORGE DOS ANJOS",   produto: "FFALM 10 20 30", embalagem: "Saco 50kg",       frete: "FOB",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 1000 },
+  { id: "M9W71205", status: "liberado",        contratoSap: "20087445", cotacao: "Q-712005", clienteFilial: "Filial Londrina",    cnpj: "56.789.012/0001-56", cidadeUf: "Londrina · PR",     cooperado: "RENATO CESAR",      produto: "KCl Granulado",  embalagem: "Granel",          frete: "CIF",
+    qtdAgendada: 0,   hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false, volume: 600 },
+  { id: "M9W82914", status: "em_agendamento",  contratoSap: "20088001", cotacao: "Q-803344", clienteFilial: "Filial Uberlândia",  cnpj: "67.890.123/0001-67", cidadeUf: "Uberlândia · MG",   cooperado: "AGUINADO GOMES",    produto: "NPK 04 14 08",   embalagem: "Saco 50kg",       frete: "CIF",
+    qtdAgendada: 150, hasSO: true,  hasOV: false, hasBilling: false, hasActiveRequests: true,  volume: 400 },
+];
+
+const STATUS_LABEL = {
+  novo:           "Novo",
+  liberado:       "Liberado para agendar",
+  em_agendamento: "Em agendamento",
+  concluido:      "Concluído",
+  cancelado:      "Cancelado",
+};
+const STATUS_CLASS = {
+  novo:           "status-novo",
+  liberado:       "status-liberado",
+  em_agendamento: "status-em-agend",
+  concluido:      "status-concluido",
+  cancelado:      "status-cancelado",
+};
+
+/* =================================================================
+   RULES — SMDP-161 (regras de edição reaproveitadas da v1)
+   ================================================================= */
+const rules = {
+  canEditVolume:    p => p.status !== "cancelado" && !p.hasBilling,
+  minVolume:        p => p.qtdAgendada || 0,
+  canEditPackaging: p => p.status !== "cancelado" && !p.hasSO,
+  canEditRoute:     p => p.status !== "cancelado" && !p.hasOV,
+  canEditInvoice:   p => p.status !== "cancelado" && !p.hasBilling,
+  canCancel:        p => p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling,
+  cancelReason:     p => {
+    if (p.status === "cancelado") return "Protocolo já cancelado";
+    if (p.hasBilling) return "Não permitido após faturamento";
+    if (p.hasActiveRequests) return "Existem agendamentos ativos";
+    return "";
+  }
+};
+
+/* Quais cells exibem cadeado (read-only por regra ou origem SAP). */
+function isLocked(p, field) {
+  if (p.status === "cancelado") return true;
+  switch (field) {
+    // Sempre read-only (vêm do SAP / imutáveis SMDP-161)
+    case "contratoSap":
+    case "cotacao":
+    case "clienteFilial":
+    case "cnpj":
+    case "cidadeUf":
+    case "cooperado":
+    case "produto":
+      return true;
+    // Embalagem: editável antes da SO
+    case "embalagem":
+      return !rules.canEditPackaging(p);
+    // Frete: vem do SAP, mas a ROTA segue a regra (não tratamos CIF/FOB — Marco Barbara 07/05/2026)
+    case "frete":
+      return true;
+    default:
+      return false;
+  }
+}
+
+/* =================================================================
+   State — list view (filter / search / sort)
+   ================================================================= */
+const state = {
+  statusFilter: "all",
+  search: "",
+  sortBy: "id",
+  sortDir: "asc",
+  selected: new Set(),
+};
+
+/* =================================================================
+   Render helpers
+   ================================================================= */
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const LOCK_SVG = '<span class="lock-ico" title="Somente leitura"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>';
+
+function cellWithLock(text, locked) {
+  const esc = escapeHtml(text);
+  return locked ? `${esc}${LOCK_SVG}` : esc;
+}
+
+function statusPillHtml(status) {
+  const cls = STATUS_CLASS[status] || "status-novo";
+  const label = STATUS_LABEL[status] || status;
+  if (status === "cancelado") {
+    return `<span class="status-pill ${cls}"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>${escapeHtml(label)}</span>`;
+  }
+  return `<span class="status-pill ${cls}">${escapeHtml(label)}</span>`;
+}
+
+function freteBadgeHtml(frete) {
+  const cls = frete === "CIF" ? "cif" : "fob";
+  return `<span class="frete-badge ${cls}">${escapeHtml(frete)}</span>`;
+}
+
+/* =================================================================
+   Sort / filter / render
+   ================================================================= */
+function getFilteredRows() {
+  let rows = PROTOCOLS.slice();
+
+  if (state.statusFilter !== "all") {
+    rows = rows.filter(p => p.status === state.statusFilter);
+  }
+
+  if (state.search.trim()) {
+    const q = state.search.trim().toLowerCase();
+    rows = rows.filter(p =>
+      p.id.toLowerCase().includes(q) ||
+      p.cooperado.toLowerCase().includes(q) ||
+      p.cidadeUf.toLowerCase().includes(q) ||
+      p.clienteFilial.toLowerCase().includes(q) ||
+      p.contratoSap.toLowerCase().includes(q)
+    );
+  }
+
+  rows.sort((a, b) => {
+    const k = state.sortBy;
+    const av = String(a[k] || "").toLowerCase();
+    const bv = String(b[k] || "").toLowerCase();
+    if (av < bv) return state.sortDir === "asc" ? -1 : 1;
+    if (av > bv) return state.sortDir === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  return rows;
+}
+
+function renderTable() {
+  const tbody = document.getElementById("protocolTableBody");
+  const rows = getFilteredRows();
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="12">Nenhum protocolo encontrado.</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(p => {
+      const isCancel = p.status === "cancelado";
+      const trClass = isCancel ? "is-cancelled" : "";
+      const checked = state.selected.has(p.id);
+      const checkClass = checked ? "checkbox is-checked" : "checkbox";
+      const checkInner = checked
+        ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '';
+      return `
+        <tr class="${trClass}" data-id="${escapeHtml(p.id)}">
+          <td><span class="${checkClass}" role="checkbox" tabindex="0" data-check="${escapeHtml(p.id)}">${checkInner}</span></td>
+          <td><a class="protocol-link" href="manutencao-protocolo-detalhe.html?id=${encodeURIComponent(p.id)}">${escapeHtml(p.id)}</a></td>
+          <td>${statusPillHtml(p.status)}</td>
+          <td>${cellWithLock(p.contratoSap, isLocked(p, "contratoSap"))}</td>
+          <td>${cellWithLock(p.cotacao,     isLocked(p, "cotacao"))}</td>
+          <td>${cellWithLock(p.clienteFilial, isLocked(p, "clienteFilial"))}</td>
+          <td>${cellWithLock(p.cnpj,        isLocked(p, "cnpj"))}</td>
+          <td>${cellWithLock(p.cidadeUf,    isLocked(p, "cidadeUf"))}</td>
+          <td>${cellWithLock(p.cooperado,   isLocked(p, "cooperado"))}</td>
+          <td>${cellWithLock(p.produto,     isLocked(p, "produto"))}</td>
+          <td>${cellWithLock(p.embalagem,   isLocked(p, "embalagem"))}</td>
+          <td>${freteBadgeHtml(p.frete)}${isLocked(p, "frete") ? " " + LOCK_SVG : ""}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  // info row
+  const info = document.getElementById("infoRow");
+  info.textContent = `${rows.length} item${rows.length === 1 ? "" : "s"} · Sorted by ${state.sortBy} · Filtered by My Team · Updated a few seconds ago`;
+
+  // sort arrow indicator
+  document.querySelectorAll("#theadRow th.sortable").forEach(th => {
+    th.classList.remove("is-sorted");
+    const arrow = th.querySelector(".sort-arrow");
+    if (arrow) arrow.textContent = "▾";
+    if (th.dataset.sort === state.sortBy) {
+      th.classList.add("is-sorted");
+      if (arrow) arrow.textContent = state.sortDir === "asc" ? "▴" : "▾";
+    }
+  });
+
+  // head checkbox state
+  updateHeadCheckbox(rows);
+}
+
+function updateHeadCheckbox(rows) {
+  const hc = document.getElementById("headCheckbox");
+  const allSelected = rows.length > 0 && rows.every(r => state.selected.has(r.id));
+  hc.classList.toggle("is-checked", allSelected);
+  hc.innerHTML = allSelected
+    ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+    : '';
+}
+
+function renderCounts() {
+  const counts = { all: PROTOCOLS.length, novo: 0, liberado: 0, em_agendamento: 0, concluido: 0, cancelado: 0 };
+  PROTOCOLS.forEach(p => { if (counts[p.status] != null) counts[p.status]++; });
+  Object.keys(counts).forEach(k => {
+    const el = document.getElementById("count-" + k);
+    if (el) el.textContent = counts[k];
+  });
+}
+
+/* =================================================================
+   Events
+   ================================================================= */
+document.getElementById("filterPills").addEventListener("click", e => {
+  const btn = e.target.closest(".filter-pill");
+  if (!btn) return;
+  document.querySelectorAll(".filter-pill").forEach(p => p.classList.remove("is-active"));
+  btn.classList.add("is-active");
+  state.statusFilter = btn.dataset.status;
+  renderTable();
+});
+
+document.getElementById("listSearch").addEventListener("input", e => {
+  state.search = e.target.value;
+  renderTable();
+});
+
+document.getElementById("theadRow").addEventListener("click", e => {
+  const th = e.target.closest("th.sortable");
+  if (!th) return;
+  const key = th.dataset.sort;
+  if (state.sortBy === key) {
+    state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+  } else {
+    state.sortBy = key;
+    state.sortDir = "asc";
+  }
+  renderTable();
+});
+
+document.getElementById("protocolTableBody").addEventListener("click", e => {
+  const check = e.target.closest("[data-check]");
+  if (check) {
+    e.preventDefault();
+    e.stopPropagation();
+    const id = check.dataset.check;
+    if (state.selected.has(id)) state.selected.delete(id);
+    else state.selected.add(id);
+    renderTable();
+  }
+});
+
+document.getElementById("headCheckbox").addEventListener("click", () => {
+  const rows = getFilteredRows();
+  const allSelected = rows.length > 0 && rows.every(r => state.selected.has(r.id));
+  if (allSelected) {
+    rows.forEach(r => state.selected.delete(r.id));
+  } else {
+    rows.forEach(r => state.selected.add(r.id));
+  }
+  renderTable();
+});
+
+document.getElementById("btnRefresh").addEventListener("click", () => {
+  renderTable();
+});
+
+/* =================================================================
+   Toast — com chip "Enviado ao SAP"
+   ================================================================= */
+const SAP_CHIP = '<span class="sap-chip"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>SAP</span>';
+
+function showToast(msg, opts) {
+  opts = opts || {};
+  const t = document.getElementById("toast");
+  const sap = opts.sap !== false;
+  t.classList.toggle("is-error", !!opts.error);
+  t.innerHTML = `<span>${escapeHtml(msg)}</span>${sap ? SAP_CHIP : ""}`;
+  t.classList.add("is-visible");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => t.classList.remove("is-visible"), 2800);
+}
+
+/* =================================================================
+   Mass-action toolbar
+   ================================================================= */
+function isFieldEditable(p, field) {
+  if (p.status === "cancelado") return false;
+  switch (field) {
+    case "volume":    return !p.hasBilling;
+    case "embalagem": return !p.hasSO;
+    case "rota":      return !p.hasOV;
+    case "nf":
+    case "dataNf":
+    case "precoNf":   return !p.hasBilling;
+    default: return false;
+  }
+}
+
+function canCancelProtocol(p) {
+  return p.status !== "cancelado" && !p.hasActiveRequests && !p.hasBilling;
+}
+function cancelBlockReason(p) {
+  if (p.status === "cancelado") return "Protocolo já cancelado";
+  if (p.hasBilling) return "Não permitido após faturamento";
+  if (p.hasActiveRequests) return "Possui agendamentos ativos";
+  return "";
+}
+
+function getSelectedProtocols() {
+  return PROTOCOLS.filter(p => state.selected.has(p.id));
+}
+
+function updateMassActionsBar() {
+  const bar = document.getElementById("massActions");
+  const n = state.selected.size;
+  if (n === 0) {
+    bar.classList.remove("is-visible");
+    return;
+  }
+  bar.classList.add("is-visible");
+  document.getElementById("massActionsCount").textContent =
+    `${n} protocolo(s) selecionado(s)`;
+}
+
+document.getElementById("btnClearSelection").addEventListener("click", () => {
+  state.selected.clear();
+  renderTable();
+});
+
+/* ----------------- Mass Edit modal ----------------- */
+const EMBALAGEM_OPTS = ["Saco 50kg", "Saco 25kg", "Big Bag 1000kg", "BagOneWay Liner 1.40", "Granel"];
+const MASS_FIELDS = [
+  { key: "volume",    label: "Volume Desejado",  type: "number", suffix: "t",  rule: "volume"    },
+  { key: "embalagem", label: "Embalagem",        type: "select", options: EMBALAGEM_OPTS, rule: "embalagem" },
+  { key: "rota",      label: "Rota de Entrega",  type: "text",   rule: "rota" },
+  { key: "nf",        label: "NF Protocolo",     type: "text",   rule: "nf" },
+  { key: "dataNf",    label: "Data NF",          type: "date",   rule: "dataNf" },
+  { key: "precoNf",   label: "Preço NF Unitário",type: "number", suffix: "R$", rule: "precoNf" },
+];
+
+function openMassEditModal() {
+  const sel = getSelectedProtocols();
+  if (!sel.length) return;
+
+  /* Mínimo de volume aceito: maior qtdAgendada entre selecionados */
+  const minVolumeSelection = sel.reduce((m, p) => Math.max(m, p.qtdAgendada || 0), 0);
+
+  document.getElementById("massEditTitle").textContent =
+    `Editar ${sel.length} protocolo${sel.length === 1 ? "" : "s"} em massa`;
+
+  const body = document.getElementById("massEditBody");
+  body.innerHTML = `
+    <div class="mass-warn-banner">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>Campos não editáveis em algum protocolo selecionado serão <strong>ignorados</strong> apenas para aquele protocolo. Cada protocolo respeita suas próprias regras (volume mín., status de SO/OV/billing).</div>
+    </div>
+    <div class="mass-edit-form" id="massEditForm">
+      ${MASS_FIELDS.map(f => {
+        let control;
+        if (f.type === "select") {
+          control = `<select disabled data-mfield="${f.key}"><option value="">— Selecione —</option>${f.options.map(o => `<option>${escapeHtml(o)}</option>`).join("")}</select>`;
+        } else {
+          control = `<input type="${f.type}" disabled data-mfield="${f.key}" />`;
+        }
+        const helper = f.key === "volume"
+          ? `<div class="mass-field-helper">Mínimo aceito para esta seleção: ${minVolumeSelection} t</div>`
+          : "";
+        return `
+          <div class="mass-field" data-mfield-wrap="${f.key}">
+            <div class="mass-field-head">
+              <span class="mass-check" role="checkbox" tabindex="0" data-mcheck="${f.key}" aria-checked="false"></span>
+              <span>Aplicar este campo · <strong>${escapeHtml(f.label)}</strong></span>
+            </div>
+            ${control}
+            ${helper}
+          </div>`;
+      }).join("")}
+    </div>
+  `;
+
+  /* checkbox handler */
+  body.querySelectorAll("[data-mcheck]").forEach(chk => {
+    chk.addEventListener("click", () => {
+      const key = chk.dataset.mcheck;
+      const on = !chk.classList.contains("is-checked");
+      chk.classList.toggle("is-checked", on);
+      chk.setAttribute("aria-checked", on ? "true" : "false");
+      chk.innerHTML = on ? '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' : "";
+      const inp = body.querySelector(`[data-mfield="${key}"]`);
+      if (inp) inp.disabled = !on;
+      updateMassEditFootInfo();
+    });
+  });
+
+  document.getElementById("massEditModal").classList.add("is-open");
+  updateMassEditFootInfo();
+}
+
+function updateMassEditFootInfo() {
+  const sel = getSelectedProtocols();
+  const body = document.getElementById("massEditBody");
+  /* Quais campos foram marcados pra aplicar */
+  const fieldsOn = MASS_FIELDS
+    .map(f => f.key)
+    .filter(k => body.querySelector(`[data-mcheck="${k}"]`).classList.contains("is-checked"));
+
+  let info = "Nenhum campo selecionado para aplicar.";
+  if (fieldsOn.length) {
+    /* Para cada protocolo, verifica se algum dos campos marcados é editável */
+    const willApply = sel.filter(p => fieldsOn.some(f => isFieldEditable(p, f))).length;
+    const blocked = sel.length - willApply;
+    info = `Aplicará em ${willApply} de ${sel.length} selecionados${blocked > 0 ? ` (${blocked} sem nenhum campo aplicável)` : ""}.`;
+  }
+  document.getElementById("massEditFootInfo").textContent = info;
+  document.getElementById("massEditApplyBtn").textContent =
+    fieldsOn.length ? `Aplicar nas ${sel.length} selecionadas` : "Aplicar";
+  document.getElementById("massEditApplyBtn").disabled = !fieldsOn.length;
+}
+
+function applyMassEdit() {
+  const body = document.getElementById("massEditBody");
+  const sel = getSelectedProtocols();
+  const fieldsOn = MASS_FIELDS
+    .filter(f => body.querySelector(`[data-mcheck="${f.key}"]`).classList.contains("is-checked"));
+  if (!fieldsOn.length) return;
+
+  /* coleta valores */
+  const vals = {};
+  fieldsOn.forEach(f => {
+    const inp = body.querySelector(`[data-mfield="${f.key}"]`);
+    vals[f.key] = f.type === "number" ? Number(inp.value) : inp.value;
+  });
+
+  let changed = 0;
+  sel.forEach(p => {
+    let touched = false;
+    fieldsOn.forEach(f => {
+      if (!isFieldEditable(p, f.key)) return;
+      /* volume mínimo */
+      if (f.key === "volume") {
+        const minV = p.qtdAgendada || 0;
+        if (vals.volume < minV) return; // skip silently for this protocol
+        p.volume = vals.volume;
+        touched = true;
+        return;
+      }
+      p[f.key] = vals[f.key];
+      touched = true;
+    });
+    if (touched) changed++;
+  });
+
+  document.getElementById("massEditModal").classList.remove("is-open");
+  renderTable();
+  showToast(`${changed} protocolo${changed === 1 ? "" : "s"} atualizado${changed === 1 ? "" : "s"}. Enviado ao SAP.`);
+}
+
+document.getElementById("btnMassEdit").addEventListener("click", openMassEditModal);
+document.getElementById("massEditApplyBtn").addEventListener("click", applyMassEdit);
+
+/* ----------------- Mass Cancel modal ----------------- */
+function openMassCancelModal() {
+  const sel = getSelectedProtocols();
+  if (!sel.length) return;
+
+  document.getElementById("massCancelTitle").textContent =
+    `Cancelar ${sel.length} protocolo${sel.length === 1 ? "" : "s"}?`;
+
+  const body = document.getElementById("massCancelBody");
+  body.innerHTML = `<div class="mass-cancel-list">
+    ${sel.map(p => {
+      const ok = canCancelProtocol(p);
+      const rowCls = ok ? "is-ok" : "is-blocked";
+      const ico = ok
+        ? '<svg class="mc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>'
+        : '<svg class="mc-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      const text = ok ? "Pronto para cancelar" : `Não permitido: ${cancelBlockReason(p)}`;
+      return `<div class="mass-cancel-row ${rowCls}">
+        ${ico}
+        <span class="mc-id">${escapeHtml(p.id)}</span>
+        <span class="mc-status">${escapeHtml(text)}</span>
+      </div>`;
+    }).join("")}
+  </div>`;
+
+  const okCount = sel.filter(canCancelProtocol).length;
+  const blocked = sel.length - okCount;
+  document.getElementById("massCancelFootInfo").textContent =
+    `${okCount} canceláveis · ${blocked} bloqueado${blocked === 1 ? "" : "s"}`;
+  const btn = document.getElementById("massCancelApplyBtn");
+  btn.disabled = okCount === 0;
+  btn.textContent = okCount > 0 ? `Cancelar ${okCount} protocolo${okCount === 1 ? "" : "s"}` : "Cancelar protocolos";
+
+  document.getElementById("massCancelModal").classList.add("is-open");
+}
+
+function applyMassCancel() {
+  const sel = getSelectedProtocols();
+  let cancelled = 0;
+  sel.forEach(p => {
+    if (!canCancelProtocol(p)) return;
+    p.status = "cancelado";
+    cancelled++;
+  });
+  document.getElementById("massCancelModal").classList.remove("is-open");
+  state.selected.clear();
+  renderCounts();
+  renderTable();
+  showToast(`${cancelled} protocolo${cancelled === 1 ? "" : "s"} cancelado${cancelled === 1 ? "" : "s"}. Enviado ao SAP.`);
+}
+
+document.getElementById("btnMassCancel").addEventListener("click", openMassCancelModal);
+document.getElementById("massCancelApplyBtn").addEventListener("click", applyMassCancel);
+
+/* Modal close handlers (backdrop + X button) */
+document.body.addEventListener("click", (e) => {
+  const closeBtn = e.target.closest("[data-close-modal]");
+  if (closeBtn) {
+    document.getElementById(closeBtn.dataset.closeModal).classList.remove("is-open");
+    return;
+  }
+  if (e.target.classList.contains("modal-backdrop")) {
+    e.target.classList.remove("is-open");
+  }
+});
+
+/* Patch renderTable para também atualizar a toolbar de mass actions */
+const _origRenderTable = renderTable;
+renderTable = function() {
+  _origRenderTable();
+  updateMassActionsBar();
+};
+
+/* =================================================================
+   CRIAR PROTOCOLO — Modal (SMDP-162 / FSD-PROT-001)
+   ================================================================= */
+
+/* Mock: dados auto-preenchidos por contrato (em produção viriam do SAP) */
+const CONTRATO_AUTOFILL = {
+  "20084782": { cooperado: "CARLOS ALVES",    cotacao: "Q-394874", cidade: "São Paulo · SP",       frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20085391": { cooperado: "BETO DOS SANTOS", cotacao: "Q-451220", cidade: "Curitiba · PR",        frete: "FOB", planta: "Toll Cefértil — Cubatão" },
+  "20086112": { cooperado: "TEREZA AKEMI",    cotacao: "Q-512883", cidade: "Porto Alegre · RS",   frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20086901": { cooperado: "JORGE DOS ANJOS", cotacao: "Q-602114", cidade: "Rio Verde · GO",      frete: "FOB", planta: "Toll Cefértil — Cubatão" },
+  "20087445": { cooperado: "RENATO CESAR",    cotacao: "Q-712005", cidade: "Londrina · PR",       frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+  "20088001": { cooperado: "AGUINADO GOMES",  cotacao: "Q-803344", cidade: "Uberlândia · MG",     frete: "CIF", planta: "Toll Cefértil — Cubatão" },
+};
+
+const CREATE_FIELDS = ["np_contrato","np_item","np_cooperado","np_cotacao","np_cidade","np_volume","np_frete","np_embalagem","np_planta","np_rota","np_nf","np_dataNf","np_precoNf"];
+
+function resetCreateForm() {
+  CREATE_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = "";
+  });
+  document.querySelectorAll("#createModal .form-field.is-invalid").forEach(f => f.classList.remove("is-invalid"));
+}
+
+function openCreateModal() {
+  resetCreateForm();
+  document.getElementById("createModal").classList.add("is-open");
+  setTimeout(() => document.getElementById("np_contrato").focus(), 50);
+}
+
+/* Auto-fill ao escolher contrato */
+document.getElementById("np_contrato").addEventListener("change", function() {
+  const info = CONTRATO_AUTOFILL[this.value];
+  if (!info) {
+    ["np_cooperado","np_cotacao","np_cidade","np_frete","np_planta"].forEach(id => document.getElementById(id).value = "");
+    return;
+  }
+  document.getElementById("np_cooperado").value = info.cooperado;
+  document.getElementById("np_cotacao").value   = info.cotacao;
+  document.getElementById("np_cidade").value    = info.cidade;
+  document.getElementById("np_frete").value     = info.frete;
+  document.getElementById("np_planta").value    = info.planta;
+  document.querySelector('#createModal .form-field[data-err-for]')?.classList.remove("is-invalid");
+});
+
+function validateCreateForm() {
+  let ok = true;
+  /* Required: contrato, item, volume (> 0), embalagem */
+  const required = [
+    { id: "np_contrato",  err: "contrato",  check: v => !!v },
+    { id: "np_item",      err: "item",      check: v => !!v },
+    { id: "np_volume",    err: "volume",    check: v => v && parseFloat(v) > 0 },
+    { id: "np_embalagem", err: "embalagem", check: v => !!v },
+  ];
+  required.forEach(r => {
+    const el = document.getElementById(r.id);
+    const field = el.closest(".form-field");
+    if (!r.check(el.value)) { field.classList.add("is-invalid"); ok = false; }
+    else field.classList.remove("is-invalid");
+  });
+  return ok;
+}
+
+function buildNewProtocol() {
+  const contratoSap  = document.getElementById("np_contrato").value;
+  const info         = CONTRATO_AUTOFILL[contratoSap] || {};
+  const item         = document.getElementById("np_item").value;
+  const volume       = parseFloat(document.getElementById("np_volume").value);
+  const embalagem    = document.getElementById("np_embalagem").value;
+  const rota         = document.getElementById("np_rota").value.trim();
+  const nf           = document.getElementById("np_nf").value.trim();
+  const dataNf       = document.getElementById("np_dataNf").value;
+  const precoNf      = document.getElementById("np_precoNf").value;
+
+  /* Gera ID novo no padrão MxxxxxxxX */
+  const seq = (PROTOCOLS.length + 1).toString(36).toUpperCase().padStart(2, "0");
+  const id = "M9W" + Math.floor(10000 + Math.random() * 89999) + seq;
+
+  const newP = {
+    id,
+    status: "novo",
+    contratoSap, cotacao: info.cotacao || "",
+    item: parseInt(item, 10) || 0,
+    clienteFilial: contratoSap, /* placeholder */
+    cnpj: "—",
+    cidadeUf: info.cidade || "",
+    cooperado: info.cooperado || "",
+    produto: "—",
+    embalagem,
+    frete: info.frete || "CIF",
+    qtdAgendada: 0,
+    hasSO: false, hasOV: false, hasBilling: false, hasActiveRequests: false,
+    volume,
+    rota,
+    nf: nf || "—",
+    dataNf: dataNf || "—",
+    precoNf: precoNf ? "R$ " + parseFloat(precoNf).toFixed(2).replace(".", ",") : "—",
+  };
+  return newP;
+}
+
+function saveNewProtocol(stayOpen) {
+  if (!validateCreateForm()) {
+    showToast("Preencha todos os campos obrigatórios marcados com *", true);
+    return;
+  }
+  const newP = buildNewProtocol();
+  PROTOCOLS.unshift(newP);
+  renderCounts();
+  renderTable();
+  showToast(`Protocolo ${newP.id} criado. Enviado ao SAP.`);
+  if (stayOpen) {
+    resetCreateForm();
+    setTimeout(() => document.getElementById("np_contrato").focus(), 50);
+  } else {
+    document.getElementById("createModal").classList.remove("is-open");
+  }
+}
+
+document.getElementById("btnNewProtocol").addEventListener("click", openCreateModal);
+document.getElementById("createSaveBtn").addEventListener("click", () => saveNewProtocol(false));
+document.getElementById("createSaveAndNewBtn").addEventListener("click", () => saveNewProtocol(true));
+
+/* =================================================================
+   Init
+   ================================================================= */
+renderCounts();
+renderTable();
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>

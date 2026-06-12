@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Agendar Contrato Normal</title>
+<title>v4 · Agendar Contrato Normal — padrão visual Mosaic real (funcional 100%)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,12 +13,13 @@
      Calibrated to match the existing Mosaic Direct portal style
      ================================================================ */
   :root {
-    /* Brand */
-    --mosaic-green-900: #003e2a;          /* deepest header green */
-    --mosaic-green-800: #00583d;          /* primary brand green */
-    --mosaic-green-700: #006a4d;          /* link / pill border */
-    --mosaic-green-600: #0a7a5a;
-    --mosaic-green-500: #16a37a;
+    /* Brand — VALORES REAIS extraidos do portal Mosaic em producao
+       (sandbox QA2, via inspecao DOM nos shadowRoots dos LWC) */
+    --mosaic-green-900: #093532;          /* texto titulos / link forte */
+    --mosaic-green-800: #1D625C;          /* botao primario (SLDS brand) */
+    --mosaic-green-700: #436462;          /* texto body / breadcrumb */
+    --mosaic-green-600: #1D625C;
+    --mosaic-green-500: #1D625C;
 
     /* Mosaic logo accent colors */
     --mosaic-yellow:  #f0c020;
@@ -44,13 +45,21 @@
     --border:         #cdcdcd;
     --border-strong:  #9c9c9c;
 
-    /* Text */
-    --text-1:         #15201b;
-    --text-2:         #3b4642;
-    --text-3:         #6b7570;
+    /* Text — atualizado pra paleta real Mosaic */
+    --text-1:         #093532;
+    --text-2:         #436462;
+    --text-3:         #76716B;
     --text-disabled:  #a8aeab;
     --text-on-green:  #ffffff;
-    --link-green:     #006a4d;
+    --link-green:     #1D625C;
+    /* Tokens novos pegos do portal real */
+    --md-header-bg:   #E9EFEE;            /* bg do thead (header da tabela) */
+    --md-header-fg:   #444444;            /* cor do texto no thead */
+    --md-card-head-bg:#F0F0F0;            /* bg do header de cards (Filtros, etc) */
+    --md-border-input:#BFD0CE;            /* border dos inputs */
+    --md-shadow-input:0 2px 5px rgba(110,132,130,0.15);
+    --md-shadow-card: 0 0 15px rgba(0,0,0,0.10);
+    --md-red-required:#C23934;            /* asterisco required SLDS */
 
     /* Type */
     --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -2065,23 +2074,19 @@
   }
   .drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(820px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
     z-index: 101;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
     padding: 22px 28px 18px;
@@ -3329,23 +3334,19 @@
   }
   .roteiro-drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(640px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(540px, 100%);
     background: #fff;
     z-index: 111;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .roteiro-drawer.is-open { transform: translateX(0); }
 
   .roteiro-drawer-header {
     background: var(--bg-section);
@@ -4361,8 +4362,150 @@
 
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="base.css" />
+
+<!-- ============================================================
+     v4 MOSAIC REAL OVERRIDES — só estilo, sem mexer em estrutura/JS
+     Sobrescreve tokens visuais com os valores capturados do portal de
+     produção (sandbox QA2). Mantém todas as colunas, todos os filtros,
+     todo o fluxo do agendar-contrato-normal.html original.
+     ============================================================ -->
+<style>
+  /* Header da tabela: bg cinza-esverdeado #E9EFEE, texto #444 fw700 16px,
+     padding 14.5px 8px, height 51px, NÃO uppercase (como no portal real). */
+  .wide-table thead th,
+  table.wide-table thead th,
+  .results-table thead th,
+  thead th {
+    background: var(--md-header-bg) !important;
+    color: var(--md-header-fg) !important;
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    padding: 14.5px 8px !important;
+    height: 51px !important;
+    border: none !important;
+  }
+  .wide-table thead th:first-child,
+  thead th:first-child { padding-left: 16px !important; }
+  .wide-table thead th:last-child,
+  thead th:last-child { padding-right: 16px !important; }
+
+  /* Linhas da tabela com hover esverdeado sutil */
+  .wide-table tbody td,
+  table.wide-table tbody td,
+  .results-table tbody td,
+  tbody td {
+    font-family: "Barlow", sans-serif !important;
+    font-size: 15px !important;
+    color: var(--mosaic-green-900);
+  }
+  .wide-table tbody tr:hover td { background: rgba(233,239,238,0.50) !important; }
+
+  /* Botão primário: verde Mosaic real #1D625C, height 45px, radius 8px,
+     Barlow SemiBold 14px com letter-spacing 0.4px */
+  .btn-primary,
+  button.btn-primary,
+  .action-primary,
+  .v5-footer-actions .btn-primary,
+  .footer-actions .btn-primary,
+  .agendar-btn-primary {
+    background: var(--mosaic-green-800) !important;
+    border: 1px solid var(--mosaic-green-800) !important;
+    color: #fff !important;
+    height: 45px !important;
+    padding: 0 24px !important;
+    border-radius: 8px !important;
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.4px !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04) !important;
+    transition: filter .15s, box-shadow .15s, transform .05s;
+  }
+  .btn-primary:hover,
+  button.btn-primary:hover {
+    filter: brightness(1.08) !important;
+    box-shadow: 0 2px 8px rgba(29,98,92,0.25) !important;
+  }
+  .btn-primary:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(29,98,92,0.30) !important;
+  }
+
+  /* Inputs: 44px, border #BFD0CE, radius 5px, shadow sutil, fonte Barlow */
+  input[type="text"], input[type="search"], input[type="number"],
+  input[type="date"], input[type="email"], select, textarea {
+    font-family: "Barlow", sans-serif !important;
+  }
+  .global-search input,
+  .filter-input,
+  input.search-input {
+    border: 1px solid var(--md-border-input) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--md-shadow-input) !important;
+  }
+
+  /* Asterisco required em vermelho SLDS #C23934 */
+  .req-asterisk, .required-mark, .field-required, label .req {
+    color: var(--md-red-required) !important;
+  }
+
+  /* Page title: Barlow Bold 26px line-height 1, color verde escuro (igual portal) */
+  .page-title {
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 30px !important;
+    line-height: 1.1 !important;
+    color: var(--mosaic-green-900) !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  /* Demo banner sutil no topo (não vai pra produção) */
+  .v4-banner {
+    background: var(--mosaic-green-900);
+    color: #fff;
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    padding: 10px 32px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .v4-banner .tag {
+    background: #fff; color: var(--mosaic-green-900);
+    font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  }
+  .v4-banner code {
+    background: rgba(255,255,255,0.15);
+    padding: 1px 6px; border-radius: 3px; font-size: 12px;
+  }
+
+  /* Logo Mosaic — substitui o SVG inline pelo PNG real via CSS background
+     em cima do .mosaic-logo (mantém o link, só troca o visual) */
+  .mosaic-logo {
+    background: url('mosaic-logo-real.png') no-repeat left center !important;
+    background-size: contain !important;
+    width: 170px !important; height: 56px !important;
+    text-indent: -9999px; overflow: hidden;
+  }
+  .mosaic-logo svg, .mosaic-logo img, .mosaic-logo .logo-text,
+  .mosaic-logo .logo-shapes { display: none !important; }
+
+  /* No footer do site (que tem outro logo no rodapé), também aplicar PNG */
+  footer .mosaic-logo, .mosaic-footer .mosaic-logo {
+    background: url('mosaic-logo-real.png') no-repeat left center !important;
+    background-size: contain !important;
+    width: 150px !important; height: 50px !important;
+  }
+</style>
+
 </head>
 <body>
+
+<div class="v4-banner">
+  <span class="tag">v4 · MOSAIC REAL</span>
+  <span><strong>Agendar Contrato Normal</strong> — versão funcional 100%: todas as colunas, todos os filtros do drawer, todo o fluxo do original preservados. Só o <strong>estilo visual</strong> foi atualizado pro padrão capturado do portal de produção (Barlow + cores reais + classes SLDS + logo PNG original).</span>
+</div>
 
 
 
