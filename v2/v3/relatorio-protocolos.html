@@ -2045,7 +2045,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos. Clique em <strong>uma célula de quantidade</strong> para editá-la inline, ou abra o menu de ações <strong>▾</strong> ao lado do protocolo para editar campos, agendar ou cancelar.</span>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos. Abra o menu de ações <strong>▾</strong> ao lado do protocolo para editar campos, agendar ou cancelar.</span>
   </div>
 
   <!-- Search bar -->
@@ -2848,20 +2848,19 @@ function renderRow(p) {
   return (p.id === editingRowId) ? renderRowEditing(p) : renderRowNormal(p);
 }
 
+/* Edição inline no item removida (V2) — células renderizam valor em texto
+   puro. A edição acontece apenas pelo chevron → modal "Editar". */
 function editableQtyCell(p, field, highlight) {
   const v = p[field];
-  const cls = "num editable-qty" + (highlight ? " highlight" : "");
-  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" data-type="number" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+  const cls = "num" + (highlight ? " highlight" : "");
+  return `<td class="${cls}">${v.toLocaleString("pt-BR")}</td>`;
 }
 
-/* Célula editável genérica — usada conforme regras (Embalagem, NF, Data, Preço) */
 function editableCell(p, field, opts = {}) {
   const v = p[field];
   const display = opts.display || (v === "—" || !v ? '<span class="muted">—</span>' : v);
-  const tdCls = (opts.cls || "") + " editable-qty"; // reusa o estilo de hover
-  const type = opts.type || "text";  // "text" | "select" | "date"
-  const optsAttr = opts.options ? ` data-options='${JSON.stringify(opts.options)}'` : '';
-  return `<td class="${tdCls.trim()}" data-id="${p.id}" data-f="${field}" data-type="${type}"${optsAttr} title="Clique para editar">${display}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+  const tdCls = (opts.cls || "").trim();
+  return `<td${tdCls ? ` class="${tdCls}"` : ""}>${display}</td>`;
 }
 
 function readOnlyCell(p, field, reason, opts = {}) {
