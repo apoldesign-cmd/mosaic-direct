@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Comparativo · Scroll horizontal em tabelas largas — 3 soluções</title>
+<title>Comparativo · Scroll horizontal em tabelas largas — 5 soluções</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="tokens.css" />
@@ -28,7 +28,7 @@
   /* ============== Grid de soluções ============== */
   .sc-section { padding: var(--space-6) 0; }
   .sc-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
     gap: var(--space-4); align-items: stretch;
   }
   .sc-card {
@@ -148,7 +148,7 @@
 <section class="cc-hero">
   <div class="container container-main">
     <div class="cc-eyebrow">Comparativo UX · decisão de produto</div>
-    <h1>Scroll horizontal em tabelas largas — 3 soluções para comparar</h1>
+    <h1>Scroll horizontal em tabelas largas — 5 soluções para comparar</h1>
     <p>
       Decisão de UX para o PO: como dar acesso às colunas que <strong>não cabem na tela</strong>
       nas tabelas do <strong>Relatório de Protocolos</strong> (24 colunas) e do <strong>Criar Protocolo</strong> (14 colunas),
@@ -284,6 +284,91 @@
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
             <a class="sc-btn secondary" href="scroll-c-criar-protocolo.html">
+              Criar Protocolo
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Solução D -->
+      <article class="sc-card">
+        <div class="sc-card-head">
+          <span class="sc-letter">D</span>
+          <h2>Botões de bloco</h2>
+          <span class="sc-tag">Tabela completa · setas ‹ › nas bordas</span>
+        </div>
+        <div class="sc-card-body">
+          <p class="sc-how">
+            A tabela mantém <strong>todas as colunas</strong>. Nas bordas aparecem
+            <strong>setas ‹ ›</strong>: cada clique avança (ou volta) <strong>um bloco
+            de colunas</strong> — cerca de uma tela por vez. A seta da esquerda só
+            aparece quando há conteúdo atrás; a da direita some ao chegar no fim.
+          </p>
+          <div>
+            <p class="sc-list-title pros">Prós</p>
+            <ul class="sc-list pros">
+              <li>Navegação em "páginas" de colunas — previsível e sem arrastar.</li>
+              <li>Controle grande e fácil de clicar, sem ocupar o rodapé.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="sc-list-title cons">Contras</p>
+            <ul class="sc-list cons">
+              <li>Avança em saltos — menos preciso que arrastar uma barra.</li>
+              <li>As setas ficam sobre a borda da tabela.</li>
+            </ul>
+          </div>
+          <div class="sc-links">
+            <p class="sc-links-label">Ver demos</p>
+            <a class="sc-btn" href="scroll-d-relatorio-protocolos.html">
+              Relatório de Protocolos
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a class="sc-btn secondary" href="scroll-d-criar-protocolo.html">
+              Criar Protocolo
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Solução E -->
+      <article class="sc-card">
+        <div class="sc-card-head">
+          <span class="sc-letter">E</span>
+          <h2>Grid estilo Jira</h2>
+          <span class="sc-tag">Altura fixa · barra colada no rodapé da tabela</span>
+        </div>
+        <div class="sc-card-body">
+          <p class="sc-how">
+            A tabela vira uma <strong>área de altura fixa</strong> com rolagem própria
+            (vertical e horizontal), igual ao Jira. A <strong>barra horizontal é a nativa
+            do container</strong>, colada no rodapé da área — sempre visível e
+            <strong>à prova de zoom</strong> (é o scrollbar real, não um cálculo). O
+            cabeçalho fica fixo ao rolar.
+          </p>
+          <div>
+            <p class="sc-list-title pros">Prós</p>
+            <ul class="sc-list pros">
+              <li>Robusta: funciona em qualquer zoom e tamanho de tela.</li>
+              <li>Padrão consagrado (Jira/planilhas) — cabeçalho sempre visível.</li>
+            </ul>
+          </div>
+          <div>
+            <p class="sc-list-title cons">Contras</p>
+            <ul class="sc-list cons">
+              <li>A tabela ganha rolagem interna (área limitada em altura).</li>
+              <li>Duas rolagens na área (vertical + horizontal) podem confundir.</li>
+            </ul>
+          </div>
+          <div class="sc-links">
+            <p class="sc-links-label">Ver demos</p>
+            <a class="sc-btn" href="scroll-e-relatorio-protocolos.html">
+              Relatório de Protocolos
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </a>
+            <a class="sc-btn secondary" href="scroll-e-criar-protocolo.html">
               Criar Protocolo
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
