@@ -1,0 +1,1239 @@
+/* ==========================================================================
+   Mosaic Direct — Componentes Base (v2)
+   Carrega depois de tokens.css. Contém:
+     - .container
+     - .mosaic-header (top bar + nav)
+     - .mosaic-logo
+     - .mosaic-nav + submenu
+     - .mosaic-footer
+     - .breadcrumb
+     - .page-title
+     - .info-banner
+     - .filter-card
+     - .form-field (label + input/select)
+     - .btn (primary, secondary, link)
+     - .data-table (wrap, thead, tbody, sort, cells)
+     - .status-pill
+     - .pagination
+     - .toolbar
+     - .empty-state
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CONTAINER
+   ========================================================================== */
+
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad-x);
+}
+
+.container-main {
+  padding-top: var(--container-pad-y);
+  padding-bottom: var(--space-7);
+}
+
+/* ==========================================================================
+   2. HEADER — Top bar (logo · search · lang · user · icons) + Nav row
+   ========================================================================== */
+
+.mosaic-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  background: #fff;
+  border-bottom: none;
+  box-shadow: none;
+}
+.mosaic-header-top,
+.mosaic-nav {
+  border-top: none;
+  border-bottom: none;
+}
+
+.mosaic-header-top {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 18px var(--container-pad-x);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+/* --- Logo (wordmark + colored shapes below) --- */
+.mosaic-logo {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  color: inherit;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.mosaic-logo:hover { text-decoration: none; color: inherit; }
+.mosaic-logo .logo-text {
+  font-family: var(--font-family-base);
+  font-weight: 800;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text-1);
+}
+.mosaic-logo .logo-text sup {
+  font-size: 38%;
+  font-weight: 500;
+  top: -0.8em;
+  margin-left: 1px;
+  color: var(--text-1);
+}
+.mosaic-logo .logo-shapes {
+  display: block;
+  margin-top: 3px;
+  height: 32px;
+  width: auto;
+}
+.mosaic-footer .mosaic-logo .logo-text { font-size: 42px; }
+.mosaic-footer .mosaic-logo .logo-shapes { height: 38px; }
+
+/* --- Search bar --- */
+.mosaic-search {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+.mosaic-search input {
+  width: 100%;
+  height: 42px;
+  padding: 0 44px 0 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body);
+  color: var(--text-1);
+  outline: none;
+  transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+}
+.mosaic-search input::placeholder { color: var(--text-3); }
+.mosaic-search input:hover { border-color: var(--border-strong); }
+.mosaic-search input:focus {
+  border-color: var(--mosaic-green-700);
+  box-shadow: var(--shadow-focus);
+}
+.mosaic-search .search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  display: flex;
+  pointer-events: none;
+}
+
+/* --- User cluster (lang + user info + icons) --- */
+.mosaic-user-cluster {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  color: var(--text-1);
+  cursor: pointer;
+  transition: border-color var(--ease-fast);
+}
+.lang-switch:hover { border-color: var(--mosaic-green-700); }
+
+.mosaic-user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+  margin: 0 var(--space-2);
+}
+.mosaic-user-info .user-name {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: var(--text-1);
+}
+.mosaic-user-info .user-org {
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: var(--radius-circle);
+  background: var(--mosaic-green-700);
+  color: #fff;
+  cursor: pointer;
+  transition: background var(--ease-fast);
+}
+.icon-btn:hover { background: var(--mosaic-green-800); }
+.icon-btn svg { display: block; }
+
+/* ==========================================================================
+   3. NAV — Centered, 9 items, submenu on hover
+   ========================================================================== */
+
+.mosaic-nav {
+  /* sem divisores em volta — só o item ativo recebe sublinhado verde */
+}
+.mosaic-nav-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad-x);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: var(--space-5);
+  min-height: var(--header-h-nav);
+}
+
+.nav-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mosaic-green-800);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--ease-fast);
+}
+.nav-item:hover {
+  color: var(--mosaic-green-900);
+  text-decoration: none;
+}
+/* Active = laranja (matches Salesforce print: "DOCUMENTS" em orange) */
+.nav-item.is-active {
+  color: var(--mosaic-orange);
+}
+/* Chevron — mesmo SVG (polyline 6 9 12 15 18 9) usado em todos os dropdowns
+   do app (action menus, selects). Mask-image herda currentColor pro hover. */
+.nav-item .chev {
+  width: 12px;
+  height: 12px;
+  margin-left: 4px;
+  background-color: currentColor;
+  -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z'/></svg>");
+          mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black'><path d='M16.59 8.59 12 13.17 7.41 8.59 6 10l6 6 6-6z'/></svg>");
+  -webkit-mask-repeat: no-repeat;
+          mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+          mask-position: center;
+  -webkit-mask-size: contain;
+          mask-size: contain;
+  opacity: 0;
+  transition: opacity var(--ease-fast);
+}
+.nav-item:hover .chev,
+.nav-item:focus-within .chev {
+  opacity: 1;
+}
+/* Chev só existe (visualmente) em items que TÊM submenu — esconde os
+   chevrons órfãos emitidos pelo transform em items sem dropdown
+   (Produtos, Cotações, Faturamento, Financeiro, Suporte). */
+.nav-item:not(:has(.nav-submenu)) .chev {
+  display: none !important;
+}
+
+/* Submenu */
+.nav-submenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 240px;
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-soft);
+  padding: 6px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--ease-fast), visibility var(--ease-fast);
+  z-index: var(--z-dropdown);
+}
+.nav-item:hover .nav-submenu,
+.nav-item:focus-within .nav-submenu {
+  opacity: 1;
+  visibility: visible;
+}
+.nav-submenu a {
+  display: block;
+  padding: 9px 16px;
+  font-size: var(--fs-body-sm);
+  font-weight: 500;
+  color: var(--text-1);
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+  transition: background var(--ease-fast), color var(--ease-fast);
+}
+.nav-submenu a:hover {
+  background: var(--bg-section);
+  color: var(--mosaic-green-700);
+}
+.nav-submenu a.is-active {
+  color: var(--mosaic-orange);
+  background: var(--bg-section);
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   4. FOOTER
+   ========================================================================== */
+
+.mosaic-footer {
+  background: var(--bg-footer);
+  border-top: 1px solid var(--border-soft);
+  padding: 32px 0 24px;
+  margin-top: var(--space-7);
+}
+.mosaic-footer-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 var(--container-pad-x);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-6);
+}
+.mosaic-footer .mosaic-logo .logo-text { font-size: var(--fs-display); }
+.mosaic-footer .mosaic-logo .logo-shapes span { width: 17px; height: 8px; }
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  font-size: var(--fs-body-sm);
+}
+.footer-links a {
+  color: var(--text-2);
+  text-decoration: underline;
+  text-decoration-color: var(--mosaic-green-700);
+  text-underline-offset: 3px;
+}
+.footer-links a:hover {
+  color: var(--mosaic-green-800);
+  text-decoration-color: var(--mosaic-green-800);
+}
+
+.footer-copyright {
+  font-size: var(--fs-body-sm);
+  color: var(--text-3);
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   5. PAGE STRUCTURE
+   ========================================================================== */
+
+.breadcrumb {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+  margin-bottom: var(--space-3);
+}
+.breadcrumb a {
+  color: var(--mosaic-green-700);
+  text-decoration: none;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb .sep {
+  margin: 0 6px;
+  color: var(--text-3);
+}
+.breadcrumb .current {
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* page-title padronizado em todas as telas (32px / weight 800 / green-900).
+   Override de regras inline que tinham 26px (relatorios) ou 28px (token h1). */
+.page-title {
+  margin: 0 0 var(--space-5) !important;
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.01em !important;
+  color: var(--mosaic-green-900) !important;
+  line-height: var(--lh-tight) !important;
+}
+/* dentro de .title-row, page-title tem margin 0 (toggle Cards/Tabela alinha) */
+.title-row .page-title { margin: 0 !important; }
+.title-row { margin-bottom: 24px !important; }
+
+/* ==========================================================================
+   6. INFO BANNER
+   ========================================================================== */
+
+.info-banner {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  background: var(--bg-info);
+  padding: 18px 24px;
+  border-radius: 2px;
+  font-size: var(--fs-body);
+  color: var(--text-1);
+  margin-bottom: var(--space-4);
+}
+.info-banner .info-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-circle);
+  background: var(--text-1);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* ==========================================================================
+   7. FILTER CARD
+   ========================================================================== */
+
+.filter-card {
+  border: none;
+  border-radius: 2px;
+  margin-bottom: var(--space-5);
+  overflow: hidden;
+}
+.filter-card-head {
+  background: var(--bg-section);
+  padding: 18px 24px;
+  border-bottom: none;
+  font-size: var(--fs-subtitle);
+  font-weight: 700;
+  color: var(--text-1);
+}
+.filter-card-body {
+  background: #fff;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) auto auto;
+  gap: 20px;
+  align-items: end;
+}
+
+@media (max-width: 1099px) {
+  .filter-card-body { grid-template-columns: repeat(2, 1fr); }
+  .filter-card-body .btn,
+  .filter-card-body .btn-link { grid-column: 1 / -1; justify-self: end; }
+}
+@media (max-width: 599px) {
+  .filter-card-body { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   8. FORM FIELDS
+   ========================================================================== */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-label {
+  font-size: var(--fs-label);
+  font-weight: 600;
+  color: var(--text-2);
+}
+.field-label .required {
+  color: var(--mosaic-red);
+  margin-right: 2px;
+}
+.field-input,
+.field-select {
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: #fff;
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body);
+  color: var(--text-1);
+  outline: none;
+  transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+}
+.field-input::placeholder { color: var(--text-3); }
+.field-input:hover,
+.field-select:hover { border-color: var(--border-strong); }
+.field-input:focus,
+.field-select:focus {
+  border-color: var(--mosaic-green-700);
+  box-shadow: var(--shadow-focus);
+}
+
+.field-select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 36px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.field-search-wrap {
+  position: relative;
+}
+.field-search-wrap .field-input { padding-right: 36px; }
+.field-search-wrap .search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  pointer-events: none;
+  display: flex;
+}
+
+.field-date-wrap {
+  position: relative;
+}
+.field-date-wrap .field-input { padding-right: 36px; }
+.field-date-wrap .cal-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-3);
+  pointer-events: none;
+  display: flex;
+}
+
+/* ==========================================================================
+   9. BUTTONS
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 22px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-base);
+  font-weight: 700;
+  font-size: var(--fs-body-sm);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--ease-fast), border-color var(--ease-fast), color var(--ease-fast);
+}
+.btn-primary {
+  background: var(--mosaic-green-800);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--mosaic-green-700);
+  color: #fff;
+  text-decoration: none;
+}
+.btn-secondary {
+  background: #fff;
+  border-color: var(--border);
+  color: var(--mosaic-green-800);
+}
+.btn-secondary:hover {
+  border-color: var(--mosaic-green-700);
+  color: var(--mosaic-green-700);
+  text-decoration: none;
+}
+.btn-link {
+  background: transparent;
+  border: none;
+  color: var(--mosaic-green-700);
+  padding: 0 8px;
+  height: 38px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.btn-link:hover {
+  color: var(--mosaic-green-800);
+}
+.btn[disabled],
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   10. DATA TABLE
+   ========================================================================== */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+.toolbar-counter {
+  font-size: var(--fs-body-sm);
+  color: var(--text-2);
+}
+.toolbar-counter strong { color: var(--text-1); font-weight: 700; }
+
+.data-table-wrap {
+  background: #fff;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+/* Garante que o header da tabela respeite o radius do wrap */
+.data-table-wrap .data-table {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-body);
+}
+.data-table thead {
+  background: var(--bg-section);
+}
+.data-table thead th {
+  padding: 18px 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: var(--fs-body);
+  color: var(--text-1);
+  border-bottom: 1px solid var(--border-soft);
+  white-space: nowrap;
+}
+.data-table thead th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color var(--ease-fast);
+}
+.data-table thead th.sortable:hover { color: var(--mosaic-green-700); }
+/* Sort arrows: SVG inline via background-image */
+.data-table thead th .sort-arrow {
+  display: inline-block;
+  width: 10px;
+  height: 12px;
+  margin-left: 6px;
+  vertical-align: -2px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.85;
+}
+.data-table thead th .sort-arrow.asc,
+.data-table thead th.sortable:not(.sort-desc) .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 1l4 6H1z'/></svg>");
+}
+.data-table thead th .sort-arrow.desc,
+.data-table thead th.sort-desc .sort-arrow {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 12' fill='%231a2421'><path d='M5 11l4-6H1z'/></svg>");
+}
+.data-table tbody td {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--text-1);
+  vertical-align: middle;
+}
+.data-table tbody tr:last-child td { border-bottom: none; }
+.data-table tbody tr:hover { background: var(--bg-hover); }
+
+.cell-num { text-align: right; font-variant-numeric: tabular-nums; }
+.cell-strong { font-weight: 700; color: var(--mosaic-green-800); }
+.cell-muted { font-size: var(--fs-label); color: var(--text-3); }
+.cell-mono { font-variant-numeric: tabular-nums; }
+
+.row-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-circle);
+  background: #fff;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
+}
+.row-action:hover {
+  border-color: var(--mosaic-green-700);
+  color: var(--mosaic-green-700);
+  background: var(--bg-section);
+}
+
+/* --------------------------------------------------------------------
+   Salesforce-style: inputs & buttons MAIORES (52px) + ROUNDED (10px)
+   - height: 52px alinha com o padrão visual do portal real
+   - border-radius: 10px (token --radius-md já atualizado)
+   -------------------------------------------------------------------- */
+.search-bar-input input,
+.btn-advanced-filter,
+.btn-clear,
+.btn-buscar-compact,
+input[type="text"]:not(.no-radius),
+input[type="search"]:not(.no-radius),
+input[type="date"]:not(.no-radius),
+input[type="number"]:not(.no-radius),
+select:not(.no-radius),
+.btn,
+button.btn-primary,
+button.btn-secondary,
+.action-row .btn-primary,
+.action-row .btn,
+.summary-footer button,
+.modal-footer button,
+.drawer-footer button {
+  border-radius: var(--radius-md) !important;
+}
+.search-bar-input input,
+.btn-advanced-filter,
+.btn-buscar-compact {
+  height: 52px !important;
+  font-size: 14px !important;
+}
+/* Buttons "pill" style que devem continuar pill */
+.status-pill,
+.lang-switch.is-pill {
+  border-radius: var(--radius-pill) !important;
+}
+
+/* --------------------------------------------------------------------
+   Unificação de margem horizontal — TODAS as telas seguem o mesmo
+   alinhamento do header (max-width 1320px + padding 32px lateral).
+   Header (.mosaic-header-top) e footer (.summary-footer-inner)
+   já tem max-width 1320px; .page passa a respeitar isso também.
+   -------------------------------------------------------------------- */
+.page {
+  max-width: var(--container-max) !important;        /* 1320px */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: var(--container-pad-x) !important;   /* 32px */
+  padding-right: var(--container-pad-x) !important;
+  width: 100% !important;
+}
+/* Footer fixo full-bleed, mas o inner respeita o mesmo container do header */
+.summary-footer-inner {
+  max-width: var(--container-max) !important;        /* 1320px */
+  padding-left: var(--container-pad-x) !important;   /* 32px (era 56px em alguns arquivos) */
+  padding-right: var(--container-pad-x) !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Full-bleed gray sections (apenas action-row e empty state) —
+   estendem até a borda do container, conteúdo refilado com 32px pra
+   alinhar com header. Cards/tabela ficam em normal-flow respeitando
+   o padding 32px do .page. */
+.page > .action-row,
+.page > .cards-empty,
+.page > .cards-container > .cards-empty {
+  margin-left: calc(-1 * var(--container-pad-x));
+  margin-right: calc(-1 * var(--container-pad-x));
+  padding-left: var(--container-pad-x);
+  padding-right: var(--container-pad-x);
+  border-left: none;
+  border-right: none;
+  border-radius: 0;
+}
+
+/* --------------------------------------------------------------------
+   Tabela do relatório: wrap arredondado nas pontas (print 3 do Salesforce)
+   -------------------------------------------------------------------- */
+.report-table-wrap {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+/* Como thead tem bg cinza-teal e ocupa toda a largura, o top corners do
+   wrap precisam ser herdados pelo thead pra ficar arredondado de verdade */
+.report-table thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+.report-table thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+/* --------------------------------------------------------------------
+   Overrides para classes específicas do relatório transposto
+   (.report-table, .search-bar, .info-banner svg) — alinha ao padrão
+   Salesforce sem mexer no inline CSS da tela.
+   -------------------------------------------------------------------- */
+
+/* info-banner ícone: SVG dentro vira fundo escuro (mais Salesforce-like) */
+.info-banner svg {
+  background: var(--text-1);
+  color: #fff !important;
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+  border-radius: var(--radius-circle);
+  flex-shrink: 0;
+}
+
+/* Tabela do relatório: thead bege, padding maior, sort arrows com SVG */
+.report-table thead {
+  background: var(--bg-section);
+}
+.report-table thead th {
+  background: var(--bg-section) !important;
+  padding: 16px 18px !important;
+  font-size: var(--fs-body) !important;
+  color: var(--text-1) !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+.report-table tbody td {
+  padding: 18px !important;
+}
+/* Sort arrows estilo Salesforce: triângulo filled em TODO th (asc default)
+   - Headers do .report-table não têm span .sort-arrow no HTML, então
+     adicionamos via ::after no próprio <th>.
+   - Para .data-table que tem .sort-arrow span, escondemos texto e
+     mostramos triângulo via ::after no span. */
+/* Tabela header padrão Salesforce: TEXTO mixed-case (NÃO uppercase),
+   TEXTO E SETAS verde-800, font 14px weight 600 */
+.report-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+.data-table thead th {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+.report-table thead th::after {
+  content: '↑';
+  font-size: 16px;
+  color: var(--mosaic-green-800);
+  margin-left: 6px;
+  vertical-align: -2px;
+  line-height: 1;
+  font-weight: 400;
+}
+.report-table thead th.sort-desc::after { content: '↓'; }
+
+.data-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+}
+.data-table .sort-arrow {
+  font-size: 0 !important;
+  color: transparent !important;
+  display: inline-block;
+  margin-left: 6px;
+  vertical-align: middle;
+  line-height: 1;
+}
+.data-table .sort-arrow::after {
+  content: '↑';
+  font-size: 16px !important;
+  color: var(--mosaic-green-800) !important;
+  font-weight: 400;
+}
+.data-table th.sort-desc .sort-arrow::after { content: '↓'; }
+
+/* ==========================================================================
+   MOSAIC TABLE PATTERN — unifica visual de todas as tabelas do projeto
+   ao padrão validado no Relatório de Status de Agendamento:
+     - wrap com border-radius 10px e cantos top arredondados via overflow
+     - thead bg --bg-section
+     - th: 14px/600, verde-800, mixed-case (NÃO uppercase), letter-spacing 0
+     - padding th: 16px 18px
+
+   PARA TELAS FUTURAS:
+     Use uma das classes abaixo na sua tabela e o pattern aplica sozinho.
+     Se criar classe nova (ex: .nova-table + .nova-table-wrap), adicione
+     o seletor às listas abaixo — uma única alteração propaga pra tudo.
+   ========================================================================== */
+
+/* WRAP — radius + corte de overflow.
+   .v3-table-wrap e .proto-table-wrap precisam de scroll horizontal interno
+   (tabelas com min-width: 1200-1500px), então aplicamos só border-radius
+   no wrap externo + overflow:hidden — o scroll horizontal continua via
+   overflow-x: auto que já existe na regra original (especificity menor). */
+.report-table-wrap,
+.results-table-wrap,
+.v3-table-wrap,
+.proto-table-wrap {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+/* Re-habilita scroll horizontal nos wraps de tabelas largas. Como
+   overflow:hidden acima corta os cantos, usamos um truque: deixamos
+   o wrap como container do radius e movemos o scroll pra dentro do
+   próprio thead/tbody via display table-layout. Solução mais simples
+   sem mexer no HTML: usar overflow-x: auto que sobrescreve hidden em X,
+   mantendo hidden em Y (necessário para cortar corners verticais). */
+.v3-table-wrap,
+.proto-table-wrap {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* ============================================================
+   Scrollbar customizada (visível e grossa) para tabelas largas
+   ============================================================ */
+.wide-table-wrap,
+.report-table-wrap,
+.results-table-wrap,
+.v3-table-wrap,
+.proto-table-wrap {
+  /* Firefox */
+  scrollbar-width: auto;
+  scrollbar-color: var(--mosaic-green-700) #e9efee;
+}
+/* WebKit / Blink (Chrome, Safari, Edge)
+   -webkit-appearance: none forca o navegador a abandonar o overlay
+   scrollbar nativo do macOS (que esconde automaticamente) e desenhar
+   a barra estilizada o tempo todo. */
+.wide-table-wrap::-webkit-scrollbar,
+.report-table-wrap::-webkit-scrollbar,
+.results-table-wrap::-webkit-scrollbar,
+.v3-table-wrap::-webkit-scrollbar,
+.proto-table-wrap::-webkit-scrollbar {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  background: #e9efee;
+  border-top: 1px solid var(--border-soft);
+}
+.wide-table-wrap::-webkit-scrollbar-track,
+.report-table-wrap::-webkit-scrollbar-track,
+.results-table-wrap::-webkit-scrollbar-track,
+.v3-table-wrap::-webkit-scrollbar-track,
+.proto-table-wrap::-webkit-scrollbar-track {
+  background: #e9efee;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+.wide-table-wrap::-webkit-scrollbar-thumb,
+.report-table-wrap::-webkit-scrollbar-thumb,
+.results-table-wrap::-webkit-scrollbar-thumb,
+.v3-table-wrap::-webkit-scrollbar-thumb,
+.proto-table-wrap::-webkit-scrollbar-thumb {
+  background: var(--mosaic-green-700);
+  border-radius: 8px;
+  border: 3px solid #e9efee;
+  min-width: 50px;
+}
+.wide-table-wrap::-webkit-scrollbar-thumb:hover,
+.report-table-wrap::-webkit-scrollbar-thumb:hover,
+.results-table-wrap::-webkit-scrollbar-thumb:hover,
+.v3-table-wrap::-webkit-scrollbar-thumb:hover,
+.proto-table-wrap::-webkit-scrollbar-thumb:hover {
+  background: var(--mosaic-green-800);
+}
+/* Scroll horizontal SEMPRE VISIVEL nos wraps de tabelas largas
+   (overflow-x: scroll garante a barra mesmo quando nao tem overflow
+   ativo, oferecendo affordance de "essa tabela rola"). Vence o
+   "overflow: hidden !important" da regra de border-radius mais acima. */
+.wide-table-wrap,
+.results-table-wrap,
+.report-table-wrap {
+  overflow-x: scroll !important;
+  overflow-y: visible !important;
+}
+
+/* TH — corners arredondados no primeiro/último th da primeira linha */
+.report-table thead tr:first-child th:first-child,
+.results-table thead tr:first-child th:first-child,
+.v3-table thead tr:first-child th:first-child,
+.proto-table thead tr:first-child th:first-child {
+  border-top-left-radius: var(--radius-md);
+}
+.report-table thead tr:first-child th:last-child,
+.results-table thead tr:first-child th:last-child,
+.v3-table thead tr:first-child th:last-child,
+.proto-table thead tr:first-child th:last-child {
+  border-top-right-radius: var(--radius-md);
+}
+
+/* v3-table-wrap DENTRO de .contract-card: o card é o container visual,
+   o wrap não precisa de radius próprio (evita arco branco no canto). */
+.contract-card .v3-table-wrap {
+  border-radius: 0 !important;
+}
+
+/* TH — tipografia unificada (mixed-case, verde-800, 14px/600) */
+.report-table thead th,
+.results-table thead th,
+.v3-table thead th,
+.proto-table thead th {
+  color: var(--mosaic-green-800) !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  padding: 16px 18px !important;
+  background: var(--bg-section) !important;
+}
+
+/* --------------------------------------------------------------------
+   TOAST — Padrão de mensagem flutuante (erro vermelho, sucesso verde,
+   info azul, warning amarelo).
+   Uso: <div class="toast toast--error">[icon] mensagem [×]</div>
+   Posicionar via .toast-container (fixed no topo).
+   -------------------------------------------------------------------- */
+.toast-container {
+  position: fixed;
+  top: 24px;
+  left: 0; right: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+  padding: 0 var(--container-pad-x);
+}
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 320px;
+  max-width: 720px;
+  padding: 14px 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-family-base);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  box-shadow: var(--shadow-soft);
+  pointer-events: auto;
+}
+.toast__icon { flex-shrink: 0; display: flex; }
+.toast__msg { flex: 1; }
+.toast__close {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.75;
+  padding: 4px;
+  display: inline-flex;
+  border-radius: var(--radius-circle);
+  transition: opacity var(--ease-fast), background var(--ease-fast);
+}
+.toast__close:hover { opacity: 1; background: rgba(255,255,255,0.15); }
+.toast--error   { background: var(--mosaic-red); color: #fff; }
+.toast--success { background: var(--mosaic-green-800); color: #fff; }
+.toast--info    { background: #1e6091; color: #fff; }
+.toast--warning { background: var(--mosaic-yellow); color: var(--text-1); }
+.toast--warning .toast__close:hover { background: rgba(0,0,0,0.08); }
+
+/* --------------------------------------------------------------------
+   MODAL pattern (override pra unificar com Salesforce):
+   - Header bege #e9efee com title + X
+   - Body branco
+   - Radius 10px nas pontas
+   -------------------------------------------------------------------- */
+.modal,
+.modal-content {
+  border-radius: var(--radius-md) !important;
+  overflow: hidden !important;
+}
+.modal-header,
+.modal .modal-head,
+.drawer-header {
+  background: var(--bg-section) !important;
+  padding: 16px 24px !important;
+  border-bottom: 1px solid var(--border-soft) !important;
+}
+
+/* --------------------------------------------------------------------
+   CONTRASTE de botões: garante text:#fff em primary, mesmo quando
+   inline CSS define cor diferente (problema relatado no "Cadastrar
+   Cooperado" e similares).
+   -------------------------------------------------------------------- */
+.btn-primary,
+button.btn-primary,
+a.btn-primary,
+.btn-with-icon.btn-primary {
+  background: var(--mosaic-green-800) !important;
+  color: #fff !important;
+  border-color: var(--mosaic-green-800) !important;
+}
+.btn-primary:hover,
+button.btn-primary:hover {
+  background: var(--mosaic-green-700) !important;
+  border-color: var(--mosaic-green-700) !important;
+}
+.btn-primary svg,
+button.btn-primary svg,
+.btn-with-icon.btn-primary svg {
+  color: #fff !important;
+  stroke: #fff !important;
+}
+.btn-primary[disabled],
+.btn-primary:disabled {
+  background: var(--mosaic-green-800) !important;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   11. STATUS PILLS
+   ========================================================================== */
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid;
+  font-size: var(--fs-label);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.status-pill::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-circle);
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.status-analise    { color: var(--status-analise-fg);    background: var(--status-analise-bg);    border-color: var(--status-analise-bd); }
+.status-aprovado   { color: var(--status-aprovado-fg);   background: var(--status-aprovado-bg);   border-color: var(--status-aprovado-bd); }
+.status-carregando { color: var(--status-carregando-fg); background: var(--status-carregando-bg); border-color: var(--status-carregando-bd); }
+.status-faturado   { color: var(--status-faturado-fg);   background: var(--status-faturado-bg);   border-color: var(--status-faturado-bd); }
+.status-rejeitado  { color: var(--status-rejeitado-fg);  background: var(--status-rejeitado-bg);  border-color: var(--status-rejeitado-bd); }
+.status-cancelado  { color: var(--status-cancelado-fg);  background: var(--status-cancelado-bg);  border-color: var(--status-cancelado-bd); }
+
+/* ==========================================================================
+   12. PAGINATION
+   ========================================================================== */
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--space-4);
+}
+.pag-btn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text-1);
+  font-family: var(--font-family-base);
+  font-size: var(--fs-body-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pag-btn:hover {
+  border-color: var(--mosaic-green-700);
+  color: var(--mosaic-green-700);
+}
+.pag-btn.is-active {
+  background: var(--mosaic-green-800);
+  border-color: var(--mosaic-green-800);
+  color: #fff;
+}
+.pag-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+/* ==========================================================================
+   13. EMPTY STATE
+   ========================================================================== */
+
+.empty-state {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--text-3);
+  font-size: var(--fs-body-sm);
+}
+.empty-state strong {
+  display: block;
+  color: var(--text-1);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  margin-bottom: 6px;
+}
+
+/* ==========================================================================
+   14. RESPONSIVE
+   ========================================================================== */
+
+@media (max-width: 899px) {
+  .mosaic-header-top { grid-template-columns: auto 1fr; padding: 14px var(--space-4); gap: var(--space-3); }
+  .mosaic-search { display: none; }
+  .mosaic-user-info { display: none; }
+  .mosaic-nav-inner { padding: 0 var(--space-4); overflow-x: auto; }
+  .container { padding-left: var(--space-4); padding-right: var(--space-4); }
+  .mosaic-footer-inner { grid-template-columns: 1fr; gap: var(--space-4); padding: 0 var(--space-4); }
+}
+
+
+/* ============================================================================
+   Sticky horizontal scrollbar (sempre visível no rodapé do viewport quando
+   a tabela transborda). Wraps com [data-h-scroll] ou .wide-table-wrap /
+   .report-table-wrap são auto-detectados pelo script que cada página carrega.
+   ============================================================================ */
+
+.sticky-h-scroll {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: rgba(255,255,255,0.96);
+  border-top: 1px solid var(--border-soft);
+  box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+  z-index: 200;
+  display: none;
+}
+.sticky-h-scroll.is-visible { display: block; }
+.sticky-h-scroll-inner { height: 1px; }
