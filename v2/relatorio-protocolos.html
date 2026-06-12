@@ -895,6 +895,7 @@
     background: #fafaf8;
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     gap: 12px;
     flex-shrink: 0;
   }
@@ -2527,10 +2528,6 @@
 
     </div>
     <div class="agendar-modal-foot">
-      <a class="agendar-modal-foot-link" id="agFullFlowLink" href="#">
-        Fluxo completo de agendamento
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-      </a>
       <div class="agendar-modal-foot-actions">
         <button class="agendar-btn agendar-btn-secondary" id="agCancelBtn" type="button">Cancelar</button>
         <button class="agendar-btn agendar-btn-primary" id="agConfirmBtn" type="button">
@@ -3816,10 +3813,6 @@ function openAgendarModal(id) {
 
   // Observação
   document.getElementById("agObs").value = "";
-
-  // Link de fluxo completo
-  document.getElementById("agFullFlowLink").href =
-    `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
 
   validateAgendarForm();
   agendarModal.classList.add("is-open");
