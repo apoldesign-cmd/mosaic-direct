@@ -1976,35 +1976,55 @@
      da viewport enquanto a tabela transborda e está em tela.
      A barra nativa do wrap é escondida para não duplicar.
      ================================================================ */
-  .wide-table-wrap, .report-table-wrap { scrollbar-width: none; }
-  .wide-table-wrap::-webkit-scrollbar,
-  .report-table-wrap::-webkit-scrollbar { height: 0; width: 0; }
+  /* Mata a barra nativa dos wraps — inclusive a verde do base.css, que
+     pode carregar DEPOIS deste <style> (daí o prefixo html + !important).
+     Sem isso aparecem DUAS barras: a nativa no rodapé da tabela e a
+     flutuante no rodapé da viewport. */
+  html .wide-table-wrap, html .report-table-wrap {
+    scrollbar-width: none !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar,
+  html .report-table-wrap::-webkit-scrollbar {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
 
-  .sticky-h-scroll {
+  /* html-prefixo + !important: o base.css também define .sticky-h-scroll
+     (16px, branca, display:none) e pode carregar depois deste style. */
+  html .sticky-h-scroll {
     position: fixed;
-    bottom: 0;
+    bottom: 0 !important;
     left: 0;
-    z-index: 90;
+    right: auto !important;
+    z-index: 200;
     overflow-x: auto;
     overflow-y: hidden;
-    height: 18px;
-    background: rgba(250, 250, 248, 0.97);
-    border-top: 1px solid var(--border-soft);
-    box-shadow: 0 -3px 10px rgba(0, 0, 0, 0.07);
+    display: block !important;
+    height: 22px !important;
+    background: #eef2f0 !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 999px !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
     opacity: 0;
     pointer-events: none;
     transition: opacity 160ms ease-out;
+    scrollbar-width: auto;
+    scrollbar-color: var(--mosaic-green-800) #eef2f0;
   }
-  .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
-  .sticky-h-scroll-inner { height: 1px; }
-  .sticky-h-scroll::-webkit-scrollbar { height: 12px; }
-  .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
-  .sticky-h-scroll::-webkit-scrollbar-thumb {
+  html .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
+  html .sticky-h-scroll-inner { height: 1px; }
+  html .sticky-h-scroll::-webkit-scrollbar { height: 22px; }
+  html .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
+  html .sticky-h-scroll::-webkit-scrollbar-thumb {
     background: var(--mosaic-green-800);
     border-radius: 999px;
-    border: 3px solid rgba(250, 250, 248, 0.97);
+    border: 4px solid #eef2f0;
+    min-width: 80px;
   }
-  .sticky-h-scroll:hover::-webkit-scrollbar-thumb { background: var(--mosaic-green-900); }
+  html .sticky-h-scroll::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
 </style>
 </head>
 <body>

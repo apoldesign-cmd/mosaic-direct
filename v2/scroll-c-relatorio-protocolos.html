@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Protocolos</title>
+<title>Mosaic Direct — Relatório de Protocolos — Solução C (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -1972,62 +1972,57 @@
   }
 
   /* ================================================================
-     Barra de scroll horizontal flutuante — sempre visível no rodapé
-     da viewport enquanto a tabela transborda e está em tela.
-     A barra nativa do wrap é escondida para não duplicar.
+     Solução C — barra grande única SEMPRE visível, fixa na base
+     da viewport. A barra nativa do wrap é 100% morta (sem duplicar).
      ================================================================ */
-  /* Mata a barra nativa dos wraps — inclusive a verde do base.css, que
-     pode carregar DEPOIS deste <style> (daí o prefixo html + !important).
-     Sem isso aparecem DUAS barras: a nativa no rodapé da tabela e a
-     flutuante no rodapé da viewport. */
-  html .wide-table-wrap, html .report-table-wrap {
+  /* Mata a barra nativa verde do base.css (pode carregar depois deste style) */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
     scrollbar-width: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    display: none !important; height: 0 !important; width: 0 !important;
+  }
+  /* base.css força overflow-x: scroll !important — sobrescreve aqui */
+  html .wide-table-wrap {
     overflow-x: auto !important;
     overflow-y: hidden !important;
   }
-  html .wide-table-wrap::-webkit-scrollbar,
-  html .report-table-wrap::-webkit-scrollbar {
-    display: none !important;
-    height: 0 !important;
-    width: 0 !important;
-  }
 
-  /* html-prefixo + !important: o base.css também define .sticky-h-scroll
-     (16px, branca, display:none) e pode carregar depois deste style. */
-  html .sticky-h-scroll {
+  .h-scrollbar-float {
     position: fixed;
-    bottom: 0 !important;
-    left: 0;
-    right: auto !important;
-    z-index: 200;
+    z-index: 120;
+    height: 22px;
     overflow-x: auto;
     overflow-y: hidden;
-    display: block !important;
-    height: 22px !important;
-    background: #eef2f0 !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
+    background: #eef2f0;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0,0,0,.14);
     opacity: 0;
     pointer-events: none;
     transition: opacity 160ms ease-out;
     scrollbar-width: auto;
     scrollbar-color: var(--mosaic-green-800) #eef2f0;
   }
-  html .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
-  html .sticky-h-scroll-inner { height: 1px; }
-  html .sticky-h-scroll::-webkit-scrollbar { height: 22px; }
-  html .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb {
+  .h-scrollbar-float.is-visible { opacity: 1; pointer-events: auto; }
+  .h-scrollbar-float::-webkit-scrollbar { height: 22px; }
+  .h-scrollbar-float::-webkit-scrollbar-track { background: transparent; }
+  .h-scrollbar-float::-webkit-scrollbar-thumb {
     background: var(--mosaic-green-800);
     border-radius: 999px;
     border: 4px solid #eef2f0;
     min-width: 80px;
   }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
+  .h-scrollbar-float::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
+  .h-scrollbar-float-inner { height: 1px; }
 </style>
 </head>
 <body>
+
+<!-- Badge identificador da demo (Solução C) -->
+<div style="position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução C — barra grande sempre visível no rodapé da tela</div>
 
 <!-- HEADER ========================================================= -->
 <header class="mosaic-header">
@@ -4068,47 +4063,61 @@ document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
 render();
 
 /* ============================================================================
-   Sticky horizontal scrollbar — espelha o scrollLeft do .wide-table-wrap
-   numa barra fixa na base do viewport. Aparece só quando a tabela transborda
-   e o rodapé natural da tabela está fora do viewport.
+   Solução C — barra grande única SEMPRE visível, fixa na base da viewport.
+   Espelha o scrollLeft do .wide-table-wrap numa barra flutuante (pista 22px,
+   thumb verde) alinhada ao left/width do wrap. Visível sempre que a tabela
+   transborda e qualquer parte dela está em tela. Barra nativa morta no CSS.
    ============================================================================ */
-(function initStickyHScroll() {
-  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
-    const sticky = document.createElement("div");
-    sticky.className = "sticky-h-scroll";
+(function initFloatHScroll() {
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.hscroll === "1") return;
+    wrap.dataset.hscroll = "1";
+
+    const bar = document.createElement("div");
+    bar.className = "h-scrollbar-float";
     const inner = document.createElement("div");
-    inner.className = "sticky-h-scroll-inner";
-    sticky.appendChild(inner);
-    document.body.appendChild(sticky);
+    inner.className = "h-scrollbar-float-inner";
+    bar.appendChild(inner);
+    document.body.appendChild(bar);
+
     let syncing = false;
+
     const update = () => {
+      if (!wrap.isConnected) {
+        bar.classList.remove("is-visible");
+        return;
+      }
       inner.style.width = wrap.scrollWidth + "px";
       const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
       const r = wrap.getBoundingClientRect();
       // visível sempre que a tabela transborda e qualquer parte dela está em tela
       const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
-      sticky.style.left = r.left + "px";
-      sticky.style.width = r.width + "px";
-      sticky.classList.toggle("is-visible", overflows && inView);
-      if (overflows && inView) sticky.scrollLeft = wrap.scrollLeft;
+      bar.style.left = r.left + "px";
+      bar.style.width = r.width + "px";
+      bar.style.bottom = "0px"; // esta tela não tem footer fixo
+      bar.classList.toggle("is-visible", overflows && inView);
+      if (overflows && inView && !syncing) bar.scrollLeft = wrap.scrollLeft;
     };
+
     wrap.addEventListener("scroll", () => {
       if (syncing) return; syncing = true;
-      sticky.scrollLeft = wrap.scrollLeft;
+      bar.scrollLeft = wrap.scrollLeft;
       requestAnimationFrame(() => { syncing = false; });
     });
-    sticky.addEventListener("scroll", () => {
+    bar.addEventListener("scroll", () => {
       if (syncing) return; syncing = true;
-      wrap.scrollLeft = sticky.scrollLeft;
+      wrap.scrollLeft = bar.scrollLeft;
       requestAnimationFrame(() => { syncing = false; });
     });
-    window.addEventListener("scroll", update);
+    window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
     update();
-  });
+  }
+
+  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(attach);
 })();
 </script>
-<script src="../review-overlay.js" defer></script>
+<script src="review-overlay.js" defer></script>
 </body>
 </html>

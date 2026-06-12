@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Relatório de Protocolos</title>
+<title>Mosaic Direct — Relatório de Protocolos — Solução A (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -54,7 +54,8 @@
   }
   .wide-table {
     width: 100%;
-    min-width: 2200px;
+    min-width: 0; /* Solução A: sem scroll horizontal */
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 13px;
   }
@@ -1972,62 +1973,102 @@
   }
 
   /* ================================================================
-     Barra de scroll horizontal flutuante — sempre visível no rodapé
-     da viewport enquanto a tabela transborda e está em tela.
-     A barra nativa do wrap é escondida para não duplicar.
+     DEMO — SOLUÇÃO A: colunas compactas + scroll vertical na tabela.
+     A tabela NUNCA rola horizontalmente: 10 colunas compactas
+     (cell-stack) que cabem na largura útil do container. O wrap ganha
+     max-height com scroll vertical interno e thead sticky.
      ================================================================ */
-  /* Mata a barra nativa dos wraps — inclusive a verde do base.css, que
-     pode carregar DEPOIS deste <style> (daí o prefixo html + !important).
-     Sem isso aparecem DUAS barras: a nativa no rodapé da tabela e a
-     flutuante no rodapé da viewport. */
-  html .wide-table-wrap, html .report-table-wrap {
-    scrollbar-width: none !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+
+  /* Mata a barra nativa HORIZONTAL verde do base.css (que usa
+     !important) e estiliza a barra VERTICAL do scroll interno.
+     Prefixo "html" garante especificidade maior que o base.css. */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--mosaic-green-700) #eef1ef !important;
   }
-  html .wide-table-wrap::-webkit-scrollbar,
-  html .report-table-wrap::-webkit-scrollbar {
-    display: none !important;
-    height: 0 !important;
-    width: 0 !important;
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    height: 0 !important;   /* sem barra horizontal — nunca */
+    width: 12px !important; /* barra vertical do scroll interno */
+    background: transparent !important;
+    border: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar-track, html .report-table-wrap::-webkit-scrollbar-track,
+  html .proto-table-wrap::-webkit-scrollbar-track, html .results-table-wrap::-webkit-scrollbar-track {
+    background: #eef1ef !important;
+    border: none !important;
+    border-radius: 0 !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar-thumb, html .report-table-wrap::-webkit-scrollbar-thumb,
+  html .proto-table-wrap::-webkit-scrollbar-thumb, html .results-table-wrap::-webkit-scrollbar-thumb {
+    background: var(--mosaic-green-700) !important;
+    border-radius: 8px !important;
+    border: 3px solid #eef1ef !important;
+    min-width: 0 !important;
   }
 
-  /* html-prefixo + !important: o base.css também define .sticky-h-scroll
-     (16px, branca, display:none) e pode carregar depois deste style. */
-  html .sticky-h-scroll {
-    position: fixed;
-    bottom: 0 !important;
-    left: 0;
-    right: auto !important;
-    z-index: 200;
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: block !important;
-    height: 22px !important;
-    background: #eef2f0 !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 160ms ease-out;
-    scrollbar-width: auto;
-    scrollbar-color: var(--mosaic-green-800) #eef2f0;
+  /* Wrap: sem overflow horizontal, scroll vertical interno limitado.
+     Sobrescreve o "overflow-x: scroll !important" do base.css. */
+  html .wide-table-wrap {
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    max-height: 56vh;
   }
-  html .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
-  html .sticky-h-scroll-inner { height: 1px; }
-  html .sticky-h-scroll::-webkit-scrollbar { height: 22px; }
-  html .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb {
-    background: var(--mosaic-green-800);
-    border-radius: 999px;
-    border: 4px solid #eef2f0;
-    min-width: 80px;
+
+  /* Cabeçalho fixo durante o scroll vertical do wrap.
+     border-collapse: separate é obrigatório — sticky em th não funciona
+     com border-collapse: collapse no Chrome. */
+  html .wide-table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
   }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
+  html .wide-table thead th {
+    position: sticky !important;
+    top: 0;
+    z-index: 4;
+  }
+
+  /* Células compactas: paddings menores + conteúdo empilhado */
+  .wide-table thead th { padding: 11px 10px !important; }
+  .wide-table tbody td { padding: 10px 10px; white-space: normal; }
+  .wide-table tbody td.num { white-space: nowrap; }
+  .wide-table th.col-proto,
+  .wide-table td.col-proto { padding: 8px 10px !important; min-width: 0; }
+  .wide-table .status-badge { font-size: 10.5px; padding: 3px 8px; }
+
+  /* Padrão cell-stack: linha primária + linha secundária na mesma célula */
+  .cell-stack-a { line-height: 1.3; min-width: 0; }
+  .cell-stack-a .csa-primary {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cell-stack-a .csa-secondary {
+    font-size: 11px;
+    font-weight: 500;
+    color: #6b7570;
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cell-stack-a.is-right { text-align: right; }
+  .cell-stack-a.is-right .csa-secondary { font-size: 10px; }
+  .cell-stack-a .csa-unit { font-size: 10px; color: #6b7570; font-weight: 700; }
+  td.num .cell-stack-a .csa-primary { font-variant-numeric: tabular-nums; font-weight: 600; }
+  .wide-table tbody td.num { font-size: 12.5px; }
 </style>
 </head>
 <body>
+
+<!-- BADGE DEMO — Solução A -->
+<div style="position:fixed; left:50%; bottom:16px; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução A — colunas compactas + scroll vertical (sem scroll horizontal)</div>
 
 <!-- HEADER ========================================================= -->
 <header class="mosaic-header">
@@ -2224,30 +2265,16 @@
     <table class="wide-table" id="mainTable">
       <thead>
         <tr>
-          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="preco">Preço NF (unit.)<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
-          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="col-proto sortable" data-sort="id" style="width:12%">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="status" style="width:13%">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="contrato" style="width:9%">Contrato<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cooperado" style="width:11%">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="filial" style="width:11%">Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="descProduto" style="width:11%">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="nf" style="width:9%">NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="preco" style="width:9%">Preço NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdProtocolo" style="width:8%">Qtd. (t)<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="saldo" style="width:7%">Saldo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
         </tr>
       </thead>
       <tbody id="tableBody">
@@ -2754,6 +2781,14 @@ const PROTOCOLS = [
   },
 ];
 
+/* Demo Solução A: clona +15 protocolos com ids únicos para tornar o
+   scroll VERTICAL interno da tabela demonstrável. */
+const EXTRA_PROTOCOLS = Array.from({ length: 15 }, (_, i) => ({
+  ...PROTOCOLS[i % PROTOCOLS.length],
+  id: "M9W8" + String(1000 + i),
+}));
+PROTOCOLS.push(...EXTRA_PROTOCOLS);
+
 /* ================================================================
    Status badge
    ================================================================ */
@@ -2868,7 +2903,7 @@ function render() {
 
   const body = document.getElementById("tableBody");
   if (!rows.length) {
-    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    body.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
     return;
   }
 
@@ -2924,27 +2959,18 @@ function readOnlyCell(p, field, reason, opts = {}) {
 }
 
 function renderRowNormal(p) {
-  // Regras de edição na tabela (idem modal SMDP-161):
-  // Volume: rules.canEditVolume(p) — só reduz, min = qtdAgendada
-  // Embalagem: rules.canEditPackaging(p) — antes do SO
-  // NF / Data NF / Preço NF: rules.canEditInvoice(p) — até billing
-  // Qtd. Agendada e Qtd. Faturada: read-only (vem do SAP)
-  // Outros (Cooperado/Contrato/Cotação/Cidade/UF/IE/Produto/Frete/Planta): imutáveis
-  const embalagemCell = rules.canEditPackaging(p)
-    ? editableCell(p, "embalagem", { type: "select", options: EMBALAGEM_OPTIONS })
-    : readOnlyCell(p, "embalagem", "Sales Order já gerada");
-  const nfCell = rules.canEditInvoice(p)
-    ? editableCell(p, "nf",     { type: "text" })
-    : readOnlyCell(p, "nf",     "Faturamento já concluído", { cls: p.nf === '—' ? 'muted' : '' });
-  const dataNfCell = rules.canEditInvoice(p)
-    ? editableCell(p, "dataNf", { type: "text" })
-    : readOnlyCell(p, "dataNf", "Faturamento já concluído", { cls: p.dataNf === '—' ? 'muted' : '' });
-  const precoCell = rules.canEditInvoice(p)
-    ? editableCell(p, "preco",  { type: "text", cls: "num" })
-    : readOnlyCell(p, "preco",  "Faturamento já concluído", { cls: "num" });
-  const qtdProtocoloCell = rules.canEditVolume(p)
-    ? editableQtyCell(p, "qtdProtocolo", true)
-    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+  // Demo Solução A — 10 colunas compactas, padrão cell-stack:
+  // informações relacionadas empilhadas na mesma célula (primária
+  // 13px/600 + secundária 11px #6b7570). Edição continua exclusiva
+  // do chevron → menu → modal "Editar protocolo" (actionCell).
+  const stackA = (primary, secondary, alignRight) => `
+    <div class="cell-stack-a${alignRight ? " is-right" : ""}">
+      <div class="csa-primary">${primary}</div>
+      ${secondary ? `<div class="csa-secondary">${secondary}</div>` : ""}
+    </div>`;
+  const dash = '<span class="muted">—</span>';
+  const nfPrimary   = (!p.nf || p.nf === "—") ? dash : p.nf;
+  const nfSecondary = (!p.dataNf || p.dataNf === "—") ? "" : p.dataNf;
 
   return `
     <tr data-proto-id="${p.id}">
@@ -2955,28 +2981,18 @@ function renderRowNormal(p) {
         </div>
       </td>
       <td>${statusBadge(p.status)}</td>
-      <td>${p.contrato}</td>
-      <td>${p.cotacao}</td>
-      <td>${p.filial}</td>
-      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
-      <td>${p.cidade}</td>
-      <td style="font-weight:600">${p.uf}</td>
-      <td style="font-weight:600">${p.cooperado}</td>
-      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
-      <td class="muted">${p.ie}</td>
-      <td class="muted">${p.produto}</td>
-      <td style="font-weight:600">${p.descProduto}</td>
-      ${embalagemCell}
-      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
-      <td>${p.planta}</td>
-      ${nfCell}
-      ${dataNfCell}
-      ${precoCell}
-      ${qtdProtocoloCell}
-      ${numCell(p.qtdAgendada, false)}
+      <td>${stackA(p.contrato, `Cot. ${p.cotacao}`)}</td>
+      <td>${stackA(p.cooperado, p.cnpjCoop)}</td>
+      <td>${stackA(p.filial, `${p.cidade} · ${p.uf}`)}</td>
+      <td>${stackA(p.descProduto, p.embalagem)}</td>
+      <td>${stackA(nfPrimary, nfSecondary)}</td>
+      <td class="num">${p.preco}</td>
+      <td class="num">${stackA(
+        `${p.qtdProtocolo.toLocaleString("pt-BR")} <span class="csa-unit">t</span>`,
+        `Ag. ${p.qtdAgendada.toLocaleString("pt-BR")} · Fat. ${p.qtdFaturada.toLocaleString("pt-BR")}`,
+        true
+      )}</td>
       ${numCell(p.saldo, p.saldo > 0)}
-      ${numCell(p.qtdFaturada, false)}
-      ${numCell(p.qtdFaturar, false)}
     </tr>
   `;
 }
@@ -4046,6 +4062,7 @@ function applySort(rows) {
 document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
   th.addEventListener("click", () => {
     const field = th.dataset.sort;
+    if (!field) return; // tolerante a th sem data-sort
     if (sortField === field) {
       // Mesma coluna: asc -> desc -> nenhuma
       if (sortDir === 1)      sortDir = -1;
@@ -4067,48 +4084,9 @@ document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
 
 render();
 
-/* ============================================================================
-   Sticky horizontal scrollbar — espelha o scrollLeft do .wide-table-wrap
-   numa barra fixa na base do viewport. Aparece só quando a tabela transborda
-   e o rodapé natural da tabela está fora do viewport.
-   ============================================================================ */
-(function initStickyHScroll() {
-  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
-    const sticky = document.createElement("div");
-    sticky.className = "sticky-h-scroll";
-    const inner = document.createElement("div");
-    inner.className = "sticky-h-scroll-inner";
-    sticky.appendChild(inner);
-    document.body.appendChild(sticky);
-    let syncing = false;
-    const update = () => {
-      inner.style.width = wrap.scrollWidth + "px";
-      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
-      const r = wrap.getBoundingClientRect();
-      // visível sempre que a tabela transborda e qualquer parte dela está em tela
-      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
-      sticky.style.left = r.left + "px";
-      sticky.style.width = r.width + "px";
-      sticky.classList.toggle("is-visible", overflows && inView);
-      if (overflows && inView) sticky.scrollLeft = wrap.scrollLeft;
-    };
-    wrap.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      sticky.scrollLeft = wrap.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    sticky.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      wrap.scrollLeft = sticky.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    window.addEventListener("scroll", update);
-    window.addEventListener("resize", update);
-    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
-    update();
-  });
-})();
+/* Demo Solução A: a barra horizontal flutuante (initStickyHScroll) foi
+   removida — a tabela não rola horizontalmente nesta solução. */
 </script>
-<script src="../review-overlay.js" defer></script>
+<script src="review-overlay.js" defer></script>
 </body>
 </html>
