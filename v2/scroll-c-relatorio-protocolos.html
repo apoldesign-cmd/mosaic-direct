@@ -1990,33 +1990,35 @@
     overflow-y: hidden !important;
   }
 
-  .h-scrollbar-float {
+  /* Barra de scroll horizontal CUSTOMIZADA (thumb desenhado em DIV).
+     Não depende do scrollbar nativo do SO (que no macOS some/overlay),
+     então o thumb verde escuro fica SEMPRE visível e grande. */
+  .hbar {
     position: fixed;
     z-index: 120;
-    height: 30px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    background: #eef2f0;
+    height: 20px;
+    background: #e3eae8;
     border: 1px solid var(--border-soft);
     border-radius: 999px;
-    box-shadow: 0 6px 18px rgba(0,0,0,.18);
+    box-shadow: 0 5px 16px rgba(0,0,0,.18);
     opacity: 0;
     pointer-events: none;
     transition: opacity 160ms ease-out;
-    scrollbar-width: auto;
-    scrollbar-color: var(--mosaic-green-800) #eef2f0;
   }
-  .h-scrollbar-float.is-visible { opacity: 1; pointer-events: auto; }
-  .h-scrollbar-float::-webkit-scrollbar { height: 30px; }
-  .h-scrollbar-float::-webkit-scrollbar-track { background: transparent; }
-  .h-scrollbar-float::-webkit-scrollbar-thumb {
-    background: var(--mosaic-green-800);
+  .hbar.is-visible { opacity: 1; pointer-events: auto; }
+  .hbar-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    min-width: 64px;
     border-radius: 999px;
-    border: 4px solid #eef2f0;
-    min-width: 90px;
+    background: var(--mosaic-green-800);
+    cursor: grab;
+    transition: background .12s;
   }
-  .h-scrollbar-float::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
-  .h-scrollbar-float-inner { height: 1px; }
+  .hbar-thumb:hover { background: var(--mosaic-green-900); }
+  .hbar-thumb:active { cursor: grabbing; background: var(--mosaic-green-900); }
 </style>
 </head>
 <body>
@@ -4063,63 +4065,87 @@ document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
 render();
 
 /* ============================================================================
-   Solução C — barra grande única SEMPRE visível, fixa na base da viewport.
-   Espelha o scrollLeft do .wide-table-wrap numa barra flutuante (pista 22px,
-   thumb verde) alinhada ao left/width do wrap. Visível sempre que a tabela
-   transborda e qualquer parte dela está em tela. Barra nativa morta no CSS.
+   Solução C — barra grande SEMPRE visível, com thumb verde DESENHADO em DIV
+   (não usa scrollbar nativo, que some no macOS). Fica colada no rodapé da
+   tabela, afastada da borda de baixo. Arrasta o thumb ou clica na pista.
    ============================================================================ */
-(function initFloatHScroll() {
+(function initCustomHScroll() {
   function attach(wrap) {
     if (!wrap || wrap.dataset.hscroll === "1") return;
     wrap.dataset.hscroll = "1";
 
     const bar = document.createElement("div");
-    bar.className = "h-scrollbar-float";
-    const inner = document.createElement("div");
-    inner.className = "h-scrollbar-float-inner";
-    bar.appendChild(inner);
+    bar.className = "hbar";
+    const thumb = document.createElement("div");
+    thumb.className = "hbar-thumb";
+    bar.appendChild(thumb);
     document.body.appendChild(bar);
 
-    let syncing = false;
-
-    const update = () => {
-      if (!wrap.isConnected) {
-        bar.classList.remove("is-visible");
-        return;
-      }
-      inner.style.width = wrap.scrollWidth + "px";
-      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
-      const r = wrap.getBoundingClientRect();
-      // visível sempre que a tabela transborda e qualquer parte dela está em tela
-      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
-      bar.style.left = r.left + "px";
-      bar.style.width = r.width + "px";
-      // A barra fica colada no RODAPÉ DA TABELA (não no fundo da tela),
-      // com uma folga de 24px da borda de baixo quando a tabela é longa.
-      const barH = bar.offsetHeight || 30;
-      const gap = 24;
-      const desired = r.bottom - barH;            // logo abaixo da última linha
-      const maxTop = window.innerHeight - gap - barH; // nunca colar no fundo
-      bar.style.bottom = "auto";
-      bar.style.top = Math.min(desired, maxTop) + "px";
-      bar.classList.toggle("is-visible", overflows && inView);
-      if (overflows && inView && !syncing) bar.scrollLeft = wrap.scrollLeft;
+    const footerH = () => {
+      const f = document.querySelector(".summary-footer");
+      return (f && getComputedStyle(f).display !== "none") ? f.offsetHeight : 0;
     };
 
-    wrap.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      bar.scrollLeft = wrap.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
+    const layout = () => {
+      if (!wrap.isConnected) { bar.remove(); return; }
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
+      bar.classList.toggle("is-visible", overflows && inView);
+      if (!overflows || !inView) return;
+      // Posição: no rodapé da tabela, com folga da borda de baixo (e do footer).
+      const barH = bar.offsetHeight || 20;
+      const gap = 18;
+      const maxTop = window.innerHeight - footerH() - gap - barH;
+      const top = Math.min(r.bottom - barH - 6, maxTop);
+      bar.style.left = r.left + "px";
+      bar.style.width = r.width + "px";
+      bar.style.top = top + "px";
+      // Thumb proporcional
+      const trackW = bar.clientWidth;
+      const ratio = wrap.clientWidth / wrap.scrollWidth;
+      const thumbW = Math.max(64, Math.round(trackW * ratio));
+      const maxThumbX = trackW - thumbW;
+      const maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const x = maxScroll > 0 ? Math.round((wrap.scrollLeft / maxScroll) * maxThumbX) : 0;
+      thumb.style.width = thumbW + "px";
+      thumb.style.left = x + "px";
+    };
+
+    // Arrastar o thumb
+    let dragging = false, startX = 0, startScroll = 0;
+    thumb.addEventListener("pointerdown", (e) => {
+      dragging = true; startX = e.clientX; startScroll = wrap.scrollLeft;
+      try { thumb.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
     });
-    bar.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      wrap.scrollLeft = bar.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
+    thumb.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const dx = e.clientX - startX;
+      wrap.scrollLeft = startScroll + (maxThumbX > 0 ? (dx / maxThumbX) * maxScroll : 0);
+      layout();
     });
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
-    update();
+    const endDrag = (e) => { dragging = false; try { thumb.releasePointerCapture(e.pointerId); } catch (_) {} };
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+    // Clique na pista → pula em direção ao ponto clicado
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target === thumb) return;
+      const rect = bar.getBoundingClientRect();
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const targetX = Math.max(0, Math.min(maxThumbX, (e.clientX - rect.left) - thumbW / 2));
+      wrap.scrollLeft = maxThumbX > 0 ? (targetX / maxThumbX) * maxScroll : 0;
+      layout();
+    });
+
+    wrap.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("resize", layout);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(layout).observe(wrap);
+    layout();
   }
 
   document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(attach);
