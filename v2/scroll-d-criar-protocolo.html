@@ -4950,8 +4950,8 @@
   .col-pager-btn {
     position: fixed;
     z-index: 130;
-    width: 40px;
-    height: 72px;
+    width: 30px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4959,16 +4959,16 @@
     color: #fff;
     border: none;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+    box-shadow: 0 4px 12px rgba(0,0,0,.20);
     opacity: 0;
     pointer-events: none;
     transition: opacity 160ms ease-out, background 120ms;
   }
   .col-pager-btn.is-visible { opacity: .97; pointer-events: auto; }
   .col-pager-btn:hover { background: var(--mosaic-green-900); }
-  .col-pager-btn.prev { border-radius: 0 12px 12px 0; }
-  .col-pager-btn.next { border-radius: 12px 0 0 12px; }
-  .col-pager-btn svg { width: 24px; height: 24px; }
+  .col-pager-btn.prev { border-radius: 0 9px 9px 0; }
+  .col-pager-btn.next { border-radius: 9px 0 0 9px; }
+  .col-pager-btn svg { width: 18px; height: 18px; }
 
 </style>
 
@@ -4981,7 +4981,7 @@
 <body>
 
 <!-- Badge identificador da demo (Solução D) -->
-<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução D — botões ‹ › avançam um bloco de colunas por clique</div>
+<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução D — um clique nas setas ‹ › revela o resto das colunas</div>
 
 <!-- Top header ==================================================== -->
 <header class="mosaic-header">
@@ -7597,18 +7597,20 @@ goTo("empty");
       const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
       const top = Math.max(r.top, 80);
       const bottom = Math.min(r.bottom, window.innerHeight - footerH());
-      const cy = (top + bottom) / 2 - 36;
+      const btnH = next.offsetHeight || 50;
+      const cy = (top + bottom) / 2 - btnH / 2;
       prev.style.top = cy + "px";
       next.style.top = cy + "px";
       prev.style.left = r.left + "px";
-      next.style.left = (r.right - 40) + "px";
+      next.style.left = (r.right - (next.offsetWidth || 30)) + "px";
       const atStart = wrap.scrollLeft <= 2;
       const atEnd = wrap.scrollLeft >= wrap.scrollWidth - wrap.clientWidth - 2;
       prev.classList.toggle("is-visible", overflows && inView && !atStart);
       next.classList.toggle("is-visible", overflows && inView && !atEnd);
     };
 
-    const step = () => Math.max(240, wrap.clientWidth * 0.85);
+    // Um clique já leva até o fim (e o ‹ volta tudo) — sem precisar de 2.
+    const step = () => Math.max(wrap.clientWidth, wrap.scrollWidth - wrap.clientWidth);
     const page = (dir) => {
       wrap.scrollBy({ left: dir * step(), behavior: "smooth" });
       [0, 200, 450].forEach(ms => setTimeout(update, ms));

@@ -1993,13 +1993,13 @@
   .h-scrollbar-float {
     position: fixed;
     z-index: 120;
-    height: 22px;
+    height: 30px;
     overflow-x: auto;
     overflow-y: hidden;
     background: #eef2f0;
     border: 1px solid var(--border-soft);
     border-radius: 999px;
-    box-shadow: 0 4px 14px rgba(0,0,0,.14);
+    box-shadow: 0 6px 18px rgba(0,0,0,.18);
     opacity: 0;
     pointer-events: none;
     transition: opacity 160ms ease-out;
@@ -2007,13 +2007,13 @@
     scrollbar-color: var(--mosaic-green-800) #eef2f0;
   }
   .h-scrollbar-float.is-visible { opacity: 1; pointer-events: auto; }
-  .h-scrollbar-float::-webkit-scrollbar { height: 22px; }
+  .h-scrollbar-float::-webkit-scrollbar { height: 30px; }
   .h-scrollbar-float::-webkit-scrollbar-track { background: transparent; }
   .h-scrollbar-float::-webkit-scrollbar-thumb {
     background: var(--mosaic-green-800);
     border-radius: 999px;
     border: 4px solid #eef2f0;
-    min-width: 80px;
+    min-width: 90px;
   }
   .h-scrollbar-float::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
   .h-scrollbar-float-inner { height: 1px; }
@@ -4094,7 +4094,14 @@ render();
       const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
       bar.style.left = r.left + "px";
       bar.style.width = r.width + "px";
-      bar.style.bottom = "0px"; // esta tela não tem footer fixo
+      // A barra fica colada no RODAPÉ DA TABELA (não no fundo da tela),
+      // com uma folga de 24px da borda de baixo quando a tabela é longa.
+      const barH = bar.offsetHeight || 30;
+      const gap = 24;
+      const desired = r.bottom - barH;            // logo abaixo da última linha
+      const maxTop = window.innerHeight - gap - barH; // nunca colar no fundo
+      bar.style.bottom = "auto";
+      bar.style.top = Math.min(desired, maxTop) + "px";
       bar.classList.toggle("is-visible", overflows && inView);
       if (overflows && inView && !syncing) bar.scrollLeft = wrap.scrollLeft;
     };
