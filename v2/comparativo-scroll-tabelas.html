@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Comparativo · Scroll horizontal em tabelas largas — 5 soluções</title>
+<title>Comparativo · Scroll horizontal em tabelas largas — 4 opções</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="tokens.css" />
@@ -148,12 +148,12 @@
 <section class="cc-hero">
   <div class="container container-main">
     <div class="cc-eyebrow">Comparativo UX · decisão de produto</div>
-    <h1>Scroll horizontal em tabelas largas — 5 soluções para comparar</h1>
+    <h1>Scroll horizontal em tabelas largas — 4 opções para comparar</h1>
     <p>
       Decisão de UX para o PO: como dar acesso às colunas que <strong>não cabem na tela</strong>
       nas tabelas do <strong>Relatório de Protocolos</strong> (24 colunas) e do <strong>Criar Protocolo</strong> (14 colunas),
       <strong>sem duas barras de scroll</strong> ao mesmo tempo e com uma barra <strong>maior e mais fácil de pegar</strong>
-      do que a atual. Cada solução abaixo tem demos navegáveis das duas telas.
+      do que a atual. Cada opção abaixo tem demos navegáveis das duas telas.
     </p>
   </div>
 </section>
@@ -163,10 +163,10 @@
   <div class="container container-main">
     <div class="sc-grid">
 
-      <!-- SOLUÇÃO A -->
+      <!-- OPÇÃO 1 -->
       <article class="sc-card">
         <div class="sc-card-head">
-          <span class="sc-letter">A</span>
+          <span class="sc-letter">1</span>
           <h2>Sem scroll horizontal</h2>
           <span class="sc-tag">Colunas compactadas · cabeçalho fixo</span>
         </div>
@@ -206,53 +206,10 @@
         </div>
       </article>
 
-      <!-- SOLUÇÃO B -->
+      <!-- OPÇÃO 2 -->
       <article class="sc-card">
         <div class="sc-card-head">
-          <span class="sc-letter">B</span>
-          <h2>Barra aparece no hover</h2>
-          <span class="sc-tag">Tabela completa · barra sob demanda</span>
-        </div>
-        <div class="sc-card-body">
-          <p class="sc-how">
-            A tabela mantém <strong>todas as colunas</strong> (24 no relatório). Uma
-            <strong>barra grande</strong> (pista de ~22px, thumb verde de ~14px)
-            <strong>surge ao passar o mouse</strong> sobre a tabela e some pouco depois que
-            ele sai. Fora do hover, a interface fica totalmente limpa.
-          </p>
-          <div>
-            <p class="sc-list-title pros">Prós</p>
-            <ul class="sc-list pros">
-              <li>Interface limpa — nada ocupa espaço quando não é necessário.</li>
-              <li>Barra grande e fácil de pegar quando aparece.</li>
-              <li>Sempre ao alcance: basta o mouse estar sobre a tabela.</li>
-            </ul>
-          </div>
-          <div>
-            <p class="sc-list-title cons">Contras</p>
-            <ul class="sc-list cons">
-              <li>O usuário precisa descobrir o gesto (hover).</li>
-              <li>Em notebook com trackpad, o two-finger scroll já resolve — a barra agrega menos.</li>
-            </ul>
-          </div>
-          <div class="sc-links">
-            <p class="sc-links-label">Ver demos</p>
-            <a class="sc-btn" href="scroll-b-relatorio-protocolos.html">
-              Relatório de Protocolos
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a class="sc-btn secondary" href="scroll-b-criar-protocolo.html">
-              Criar Protocolo
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-          </div>
-        </div>
-      </article>
-
-      <!-- SOLUÇÃO C -->
-      <article class="sc-card">
-        <div class="sc-card-head">
-          <span class="sc-letter">C</span>
+          <span class="sc-letter">2</span>
           <h2>Barra sempre visível</h2>
           <span class="sc-tag">Tabela completa · barra fixa no rodapé</span>
         </div>
@@ -294,7 +251,7 @@
       <!-- Solução D -->
       <article class="sc-card">
         <div class="sc-card-head">
-          <span class="sc-letter">D</span>
+          <span class="sc-letter">3</span>
           <h2>Botões de bloco</h2>
           <span class="sc-tag">Tabela completa · setas ‹ › nas bordas</span>
         </div>
@@ -333,33 +290,33 @@
         </div>
       </article>
 
-      <!-- Solução E -->
+      <!-- OPÇÃO 4 -->
       <article class="sc-card">
         <div class="sc-card-head">
-          <span class="sc-letter">E</span>
-          <h2>Grid estilo Jira</h2>
-          <span class="sc-tag">Altura fixa · barra colada no rodapé da tabela</span>
+          <span class="sc-letter">4</span>
+          <h2>Estilo Jira (tela travada)</h2>
+          <span class="sc-tag">A página não rola · só a tabela rola</span>
         </div>
         <div class="sc-card-body">
           <p class="sc-how">
-            A tabela vira uma <strong>área de altura fixa</strong> com rolagem própria
-            (vertical e horizontal), igual ao Jira. A <strong>barra horizontal é a nativa
-            do container</strong>, colada no rodapé da área — sempre visível e
-            <strong>à prova de zoom</strong> (é o scrollbar real, não um cálculo). O
-            cabeçalho fica fixo ao rolar.
+            Igual ao Jira: a <strong>página inteira não rola</strong>. O topo (menu e busca)
+            fica parado, o banner informativo é removido e a <strong>tabela ocupa todo o
+            resto da tela</strong>, rolando só por dentro (vertical e horizontal). A barra
+            horizontal é a nativa, colada no rodapé da área — sempre visível e
+            <strong>à prova de zoom</strong>. O cabeçalho da tabela fica fixo.
           </p>
           <div>
             <p class="sc-list-title pros">Prós</p>
             <ul class="sc-list pros">
-              <li>Robusta: funciona em qualquer zoom e tamanho de tela.</li>
-              <li>Padrão consagrado (Jira/planilhas) — cabeçalho sempre visível.</li>
+              <li>Zero scroll de página — tudo cabe numa tela só, como no Jira.</li>
+              <li>Robusta em qualquer zoom; cabeçalho da tabela sempre visível.</li>
             </ul>
           </div>
           <div>
             <p class="sc-list-title cons">Contras</p>
             <ul class="sc-list cons">
-              <li>A tabela ganha rolagem interna (área limitada em altura).</li>
-              <li>Duas rolagens na área (vertical + horizontal) podem confundir.</li>
+              <li>A tabela tem área de altura limitada (rolagem interna).</li>
+              <li>Esconde banner e rodapé institucional para travar a altura.</li>
             </ul>
           </div>
           <div class="sc-links">

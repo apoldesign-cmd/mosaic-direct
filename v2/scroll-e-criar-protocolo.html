@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo — Solução E (demo)</title>
+<title>Mosaic Direct — Criar Protocolo — Estilo Jira / tela travada (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -4925,14 +4925,38 @@
 
 
   /* ================================================================
-     Solução E — "grid estilo Jira": a tabela de itens vira uma área de
-     altura fixa com scroll próprio. A barra horizontal é a NATIVA do
-     container, colada no rodapé da área — sempre visível e à prova de
-     zoom. Cabeçalho fixo. CSS puro: nada de barra flutuante / JS.
+     Solução E — "Estilo Jira (tela travada)": a PÁGINA não rola. O
+     topo (nav + ação de selecionar contrato) e o rodapé fixo ficam
+     parados; a tabela de itens ocupa o espaço do meio e rola só por
+     dentro (vertical + horizontal), igual ao Jira. Barra horizontal
+     nativa, colada no rodapé da área, sempre visível e à prova de zoom.
      ================================================================ */
+  /* Trava o scroll da página inteira */
+  html, body { height: 100%; overflow: hidden; }
+  body { display: flex; flex-direction: column; }
+  html main.page {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: 96px; /* reserva o espaço do rodapé fixo */
+  }
+  html .breadcrumbs, html .title-row, html .action-row { flex: 0 0 auto; }
+  /* O container dos itens preenche o espaço restante */
+  html #cardsContainer {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  /* A tabela rola só por dentro */
   html .proto-table-wrap {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: none !important;
     overflow: auto !important;
-    max-height: 46vh !important;
     scrollbar-width: auto;
     scrollbar-color: var(--mosaic-green-800) #eef2f0;
   }
@@ -4972,7 +4996,7 @@
 <body>
 
 <!-- Badge identificador da demo (Solução E) -->
-<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução E — grid estilo Jira (altura fixa, barra colada no rodapé, à prova de zoom)</div>
+<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Estilo Jira — tela travada (a página não rola; só a tabela rola por dentro)</div>
 
 <!-- Top header ==================================================== -->
 <header class="mosaic-header">
