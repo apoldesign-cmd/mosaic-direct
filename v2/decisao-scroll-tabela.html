@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct 2.0 — Decisão de UX: scroll horizontal em tabelas largas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --g900:#003e2a;--g800:#00583d;--g700:#006a4d;--teal:#2c8b78;
+    --yellow:#f0c020;--orange:#d56b1a;--red:#b9202a;
+    --bg:#fafaf8;--card:#fff;--section:#f1f5f3;--border:#e1e1e1;
+    --t1:#15201b;--t2:#3b4642;--t3:#6b7570;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{margin:0;background:var(--bg);color:var(--t1);font-family:"Barlow",-apple-system,system-ui,sans-serif;font-size:15px;line-height:1.6}
+  .page{max-width:920px;margin:0 auto;padding:0 40px}
+
+  /* capa */
+  .cover{min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    background:radial-gradient(1100px 560px at 82% -10%,rgba(44,139,120,.18),transparent 60%),
+    linear-gradient(160deg,var(--g900) 0%,var(--g800) 55%,var(--g700) 100%);
+    color:#fff;padding:72px 60px;position:relative;overflow:hidden}
+  .cover::after{content:"";position:absolute;right:-120px;bottom:-120px;width:440px;height:440px;border-radius:50%;
+    background:radial-gradient(circle,rgba(240,192,32,.16),transparent 65%)}
+  .cover-logo{display:flex;align-items:center;gap:14px;margin-bottom:48px}
+  .cover-logo .lt{font-size:32px;font-weight:900;letter-spacing:-.5px}
+  .cover-logo .lt sup{font-size:12px;font-weight:700;opacity:.8}
+  .cover-logo img{height:28px}
+  .cover .eyebrow{font-size:13px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);margin-bottom:18px}
+  .cover h1{font-size:50px;line-height:1.06;font-weight:900;margin:0 0 18px;letter-spacing:-1.2px;max-width:760px}
+  .cover .sub{font-size:19px;max-width:640px;opacity:.92;font-weight:500}
+  .cover .verdict{margin-top:34px;display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:12px 22px;font-weight:700;font-size:16px;position:relative;z-index:1}
+  .cover .verdict b{color:var(--yellow)}
+  .cover-meta{margin-top:46px;display:flex;gap:44px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.22);padding-top:26px;position:relative;z-index:1}
+  .cover-meta .l{font-size:11px;text-transform:uppercase;letter-spacing:.12em;opacity:.7;margin-bottom:4px}
+  .cover-meta .v{font-size:15px;font-weight:700}
+
+  section{padding:50px 0}
+  .eyebrow2{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--g700);margin-bottom:8px}
+  h2{font-size:30px;font-weight:900;margin:0 0 10px;letter-spacing:-.5px;color:var(--g900)}
+  h3{font-size:20px;font-weight:800;color:var(--t1);margin:26px 0 10px}
+  p{margin:0 0 14px;color:var(--t2)}
+  p strong,li strong{color:var(--t1)}
+  .lead{font-size:16.5px;color:var(--t2);max-width:760px}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+  .deccard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+  .deccard .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g700)}
+  .deccard h3{margin:6px 0 6px;font-size:18px;color:var(--g900)}
+  .deccard p{margin:0;font-size:14px}
+
+  .callout{background:var(--section);border-left:4px solid var(--g700);border-radius:0 10px 10px 0;padding:16px 20px;margin:6px 0 0}
+  .callout p{margin:0;color:var(--t1);font-size:14.5px}
+
+  table.score{width:100%;border-collapse:separate;border-spacing:0;margin-top:10px;font-size:13.5px;
+    background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  table.score th,table.score td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  table.score thead th{background:var(--section);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);font-weight:800}
+  table.score thead th.best{background:rgba(0,88,61,.10);color:var(--g800)}
+  table.score td.crit{font-weight:700;color:var(--t1);width:30%}
+  table.score td.best{background:rgba(0,88,61,.05)}
+  table.score tr:last-child td{border-bottom:none}
+  .yes{color:var(--g700);font-weight:700}.mid{color:var(--orange);font-weight:700}.no{color:var(--red);font-weight:700}
+
+  ul.imp{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+  ul.imp li{position:relative;padding-left:28px;font-size:14.5px;color:var(--t1);line-height:1.5}
+  ul.imp li::before{content:"✓";position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;
+    background:var(--g800);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+
+  .rec{background:linear-gradient(135deg,var(--g800),var(--g900));color:#fff;border-radius:14px;padding:28px 32px;margin-top:10px}
+  .rec .eyebrow2{color:var(--yellow)}
+  .rec h2{color:#fff;margin-bottom:10px}
+  .rec p{color:rgba(255,255,255,.92)}
+  .rec ul.imp li{color:#fff}
+  .rec ul.imp li::before{background:var(--yellow);color:var(--g900)}
+
+  .qa{display:grid;gap:12px;margin-top:8px}
+  .qa .row{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px}
+  .qa .q{font-weight:800;color:var(--g900);margin:0 0 4px;font-size:14.5px}
+  .qa .a{margin:0;font-size:14px;color:var(--t2)}
+
+  hr.div{height:1px;background:var(--border);border:0;margin:0}
+  footer{background:var(--g900);color:rgba(255,255,255,.85);padding:34px 0;margin-top:36px}
+  footer .page{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  footer .lt{font-size:20px;font-weight:900;color:#fff}
+  footer small{font-size:12.5px}
+
+  @page{size:A4;margin:14mm}
+  @page capa{size:A4;margin:0}
+  @media print{
+    body{background:#fff;font-size:11.5px}
+    .page{max-width:none;padding:0}
+    .cover{page:capa;min-height:auto;height:297mm;padding:60px 50px;page-break-after:always}
+    .cover h1{font-size:40px}
+    section{padding:14px 0}
+    .break{page-break-before:always}
+    .deccard,.callout,table.score,.rec,.qa .row{page-break-inside:avoid}
+    h2{font-size:23px}
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-logo"><span class="lt">Mosaic<sup>®</sup></span><img src="logo-shapes.png" alt="Mosaic"/></div>
+  <div class="eyebrow">Mosaic Direct 2.0 · Scheduling Fase 2</div>
+  <h1>Scroll horizontal em tabelas largas</h1>
+  <p class="sub">Decisão de UX e defesa técnica para o acesso a colunas que não cabem na tela, nas tabelas do Relatório de Protocolos (24 colunas) e Criar Protocolo (14 colunas).</p>
+  <div class="verdict">Decisão: <b>visual contido (cabeçalho fixo) + botões de bloco ‹ ›</b></div>
+  <div class="cover-meta">
+    <div><div class="l">Produto</div><div class="v">Mosaic Direct 2.0</div></div>
+    <div><div class="l">Tema</div><div class="v">Navegação de tabelas largas</div></div>
+    <div><div class="l">Data</div><div class="v">Junho de 2026</div></div>
+    <div><div class="l">Autor</div><div class="v">Victor Dias</div></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- CONTEXTO -->
+  <section>
+    <div class="eyebrow2">Contexto</div>
+    <h2>O problema</h2>
+    <p class="lead">As telas são <strong>LWCs rodando dentro do Experience Cloud (LWR)</strong> do Mosaic Direct, e o mesmo componente também roda na tela interna do CS (Lightning Experience). As tabelas têm <strong>mais colunas do que cabe na largura da tela</strong> — e, em tabelas largas, o usuário <strong>frequentemente não percebe que há conteúdo à direita</strong>. Esse é um problema clássico de descoberta em scroll horizontal (documentado pela Nielsen Norman Group).</p>
+    <p class="lead">Portanto, o critério nº 1 não é "rolar bonito": é <strong>deixar óbvio que existem mais colunas e dar um controle fácil e acessível para chegar nelas</strong> — funcionando igual no portal, no CS e no mobile.</p>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- DUAS DECISÕES -->
+  <section>
+    <div class="eyebrow2">Como organizar a discussão</div>
+    <h2>São duas decisões independentes</h2>
+    <p class="lead">Separar os dois eixos evita confundir "look" com "mecanismo" — e mostra que parte da solução já vem de graça.</p>
+    <div class="two">
+      <div class="deccard">
+        <div class="tag">Decisão A · Layout vertical</div>
+        <h3>Tabela contida (cabeçalho fixo)</h3>
+        <p>Confinar a tabela a um contêiner de altura fixa, com cabeçalho fixo e rolagem própria — o visual "uma tela só", sem scroll vertical sobrando. O time de engenharia confirmou que isso é <strong>viável de forma nativa</strong>, dentro do componente, sem travar a página.</p>
+      </div>
+      <div class="deccard">
+        <div class="tag">Decisão B · Mecanismo horizontal</div>
+        <h3>Como acessar as colunas escondidas</h3>
+        <p>Botões de bloco ‹ ›, barra custom sempre visível, ou apenas o scroll nativo. Aqui pesam descoberta, precisão, acessibilidade e risco de implementação.</p>
+      </div>
+    </div>
+    <div class="callout"><p><strong>Ganho imediato:</strong> o visual de "tela travada" que buscávamos (cabeçalho fixo, sem scroll sobrando) é alcançável de forma nativa e segura — independente do mecanismo horizontal escolhido. Ele entra na decisão como base.</p></div>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- SCORECARD -->
+  <section class="break">
+    <div class="eyebrow2">Comparativo de UX</div>
+    <h2>Mecanismo horizontal, critério a critério</h2>
+    <p class="lead">Avaliação das três alternativas pelos critérios que mais afetam o usuário e o risco de entrega.</p>
+    <table class="score">
+      <thead>
+        <tr>
+          <th>Critério de UX</th>
+          <th class="best">Botões ‹ › <span style="font-weight:600;text-transform:none;letter-spacing:0">(Opção 3)</span></th>
+          <th>Barra custom <span style="font-weight:600;text-transform:none;letter-spacing:0">(Opção 2)</span></th>
+          <th>Scroll nativo puro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="crit">Descoberta ("há mais à direita?")</td><td class="best"><span class="yes">Alta</span> — botão é convite claro</td><td><span class="mid">Média</span> — barra discreta</td><td><span class="no">Baixa</span> — no Mac some até rolar</td></tr>
+        <tr><td class="crit">Precisão (coluna específica)</td><td class="best"><span class="mid">Média</span> — pula em blocos</td><td><span class="yes">Alta</span> — arrasta a qualquer ponto</td><td><span class="yes">Alta</span></td></tr>
+        <tr><td class="crit">Eficiência (chegar longe)</td><td class="best"><span class="yes">Boa</span> — 1–2 cliques previsíveis</td><td><span class="mid">Média</span> — arrasto longo</td><td><span class="mid">Média</span></td></tr>
+        <tr><td class="crit">Acessibilidade (teclado / leitor de tela)</td><td class="best"><span class="yes">Alta</span> — botão real, foco, ARIA</td><td><span class="no">Baixa</span> — thumb custom não substitui o nativo</td><td><span class="yes">Alta</span></td></tr>
+        <tr><td class="crit">Consistência (portal + CS + mobile)</td><td class="best"><span class="yes">Alta</span> — igual em tudo</td><td><span class="mid">Média</span> — scrollbar varia por navegador</td><td><span class="mid">Média</span></td></tr>
+        <tr><td class="crit">Carga visual</td><td class="best"><span class="mid">Média</span> — 2 botões nas bordas</td><td><span class="mid">Média</span> — barra permanente</td><td><span class="yes">Nenhuma</span></td></tr>
+        <tr><td class="crit">Risco de implementação</td><td class="best"><span class="yes">Baixo</span></td><td><span class="mid">Médio</span></td><td><span class="yes">Baixo</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><p>A <strong>Opção 3 (botões)</strong> domina a Opção 2 em quase tudo que importa — descoberta, acessibilidade e consistência — perdendo só em <strong>precisão de arrasto</strong>, ponto pequeno e mitigável (ver alavancas adiante).</p></div>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- LAYOUT GAIN -->
+  <section>
+    <div class="eyebrow2">Por que o layout contido importa</div>
+    <h2>O maior ganho de UX vem do cabeçalho fixo</h2>
+    <p class="lead">Independente do botão, confinar a tabela numa altura fixa entrega os benefícios de usabilidade mais altos — e é justamente o caminho nativo que a engenharia liberou.</p>
+    <ul class="imp">
+      <li><strong>Cabeçalho sempre visível</strong> — "reconhecer em vez de lembrar" (heurística de Nielsen): o usuário nunca perde o nome da coluna ao rolar as linhas.</li>
+      <li><strong>Ações/rodapé fixos</strong> — sempre ao alcance, sem rolar a página inteira.</li>
+      <li><strong>"Uma tela só"</strong> — sem scroll vertical sobrando, leitura mais focada.</li>
+      <li><strong>Sem risco de plataforma</strong> — entregue dentro do componente, sem mexer no Theme Layout / chrome da página.</li>
+    </ul>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- RECOMENDAÇÃO -->
+  <section class="break">
+    <div class="rec">
+      <div class="eyebrow2">Decisão recomendada</div>
+      <h2>Visual contido (nativo) + botões de bloco ‹ ›</h2>
+      <p>Adotar o <strong>layout contido de altura fixa</strong> (cabeçalho fixo, sem scroll sobrando) pelo caminho nativo, usando os <strong>botões de bloco ‹ ›</strong> como mecanismo de scroll horizontal. UX e engenharia apontam para o mesmo lugar:</p>
+      <ul class="imp">
+        <li>Entrega o <strong>visual que buscávamos</strong> (look "tela travada") com baixo risco.</li>
+        <li>Melhor <strong>descoberta</strong> e melhor <strong>acessibilidade</strong> (botão real, teclado, leitor de tela).</li>
+        <li><strong>Consistente</strong> em portal, CS e mobile; sem efeito colateral de plataforma.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ALAVANCAS -->
+  <section>
+    <div class="eyebrow2">Para blindar a decisão</div>
+    <h2>Três alavancas de UX (todas nativas)</h2>
+    <p class="lead">Neutralizam o único ponto fraco dos botões (precisão) e elevam ainda mais a descoberta.</p>
+    <ul class="imp">
+      <li><strong>Congelar a 1ª coluna (Protocolo) e o cabeçalho</strong> — padrão de Excel/Salesforce para tabelas largas: o usuário nunca perde a identidade da linha enquanto navega as colunas. Maior ganho de UX, barato e nativo.</li>
+      <li><strong>Manter a rolagem nativa ativa por baixo dos botões</strong> (trackpad/teclado) — os botões são a camada de descoberta; quem quer precisão usa o trackpad.</li>
+      <li><strong>Sombra / "fade" na borda direita</strong> indicando que há mais conteúdo — reforço de descoberta a custo zero.</li>
+    </ul>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- OBJEÇÕES -->
+  <section>
+    <div class="eyebrow2">Antecipando perguntas</div>
+    <h2>Perguntas &amp; respostas</h2>
+    <div class="qa">
+      <div class="row"><p class="q">"Botão não é menos preciso que arrastar uma barra?"</p><p class="a">Sim, em precisão pura. Mas a barra custom tem custo de acessibilidade e QA (risco médio), e a precisão dos botões é resolvida congelando a 1ª coluna + mantendo o scroll nativo por baixo. O saldo de UX fica com os botões.</p></div>
+      <div class="row"><p class="q">"Perdemos o visual 'tela travada' (Opção 1)?"</p><p class="a">Não. O look é entregue pelo layout contido nativo — cabeçalho fixo, sem scroll sobrando — sem o risco de travar a página inteira que a engenharia apontou.</p></div>
+      <div class="row"><p class="q">"Funciona igual no CS interno e no mobile?"</p><p class="a">Sim — é o principal motivo de escolher os botões: tudo interno ao componente, sem depender do Theme Layout, com comportamento idêntico em portal, CS e mobile.</p></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="page">
+    <span class="lt">Mosaic<sup>®</sup> Direct 2.0</span>
+    <small>Decisão de UX · Scroll horizontal em tabelas largas · Junho de 2026</small>
+  </div>
+</footer>
+
+</body>
+</html>
