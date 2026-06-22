@@ -3,312 +3,296 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Comparativo · Scroll horizontal em tabelas largas — 3 opções</title>
+<title>Mosaic Direct 2.0 — Scroll horizontal em tabelas largas: comparativo e decisão</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="base.css" />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
-  body { background: var(--bg-page); }
+  :root{
+    --g900:#003e2a;--g800:#00583d;--g700:#006a4d;--teal:#2c8b78;
+    --yellow:#f0c020;--orange:#d56b1a;--red:#b9202a;
+    --bg:#fafaf8;--card:#fff;--section:#f1f5f3;--border:#e1e1e1;
+    --t1:#15201b;--t2:#3b4642;--t3:#6b7570;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--t1);font-family:"Barlow",-apple-system,system-ui,sans-serif;font-size:15px;line-height:1.6}
+  .page{max-width:1080px;margin:0 auto;padding:0 40px}
+  a{color:var(--g700)}
 
-  /* ============== Hero ============== */
-  .cc-hero {
-    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
-    border-bottom: 1px solid var(--border-soft);
-    padding: var(--space-6) 0 var(--space-5);
-  }
-  .cc-eyebrow {
-    font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; color: var(--mosaic-green-700);
-    margin-bottom: var(--space-2);
-  }
-  .cc-hero h1 { margin: 0 0 var(--space-2); font-size: 30px; font-weight: 800; color: var(--text-1); letter-spacing: -0.01em; }
-  .cc-hero p { margin: 0; max-width: 820px; color: var(--text-2); line-height: 1.55; font-size: 14px; }
+  /* Hero */
+  .hero{background:radial-gradient(1100px 540px at 84% -10%,rgba(44,139,120,.18),transparent 60%),
+    linear-gradient(160deg,var(--g900) 0%,var(--g800) 55%,var(--g700) 100%);color:#fff;padding:54px 0 50px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-130px;bottom:-130px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(240,192,32,.15),transparent 65%)}
+  .hero .logo{display:flex;align-items:center;gap:12px;margin-bottom:30px}
+  .hero .logo .lt{font-size:26px;font-weight:900;letter-spacing:-.5px}.hero .logo .lt sup{font-size:11px;opacity:.8}
+  .hero .logo img{height:24px}
+  .hero .eyebrow{font-size:12px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow);margin-bottom:14px}
+  .hero h1{font-size:40px;line-height:1.1;font-weight:900;margin:0 0 14px;letter-spacing:-1px;max-width:780px}
+  .hero p{font-size:17px;max-width:720px;opacity:.93;margin:0;font-weight:500;position:relative;z-index:1}
+  .hero .verdict{margin-top:26px;display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:11px 20px;font-weight:700;font-size:15px;position:relative;z-index:1}
+  .hero .verdict b{color:var(--yellow)}
 
-  /* ============== Grid de soluções ============== */
-  .sc-section { padding: var(--space-6) 0; }
-  .sc-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: var(--space-4); align-items: stretch;
-  }
-  .sc-card {
-    background: #fff; border: 1px solid var(--border-soft); border-radius: 6px;
-    display: flex; flex-direction: column; overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-  .sc-card-head {
-    padding: 18px 20px 16px;
-    border-bottom: 1px solid var(--border-soft);
-    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
-  }
-  .sc-letter {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 30px; height: 30px; border-radius: 6px;
-    background: var(--mosaic-green-800); color: #fff;
-    font-size: 15px; font-weight: 800; margin-bottom: 10px;
-  }
-  .sc-card-head h2 { margin: 0; font-size: 17px; font-weight: 800; color: var(--text-1); line-height: 1.3; }
-  .sc-card-head .sc-tag {
-    display: inline-block; margin-top: 6px;
-    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
-    color: var(--text-3);
-  }
-  .sc-card-body { padding: 16px 20px 20px; display: flex; flex-direction: column; flex: 1; gap: 14px; }
-  .sc-how { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-2); }
-  .sc-how strong { color: var(--text-1); }
+  section{padding:46px 0}
+  .eyebrow2{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--g700);margin-bottom:8px}
+  h2{font-size:28px;font-weight:900;margin:0 0 10px;letter-spacing:-.5px;color:var(--g900)}
+  .lead{font-size:16px;color:var(--t2);max-width:780px}
+  p{color:var(--t2)}
+  p strong,li strong{color:var(--t1)}
+  hr.div{height:1px;background:var(--border);border:0;margin:0}
 
-  .sc-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
-  .sc-list li { font-size: 12.5px; line-height: 1.5; color: var(--text-2); padding-left: 22px; position: relative; }
-  .sc-list li::before {
-    position: absolute; left: 0; top: 0;
-    font-weight: 800; font-size: 12px;
-  }
-  .sc-list.pros li::before { content: "✓"; color: var(--mosaic-green-800); }
-  .sc-list.cons li::before { content: "–"; color: var(--mosaic-red); }
-  .sc-list-title {
-    font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
-    margin: 0 0 6px;
-  }
-  .sc-list-title.pros { color: var(--mosaic-green-800); }
-  .sc-list-title.cons { color: var(--mosaic-red); }
+  /* 2 decisões */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+  .deccard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+  .deccard .tag{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g700)}
+  .deccard h3{margin:6px 0 6px;font-size:17px;color:var(--g900)}
+  .deccard p{margin:0;font-size:14px}
+  .callout{background:var(--section);border-left:4px solid var(--g700);border-radius:0 10px 10px 0;padding:15px 18px;margin:18px 0 0}
+  .callout p{margin:0;color:var(--t1);font-size:14.5px}
 
-  .sc-links {
-    margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-soft);
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .sc-links-label {
-    font-size: 10.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-3); margin: 0;
-  }
-  .sc-btn {
-    display: inline-flex; align-items: center; justify-content: space-between; gap: 8px;
-    background: var(--mosaic-green-800); color: #fff; text-decoration: none;
-    height: 38px; padding: 0 16px; border-radius: 4px;
-    font-size: 13px; font-weight: 700;
-    box-shadow: 0 2px 6px rgba(0,88,61,0.18);
-    transition: background .12s;
-  }
-  .sc-btn:hover { background: var(--mosaic-green-900); }
-  .sc-btn.secondary {
-    background: #fff; color: var(--mosaic-green-800);
-    border: 1.5px solid var(--mosaic-green-800); box-shadow: none;
-  }
-  .sc-btn.secondary:hover { background: rgba(0,88,61,0.06); }
-  .sc-btn svg { flex-shrink: 0; }
+  /* opções */
+  .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+  .opt{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;height:100%}
+  .opt .shot{width:100%;height:172px;object-fit:cover;object-position:top left;border-bottom:1px solid var(--border);background:var(--section)}
+  .opt-body{padding:16px 18px 18px;display:flex;flex-direction:column;flex:1;gap:12px}
+  .opt-head{display:flex;align-items:center;gap:10px}
+  .opt .n{display:inline-flex;width:30px;height:30px;border-radius:8px;background:var(--g800);color:#fff;align-items:center;justify-content:center;font-weight:900;font-size:15px;flex:0 0 auto}
+  .opt h3{margin:0;font-size:17px;font-weight:800;color:var(--g900);line-height:1.2}
+  .risk{font-size:10.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 9px;border-radius:999px;display:inline-block;width:fit-content}
+  .risk.low{background:rgba(0,88,61,.10);color:var(--g800)}
+  .risk.mid{background:rgba(213,107,26,.14);color:var(--orange)}
+  .risk.high{background:rgba(185,32,42,.12);color:var(--red)}
+  .opt .how{margin:0;font-size:13.5px;color:var(--t2);line-height:1.5}
+  .lst{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .lst li{font-size:12.5px;line-height:1.45;color:var(--t2);padding-left:20px;position:relative}
+  .lst.pro li::before{content:"✓";position:absolute;left:0;color:var(--g800);font-weight:800}
+  .lst.con li::before{content:"–";position:absolute;left:0;color:var(--red);font-weight:800}
+  .lst-t{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin:2px 0 4px}
+  .lst-t.pro{color:var(--g800)}.lst-t.con{color:var(--red)}
+  .opt .links{margin-top:auto;padding-top:12px;border-top:1px solid var(--border);display:flex;gap:14px;flex-wrap:wrap}
+  .opt .links a{font-size:13px;font-weight:700;text-decoration:none}
 
-  /* ============== Nota de rodapé do conteúdo ============== */
-  .sc-note {
-    margin-top: var(--space-5);
-    background: linear-gradient(135deg, var(--mosaic-green-800) 0%, var(--mosaic-green-900) 100%);
-    color: #fff; padding: 18px 24px; border-radius: 6px;
-    display: flex; align-items: flex-start; gap: 12px;
-    font-size: 13.5px; line-height: 1.55;
-  }
-  .sc-note svg { flex-shrink: 0; margin-top: 1px; }
-  .sc-note p { margin: 0; opacity: 0.96; }
-  .sc-note strong { font-weight: 800; }
+  /* scorecard */
+  table.score{width:100%;border-collapse:separate;border-spacing:0;margin-top:8px;font-size:13.5px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  table.score th,table.score td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+  table.score thead th{background:var(--section);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);font-weight:800}
+  table.score thead th.best{background:rgba(0,88,61,.10);color:var(--g800)}
+  table.score td.crit{font-weight:700;color:var(--t1);width:28%}
+  table.score td.best{background:rgba(0,88,61,.05)}
+  table.score tr:last-child td{border-bottom:none}
+  .yes{color:var(--g700);font-weight:700}.mid{color:var(--orange);font-weight:700}.no{color:var(--red);font-weight:700}
 
-  .sc-howto {
-    margin-top: var(--space-4); padding: 16px 18px;
-    border: 1px dashed var(--border); border-radius: 6px; background: var(--bg-section);
-    font-size: 13px; color: var(--text-2); line-height: 1.6;
-  }
-  .sc-howto strong { color: var(--text-1); }
+  /* decisão */
+  .decision{display:grid;grid-template-columns:1.02fr .98fr;gap:26px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:8px}
+  .decision img{width:100%;border-radius:10px;border:1px solid var(--border);box-shadow:0 10px 30px rgba(0,0,0,.12)}
+  .decision .pill{display:inline-block;background:rgba(0,88,61,.10);color:var(--g800);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 11px;border-radius:999px;margin-bottom:10px}
+  .decision h2{margin:0 0 10px}
+  .imp{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+  .imp li{position:relative;padding-left:26px;font-size:14.5px;color:var(--t1);line-height:1.5}
+  .imp li::before{content:"✓";position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;background:var(--g800);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 
-  @media (max-width: 980px) {
-    .sc-grid { grid-template-columns: 1fr; }
-  }
+  /* telas que usam */
+  .screens{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .scr{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+  .scr .badge{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--g700)}
+  .scr h3{margin:0;font-size:16px;font-weight:800;color:var(--g900)}
+  .scr p{margin:0;font-size:13px;color:var(--t2)}
+  .scr a{margin-top:auto;font-size:13px;font-weight:700;text-decoration:none}
+  .scr-note{font-size:13.5px;color:var(--t2);margin-top:16px;background:var(--section);border:1px dashed var(--border);border-radius:10px;padding:14px 18px}
+
+  .note{background:linear-gradient(135deg,var(--g800),var(--g900));color:#fff;border-radius:14px;padding:22px 26px;margin-top:8px;display:flex;gap:12px;align-items:flex-start}
+  .note p{margin:0;color:rgba(255,255,255,.95);font-size:14px}
+  .note svg{flex:0 0 auto;margin-top:1px}
+
+  footer{background:var(--g900);color:rgba(255,255,255,.85);padding:32px 0;margin-top:40px}
+  footer .page{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  footer .lt{font-size:20px;font-weight:900;color:#fff}footer .lt sup{font-size:10px;opacity:.8}
+  footer small{font-size:12.5px}
+
+  @media (max-width:920px){ .opts,.two,.screens{grid-template-columns:1fr} .decision{grid-template-columns:1fr} }
 </style>
 </head>
 <body>
 
-<header class="mosaic-header">
-  <div class="mosaic-header-top">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="mosaic-search">
-      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa" />
-      <span class="search-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-    </div>
-    <div class="mosaic-user-cluster">
-      <button class="lang-switch" type="button">PT <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
-      <div class="mosaic-user-info">
-        <span class="user-name">Victor Dias</span>
-        <span class="user-org">COOPERCITRUS</span>
+<!-- HERO -->
+<div class="hero">
+  <div class="page">
+    <div class="logo"><span class="lt">Mosaic<sup>®</sup></span><img src="logo-shapes.png" alt="Mosaic"/></div>
+    <div class="eyebrow">Mosaic Direct 2.0 · Scheduling Fase 2 · Decisão de UX</div>
+    <h1>Scroll horizontal em tabelas largas</h1>
+    <p>Como dar acesso às colunas que não cabem na tela — Relatório de Protocolos (24 colunas) e Criar Protocolo (14 colunas) — comparando as 3 opções e a decisão final.</p>
+    <div class="verdict">Decisão: <b>visual contido (cabeçalho fixo) + botões de bloco ‹ ›</b></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- CONTEXTO -->
+  <section>
+    <div class="eyebrow2">Contexto</div>
+    <h2>O problema, em uma frase</h2>
+    <p class="lead">As tabelas têm <strong>mais colunas do que cabe na largura da tela</strong>. Em tabelas largas, o usuário muitas vezes <strong>nem percebe que há conteúdo à direita</strong> — então o objetivo nº 1 é <strong>deixar óbvio que existem mais colunas</strong> e dar um controle fácil e acessível para alcançá-las, funcionando igual no portal, na tela interna do CS e no mobile.</p>
+    <div class="two">
+      <div class="deccard">
+        <div class="tag">Restrição técnica</div>
+        <h3>São LWCs no Experience Cloud</h3>
+        <p>As telas são componentes (LWC) rodando dentro do site (LWR) e também na tela interna do CS (Lightning Experience). A solução precisa viver <strong>dentro do componente</strong>, sem depender do layout da página.</p>
+      </div>
+      <div class="deccard">
+        <div class="tag">Duas decisões separadas</div>
+        <h3>Layout × mecanismo</h3>
+        <p><strong>(A) Layout:</strong> tabela contida em altura fixa (cabeçalho fixo) vs. página rolando. <strong>(B) Mecanismo horizontal:</strong> botões, barra custom ou scroll nativo.</p>
       </div>
     </div>
-  </div>
-</header>
+  </section>
 
-<!-- HERO -->
-<section class="cc-hero">
-  <div class="container container-main">
-    <div class="cc-eyebrow">Comparativo UX · decisão de produto</div>
-    <h1>Scroll horizontal em tabelas largas — 3 opções para comparar</h1>
-    <p>
-      Decisão de UX para o PO: como dar acesso às colunas que <strong>não cabem na tela</strong>
-      nas tabelas do <strong>Relatório de Protocolos</strong> (24 colunas) e do <strong>Criar Protocolo</strong> (14 colunas),
-      <strong>sem duas barras de scroll</strong> ao mesmo tempo e com uma barra <strong>maior e mais fácil de pegar</strong>
-      do que a atual. Cada opção abaixo tem demos navegáveis das duas telas.
-    </p>
-  </div>
-</section>
+  <hr class="div"/>
 
-<!-- GRID DE SOLUÇÕES -->
-<main class="sc-section">
-  <div class="container container-main">
-    <div class="sc-grid">
+  <!-- AS 3 OPÇÕES -->
+  <section>
+    <div class="eyebrow2">As alternativas</div>
+    <h2>Opção 1, 2 e 3</h2>
+    <p class="lead">Cada opção tem demonstração navegável nas duas telas. As classificações de risco refletem a análise do time de engenharia.</p>
+    <div class="opts">
 
-      <!-- OPÇÃO 1 -->
-      <article class="sc-card">
-        <div class="sc-card-head">
-          <span class="sc-letter">1</span>
-          <h2>Estilo Jira (tela travada)</h2>
-          <span class="sc-tag">A página não rola · só a tabela rola</span>
-        </div>
-        <div class="sc-card-body">
-          <p class="sc-how">
-            Igual ao Jira: a <strong>página inteira não rola</strong>. O topo (menu e busca)
-            fica parado, o banner informativo é removido e a <strong>tabela ocupa todo o
-            resto da tela</strong>, rolando só por dentro (vertical e horizontal). A barra
-            horizontal é a nativa, colada no rodapé da área — sempre visível e
-            <strong>à prova de zoom</strong>. O cabeçalho da tabela fica fixo.
-          </p>
-          <div>
-            <p class="sc-list-title pros">Prós</p>
-            <ul class="sc-list pros">
-              <li>Zero scroll de página — tudo cabe numa tela só, como no Jira.</li>
-              <li>Robusta em qualquer zoom; cabeçalho da tabela sempre visível.</li>
-            </ul>
-          </div>
-          <div>
-            <p class="sc-list-title cons">Contras</p>
-            <ul class="sc-list cons">
-              <li>A tabela tem área de altura limitada (rolagem interna).</li>
-              <li>Esconde banner e rodapé institucional para travar a altura.</li>
-            </ul>
-          </div>
-          <div class="sc-links">
-            <p class="sc-links-label">Ver demos</p>
-            <a class="sc-btn" href="scroll-e-relatorio-protocolos.html">
-              Relatório de Protocolos
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a class="sc-btn secondary" href="scroll-e-criar-protocolo.html">
-              Criar Protocolo
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-          </div>
+      <!-- OP 1 -->
+      <article class="opt">
+        <img class="shot" src="doc-assets/scroll-jira.png" alt="Opção 1 — estilo Jira (tela travada)" />
+        <div class="opt-body">
+          <div class="opt-head"><span class="n">1</span><h3>Estilo Jira (tela travada)</h3></div>
+          <span class="risk high">Risco alto · não recomendada</span>
+          <p class="how">A página inteira não rola; só a tabela rola por dentro. Visual "uma tela só" com cabeçalho fixo.</p>
+          <div><p class="lst-t pro">Prós</p><ul class="lst pro"><li>Visual mais limpo, sem scroll de página.</li><li>Cabeçalho sempre visível.</li></ul></div>
+          <div><p class="lst-t con">Contras</p><ul class="lst con"><li>Travar a página é do Theme Layout, não do LWC.</li><li>Acopla ao tema e quebra a cada atualização.</li><li>Degrada no CS interno e no mobile.</li></ul></div>
+          <div class="links"><a href="scroll-e-relatorio-protocolos.html">Relatório →</a><a href="scroll-e-criar-protocolo.html">Criar Protocolo →</a></div>
         </div>
       </article>
 
-      <!-- OPÇÃO 2 -->
-      <article class="sc-card">
-        <div class="sc-card-head">
-          <span class="sc-letter">2</span>
-          <h2>Barra sempre visível</h2>
-          <span class="sc-tag">Tabela completa · barra fixa no rodapé</span>
-        </div>
-        <div class="sc-card-body">
-          <p class="sc-how">
-            A tabela mantém <strong>todas as colunas</strong> e uma <strong>barra grande
-            fica fixa no rodapé da tela</strong> o tempo todo enquanto a tabela estiver
-            visível no viewport. A barra acompanha a rolagem da página e controla o
-            deslocamento horizontal da tabela.
-          </p>
-          <div>
-            <p class="sc-list-title pros">Prós</p>
-            <ul class="sc-list pros">
-              <li>Affordance explícita: fica claro que "essa tabela rola".</li>
-              <li>Zero descoberta necessária — o controle está sempre à vista.</li>
-            </ul>
-          </div>
-          <div>
-            <p class="sc-list-title cons">Contras</p>
-            <ul class="sc-list cons">
-              <li>Elemento permanente na tela enquanto a tabela está visível.</li>
-              <li>Cobre ~22px do rodapé da área útil.</li>
-            </ul>
-          </div>
-          <div class="sc-links">
-            <p class="sc-links-label">Ver demos</p>
-            <a class="sc-btn" href="scroll-c-relatorio-protocolos.html">
-              Relatório de Protocolos
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a class="sc-btn secondary" href="scroll-c-criar-protocolo.html">
-              Criar Protocolo
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-          </div>
+      <!-- OP 2 -->
+      <article class="opt">
+        <img class="shot" src="doc-assets/scroll-barra.png" alt="Opção 2 — barra custom sempre visível" />
+        <div class="opt-body">
+          <div class="opt-head"><span class="n">2</span><h3>Barra custom sempre visível</h3></div>
+          <span class="risk mid">Risco médio · viável</span>
+          <p class="how">Tabela completa; uma barra verde grande fica fixa no rodapé da tabela — arrastável e clicável.</p>
+          <div><p class="lst-t pro">Prós</p><ul class="lst pro"><li>Precisão de arrasto a qualquer ponto.</li><li>Affordance permanente.</li></ul></div>
+          <div><p class="lst-t con">Contras</p><ul class="lst con"><li>Barra custom não substitui a rolagem nativa (acessibilidade).</li><li>Estilo de scrollbar varia entre navegadores; QA extra.</li></ul></div>
+          <div class="links"><a href="scroll-c-relatorio-protocolos.html">Relatório →</a><a href="scroll-c-criar-protocolo.html">Criar Protocolo →</a></div>
         </div>
       </article>
 
-      <!-- OPÇÃO 3 -->
-      <article class="sc-card">
-        <div class="sc-card-head">
-          <span class="sc-letter">3</span>
-          <h2>Botões de bloco</h2>
-          <span class="sc-tag">Tabela completa · setas ‹ › nas bordas</span>
-        </div>
-        <div class="sc-card-body">
-          <p class="sc-how">
-            A tabela mantém <strong>todas as colunas</strong>. Nas bordas aparecem
-            <strong>setas ‹ ›</strong>: cada clique avança (ou volta) <strong>um bloco
-            de colunas</strong> — cerca de uma tela por vez. A seta da esquerda só
-            aparece quando há conteúdo atrás; a da direita some ao chegar no fim.
-          </p>
-          <div>
-            <p class="sc-list-title pros">Prós</p>
-            <ul class="sc-list pros">
-              <li>Navegação em "páginas" de colunas — previsível e sem arrastar.</li>
-              <li>Controle grande e fácil de clicar, sem ocupar o rodapé.</li>
-            </ul>
-          </div>
-          <div>
-            <p class="sc-list-title cons">Contras</p>
-            <ul class="sc-list cons">
-              <li>Avança em saltos — menos preciso que arrastar uma barra.</li>
-              <li>As setas ficam sobre a borda da tabela.</li>
-            </ul>
-          </div>
-          <div class="sc-links">
-            <p class="sc-links-label">Ver demos</p>
-            <a class="sc-btn" href="scroll-d-relatorio-protocolos.html">
-              Relatório de Protocolos
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-            <a class="sc-btn secondary" href="scroll-d-criar-protocolo.html">
-              Criar Protocolo
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
-          </div>
+      <!-- OP 3 -->
+      <article class="opt">
+        <img class="shot" src="doc-assets/scroll-botoes.png" alt="Opção 3 — botões de bloco" />
+        <div class="opt-body">
+          <div class="opt-head"><span class="n">3</span><h3>Botões de bloco ‹ ›</h3></div>
+          <span class="risk low">Risco baixo · recomendada</span>
+          <p class="how">Tabela completa; setas nas bordas. Cada clique avança/volta um bloco de colunas (ajusta o scrollLeft).</p>
+          <div><p class="lst-t pro">Prós</p><ul class="lst pro"><li>Botão real: acessível por teclado e leitor de tela.</li><li>Interno ao componente; igual em portal, CS e mobile.</li><li>Affordance de descoberta clara.</li></ul></div>
+          <div><p class="lst-t con">Contras</p><ul class="lst con"><li>Avança em blocos (menos preciso que arrastar).</li></ul></div>
+          <div class="links"><a href="scroll-d-relatorio-protocolos.html">Relatório →</a><a href="scroll-d-criar-protocolo.html">Criar Protocolo →</a></div>
         </div>
       </article>
 
     </div>
+  </section>
 
-    <div class="sc-howto">
-      <strong>Como avaliar:</strong> abra cada demo, role até a tabela e tente alcançar as últimas colunas
-      (no Criar Protocolo, primeiro adicione contratos pelo botão "Selecionar contratos" para a tabela aparecer).
-      Compare o esforço de descoberta, a facilidade de "pegar" a barra e o quanto cada abordagem ocupa da tela.
-    </div>
+  <hr class="div"/>
 
-    <div class="sc-note">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-      <p>
-        <strong>Em todas as soluções a barra nativa duplicada foi removida — nunca há duas barras horizontais.</strong>
-        Quando a barra existe (B e C), ela segue o novo padrão: pista de ~22px com thumb verde de ~14px,
-        bem maior que a barra antiga de 14px/6px.
-      </p>
+  <!-- SCORECARD -->
+  <section>
+    <div class="eyebrow2">Comparativo</div>
+    <h2>Lado a lado, critério a critério</h2>
+    <table class="score">
+      <thead>
+        <tr>
+          <th>Critério</th>
+          <th>Opção 1 · Jira travado</th>
+          <th>Opção 2 · Barra custom</th>
+          <th class="best">Opção 3 · Botões ‹ ›</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="crit">Descoberta (“há mais colunas?”)</td><td><span class="mid">Média</span></td><td><span class="mid">Média</span></td><td class="best"><span class="yes">Alta</span></td></tr>
+        <tr><td class="crit">Acessibilidade (teclado / leitor de tela)</td><td><span class="mid">Parcial</span></td><td><span class="no">Baixa</span></td><td class="best"><span class="yes">Alta</span></td></tr>
+        <tr><td class="crit">Consistência (portal + CS + mobile)</td><td><span class="no">Degrada</span></td><td><span class="mid">Média</span></td><td class="best"><span class="yes">Alta</span></td></tr>
+        <tr><td class="crit">Precisão (coluna específica)</td><td><span class="yes">Alta</span></td><td><span class="yes">Alta</span></td><td class="best"><span class="mid">Média</span></td></tr>
+        <tr><td class="crit">Risco técnico (LWC / Experience Cloud)</td><td><span class="no">Alto</span></td><td><span class="mid">Médio</span></td><td class="best"><span class="yes">Baixo</span></td></tr>
+        <tr><td class="crit">Esforço de QA</td><td><span class="no">Alto</span></td><td><span class="mid">Médio</span></td><td class="best"><span class="yes">Baixo</span></td></tr>
+        <tr><td class="crit">Recomendação da engenharia</td><td><span class="no">Não</span></td><td><span class="mid">Viável</span></td><td class="best"><span class="yes">Recomendada</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout"><p>A <strong>Opção 3</strong> vence em descoberta, acessibilidade, consistência e risco. Perde só em <strong>precisão de arrasto</strong> — ponto pequeno e mitigável (coluna congelada + rolagem nativa preservada por baixo).</p></div>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- DECISÃO -->
+  <section>
+    <div class="eyebrow2">Decisão final</div>
+    <div class="decision">
+      <img src="doc-assets/decisao-aplicada.png" alt="Decisão aplicada no Relatório de Protocolos" />
+      <div>
+        <span class="pill">O melhor das duas: look da Op. 1 + mecanismo da Op. 3</span>
+        <h2>Visual contido + botões de bloco</h2>
+        <p>Em vez de travar a página (Opção 1, arriscada), entregamos o <strong>mesmo visual</strong> de forma nativa: a tabela é <strong>confinada a uma área de altura fixa</strong> com cabeçalho fixo, e o scroll horizontal usa os <strong>botões de bloco ‹ › (Opção 3)</strong>. Tudo dentro do componente.</p>
+        <ul class="imp">
+          <li><strong>Cabeçalho fixo</strong> + área contida (o look "uma tela só").</li>
+          <li><strong>1ª coluna congelada</strong> (Protocolo) — nunca perde a referência da linha.</li>
+          <li><strong>Botões ‹ ›</strong> acessíveis; rolagem nativa (trackpad/teclado) ativa por baixo.</li>
+          <li><strong>Baixo risco</strong> e igual em portal, CS e mobile.</li>
+        </ul>
+      </div>
     </div>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- TELAS QUE USAM -->
+  <section>
+    <div class="eyebrow2">Onde se aplica</div>
+    <h2>Telas que usam este padrão</h2>
+    <p class="lead">Das telas já construídas, estas têm tabelas largas e adotam o padrão decidido (área contida + cabeçalho fixo + coluna(s) congelada(s) + botões ‹ ›). Já estão aplicadas e navegáveis:</p>
+    <div class="screens">
+      <div class="scr">
+        <span class="badge">Contratos · 24 colunas</span>
+        <h3>Relatório de Protocolos</h3>
+        <p>Acompanhamento de protocolos por status, quantidades e saldos. 1ª coluna (Protocolo) congelada.</p>
+        <a href="relatorio-protocolos.html">Abrir tela →</a>
+      </div>
+      <div class="scr">
+        <span class="badge">Agendamento · tabela larga</span>
+        <h3>Relatório de Status de Agendamento</h3>
+        <p>Solicitações por semana, tipo e status. Colunas-chave congeladas à esquerda.</p>
+        <a href="relatorio-status-agendamento.html">Abrir tela →</a>
+      </div>
+      <div class="scr">
+        <span class="badge">Contratos · 14 colunas</span>
+        <h3>Criar Protocolo</h3>
+        <p>Criação de protocolos a partir de contratos. As 3 primeiras colunas ficam congeladas durante o scroll.</p>
+        <a href="criar-protocolo.html">Abrir tela →</a>
+      </div>
+    </div>
+    <div class="scr-note">
+      <strong>Telas que NÃO precisam deste padrão:</strong> Agendar Contrato Normal e Agendar Protocolo — a seleção de itens acontece em <strong>modal centralizado</strong> e a tabela principal cabe na largura da tela, sem scroll horizontal.
+    </div>
+  </section>
+
+  <!-- NOTA -->
+  <section style="padding-top:0">
+    <div class="note">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <p>Em todas as opções a barra duplicada foi eliminada — <strong>nunca há duas barras horizontais</strong> ao mesmo tempo. E o banner informativo virou um ícone ⓘ no título, para não ocupar espaço vertical acima da tabela.</p>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="page">
+    <span class="lt">Mosaic<sup>®</sup> Direct 2.0</span>
+    <small>Scroll horizontal em tabelas largas · Comparativo &amp; decisão · Junho de 2026</small>
   </div>
-</main>
+</footer>
 
-<script src="review-overlay.js" defer></script>
 </body>
 </html>
