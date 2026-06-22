@@ -80,6 +80,35 @@
   table.score td.best{background:rgba(0,88,61,.05)}
   table.score tr:last-child td{border-bottom:none}
   .yes{color:var(--g700);font-weight:700}.mid{color:var(--orange);font-weight:700}.no{color:var(--red);font-weight:700}
+  /* Medidor de bolinhas (scorecard visual) */
+  .cell{display:flex;align-items:center;gap:9px}
+  .meter{display:inline-flex;gap:4px;flex:0 0 auto}
+  .meter i{width:9px;height:9px;border-radius:50%;background:#d7ded9;display:block}
+  .meter.lvl3 i:nth-child(-n+3){background:var(--g700)}
+  .meter.lvl2 i:nth-child(-n+2){background:var(--orange)}
+  .meter.lvl1 i:nth-child(-n+1){background:var(--red)}
+  .cell b{font-size:12.5px;font-weight:700;white-space:nowrap}
+  .cell.good b{color:var(--g800)} .cell.mid b{color:var(--orange)} .cell.bad b{color:var(--red)}
+  table.score td.best .cell b{font-weight:800}
+
+  /* Parecer da engenharia (cards por opção) */
+  .eng{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:8px}
+  .engc{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--card);display:flex;flex-direction:column}
+  .engc .top{padding:14px 18px;display:flex;align-items:center;gap:11px;border-bottom:1px solid var(--border)}
+  .engc.good .top{background:rgba(0,88,61,.07)} .engc.mid .top{background:rgba(213,107,26,.09)} .engc.bad .top{background:rgba(185,32,42,.07)}
+  .engc .vn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;flex:0 0 auto;font-size:15px}
+  .engc.good .vn{background:var(--g800)} .engc.mid .vn{background:var(--orange)} .engc.bad .vn{background:var(--red)}
+  .engc .tt{font-size:14.5px;font-weight:800;color:var(--g900);line-height:1.2}
+  .engc .verdict{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+  .engc.good .verdict{color:var(--g700)} .engc.mid .verdict{color:var(--orange)} .engc.bad .verdict{color:var(--red)}
+  .engc .bd{padding:15px 18px;font-size:13px;color:var(--t2);line-height:1.5;flex:1}
+  .engc .bd p{margin:0 0 9px;color:var(--t2)}
+  .engc .bd p:last-child{margin:0}
+  .engc .bd strong{color:var(--t1)}
+  .eng-quote{margin-top:18px;display:flex;gap:14px;align-items:flex-start;background:var(--section);border-radius:12px;padding:18px 22px}
+  .eng-quote .av{width:42px;height:42px;border-radius:50%;background:var(--g800);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;font-size:15px}
+  .eng-quote p{margin:0;font-size:14px;color:var(--t1);font-style:italic;line-height:1.55}
+  .eng-quote .who{display:block;font-style:normal;font-size:12px;color:var(--t3);font-weight:700;margin-top:6px}
 
   /* decisão */
   .decision{display:grid;grid-template-columns:1.02fr .98fr;gap:26px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-top:8px}
@@ -212,16 +241,98 @@
         </tr>
       </thead>
       <tbody>
-        <tr><td class="crit">Descoberta (“há mais colunas?”)</td><td><span class="mid">Média</span></td><td><span class="mid">Média</span></td><td class="best"><span class="yes">Alta</span></td></tr>
-        <tr><td class="crit">Acessibilidade (teclado / leitor de tela)</td><td><span class="mid">Parcial</span></td><td><span class="no">Baixa</span></td><td class="best"><span class="yes">Alta</span></td></tr>
-        <tr><td class="crit">Consistência (portal + CS + mobile)</td><td><span class="no">Degrada</span></td><td><span class="mid">Média</span></td><td class="best"><span class="yes">Alta</span></td></tr>
-        <tr><td class="crit">Precisão (coluna específica)</td><td><span class="yes">Alta</span></td><td><span class="yes">Alta</span></td><td class="best"><span class="mid">Média</span></td></tr>
-        <tr><td class="crit">Risco técnico (LWC / Experience Cloud)</td><td><span class="no">Alto</span></td><td><span class="mid">Médio</span></td><td class="best"><span class="yes">Baixo</span></td></tr>
-        <tr><td class="crit">Esforço de QA</td><td><span class="no">Alto</span></td><td><span class="mid">Médio</span></td><td class="best"><span class="yes">Baixo</span></td></tr>
-        <tr><td class="crit">Recomendação da engenharia</td><td><span class="no">Não</span></td><td><span class="mid">Viável</span></td><td class="best"><span class="yes">Recomendada</span></td></tr>
+        <tr>
+          <td class="crit">Descoberta (“há mais colunas?”)</td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Média</b></div></td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Média</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Alta</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Acessibilidade (teclado / leitor de tela)</td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Parcial</b></div></td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Baixa</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Alta</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Consistência (portal + CS + mobile)</td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Degrada</b></div></td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Média</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Alta</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Contido no componente (sem tocar no layout)</td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Não</b></div></td>
+          <td><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Sim</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Sim</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Precisão (coluna específica)</td>
+          <td><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Alta</b></div></td>
+          <td><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Alta</b></div></td>
+          <td class="best"><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Média</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Risco técnico (LWC / Theme Layout / LWS)</td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Alto</b></div></td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Médio</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Baixo</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Esforço de QA (resize, “carregar mais”)</td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Alto</b></div></td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Médio</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Baixo</b></div></td>
+        </tr>
+        <tr>
+          <td class="crit">Recomendação da engenharia</td>
+          <td><div class="cell bad"><span class="meter lvl1"><i></i><i></i><i></i></span><b>Não</b></div></td>
+          <td><div class="cell mid"><span class="meter lvl2"><i></i><i></i><i></i></span><b>Viável</b></div></td>
+          <td class="best"><div class="cell good"><span class="meter lvl3"><i></i><i></i><i></i></span><b>Recomendada</b></div></td>
+        </tr>
       </tbody>
     </table>
     <div class="callout"><p>A <strong>Opção 3</strong> vence em descoberta, acessibilidade, consistência e risco. Perde só em <strong>precisão de arrasto</strong> — ponto pequeno e mitigável (coluna congelada + rolagem nativa preservada por baixo).</p></div>
+  </section>
+
+  <hr class="div"/>
+
+  <!-- PARECER DA ENGENHARIA -->
+  <section>
+    <div class="eyebrow2">Análise técnica · Engenharia</div>
+    <h2>Parecer da engenharia, opção a opção</h2>
+    <p class="lead">Resumo da avaliação do time de engenharia, considerando que as telas são <strong>LWCs rodando dentro do Experience Cloud</strong> — não páginas HTML isoladas.</p>
+    <div class="eng">
+      <article class="engc bad">
+        <div class="top"><span class="vn">1</span><div><span class="tt">Estilo Jira (tela travada)</span><span class="verdict">Maior risco · não recomendada</span></div></div>
+        <div class="bd">
+          <p>Para travar a tela, o componente precisaria controlar o <strong>scroll e o layout da página inteira</strong> — algo do <strong>Theme Layout</strong> do site, não do LWC.</p>
+          <p>Mexer em <strong>document/body sob Lightning Web Security</strong> é desaconselhado pela Salesforce: acopla ao markup do tema e tende a <strong>quebrar a cada atualização</strong> do template.</p>
+          <p>O mesmo componente roda no <strong>CS (Lightning Experience)</strong>, onde travar o documento atrapalha a navegação, e a solução <strong>degrada no mobile</strong>.</p>
+        </div>
+      </article>
+      <article class="engc mid">
+        <div class="top"><span class="vn">2</span><div><span class="tt">Barra custom sempre visível</span><span class="verdict">Viável · risco médio</span></div></div>
+        <div class="bd">
+          <p>Também é <strong>contida no componente</strong> e factível.</p>
+          <p>O custo é o acerto fino: a barra custom <strong>não substitui a rolagem nativa</strong> (acessibilidade de teclado/leitor de tela), a estilização de scrollbar tem <strong>inconsistência entre navegadores</strong>, e precisa de <strong>QA para acompanhar resize e o “Carregar mais”</strong>.</p>
+          <p>Dá pra fazer, mas custa mais que a Opção 3 para ficar redonda.</p>
+        </div>
+      </article>
+      <article class="engc good">
+        <div class="top"><span class="vn">3</span><div><span class="tt">Botões de bloco ‹ ›</span><span class="verdict">Recomendada · baixo risco</span></div></div>
+        <div class="bd">
+          <p><strong>Totalmente interna ao componente</strong>: cada clique apenas ajusta o <strong>scrollLeft</strong> do contêiner da tabela.</p>
+          <p>São <strong>botões reais</strong>, acessíveis por teclado e leitor de tela, e funcionam igual em <strong>desktop, mobile e na tela interna do CS</strong>.</p>
+          <p>Não dependem de nada fora do componente, sem risco de efeito colateral. <strong>Entra em produção sem surpresa.</strong></p>
+        </div>
+      </article>
+    </div>
+    <div class="eng-quote">
+      <span class="av">AB</span>
+      <p>“O visual que você buscou na Opção 1 — cabeçalho fixo, uma só barra, sem scroll vertical sobrando — é alcançável de forma nativa, confinando a tabela a um contêiner de altura fixa com scroll próprio dentro do componente, sem tocar no chrome da página.”
+        <span class="who">— Parecer da engenharia (alinhamento técnico · Scheduling Fase 2)</span>
+      </p>
+    </div>
   </section>
 
   <hr class="div"/>
