@@ -4923,7 +4923,36 @@
     display: none !important;
   }
 
+  /* ================================================================
+     DECISÃO de scroll: tabela contida (altura fixa) + cabeçalho fixo +
+     3 primeiras colunas congeladas (já existentes) + botões de bloco ‹ ›.
+     A página não trava; a barra nativa fica escondida (botões são a
+     affordance) e a rolagem nativa segue ativa por baixo.
+     ================================================================ */
+  html .proto-table-wrap {
+    overflow: auto !important;
+    max-height: 56vh !important;
+    scrollbar-width: none !important;
+  }
+  html .proto-table-wrap::-webkit-scrollbar { display: none !important; height: 0 !important; width: 0 !important; }
+  html .proto-table { border-collapse: separate !important; border-spacing: 0 !important; }
+  html .proto-table thead th { position: sticky !important; top: 0; z-index: 5; }
+  html .proto-table thead th:nth-child(1),
+  html .proto-table thead th:nth-child(2),
+  html .proto-table thead th:nth-child(3) { z-index: 6; }
 
+  .col-pager-btn {
+    position: fixed; z-index: 130; width: 40px; height: 72px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--mosaic-green-800); color: #fff; border: none; cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
+    opacity: 0; pointer-events: none; transition: opacity 160ms ease-out, background 120ms;
+  }
+  .col-pager-btn.is-visible { opacity: .97; pointer-events: auto; }
+  .col-pager-btn:hover { background: var(--mosaic-green-900); }
+  .col-pager-btn.prev { border-radius: 0 12px 12px 0; }
+  .col-pager-btn.next { border-radius: 12px 0 0 12px; }
+  .col-pager-btn svg { width: 24px; height: 24px; }
 </style>
 
 
@@ -7509,6 +7538,43 @@ document.body.addEventListener("input", e => {
 }, true);
 
 goTo("empty");
+</script>
+<script>
+/* DECISÃO — botões de bloco (‹ ›) para o scroll horizontal da tabela de
+   itens (criada dinamicamente; MutationObserver re-anexa; acima do footer fixo). */
+(function initColPager(){
+  const SVG_PREV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+  const SVG_NEXT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+  const footerH=()=>{const f=document.querySelector(".summary-footer");return (f&&getComputedStyle(f).display!=="none")?f.offsetHeight:0;};
+  function attach(wrap){
+    if(!wrap||wrap.dataset.pager==="1")return; wrap.dataset.pager="1";
+    const prev=document.createElement("button");prev.className="col-pager-btn prev";prev.type="button";prev.setAttribute("aria-label","Bloco anterior de colunas");prev.innerHTML=SVG_PREV;
+    const next=document.createElement("button");next.className="col-pager-btn next";next.type="button";next.setAttribute("aria-label","Próximo bloco de colunas");next.innerHTML=SVG_NEXT;
+    document.body.appendChild(prev);document.body.appendChild(next);
+    const update=()=>{
+      if(!wrap.isConnected){prev.remove();next.remove();return;}
+      const overflows=wrap.scrollWidth>wrap.clientWidth+1;
+      const r=wrap.getBoundingClientRect();
+      const inView=r.top<window.innerHeight-24&&r.bottom>120;
+      const cy=(Math.max(r.top,80)+Math.min(r.bottom,window.innerHeight-footerH()))/2-36;
+      prev.style.top=cy+"px";next.style.top=cy+"px";
+      prev.style.left=r.left+"px";next.style.left=(r.right-40)+"px";
+      const atStart=wrap.scrollLeft<=2, atEnd=wrap.scrollLeft>=wrap.scrollWidth-wrap.clientWidth-2;
+      prev.classList.toggle("is-visible",overflows&&inView&&!atStart);
+      next.classList.toggle("is-visible",overflows&&inView&&!atEnd);
+    };
+    const step=()=>Math.max(240,wrap.clientWidth*0.85);
+    const page=(d)=>{wrap.scrollBy({left:d*step(),behavior:"smooth"});[0,200,450].forEach(ms=>setTimeout(update,ms));};
+    prev.addEventListener("click",()=>page(-1));next.addEventListener("click",()=>page(1));
+    wrap.addEventListener("scroll",update,{passive:true});
+    window.addEventListener("scroll",update,{passive:true});window.addEventListener("resize",update);
+    if(typeof ResizeObserver!=="undefined")new ResizeObserver(update).observe(wrap);
+    update();
+  }
+  document.querySelectorAll(".proto-table-wrap").forEach(attach);
+  const mo=new MutationObserver(muts=>{muts.forEach(m=>m.addedNodes.forEach(n=>{if(n.nodeType!==1)return;if(n.classList&&n.classList.contains("proto-table-wrap"))attach(n);if(n.querySelectorAll)n.querySelectorAll(".proto-table-wrap").forEach(attach);}));});
+  mo.observe(document.body,{childList:true,subtree:true});
+})();
 </script>
 <script src="review-overlay.js" defer></script>
 </body>
