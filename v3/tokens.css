@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Mosaic Direct — Design Tokens (v2)
+   Reference: mosaicdesignsystem.md (Apol Design)
+   Validated against live portal: globaldigitalacceleration--qa2.sandbox.my.site.com
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* --------------------------------------------------------------------
+     1. BRAND COLORS
+     -------------------------------------------------------------------- */
+
+  /* Verde Mosaic (escala) */
+  --mosaic-green-900: #003e2a;   /* Texto sobre verde, ativo de nav */
+  --mosaic-green-800: #00583d;   /* Botões primários, títulos H1 */
+  --mosaic-green-700: #006a4d;   /* Hover de botão, link, focus-ring */
+  --mosaic-green-600: #0a7f5e;   /* Acentos sutis */
+
+  /* Acentos (logo Mosaic) */
+  --mosaic-yellow:    #f0c020;
+  --mosaic-orange:    #d56b1a;
+  --mosaic-red:       #b9202a;
+  --mosaic-teal:      #2c8b78;
+
+  /* --------------------------------------------------------------------
+     2. NEUTRALS
+     -------------------------------------------------------------------- */
+
+  /* Texto */
+  --text-1:        #1a2421;   /* Texto principal forte (títulos, header strong) */
+  --text-2:        #3b4642;   /* Texto secundário */
+  --text-3:        #6b7570;   /* Texto terciário, placeholders, captions */
+  --text-body:     #436462;   /* Default body — observado live (rgb 67,100,98) */
+
+  /* Backgrounds */
+  --bg-page:       #ffffff;   /* Fundo da página */
+  --bg-section:    #e9efee;   /* Seções/cards (banner + filter head) — cor real Salesforce */
+  --bg-info:       #e9efee;   /* Banner informativo (mesmo tom) */
+  --bg-footer:     #f4f4f2;   /* Footer da página */
+  --bg-table-head: #e9efee;   /* Cabeçalho de tabela usa mesmo tom */
+  --bg-hover:      #fafaf8;   /* Hover de linha em tabela */
+  --bg-input:      #ffffff;
+
+  /* Bordas */
+  --border-soft:   #e8e8e6;   /* Divisórias, bordas leves de card */
+  --border:        #d4d4d2;   /* Inputs, selects */
+  --border-strong: #b8b8b6;   /* Inputs em hover */
+
+  /* --------------------------------------------------------------------
+     3. SEMÂNTICAS (status badges)
+     -------------------------------------------------------------------- */
+
+  --status-analise-fg:   #8a6500;
+  --status-analise-bg:   #fdf3d2;
+  --status-analise-bd:   #f5e1a0;
+
+  --status-aprovado-fg:  #006a4d;
+  --status-aprovado-bg:  #e0f0e8;
+  --status-aprovado-bd:  #b8d8c8;
+
+  --status-carregando-fg:#1c6b5a;
+  --status-carregando-bg:#d8eee6;
+  --status-carregando-bd:#a8d8c8;
+
+  --status-faturado-fg:  #003e2a;
+  --status-faturado-bg:  #cce0d4;
+  --status-faturado-bd:  #88b9a0;
+
+  --status-rejeitado-fg: #8a1820;
+  --status-rejeitado-bg: #fadcde;
+  --status-rejeitado-bd: #e5a8ad;
+
+  --status-cancelado-fg: #555555;
+  --status-cancelado-bg: #ececea;
+  --status-cancelado-bd: #c8c8c6;
+
+  /* --------------------------------------------------------------------
+     4. RADIUS
+     -------------------------------------------------------------------- */
+
+  --radius-sm:     4px;   /* Tags, chips */
+  --radius-md:     10px;  /* Inputs, selects, buttons (Salesforce-rounded) */
+  --radius-lg:     14px;  /* Cards de filtro */
+  --radius-card:   12px;  /* Cards de protótipo, tabela wrap */
+  --radius-pill:   999px; /* Pills, status badges */
+  --radius-circle: 50%;   /* Icon buttons, avatars */
+
+  /* --------------------------------------------------------------------
+     5. SHADOWS
+     -------------------------------------------------------------------- */
+
+  --shadow-soft:  0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.05);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-focus: 0 0 0 3px rgba(0,106,77,0.10);
+
+  /* --------------------------------------------------------------------
+     6. SPACING (base 4px)
+     -------------------------------------------------------------------- */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* --------------------------------------------------------------------
+     7. TRANSITIONS
+     -------------------------------------------------------------------- */
+
+  --ease-fast: 120ms ease-out;
+  --ease-base: 200ms cubic-bezier(0.2, 0.8, 0.3, 1);
+  --ease-slow: 300ms ease-out;
+
+  /* --------------------------------------------------------------------
+     8. TYPOGRAPHY SCALE
+     -------------------------------------------------------------------- */
+
+  --font-family-base: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --fs-caption:      11px;
+  --fs-label:        12px;
+  --fs-body-sm:      13px;
+  --fs-body:         14px;
+  --fs-subtitle:     16px;
+  --fs-h3:           18px;
+  --fs-h2:           22px;
+  --fs-h1:           28px;
+  --fs-display:      32px;
+
+  --lh-tight:        1.15;
+  --lh-snug:         1.3;
+  --lh-normal:       1.5;
+
+  /* --------------------------------------------------------------------
+     9. LAYOUT
+     -------------------------------------------------------------------- */
+
+  --container-max:    1320px;
+  --container-pad-x:  32px;
+  --container-pad-y:  24px;
+
+  --header-h-top:     78px;   /* logo + search + user bar */
+  --header-h-nav:     44px;   /* nav bar */
+
+  --z-header:         50;
+  --z-dropdown:       60;
+  --z-drawer:         100;
+  --z-modal:          200;
+}
+
+/* ==========================================================================
+   GLOBAL RESET + BASE
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-page);
+  color: var(--text-body);
+  font-family: var(--font-family-base);
+  font-weight: 400;
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+a {
+  color: var(--mosaic-green-700);
+  text-decoration: none;
+  transition: color var(--ease-fast);
+}
+a:hover {
+  color: var(--mosaic-green-800);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--mosaic-green-700);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+h1, h2, h3, h4 {
+  margin: 0;
+  color: var(--mosaic-green-800);
+  font-weight: 700;
+  letter-spacing: -0.005em;
+}
+
+h1 { font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: -0.015em; }
+h2 { font-size: var(--fs-h2); line-height: var(--lh-tight); }
+h3 { font-size: var(--fs-h3); line-height: var(--lh-snug); }

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo</title>
+<title>Mosaic Direct — Criar Protocolo — Solução D (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -4924,6 +4924,52 @@
   }
 
 
+  /* ================================================================
+     Solução D — "botões de bloco": setas ‹ › nas bordas da tabela.
+     Clicar avança/volta ~1 tela de colunas. Barra nativa escondida;
+     trackpad continua rolando. As setas ficam acima do footer fixo.
+     ================================================================ */
+  /* Mata a barra nativa verde do base.css (carrega DEPOIS deste style) */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
+    scrollbar-width: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    display: none !important; height: 0 !important; width: 0 !important;
+  }
+  html .proto-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  html .results-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .col-pager-btn {
+    position: fixed;
+    z-index: 130;
+    width: 30px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,.20);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease-out, background 120ms;
+  }
+  .col-pager-btn.is-visible { opacity: .97; pointer-events: auto; }
+  .col-pager-btn:hover { background: var(--mosaic-green-900); }
+  .col-pager-btn.prev { border-radius: 0 9px 9px 0; }
+  .col-pager-btn.next { border-radius: 9px 0 0 9px; }
+  .col-pager-btn svg { width: 18px; height: 18px; }
+
 </style>
 
 
@@ -4934,7 +4980,8 @@
 </head>
 <body>
 
-
+<!-- Badge identificador da demo (Solução D) -->
+<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução D — um clique nas setas ‹ › revela o resto das colunas</div>
 
 <!-- Top header ==================================================== -->
 <header class="mosaic-header">
@@ -7509,6 +7556,87 @@ document.body.addEventListener("input", e => {
 }, true);
 
 goTo("empty");
+
+/* ============================================================================
+   Solução D — "botões de bloco": setas ‹ › nas bordas da tabela. Clicar avança
+   ~85% da largura visível (uma "tela" de colunas). O .proto-table-wrap nasce
+   dinamicamente (re-render), então um MutationObserver anexa as setas a cada
+   wrap novo. As setas ficam acima do footer fixo (.summary-footer).
+   ============================================================================ */
+(function initColPager() {
+  const SVG_PREV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+  const SVG_NEXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+  function footerH() {
+    const f = document.querySelector(".summary-footer");
+    return (f && getComputedStyle(f).display !== "none") ? f.offsetHeight : 0;
+  }
+
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.pager === "1") return;
+    wrap.dataset.pager = "1";
+
+    const prev = document.createElement("button");
+    prev.className = "col-pager-btn prev";
+    prev.type = "button";
+    prev.setAttribute("aria-label", "Bloco anterior de colunas");
+    prev.innerHTML = SVG_PREV;
+    const next = document.createElement("button");
+    next.className = "col-pager-btn next";
+    next.type = "button";
+    next.setAttribute("aria-label", "Proximo bloco de colunas");
+    next.innerHTML = SVG_NEXT;
+    document.body.appendChild(prev);
+    document.body.appendChild(next);
+
+    const update = () => {
+      // wrap recriado a cada render — remove as setas orfas do wrap antigo
+      if (!wrap.isConnected) { prev.remove(); next.remove(); return; }
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
+      const top = Math.max(r.top, 80);
+      const bottom = Math.min(r.bottom, window.innerHeight - footerH());
+      const btnH = next.offsetHeight || 50;
+      const cy = (top + bottom) / 2 - btnH / 2;
+      prev.style.top = cy + "px";
+      next.style.top = cy + "px";
+      prev.style.left = r.left + "px";
+      next.style.left = (r.right - (next.offsetWidth || 30)) + "px";
+      const atStart = wrap.scrollLeft <= 2;
+      const atEnd = wrap.scrollLeft >= wrap.scrollWidth - wrap.clientWidth - 2;
+      prev.classList.toggle("is-visible", overflows && inView && !atStart);
+      next.classList.toggle("is-visible", overflows && inView && !atEnd);
+    };
+
+    // Um clique já leva até o fim (e o ‹ volta tudo) — sem precisar de 2.
+    const step = () => Math.max(wrap.clientWidth, wrap.scrollWidth - wrap.clientWidth);
+    const page = (dir) => {
+      wrap.scrollBy({ left: dir * step(), behavior: "smooth" });
+      [0, 200, 450].forEach(ms => setTimeout(update, ms));
+    };
+    prev.addEventListener("click", () => page(-1));
+    next.addEventListener("click", () => page(1));
+    wrap.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
+    update();
+  }
+
+  document.querySelectorAll(".proto-table-wrap").forEach(attach);
+
+  const mo = new MutationObserver(muts => {
+    muts.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        if (node.classList && node.classList.contains("proto-table-wrap")) attach(node);
+        if (node.querySelectorAll) node.querySelectorAll(".proto-table-wrap").forEach(attach);
+      });
+    });
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+})();
 </script>
 <script src="review-overlay.js" defer></script>
 </body>

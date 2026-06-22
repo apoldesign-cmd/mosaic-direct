@@ -1,0 +1,4156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Relatório de Protocolos — Solução C (demo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ================================================================
+     Status badges — Relatório de Protocolos
+     ================================================================ */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .status-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-novo        { background: var(--status-aprovado-bg);   color: var(--status-aprovado-fg);   }
+  .status-novo .dot   { background: var(--status-aprovado-fg); }
+  .status-liberado    { background: var(--status-carregando-bg); color: var(--status-carregando-fg); }
+  .status-liberado .dot { background: var(--status-carregando-fg); }
+  .status-agendamento { background: var(--status-analise-bg);    color: var(--status-analise-fg);    }
+  .status-agendamento .dot { background: var(--status-analise-fg); }
+  .status-concluido   { background: var(--status-faturado-bg);   color: var(--status-faturado-fg);   }
+  .status-concluido .dot { background: var(--status-faturado-fg); }
+  .status-cancelado   { background: var(--status-cancelado-bg);  color: var(--status-cancelado-fg);  }
+  .status-cancelado .dot { background: var(--status-cancelado-fg); }
+  .status-sap         { background: #f4f4f2; color: var(--text-3); border: 1px solid var(--border); }
+  .status-sap .dot    { background: var(--text-3); }
+
+  /* ================================================================
+     Wide table wrap (overflow-x: scroll + radius)
+     ================================================================ */
+  .wide-table-wrap {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .wide-table {
+    width: 100%;
+    min-width: 2200px;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  /* Apply the unified thead pattern via base.css .report-table rules */
+  .wide-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-md); }
+  .wide-table thead tr:first-child th:last-child  { border-top-right-radius: var(--radius-md); }
+  .wide-table thead th {
+    background: var(--bg-section) !important;
+    color: var(--mosaic-green-800) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    padding: 13px 14px !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+    white-space: nowrap;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .wide-table thead th.num { text-align: right; }
+  .wide-table thead th .th-hint {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-3);
+    margin-top: 1px;
+    letter-spacing: 0;
+    white-space: normal;
+    max-width: 140px;
+    line-height: 1.3;
+  }
+  .wide-table tbody td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .wide-table tbody tr:last-child td { border-bottom: none; }
+  .wide-table tbody tr:hover td { background: var(--bg-hover); }
+  .wide-table tbody td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .wide-table tbody td.num.highlight {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+  }
+  .wide-table tbody td.muted { color: var(--text-3); }
+  .wide-table tbody td.proto-id {
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+    font-size: 13px;
+  }
+  .cell-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border: none;
+    border-radius: 5px;
+    color: var(--text-3);
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    transition: color var(--ease-fast), background var(--ease-fast);
+    text-decoration: none;
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .cell-action:hover {
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.10);
+  }
+  /* Cluster de ações inline na célula do Protocolo */
+  .action-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 4px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.025);
+    margin-left: 8px;
+    position: relative;
+  }
+  .wide-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
+  .cell-action.action-menu {
+    color: var(--text-2);
+    width: 26px;
+    height: 22px;
+    border-radius: 5px;
+  }
+  .cell-action.action-menu:hover {
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.14);
+  }
+
+  /* Dropdown de ações da linha — vive no <body> direto (fora de
+     qualquer stacking context da tabela) com position:fixed. */
+  .action-menu-pop {
+    position: fixed;
+    min-width: 220px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
+    padding: 4px;
+    z-index: 9999;
+  }
+  .action-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-1);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+    transition: background var(--ease-fast);
+  }
+  .action-menu-item:hover { background: rgba(0,106,77,0.08); }
+  .action-menu-item svg { color: var(--text-3); flex-shrink: 0; }
+  .action-menu-item:hover svg { color: var(--mosaic-green-700); }
+  .action-menu-item.is-danger { color: var(--mosaic-red); }
+  .action-menu-item.is-danger svg { color: var(--mosaic-red); }
+  .action-menu-item.is-danger:hover { background: rgba(185,32,42,0.08); }
+  .action-menu-item.is-disabled {
+    color: var(--text-3);
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+  .action-menu-item.is-disabled:hover { background: transparent; }
+  .action-menu-item-reason {
+    font-size: 10.5px;
+    color: var(--text-3);
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+  .action-menu-sep {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 4px 0;
+  }
+  .cell-action.action-edit { color: var(--text-3); }
+  .cell-action.action-edit:hover {
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.14);
+  }
+  .cell-action.action-save {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.10);
+  }
+  .cell-action.action-save:hover {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .cell-action.action-cancel { color: var(--text-3); }
+  .cell-action.action-cancel:hover {
+    background: var(--mosaic-red);
+    color: #fff;
+  }
+  /* "Agendar protocolo" — só em linhas com saldo > 0 e status permitido */
+  .cell-action.action-agendar {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.08);
+  }
+  .cell-action.action-agendar:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+  }
+
+  /* ================================================================
+     Inline edit — linha em modo edicao
+     ================================================================ */
+  .wide-table tbody tr.is-editing td,
+  .wide-table tbody tr.is-editing td.col-check,
+  .wide-table tbody tr.is-editing td.col-action,
+  .wide-table tbody tr.is-editing td.col-proto {
+    background: #fffbed !important; /* amarelo bem sutil */
+  }
+  .wide-table tbody tr.is-editing td.col-proto {
+    box-shadow: 4px 0 8px -4px rgba(240,192,32,0.40);
+  }
+  .inline-edit {
+    width: 100%;
+    min-width: 90px;
+    padding: 5px 8px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text-1);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .inline-edit:hover { border-color: var(--border-strong); }
+  .inline-edit:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 2px rgba(0,106,77,0.15);
+  }
+  .inline-edit.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  select.inline-edit {
+    padding-right: 24px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
+
+  /* ================================================================
+     Confirmation modal (descartar alteracoes)
+     ================================================================ */
+  .confirm-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open {
+    display: flex;
+    opacity: 1;
+  }
+  .confirm-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 24px 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open .confirm-modal { transform: scale(1); }
+  .confirm-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .confirm-modal-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(213,107,26,0.12);
+    color: var(--mosaic-orange);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .confirm-modal h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .confirm-modal-text {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .confirm-modal-text strong {
+    color: var(--text-1);
+    font-weight: 700;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .confirm-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .confirm-btn {
+    height: 36px; padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast), border-color var(--ease-fast);
+  }
+  .confirm-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .confirm-btn-secondary:hover { background: var(--bg-section); }
+  .confirm-btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+  }
+  .confirm-btn-danger:hover { background: #8a1820; }
+
+  /* ================================================================
+     Células de quantidade editáveis (click-to-edit)
+     ================================================================ */
+  .wide-table td.editable-qty {
+    position: relative;
+    cursor: pointer;
+    padding-right: 22px !important;
+  }
+  .wide-table td.editable-qty:hover {
+    background: #fffbed;
+    box-shadow: inset 0 0 0 1px #f0c020;
+  }
+  .qty-pencil {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    opacity: 0.28;
+    transition: opacity var(--ease-fast), color var(--ease-fast);
+    pointer-events: none;
+    display: inline-flex;
+  }
+  .wide-table td.editable-qty:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
+  .wide-table td.editable-qty.cell-editing {
+    padding: 0 !important;
+    background: #fff;
+    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
+  }
+  .qty-inline-input {
+    width: 100%;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 12px 12px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-1);
+    background: transparent;
+  }
+  select.qty-inline-input {
+    text-align: left;
+    -webkit-appearance: none;
+    appearance: none;
+    padding-right: 20px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2300583d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
+
+  /* ================================================================
+     Modal "Editar campos do protocolo"
+     ================================================================ */
+  .edit-fields-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 260;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .edit-fields-modal-backdrop.is-open { display: flex; opacity: 1; }
+  .edit-fields-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 720px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+    overflow: hidden;
+  }
+  .edit-fields-modal-backdrop.is-open .edit-fields-modal { transform: scale(1); }
+  .edit-fields-modal-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .edit-fields-modal-head h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .edit-fields-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .edit-fields-modal-head-sub strong {
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 800;
+  }
+  .edit-fields-modal-body {
+    padding: 18px 22px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* Resumo de quantidades — read-only */
+  .ef-qty-summary {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 20px;
+  }
+  .ef-qty-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .ef-qty-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-qty-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ef-qty-hint strong { color: var(--mosaic-green-800); font-weight: 700; }
+  .ef-qty-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 640px) { .ef-qty-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ef-qty-item .lbl {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .ef-qty-item .val {
+    font-size: 14px;
+    color: var(--text-1);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .ef-qty-item.saldo .val {
+    color: var(--mosaic-green-800);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .ef-qty-item .unit {
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  /* Form sections */
+  .ef-section {
+    margin-bottom: 18px;
+  }
+  .ef-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mosaic-green-800);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ef-form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .ef-form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .ef-form-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) {
+    .ef-form-row, .ef-form-row.cols-2, .ef-form-row.cols-4 { grid-template-columns: 1fr 1fr; }
+  }
+  .ef-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .ef-field.span-2 { grid-column: span 2; }
+  .ef-field-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-field-input,
+  .ef-field-select {
+    height: 36px;
+    padding: 0 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .ef-field-input:focus,
+  .ef-field-select:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .ef-field-select {
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  /* Ficha view (demais informações — somente leitura) */
+  .ef-view-section {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px 16px;
+    margin-top: 18px;
+  }
+  .ef-view-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .ef-view-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-view-lock {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ef-view-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px 16px;
+  }
+  @media (max-width: 720px) { .ef-view-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ef-view-item.span-2 { grid-column: span 2; }
+  .ef-view-item .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .ef-view-item .val {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+  }
+  .ef-view-item .val.mono {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .edit-fields-modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .ef-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast);
+  }
+  .ef-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .ef-btn-secondary:hover { background: var(--bg-section); }
+  .ef-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .ef-btn-primary:hover { background: var(--mosaic-green-700); }
+
+  /* ================================================================
+     Modal "Agendar protocolo"
+     ================================================================ */
+  .agendar-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open { display: flex; opacity: 1; }
+  .agendar-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open .agendar-modal { transform: scale(1); }
+  .agendar-modal-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .agendar-modal-head-text { flex: 1; min-width: 0; }
+  .agendar-modal-head-text h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .agendar-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .agendar-modal-head-sub strong {
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 800;
+  }
+  .agendar-modal-head .modal-x {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+    flex-shrink: 0;
+  }
+  .agendar-modal-head .modal-x:hover { background: var(--bg-section); }
+  .agendar-modal-body {
+    padding: 18px 22px 20px;
+    overflow-y: auto;
+  }
+
+  /* Card de contexto */
+  .agendar-context {
+    background: linear-gradient(135deg, rgba(0,106,77,0.05) 0%, rgba(122,217,181,0.07) 100%);
+    border: 1px solid rgba(0,106,77,0.18);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 18px;
+  }
+  .agendar-context-item .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .agendar-context-item .val {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+  }
+  .agendar-context-item .val.saldo {
+    color: var(--mosaic-green-800);
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .agendar-context-item .val.saldo .unit {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  /* Form */
+  .agendar-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .agendar-form-row.cols-1 { grid-template-columns: 1fr; }
+  .agendar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .agendar-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .agendar-field-label .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .agendar-field-input,
+  .agendar-field-select,
+  .agendar-field-textarea {
+    padding: 0 12px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .agendar-field-textarea {
+    height: 70px;
+    padding: 9px 12px;
+    resize: vertical;
+  }
+  .agendar-field-input:focus,
+  .agendar-field-select:focus,
+  .agendar-field-textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .agendar-field-select {
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .agendar-input-with-suffix { position: relative; }
+  .agendar-input-with-suffix .suffix {
+    position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; font-weight: 700; color: var(--text-3);
+    pointer-events: none;
+  }
+  .agendar-input-with-suffix input { padding-right: 36px; }
+  .agendar-field-hint {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .agendar-field-hint.error { color: var(--mosaic-red); font-weight: 600; }
+
+  /* Footer */
+  .agendar-modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-foot-link {
+    font-size: 12px;
+    color: var(--mosaic-green-700);
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .agendar-modal-foot-link:hover { text-decoration: underline; }
+  .agendar-modal-foot-actions { display: flex; gap: 10px; }
+  .agendar-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast);
+  }
+  .agendar-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .agendar-btn-secondary:hover { background: var(--bg-section); }
+  .agendar-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .agendar-btn-primary:hover { background: var(--mosaic-green-700); }
+  .agendar-btn-primary:disabled {
+    background: var(--bg-section);
+    color: var(--text-3);
+    cursor: not-allowed;
+  }
+
+  /* Tooltip on the action button */
+  .cell-action-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+  .cell-action-wrap[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--text-1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-fast);
+    z-index: 10;
+  }
+  .cell-action-wrap[data-tooltip]:hover::after { opacity: 1; }
+
+  /* ================================================================
+     Sticky column: Protocolo (com ações inline ao lado do número)
+     ================================================================ */
+  .wide-table th.col-proto,
+  .wide-table td.col-proto {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #fff;
+    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
+    min-width: 160px;
+    padding: 8px 14px !important;
+  }
+  /* Thead da col-proto: sticky em DUAS direções (top + left) — fica
+     fixo no canto superior esquerdo independente do scroll. */
+  .wide-table thead th.col-proto {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background: var(--bg-section) !important;
+  }
+  /* Wrapper interno da célula proto: ações + número */
+  .proto-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .proto-cell-number {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .proto-cell-number a {
+    color: var(--mosaic-green-800);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .proto-cell-number a:hover {
+    color: var(--mosaic-green-700);
+    border-bottom-color: var(--mosaic-green-700);
+  }
+  /* Hover keeps sticky cell on top of zebra hover */
+  .wide-table tbody tr:hover td.col-proto { background: var(--bg-hover); }
+
+  /* ================================================================
+     Toolbar: botão "Importar via CSV" sutil
+     ================================================================ */
+  .toolbar-csv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--ease-fast), color var(--ease-fast);
+  }
+  .toolbar-csv-btn:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+  }
+
+  /* ================================================================
+     Bulk-edit SIDENAV DRAWER (substitui o modal centralizado)
+     ================================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 250;
+    display: none;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .modal-backdrop.is-open {
+    display: block;
+    opacity: 1;
+  }
+  .bulk-modal {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: min(720px, 96vw);
+    max-width: 96vw;
+    max-height: calc(100vh - 56px);
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    display: flex;
+    flex-direction: column;
+    transform: translate(-50%, -48%) scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    z-index: 260;
+  }
+  .modal-backdrop.is-open .bulk-modal {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .bulk-modal-head {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .bulk-modal-head-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .bulk-modal-head h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .bulk-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .bulk-modal-head-sub strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-modal-head .modal-x {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+    flex-shrink: 0;
+  }
+  .bulk-modal-head .modal-x:hover { background: var(--bg-section); }
+
+  /* Tabs */
+  .bulk-tabs {
+    display: flex;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .bulk-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-3);
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 2px solid transparent;
+    transition: all var(--ease-fast);
+  }
+  .bulk-tab:hover { color: var(--text-1); }
+  .bulk-tab.is-active {
+    color: var(--mosaic-green-800);
+    background: #fff;
+    border-bottom-color: var(--mosaic-green-700);
+  }
+
+  .bulk-modal-body {
+    padding: 20px 24px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .bulk-modal-lede {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .bulk-modal-lede strong { color: var(--mosaic-green-800); font-weight: 800; }
+
+  .bulk-tab-pane { display: none; }
+  .bulk-tab-pane.is-active { display: block; }
+  .bulk-field-group {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color var(--ease-fast);
+  }
+  .bulk-field-group.is-active {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .bulk-field-toggle {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-section);
+    cursor: pointer;
+    user-select: none;
+  }
+  .bulk-field-group.is-active .bulk-field-toggle {
+    background: rgba(0,106,77,0.06);
+  }
+  .bulk-field-toggle-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    flex: 1;
+  }
+  .bulk-field-toggle-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .bulk-field-body {
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--ease-base), padding var(--ease-base);
+  }
+  .bulk-field-group.is-active .bulk-field-body {
+    padding: 14px 16px 16px;
+    max-height: 220px;
+  }
+  .bulk-field-body label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 5px;
+  }
+  .bulk-field-body select,
+  .bulk-field-body input,
+  .bulk-field-body textarea {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .bulk-field-body textarea { height: 70px; padding: 10px 12px; resize: vertical; }
+  .bulk-field-body select:focus,
+  .bulk-field-body input:focus,
+  .bulk-field-body textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  /* ============== CSV UPLOAD ============== */
+  .csv-dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px 20px;
+    text-align: center;
+    background: #fafaf8;
+    transition: all var(--ease-fast);
+    cursor: pointer;
+    margin-bottom: 18px;
+  }
+  .csv-dropzone:hover,
+  .csv-dropzone.is-dragover {
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .csv-dropzone.has-file {
+    border-style: solid;
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+    text-align: left;
+    padding: 18px 20px;
+    cursor: default;
+  }
+  .csv-drop-icon {
+    width: 48px; height: 48px;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .csv-drop-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .csv-drop-hint {
+    font-size: 11.5px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .csv-drop-hint strong { color: var(--mosaic-green-700); }
+  .csv-file-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .csv-file-icon {
+    width: 36px; height: 36px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-file-info { flex: 1; min-width: 0; }
+  .csv-file-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .csv-file-meta {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .csv-file-meta strong { color: var(--mosaic-green-700); font-weight: 700; }
+  .csv-file-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--ease-fast);
+  }
+  .csv-file-remove:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .csv-template-section {
+    background: var(--bg-section);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .csv-template-icon {
+    width: 32px; height: 32px;
+    background: #fff;
+    border-radius: 8px;
+    color: var(--mosaic-green-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-template-content { flex: 1; min-width: 0; }
+  .csv-template-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 2px;
+  }
+  .csv-template-text {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .csv-template-btn {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    border: 1px solid var(--mosaic-green-700);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background var(--ease-fast);
+  }
+  .csv-template-btn:hover { background: var(--mosaic-green-800); color: #fff; }
+
+  .csv-fields-info {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .csv-fields-info-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .csv-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .csv-field-chip {
+    background: var(--bg-section);
+    color: var(--text-1);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .csv-field-chip.required {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-800);
+  }
+  .csv-fields-legend {
+    font-size: 10.5px;
+    color: var(--text-3);
+    margin-top: 8px;
+  }
+  .csv-fields-legend .req-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--mosaic-green-700);
+    border-radius: 2px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* Preview de CSV após upload */
+  .csv-preview {
+    margin-top: 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .csv-preview-head {
+    background: var(--bg-section);
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .csv-preview-head .csv-preview-badge {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .csv-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    overflow-x: auto;
+    display: block;
+  }
+  .csv-preview-table th,
+  .csv-preview-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    text-align: left;
+  }
+  .csv-preview-table th {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+    font-size: 10.5px;
+  }
+  .csv-preview-table td { color: var(--text-2); }
+  .csv-preview-table tbody tr:nth-child(even) td { background: #f7f9f8; }
+
+  .bulk-modal-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafaf8;
+    flex-shrink: 0;
+  }
+  .bulk-modal-foot-info {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .bulk-modal-foot-info strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-modal-foot-actions { display: flex; gap: 10px; }
+  .bulk-modal-foot-actions .btn {
+    height: 38px; padding: 0 16px; border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+    font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .bulk-modal-foot-actions .btn-primary { background: var(--mosaic-green-800); color: #fff; }
+  .bulk-modal-foot-actions .btn-primary:hover { background: var(--mosaic-green-700); }
+  .bulk-modal-foot-actions .btn-primary:disabled {
+    background: var(--bg-section); color: var(--text-3); cursor: not-allowed;
+  }
+  .bulk-modal-foot-actions .btn-secondary {
+    background: #fff; color: var(--text-1); border: 1px solid var(--border);
+  }
+  .bulk-modal-foot-actions .btn-secondary:hover { background: var(--bg-section); }
+
+  /* Responsivo: em mobile o drawer ocupa tela toda */
+  @media (max-width: 600px) {
+    .bulk-modal { max-width: 100%; }
+  }
+
+  /* Success toast (bulk-edit) */
+  .bulk-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 300;
+    transition: transform var(--ease-base);
+    pointer-events: none;
+  }
+  .bulk-toast.is-visible {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ================================================================
+     Toolbar (results count + export)
+     ================================================================ */
+  .results-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .results-count {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-right: auto;
+  }
+  .results-count strong { color: var(--text-1); font-weight: 700; }
+
+  /* ================================================================
+     Advanced filter panel
+     ================================================================ */
+  .advanced-filter {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .advanced-filter.is-hidden { display: none; }
+  .filter-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .filter-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .filter-block label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .filter-block input,
+  .filter-block select {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast);
+  }
+  .filter-block input:focus,
+  .filter-block select:focus { border-color: var(--mosaic-green-700); }
+  .filter-block--actions {
+    align-self: end;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-clear-filters {
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-clear-filters:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+
+  /* ================================================================
+     Autocomplete dos filtros (mesmo padrão do "Campo de busca com
+     autocomplete" defendido na página de usabilidade)
+     ================================================================ */
+  .filter-ac {
+    position: relative;
+  }
+  .filter-ac input {
+    width: 100%;
+    height: 38px;
+    padding: 0 56px 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .filter-ac input:hover { border-color: var(--border-strong); }
+  .filter-ac.is-open input,
+  .filter-ac input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .filter-ac input::placeholder {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+  .filter-ac-chev {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    transition: transform var(--ease-base), color var(--ease-fast);
+  }
+  .filter-ac.is-open .filter-ac-chev { transform: translateY(-50%) rotate(180deg); }
+  .filter-ac-clear {
+    position: absolute;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background var(--ease-fast), color var(--ease-fast);
+  }
+  .filter-ac.has-value .filter-ac-clear { display: inline-flex; }
+  .filter-ac-clear:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .filter-ac.has-value .filter-ac-chev { opacity: 0; }
+  .filter-ac-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+    max-height: 240px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    z-index: 20;
+    display: none;
+  }
+  .filter-ac.is-open .filter-ac-list { display: block; }
+  .filter-ac-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-1);
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background var(--ease-fast);
+  }
+  .filter-ac-item:hover,
+  .filter-ac-item.is-active {
+    background: rgba(0,106,77,0.08);
+  }
+  .filter-ac-item mark {
+    background: rgba(240,192,32,0.40);
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .filter-ac-empty {
+    padding: 12px 10px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 12px;
+    font-style: italic;
+  }
+  .filter-ac-all {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 4px;
+    padding-bottom: 10px;
+    font-weight: 600;
+  }
+  .filter-ac-all:hover { background: var(--bg-section); color: var(--text-1); }
+
+  /* search-bar (reuses base.css pattern) */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .search-bar-input {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+  .search-bar-input input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .search-bar-input input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .search-bar-input input::placeholder { color: var(--text-3); }
+  .search-bar-input .icon-left {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    display: flex;
+  }
+  .search-bar-input .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    padding: 4px;
+    color: var(--text-3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: color var(--ease-fast), background var(--ease-fast);
+  }
+  .search-bar-input .search-clear:hover { color: var(--text-1); background: var(--bg-section); }
+  .search-bar-input .search-clear.is-hidden { display: none !important; }
+
+  .btn-advanced-filter {
+    height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-advanced-filter:hover,
+  .btn-advanced-filter[aria-expanded="true"] {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+  .adv-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .adv-count.is-hidden { display: none; }
+
+  .btn-export-xls {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    opacity: 0.85;
+    transition: opacity var(--ease-fast);
+  }
+  .btn-export-xls:hover { opacity: 1; }
+
+  /* breadcrumb + page-title */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    padding-top: 24px;
+  }
+  .breadcrumbs a { color: var(--mosaic-green-700); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 4px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+  }
+
+  .info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .page-btn:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); }
+  .page-btn.is-active {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* ============================================================
+     Headers de tabela com seta única de ordenação (estilo Salesforce)
+     - Estado neutro: sem ícone visível
+     - Hover: ícone aparece em cinza claro como dica
+     - Ordenado: seta única verde Mosaic (↑ asc / ↓ desc)
+     ============================================================ */
+  .wide-table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 22px !important;
+    position: relative;
+  }
+  .wide-table thead th.sortable:hover { color: var(--mosaic-green-700) !important; }
+  .wide-table thead th.sortable .sort-icon {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    opacity: 0;
+    transition: opacity var(--ease-fast), transform var(--ease-fast);
+    color: var(--text-3);
+  }
+  .wide-table thead th.sortable .sort-icon svg { width: 11px; height: 11px; }
+  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.5; }
+  .wide-table thead th.sortable.sort-asc  .sort-icon,
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    opacity: 1;
+    color: var(--mosaic-green-800);
+  }
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  /* Esconde spinner do input type="number" no edit inline */
+  .qty-inline-input::-webkit-outer-spin-button,
+  .qty-inline-input::-webkit-inner-spin-button,
+  .row-qty-input::-webkit-outer-spin-button,
+  .row-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .qty-inline-input,
+  .row-qty-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* ================================================================
+     Solução C — barra grande única SEMPRE visível, fixa na base
+     da viewport. A barra nativa do wrap é 100% morta (sem duplicar).
+     ================================================================ */
+  /* Mata a barra nativa verde do base.css (pode carregar depois deste style) */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
+    scrollbar-width: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    display: none !important; height: 0 !important; width: 0 !important;
+  }
+  /* base.css força overflow-x: scroll !important — sobrescreve aqui */
+  html .wide-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+
+  /* Barra de scroll horizontal CUSTOMIZADA (thumb desenhado em DIV).
+     Não depende do scrollbar nativo do SO (que no macOS some/overlay),
+     então o thumb verde escuro fica SEMPRE visível e grande. */
+  .hbar {
+    position: fixed;
+    z-index: 120;
+    height: 20px;
+    background: #e3eae8;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: 0 5px 16px rgba(0,0,0,.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease-out;
+  }
+  .hbar.is-visible { opacity: 1; pointer-events: auto; }
+  .hbar-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    min-width: 64px;
+    border-radius: 999px;
+    background: var(--mosaic-green-800);
+    cursor: grab;
+    transition: background .12s;
+  }
+  .hbar-thumb:hover { background: var(--mosaic-green-900); }
+  .hbar-thumb:active { cursor: grabbing; background: var(--mosaic-green-900); }
+</style>
+</head>
+<body>
+
+<!-- Badge identificador da demo (Solução C) -->
+<div style="position:fixed; bottom:16px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução C — barra grande sempre visível no rodapé da tela</div>
+
+<!-- HEADER ========================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item is-active" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html" class="is-active">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
+    </div>
+  </nav>
+</header>
+
+<!-- PAGE =========================================================== -->
+<main class="page">
+
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <span>Contratos</span>
+    <span class="sep">›</span>
+    <span class="current">Relatório de Protocolos</span>
+  </div>
+  <h1 class="page-title">Relatório de Protocolos</h1>
+
+  <div class="info-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos. Abra o menu de ações <strong>▾</strong> ao lado do protocolo para editar campos, agendar ou cancelar.</span>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <div class="search-bar-input">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="filterSearch" placeholder="Buscar Protocolo, Contrato SAP ou Cotação..." autocomplete="off" />
+      <button type="button" class="search-clear is-hidden" id="searchClearBtn" aria-label="Limpar busca">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <button type="button" class="btn-advanced-filter" id="btnToggleAdvanced" aria-expanded="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      Filtros
+      <span class="adv-count is-hidden" id="advCount">0</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <button type="button" class="btn-export-xls" id="btnExport" title="Exportar (CSV)" aria-label="Exportar relatório">
+      <svg width="26" height="32" viewBox="0 0 28 34" aria-hidden="true">
+        <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
+        <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
+        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Barlow, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Advanced filter panel -->
+  <div class="advanced-filter is-hidden" id="advancedFilter">
+    <div class="filter-row">
+      <div class="filter-block">
+        <label for="filterStatus">Status</label>
+        <div class="filter-ac" data-options='["Novo","Liberado para agendar","Em agendamento","Concluído","Cancelado"]'>
+          <input id="filterStatus" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <span class="filter-ac-chev" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCnpjFilial">CPF/CNPJ da Filial</label>
+        <div class="filter-ac" data-options='["12.345.678/0001-90","23.456.789/0001-12","34.567.890/0001-34","45.678.901/0001-56"]'>
+          <input id="filterCnpjFilial" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterFilial">Filial do Cliente</label>
+        <div class="filter-ac" data-options='["Filial São Paulo","Filial Curitiba","Filial Porto Alegre","Filial Londrina"]'>
+          <input id="filterFilial" type="text" placeholder="Todas" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCnpjCoop">CPF/CNPJ do Cooperado</label>
+        <div class="filter-ac" data-options='["123.456.789-00","234.567.890-00","345.678.901-00","456.789.012-00","567.890.123-00"]'>
+          <input id="filterCnpjCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCoop">Nome do Cooperado</label>
+        <div class="filter-ac" data-options='["CARLOS ALVES","AGUINALDO GOMES","TEREZA AKEMI","BETO DOS SANTOS","RENATO CESAR"]'>
+          <input id="filterCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterIe">IE do Cooperado</label>
+        <div class="filter-ac" data-options='["123456789","234567890","345678901","456789012","567890123"]'>
+          <input id="filterIe" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterProduto">Descrição Produto</label>
+        <div class="filter-ac" data-options='["FFALM 10 20 30","FFALM 20 20 00","MAP 11-52-00","KCl","FFALM 15 30 00"]'>
+          <input id="filterProduto" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterNf">NF do Protocolo</label>
+        <div class="filter-ac" data-options='["NF-2024-001","NF-2024-089"]'>
+          <input id="filterNf" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block filter-block--actions">
+        <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results count + table -->
+  <div class="results-toolbar">
+    <span class="results-count"><strong id="resultCount">5</strong> protocolos encontrados</span>
+  </div>
+
+  <div class="wide-table-wrap">
+    <table class="wide-table" id="mainTable">
+      <thead>
+        <tr>
+          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="preco">Preço NF (unit.)<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- rows rendered by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="results-count" id="paginationInfo">Exibindo 1–5 de 5 protocolos</span>
+    <div class="pagination-pages">
+      <button class="page-btn" disabled aria-label="Anterior">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="page-btn is-active">1</button>
+      <button class="page-btn" disabled aria-label="Próxima">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- EDIT FIELDS MODAL (regras SMDP-161) -->
+<div class="edit-fields-modal-backdrop" id="editFieldsModal" role="dialog" aria-modal="true" aria-labelledby="efModalTitle">
+  <div class="edit-fields-modal">
+    <div class="edit-fields-modal-head">
+      <span style="width:38px;height:38px;border-radius:50%;background:var(--mosaic-green-700);color:#fff;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      </span>
+      <div style="flex:1;min-width:0">
+        <h2 id="efModalTitle">Editar protocolo</h2>
+        <div class="edit-fields-modal-head-sub">Protocolo <strong id="efModalProtoId">—</strong></div>
+      </div>
+      <button class="modal-x" id="efModalClose" type="button" aria-label="Fechar" style="background:transparent;border:none;color:var(--text-3);cursor:pointer;width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="edit-fields-modal-body">
+      <!-- Volumes -->
+      <div class="ef-section">
+        <div class="ef-section-title">Volumes (t)</div>
+        <div class="ef-form-row cols-4">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efQtdProto">Qtd. Protocolo</label>
+            <input class="ef-field-input" id="efQtdProto" type="number" min="0" style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700" />
+            <span class="ef-field-hint" id="efQtdProtoHint" style="font-size:11px;color:var(--text-3);margin-top:3px">Só pode reduzir, min = Qtd. Agendada</span>
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label">Agendada</label>
+            <input class="ef-field-input" id="efQtdAgendada" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8" />
+            <span class="ef-field-hint" style="font-size:11px;color:var(--text-3);margin-top:3px">Vem de outros sistemas</span>
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label">Saldo (calc.)</label>
+            <input class="ef-field-input" id="efQtdSaldo" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8;color:var(--mosaic-green-800)" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label">Faturada</label>
+            <input class="ef-field-input" id="efQtdFaturada" readonly style="text-align:right;font-variant-numeric:tabular-nums;font-weight:700;background:#f7f9f8" />
+            <span class="ef-field-hint" style="font-size:11px;color:var(--text-3);margin-top:3px">Vem do SAP</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Embalagem -->
+      <div class="ef-section">
+        <div class="ef-section-title">Embalagem</div>
+        <div class="ef-form-row cols-2">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efEmbalagem">Embalagem</label>
+            <select class="ef-field-select" id="efEmbalagem">
+              <option>Saco 50kg</option>
+              <option>Saco 25kg</option>
+              <option>Big Bag 1000kg</option>
+              <option>Granel</option>
+            </select>
+            <span class="ef-field-hint" id="efEmbalagemHint" style="font-size:11px;color:var(--text-3);margin-top:3px"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logística / Roteiro -->
+      <div class="ef-section">
+        <div class="ef-section-title">Logística</div>
+        <div class="ef-form-row cols-1">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efRoteiro">Roteiro de entrega (Delivery Route)</label>
+            <textarea class="ef-field-input" id="efRoteiro" rows="3" style="height:auto;padding:9px 12px;resize:vertical" placeholder="Endereço completo, pontos de referência..."></textarea>
+            <span class="ef-field-hint" id="efRoteiroHint" style="font-size:11px;color:var(--text-3);margin-top:3px"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nota Fiscal -->
+      <div class="ef-section">
+        <div class="ef-section-title">Nota Fiscal</div>
+        <div class="ef-form-row cols-3">
+          <div class="ef-field">
+            <label class="ef-field-label" for="efNf">Número da NF</label>
+            <input class="ef-field-input" id="efNf" placeholder="—" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efDataNf">Data da NF</label>
+            <input class="ef-field-input" id="efDataNf" placeholder="dd/mm/aaaa" />
+          </div>
+          <div class="ef-field">
+            <label class="ef-field-label" for="efPreco">Preço NF (unit.)</label>
+            <input class="ef-field-input" id="efPreco" />
+          </div>
+        </div>
+        <span class="ef-field-hint" id="efNfHint" style="font-size:11px;color:var(--text-3);margin-top:3px;display:block"></span>
+      </div>
+
+      <!-- Demais informações — read-only (Cooperado/Contrato imutáveis) -->
+      <div class="ef-view-section">
+        <div class="ef-view-section-head">
+          <span class="ef-view-title">Demais informações</span>
+          <span class="ef-view-lock">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+            Imutáveis · para alterar, cancele e recrie
+          </span>
+        </div>
+        <div class="ef-view-grid">
+          <div class="ef-view-item">
+            <div class="lbl">Status</div>
+            <div class="val" id="efViewStatus">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Frete</div>
+            <div class="val" id="efViewFrete">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Contrato SAP</div>
+            <div class="val mono" id="efViewContrato">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Cotação</div>
+            <div class="val mono" id="efViewCotacao">—</div>
+          </div>
+          <div class="ef-view-item span-2">
+            <div class="lbl">Cooperado</div>
+            <div class="val" id="efViewCooperado">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">CPF/CNPJ Coop</div>
+            <div class="val mono" id="efViewCnpjCoop">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">IE</div>
+            <div class="val mono" id="efViewIe">—</div>
+          </div>
+          <div class="ef-view-item span-2">
+            <div class="lbl">Filial do Cliente</div>
+            <div class="val" id="efViewFilial">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">CPF/CNPJ Filial</div>
+            <div class="val mono" id="efViewCnpjFilial">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Cidade · UF</div>
+            <div class="val" id="efViewCidadeUf">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Produto</div>
+            <div class="val mono" id="efViewProduto">—</div>
+          </div>
+          <div class="ef-view-item span-2">
+            <div class="lbl">Descrição</div>
+            <div class="val" id="efViewDescProduto">—</div>
+          </div>
+          <div class="ef-view-item">
+            <div class="lbl">Planta</div>
+            <div class="val" id="efViewPlanta">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;font-size:11px;color:var(--text-3);font-style:italic;text-align:right">
+        Todas as alterações são registradas no <strong>Salesforce Field History</strong> e propagadas ao SAP via Protocol Interface.
+      </div>
+    </div>
+    <div class="edit-fields-modal-foot">
+      <button class="ef-btn ef-btn-secondary" id="efCancelBtn" type="button">Cancelar</button>
+      <button class="ef-btn ef-btn-primary" id="efSaveBtn" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar alterações
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DISCARD MODAL (usado por Editar protocolo / cancelamento de edição) -->
+<div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="confirm-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <h3>Descartar alterações?</h3>
+    </div>
+    <p class="confirm-modal-text">
+      Você está prestes a descartar as alterações feitas no protocolo
+      <strong id="confirmDiscardProto">—</strong>. Essa ação não pode ser desfeita.
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-btn confirm-btn-secondary" id="confirmDiscardNo" type="button">Voltar a editar</button>
+      <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CANCELAR PROTOCOLO MODAL -->
+<div class="agendar-modal-backdrop" id="cancelProtoModal" role="dialog" aria-modal="true">
+  <div class="agendar-modal" style="max-width:480px">
+    <div class="agendar-modal-head">
+      <span class="agendar-modal-icon" style="background:var(--mosaic-red)" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      </span>
+      <div class="agendar-modal-head-text">
+        <h2>Cancelar protocolo</h2>
+        <div class="agendar-modal-head-sub">Esta ação não pode ser desfeita.</div>
+      </div>
+      <button class="modal-x" id="cpModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="agendar-modal-body">
+      <p style="font-size:13.5px;color:var(--text-2);margin:0 0 14px;line-height:1.55">
+        Você está prestes a cancelar o protocolo
+        <strong style="color:var(--mosaic-green-800);font-family:ui-monospace,'SF Mono',Menlo,monospace" id="cpProtoId">—</strong>
+        do contrato <strong style="color:var(--text-1)" id="cpContrato">—</strong>.
+        O volume <strong id="cpVolume">—</strong> deste protocolo será
+        <strong style="color:var(--mosaic-green-800)">devolvido ao saldo disponível do contrato</strong>.
+      </p>
+      <div style="background:rgba(185,32,42,0.06);border-left:3px solid var(--mosaic-red);padding:10px 12px;border-radius:0 8px 8px 0;font-size:12px;color:var(--text-2);line-height:1.5">
+        <strong style="color:var(--mosaic-red);font-weight:700">Importante:</strong>
+        O status será alterado para <strong>"Cancelado"</strong> e a mudança será permanente.
+      </div>
+    </div>
+    <div class="agendar-modal-foot">
+      <div class="agendar-modal-foot-actions" style="margin-left:auto">
+        <button class="agendar-btn agendar-btn-secondary" id="cpKeepBtn" type="button">Manter protocolo</button>
+        <button class="agendar-btn" id="cpConfirmBtn" type="button" style="background:var(--mosaic-red);color:#fff">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          Confirmar cancelamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENDAR PROTOCOLO MODAL -->
+<div class="agendar-modal-backdrop" id="agendarModal" role="dialog" aria-modal="true" aria-labelledby="agendarModalTitle">
+  <div class="agendar-modal">
+    <div class="agendar-modal-head">
+      <span class="agendar-modal-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M12 14v4"/><path d="M10 16h4"/>
+        </svg>
+      </span>
+      <div class="agendar-modal-head-text">
+        <h2 id="agendarModalTitle">Agendar protocolo</h2>
+        <div class="agendar-modal-head-sub">Protocolo <strong id="agModalProtoId">—</strong></div>
+      </div>
+      <button class="modal-x" id="agModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="agendar-modal-body">
+
+      <!-- Contexto do protocolo -->
+      <div class="agendar-context">
+        <div class="agendar-context-item">
+          <div class="lbl">Cooperado</div>
+          <div class="val" id="agCtxCooperado">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Contrato SAP</div>
+          <div class="val" id="agCtxContrato">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Produto</div>
+          <div class="val" id="agCtxProduto">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Saldo disponível</div>
+          <div class="val saldo" id="agCtxSaldo">—</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agSemana">Semana de agendamento <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agSemana"></select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agVolume">Volume a agendar <span class="req">*</span></label>
+          <div class="agendar-input-with-suffix">
+            <input class="agendar-field-input" type="number" id="agVolume" min="0" />
+            <span class="suffix">t</span>
+          </div>
+          <span class="agendar-field-hint" id="agVolumeHint">—</span>
+        </div>
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agFrete">Frete <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agFrete">
+            <option value="CIF">CIF · Por conta da Mosaic</option>
+            <option value="FOB">FOB · Por conta do cliente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agObs">Observações (opcional)</label>
+          <textarea class="agendar-field-textarea" id="agObs" placeholder="Instruções de entrega, restrições de horário, contatos no local..."></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="agendar-modal-foot">
+      <div class="agendar-modal-foot-actions">
+        <button class="agendar-btn agendar-btn-secondary" id="agCancelBtn" type="button">Cancelar</button>
+        <button class="agendar-btn agendar-btn-primary" id="agConfirmBtn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirmar agendamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="bulk-toast" id="bulkToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="bulkToastText">Alterações aplicadas</span>
+</div>
+
+<!-- FOOTER ========================================================= -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   Data
+   ================================================================ */
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    status: "Novo",
+    contrato: "C-001-2024",
+    cotacao: "Q-12345",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "CARLOS ALVES",
+    cnpjCoop: "123.456.789-00",
+    ie: "123456789",
+    produto: "123245",
+    descProduto: "FFALM 10 20 30",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.450,00",
+    qtdProtocolo: 300,
+    qtdAgendada: 250,
+    saldo: 50,
+    qtdFaturada: 50,
+    qtdFaturar: 250,
+  },
+  {
+    id: "M9W47291",
+    status: "Em agendamento",
+    contrato: "C-002-2024",
+    cotacao: "Q-23456",
+    filial: "Filial Curitiba",
+    cnpjFilial: "23.456.789/0001-12",
+    cidade: "Curitiba",
+    uf: "PR",
+    cooperado: "AGUINALDO GOMES",
+    cnpjCoop: "234.567.890-00",
+    ie: "234567890",
+    produto: "123246",
+    descProduto: "FFALM 20 20 00",
+    embalagem: "Big Bag 1t",
+    frete: "FOB",
+    planta: "Cascavel",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.380,00",
+    qtdProtocolo: 500,
+    qtdAgendada: 200,
+    saldo: 300,
+    qtdFaturada: 0,
+    qtdFaturar: 500,
+  },
+  {
+    id: "M9W51038",
+    status: "Concluído",
+    contrato: "C-003-2024",
+    cotacao: "Q-34567",
+    filial: "Filial Porto Alegre",
+    cnpjFilial: "34.567.890/0001-34",
+    cidade: "Porto Alegre",
+    uf: "RS",
+    cooperado: "TEREZA AKEMI",
+    cnpjCoop: "345.678.901-00",
+    ie: "345678901",
+    produto: "123247",
+    descProduto: "MAP 11-52-00",
+    embalagem: "Saco 40kg",
+    frete: "CIF",
+    planta: "Três Lagoas",
+    nf: "NF-2024-089",
+    dataNf: "20/03/2025",
+    preco: "R$ 1.620,00",
+    qtdProtocolo: 200,
+    qtdAgendada: 200,
+    saldo: 0,
+    qtdFaturada: 200,
+    qtdFaturar: 0,
+  },
+  {
+    id: "M9W63847",
+    status: "Cancelado",
+    contrato: "C-004-2024",
+    cotacao: "Q-45678",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "BETO DOS SANTOS",
+    cnpjCoop: "456.789.012-00",
+    ie: "456789012",
+    produto: "123248",
+    descProduto: "KCl",
+    embalagem: "Granel",
+    frete: "FOB",
+    planta: "Paranaguá",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 890,00",
+    qtdProtocolo: 150,
+    qtdAgendada: 30,
+    saldo: 120,
+    qtdFaturada: 0,
+    qtdFaturar: 150,
+  },
+  {
+    id: "M9W71205",
+    status: "Liberado para agendar",
+    contrato: "C-005-2024",
+    cotacao: "Q-56789",
+    filial: "Filial Londrina",
+    cnpjFilial: "45.678.901/0001-56",
+    cidade: "Londrina",
+    uf: "PR",
+    cooperado: "RENATO CESAR",
+    cnpjCoop: "567.890.123-00",
+    ie: "567890123",
+    produto: "123249",
+    descProduto: "FFALM 15 30 00",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.290,00",
+    qtdProtocolo: 400,
+    qtdAgendada: 0,
+    saldo: 400,
+    qtdFaturada: 0,
+    qtdFaturar: 400,
+  },
+];
+
+/* ================================================================
+   Status badge
+   ================================================================ */
+function statusBadge(s) {
+  const map = {
+    "Novo":                   "status-novo",
+    "Liberado para agendar":  "status-liberado",
+    "Em agendamento":         "status-agendamento",
+    "Concluído":              "status-concluido",
+    "Cancelado":              "status-cancelado",
+    "Enviar ao SAP":          "status-sap",
+  };
+  const cls = map[s] || "status-sap";
+  return `<span class="status-badge ${cls}"><span class="dot"></span>${s}</span>`;
+}
+
+function numCell(v, highlight) {
+  if (v === 0) return `<td class="num muted">—</td>`;
+  return `<td class="num${highlight ? " highlight" : ""}">${v.toLocaleString("pt-BR")}</td>`;
+}
+
+/* ================================================================
+   Status que permitem agendamento (controla o botão calendário)
+   ================================================================ */
+const STATUS_PODE_AGENDAR = new Set([
+  "Novo",
+  "Liberado para agendar",
+  "Em agendamento",
+]);
+
+/* ============================================================
+   Regras de edição (SMDP-161)
+   ============================================================ */
+const STATUS_ACTIVE = new Set(["Novo", "Liberado para agendar", "Em agendamento"]);
+const STATUS_PRE_SO = new Set(["Novo", "Liberado para agendar"]); // antes do SO
+const STATUS_BILLED = new Set(["Concluído"]);                     // billing aconteceu
+const STATUS_CANCELED = new Set(["Cancelado"]);
+
+const rules = {
+  canEditVolume(p)    { return STATUS_ACTIVE.has(p.status); },
+  minVolume(p)        { return p.qtdAgendada; }, // proxy de "active requests in SAP"
+  canEditPackaging(p) { return STATUS_PRE_SO.has(p.status); }, // antes do SO
+  canEditRoute(p)     { return STATUS_ACTIVE.has(p.status) && p.frete === "CIF"; },
+  routeRequired(p)    { return p.frete === "CIF"; },
+  canEditInvoice(p)   { return !STATUS_BILLED.has(p.status) && !STATUS_CANCELED.has(p.status); },
+  canCancel(p)        { return STATUS_ACTIVE.has(p.status) && p.qtdAgendada === 0 && p.qtdFaturada === 0; },
+  cancelReason(p) {
+    if (!STATUS_ACTIVE.has(p.status)) return "Só é possível cancelar protocolos ativos (Novo / Liberado / Em agendamento).";
+    if (p.qtdAgendada > 0) return "Há requests ativas vinculadas — cancele as requests antes.";
+    if (p.qtdFaturada > 0) return "Já existe faturamento neste protocolo.";
+    return "";
+  },
+};
+
+const SVG_EDIT       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_EDIT_SMALL = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CAL        = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>`;
+const SVG_CHEV       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+const SVG_X_ROUND    = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`;
+const SVG_LOCK       = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>`;
+const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function actionCell(p) {
+  // Cluster com chevron único que abre dropdown de ações
+  return `
+    <div class="action-cluster">
+      <button class="cell-action action-menu" data-act="menu" data-id="${p.id}" type="button" title="Ações do protocolo" aria-label="Abrir menu de ações" aria-haspopup="true">
+        ${SVG_CHEV}
+      </button>
+    </div>`;
+}
+
+/* ================================================================
+   Render
+   ================================================================ */
+function render() {
+  const q      = (document.getElementById("filterSearch").value || "").trim().toLowerCase();
+  const status = document.getElementById("filterStatus").value;
+  const cnpjF  = document.getElementById("filterCnpjFilial").value;
+  const filial = document.getElementById("filterFilial").value;
+  const cnpjC  = document.getElementById("filterCnpjCoop").value;
+  const coop   = document.getElementById("filterCoop").value;
+  const ie     = document.getElementById("filterIe").value;
+  const prod   = document.getElementById("filterProduto").value;
+  const nf     = document.getElementById("filterNf").value;
+
+  // Autocomplete: aceita match parcial (contém), case-insensitive
+  const matches = (val, needle) => {
+    if (!needle) return true;
+    return String(val ?? "").toLowerCase().includes(needle.toLowerCase());
+  };
+  const rows = PROTOCOLS.filter(p => {
+    if (q && ![p.id, p.contrato, p.cotacao].some(v => v.toLowerCase().includes(q))) return false;
+    if (!matches(p.status,      status)) return false;
+    if (!matches(p.cnpjFilial,  cnpjF))  return false;
+    if (!matches(p.filial,      filial)) return false;
+    if (!matches(p.cnpjCoop,    cnpjC))  return false;
+    if (!matches(p.cooperado,   coop))   return false;
+    if (!matches(p.ie,          ie))     return false;
+    if (!matches(p.descProduto, prod))   return false;
+    if (!matches(p.nf,          nf))     return false;
+    return true;
+  });
+
+  // Ordenação
+  applySort(rows);
+
+  document.getElementById("resultCount").textContent = rows.length;
+  document.getElementById("paginationInfo").textContent =
+    rows.length === 0 ? "Nenhum protocolo encontrado" :
+    `Exibindo 1–${rows.length} de ${rows.length} protocolo${rows.length !== 1 ? "s" : ""}`;
+
+  const body = document.getElementById("tableBody");
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = rows.map(p => renderRow(p)).join("");
+}
+
+/* ================================================================
+   Render — escolhe entre linha normal ou linha em edicao
+   ================================================================ */
+const STATUS_OPTIONS    = ["Novo", "Liberado para agendar", "Em agendamento", "Concluído", "Cancelado", "Enviar ao SAP"];
+const UF_OPTIONS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
+const EMBALAGEM_OPTIONS = ["Saco 50kg","Saco 25kg","Big Bag 1000kg","Granel"];
+const FRETE_OPTIONS     = ["CIF","FOB"];
+const PLANTA_OPTIONS    = ["Limeira","Paranaguá","Cubatão","Rondonópolis","Uberaba","Candeias"];
+
+function selOptions(list, current) {
+  return list.map(o => `<option value="${o}"${o===current?' selected':''}>${o}</option>`).join("");
+}
+function escAttr(v) {
+  return String(v ?? "").replace(/"/g, "&quot;");
+}
+
+/* Estado da linha em edição (padrão "linha inteira"): clicar em qualquer
+   campo editável liga a linha toda; salva/cancela pelos botões. */
+let editingRowId = null;
+let editingRowSnapshot = null;
+
+function renderRow(p) {
+  return (p.id === editingRowId) ? renderRowEditing(p) : renderRowNormal(p);
+}
+
+/* Edição inline no item removida (V2) — células renderizam valor em texto
+   puro. A edição acontece apenas pelo chevron → modal "Editar". */
+function editableQtyCell(p, field, highlight) {
+  const v = p[field];
+  const cls = "num" + (highlight ? " highlight" : "");
+  return `<td class="${cls}">${v.toLocaleString("pt-BR")}</td>`;
+}
+
+function editableCell(p, field, opts = {}) {
+  const v = p[field];
+  const display = opts.display || (v === "—" || !v ? '<span class="muted">—</span>' : v);
+  const tdCls = (opts.cls || "").trim();
+  return `<td${tdCls ? ` class="${tdCls}"` : ""}>${display}</td>`;
+}
+
+function readOnlyCell(p, field, reason, opts = {}) {
+  // Célula com indicador de lock sutil no hover (não é clicável)
+  const v = p[field];
+  const display = opts.display || (v === "—" || !v ? '<span class="muted">—</span>' : v);
+  const tdCls = opts.cls || "";
+  return `<td class="${tdCls}" title="🔒 ${reason}">${display}</td>`;
+}
+
+function renderRowNormal(p) {
+  // Regras de edição na tabela (idem modal SMDP-161):
+  // Volume: rules.canEditVolume(p) — só reduz, min = qtdAgendada
+  // Embalagem: rules.canEditPackaging(p) — antes do SO
+  // NF / Data NF / Preço NF: rules.canEditInvoice(p) — até billing
+  // Qtd. Agendada e Qtd. Faturada: read-only (vem do SAP)
+  // Outros (Cooperado/Contrato/Cotação/Cidade/UF/IE/Produto/Frete/Planta): imutáveis
+  const embalagemCell = rules.canEditPackaging(p)
+    ? editableCell(p, "embalagem", { type: "select", options: EMBALAGEM_OPTIONS })
+    : readOnlyCell(p, "embalagem", "Sales Order já gerada");
+  const nfCell = rules.canEditInvoice(p)
+    ? editableCell(p, "nf",     { type: "text" })
+    : readOnlyCell(p, "nf",     "Faturamento já concluído", { cls: p.nf === '—' ? 'muted' : '' });
+  const dataNfCell = rules.canEditInvoice(p)
+    ? editableCell(p, "dataNf", { type: "text" })
+    : readOnlyCell(p, "dataNf", "Faturamento já concluído", { cls: p.dataNf === '—' ? 'muted' : '' });
+  const precoCell = rules.canEditInvoice(p)
+    ? editableCell(p, "preco",  { type: "text", cls: "num" })
+    : readOnlyCell(p, "preco",  "Faturamento já concluído", { cls: "num" });
+  const qtdProtocoloCell = rules.canEditVolume(p)
+    ? editableQtyCell(p, "qtdProtocolo", true)
+    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+
+  return `
+    <tr data-proto-id="${p.id}">
+      <td class="col-proto">
+        <div class="proto-cell">
+          <span class="proto-cell-number"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></span>
+          ${actionCell(p)}
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      ${embalagemCell}
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      ${nfCell}
+      ${dataNfCell}
+      ${precoCell}
+      ${qtdProtocoloCell}
+      ${numCell(p.qtdAgendada, false)}
+      ${numCell(p.saldo, p.saldo > 0)}
+      ${numCell(p.qtdFaturada, false)}
+      ${numCell(p.qtdFaturar, false)}
+    </tr>
+  `;
+}
+
+/* ================================================================
+   Render da linha em EDIÇÃO (linha inteira)
+   ================================================================ */
+function editNumCell(p, field) {
+  const min = field === "qtdProtocolo" ? rules.minVolume(p) : 0;
+  const max = field === "qtdProtocolo" ? p.qtdProtocolo : "";
+  return `<td class="num"><input type="number" class="inline-edit num" data-f="${field}" min="${min}" ${max !== "" ? `max="${max}"` : ""} value="${p[field]}" /></td>`;
+}
+function editTextCell(p, field, asNum) {
+  const mask = MASKS[field];
+  let v = p[field] === "—" ? "" : (p[field] || "");
+  if (mask && mask.prefix && String(v).startsWith(mask.prefix)) v = String(v).slice(mask.prefix.length);
+  const inputmode = mask ? `inputmode="${mask.inputmode}"` : "";
+  const maxlen = mask ? `maxlength="${mask.maxlength}"` : "";
+  const ph = mask ? mask.placeholder : "—";
+  return `<td class="${asNum ? 'num' : ''}"><input type="text" class="inline-edit${asNum ? ' num' : ''}" data-f="${field}" ${inputmode} ${maxlen} value="${escAttr(v)}" placeholder="${ph}" /></td>`;
+}
+function editSelectCell(p, field, options) {
+  const v = p[field];
+  return `<td><select class="inline-edit" data-f="${field}">${
+    options.map(o => `<option value="${escAttr(o)}"${o === v ? ' selected' : ''}>${o}</option>`).join("")
+  }</select></td>`;
+}
+
+function renderRowEditing(p) {
+  // Mesmas regras do modo normal: campo só vira input se a regra permitir.
+  const embalagemCell = rules.canEditPackaging(p)
+    ? editSelectCell(p, "embalagem", EMBALAGEM_OPTIONS)
+    : readOnlyCell(p, "embalagem", "Sales Order já gerada");
+  const nfCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "nf")
+    : readOnlyCell(p, "nf", "Faturamento já concluído", { cls: p.nf === '—' ? 'muted' : '' });
+  const dataNfCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "dataNf")
+    : readOnlyCell(p, "dataNf", "Faturamento já concluído", { cls: p.dataNf === '—' ? 'muted' : '' });
+  const precoCell = rules.canEditInvoice(p)
+    ? editTextCell(p, "preco", true)
+    : readOnlyCell(p, "preco", "Faturamento já concluído", { cls: "num" });
+  const qtdProtocoloCell = rules.canEditVolume(p)
+    ? editNumCell(p, "qtdProtocolo")
+    : `<td class="num highlight" title="🔒 Status não permite alteração">${p.qtdProtocolo.toLocaleString("pt-BR")}</td>`;
+
+  return `
+    <tr data-proto-id="${p.id}" class="is-editing">
+      <td class="col-proto">
+        <div class="proto-cell">
+          <span class="proto-cell-number">${p.id}</span>
+          <div class="action-cluster">
+            <button class="cell-action action-save" data-act="save-row" data-id="${p.id}" type="button" title="Salvar alterações" aria-label="Salvar">${SVG_CHECK}</button>
+            <button class="cell-action action-cancel" data-act="cancel-row" data-id="${p.id}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X_ROUND}</button>
+          </div>
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      ${embalagemCell}
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      ${nfCell}
+      ${dataNfCell}
+      ${precoCell}
+      ${qtdProtocoloCell}
+      ${numCell(p.qtdAgendada, false)}
+      ${numCell(p.saldo, p.saldo > 0)}
+      ${numCell(p.qtdFaturada, false)}
+      ${numCell(p.qtdFaturar, false)}
+    </tr>
+  `;
+}
+
+/* ================================================================
+   Events
+   ================================================================ */
+const elSearch = document.getElementById("filterSearch");
+const elClear  = document.getElementById("searchClearBtn");
+
+elSearch.addEventListener("input", () => {
+  elClear.classList.toggle("is-hidden", !elSearch.value);
+  render();
+});
+elClear.addEventListener("click", () => {
+  elSearch.value = "";
+  elClear.classList.add("is-hidden");
+  render();
+  elSearch.focus();
+});
+
+/* ============================================================
+   Autocomplete dos filtros — comportamento idêntico ao "Campo de
+   busca com autocomplete" da página de Usabilidade
+   ============================================================ */
+const FILTER_IDS = ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+                    "filterCoop","filterIe","filterProduto","filterNf"];
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+function highlight(text, needle) {
+  if (!needle) return escHtml(text);
+  const t = escHtml(text);
+  const re = new RegExp("(" + needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+  return t.replace(re, "<mark>$1</mark>");
+}
+
+function mountAutocomplete(rootEl) {
+  const input   = rootEl.querySelector("input");
+  const list    = rootEl.querySelector(".filter-ac-list");
+  const clear   = rootEl.querySelector(".filter-ac-clear");
+  const options = JSON.parse(rootEl.dataset.options || "[]");
+
+  let activeIdx = -1;
+
+  function buildList(needle) {
+    activeIdx = -1;
+    const matches = options.filter(o => o.toLowerCase().includes((needle||"").toLowerCase()));
+    let html = `<li class="filter-ac-all" data-val="">Todos</li>`;
+    if (matches.length === 0) {
+      html += `<li class="filter-ac-empty">Nenhum resultado para "${escHtml(needle)}"</li>`;
+    } else {
+      html += matches.map(o => `<li class="filter-ac-item" data-val="${escHtml(o)}">${highlight(o, needle)}</li>`).join("");
+    }
+    list.innerHTML = html;
+  }
+
+  function open() {
+    buildList(input.value);
+    rootEl.classList.add("is-open");
+  }
+  function close() {
+    rootEl.classList.remove("is-open");
+  }
+
+  input.addEventListener("focus", open);
+  input.addEventListener("click", open);
+  input.addEventListener("input", () => {
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    buildList(input.value);
+    rootEl.classList.add("is-open");
+    updateAdvCount();
+    render();
+  });
+  input.addEventListener("keydown", (e) => {
+    const items = list.querySelectorAll(".filter-ac-item, .filter-ac-all");
+    if (e.key === "ArrowDown") { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, items.length - 1); }
+    if (e.key === "ArrowUp")   { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const item = items[activeIdx] || items[0];
+      if (item) item.click();
+    }
+    if (e.key === "Escape") { e.preventDefault(); close(); input.blur(); }
+    items.forEach((el, i) => el.classList.toggle("is-active", i === activeIdx));
+  });
+
+  list.addEventListener("mousedown", (e) => {
+    const item = e.target.closest("[data-val]");
+    if (!item) return;
+    e.preventDefault();
+    input.value = item.dataset.val;
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    close();
+    updateAdvCount();
+    render();
+  });
+
+  clear.addEventListener("click", (e) => {
+    e.preventDefault();
+    input.value = "";
+    rootEl.classList.remove("has-value");
+    updateAdvCount();
+    render();
+    input.focus();
+  });
+
+  // Click fora fecha
+  document.addEventListener("click", (e) => {
+    if (!rootEl.contains(e.target)) close();
+  });
+}
+
+document.querySelectorAll(".filter-ac").forEach(mountAutocomplete);
+
+/* Toggle filtros */
+document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
+  const btn = document.getElementById("btnToggleAdvanced");
+  const panel = document.getElementById("advancedFilter");
+  const isOpen = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  panel.classList.toggle("is-hidden", isOpen);
+});
+
+document.getElementById("btnClearFilters").addEventListener("click", () => {
+  FILTER_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    el.value = "";
+    el.closest(".filter-ac")?.classList.remove("has-value");
+  });
+  updateAdvCount();
+  render();
+});
+
+function updateAdvCount() {
+  const n = FILTER_IDS.filter(id => document.getElementById(id).value).length;
+  const el = document.getElementById("advCount");
+  el.textContent = String(n);
+  el.classList.toggle("is-hidden", n === 0);
+}
+
+/* Export CSV */
+document.getElementById("btnExport").addEventListener("click", () => {
+  const headers = ["Protocolo","Status","Contrato SAP","Cotação","Filial do Cliente",
+    "CPF/CNPJ da Filial","Cidade da Filial","UF","Cooperado","CPF/CNPJ do Cooperado",
+    "IE do Cooperado","Produto","Descrição Produto","Embalagem","Tipo de Frete","Planta",
+    "NF Protocolo","Data NF Protocolo","Preço NF (unit.)","Qtd. Protocolo","Qtd. Agendada",
+    "Saldo Agendar","Qtd. Faturada","Qtd. a Faturar"];
+  const csvRows = [headers.join(";")];
+  PROTOCOLS.forEach(p => {
+    csvRows.push([p.id,p.status,p.contrato,p.cotacao,p.filial,p.cnpjFilial,p.cidade,p.uf,
+      p.cooperado,p.cnpjCoop,p.ie,p.produto,p.descProduto,p.embalagem,p.frete,p.planta,
+      p.nf,p.dataNf,p.preco,p.qtdProtocolo,p.qtdAgendada,p.saldo,p.qtdFaturada,p.qtdFaturar
+    ].join(";"));
+  });
+  const blob = new Blob(["﻿" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "relatorio-protocolos.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ================================================================
+   Eventos no tbody — botões de ação + inline cell edit
+   ================================================================ */
+const tableBodyEl = document.getElementById("tableBody");
+
+tableBodyEl.addEventListener("click", (e) => {
+  // Botões Salvar / Cancelar da linha em edição
+  const saveBtn = e.target.closest("[data-act='save-row']");
+  if (saveBtn) { e.stopPropagation(); saveRowEdit(saveBtn.dataset.id); return; }
+  const cancelBtn = e.target.closest("[data-act='cancel-row']");
+  if (cancelBtn) { e.stopPropagation(); cancelRowEdit(); return; }
+
+  // Botão chevron do cluster — toggle do menu
+  const btn = e.target.closest("[data-act='menu']");
+  if (btn) {
+    e.stopPropagation();
+    const cluster = btn.closest(".action-cluster");
+    const wasOpen = cluster.classList.contains("is-open");
+    closeAllActionMenus();
+    if (!wasOpen) {
+      const id = btn.dataset.id;
+      openActionMenu(cluster, id);
+    }
+    return;
+  }
+  // Click em qualquer célula editável → liga a LINHA INTEIRA pra edição
+  const td = e.target.closest("td.editable-qty");
+  if (td) {
+    e.stopPropagation();
+    startRowEdit(td.dataset.id);
+  }
+});
+
+function openActionMenu(cluster, id) {
+  const p = findProto(id);
+  if (!p) return;
+  const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
+  const podeCancel = rules.canCancel(p);
+  const cancelReason = podeCancel ? "" : rules.cancelReason(p);
+
+  const pop = document.createElement("div");
+  pop.className = "action-menu-pop";
+  pop.dataset.clusterId = id;  // pra reassociar no close
+  // Posiciona o popup como FIXED a partir das coords do botão chevron
+  const btn = cluster.querySelector("[data-act='menu']");
+  if (btn) {
+    const rect = btn.getBoundingClientRect();
+    pop.style.top  = `${rect.bottom + 4}px`;
+    pop.style.left = `${rect.left}px`;
+  }
+  pop.innerHTML = `
+    <button class="action-menu-item" data-act="edit" data-id="${id}" type="button">
+      ${SVG_EDIT_SMALL}
+      <span>Editar protocolo</span>
+    </button>
+    <button class="action-menu-item${podeAgendar ? '' : ' is-disabled'}" data-act="agendar" data-id="${id}" type="button"${podeAgendar ? '' : ' aria-disabled="true"'}>
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>
+      <span>
+        Agendar protocolo
+        ${podeAgendar ? '' : '<div class="action-menu-item-reason">Sem saldo disponível ou status não permite</div>'}
+      </span>
+    </button>
+    <div class="action-menu-sep"></div>
+    <button class="action-menu-item is-danger${podeCancel ? '' : ' is-disabled'}" data-act="cancel" data-id="${id}" type="button"${podeCancel ? '' : ' aria-disabled="true"'}>
+      ${SVG_X_ROUND}
+      <span>
+        Cancelar protocolo
+        ${cancelReason ? `<div class="action-menu-item-reason">${cancelReason}</div>` : ''}
+      </span>
+    </button>
+  `;
+  // Handler dos itens do menu — adicionado direto no pop porque ele
+  // vive no <body>, fora do tableBodyEl.
+  pop.addEventListener("click", (e) => {
+    const item = e.target.closest(".action-menu-item");
+    if (!item || item.classList.contains("is-disabled")) return;
+    const itemId  = item.dataset.id;
+    const itemAct = item.dataset.act;
+    closeAllActionMenus();
+    if (itemAct === "edit")    openEditFieldsModal(itemId);
+    if (itemAct === "agendar") openAgendarModal(itemId);
+    if (itemAct === "cancel")  openCancelModal(itemId);
+  });
+
+  // Anexa direto no <body> pra sair de qualquer stacking context
+  // (sticky cells, overflow scroll, etc.). cluster.is-open vira apenas
+  // marker; o popup vive fora do cluster no DOM.
+  document.body.appendChild(pop);
+  cluster.classList.add("is-open");
+}
+
+function closeAllActionMenus() {
+  document.querySelectorAll(".action-cluster.is-open").forEach(c => c.classList.remove("is-open"));
+  // Remove os pops (que vivem no body)
+  document.querySelectorAll(".action-menu-pop").forEach(pop => pop.remove());
+}
+
+// Click fora fecha o menu (e o popover não está mais dentro do cluster,
+// está direto no body por position:fixed — então precisa checar pop também)
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".action-cluster") && !e.target.closest(".action-menu-pop")) {
+    closeAllActionMenus();
+  }
+});
+
+// Scroll/resize → fecha o menu (já que é fixed, posição não acompanha)
+window.addEventListener("scroll", closeAllActionMenus, true);
+window.addEventListener("resize", closeAllActionMenus);
+
+/* ============== Inline cell edit (só quantidades) ============== */
+let editingCellEl = null;
+let editingCellOriginal = null;
+
+function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+/* ============== Máscaras de input ==============
+   Aplicadas conforme o campo:
+   - NF Protocolo: apenas dígitos, máx 12 chars (padrão NF-e BR
+     número da NF dentro da série tem até 9 digitos, deixo 12 pra
+     casos com prefixo da série)
+   - Data NF: dd/mm/aaaa (8 dígitos formatados)
+   - Preço NF: R$ X.XXX,XX (formatação monetária brasileira)
+============================================== */
+function maskOnlyDigits(s, maxDigits = 12) {
+  return String(s ?? "").replace(/\D/g, "").slice(0, maxDigits);
+}
+function maskDate(s) {
+  const d = maskOnlyDigits(s, 8);
+  if (d.length <= 2) return d;
+  if (d.length <= 4) return d.slice(0, 2) + "/" + d.slice(2);
+  return d.slice(0, 2) + "/" + d.slice(2, 4) + "/" + d.slice(4);
+}
+function maskMoney(s) {
+  // Pega só dígitos, máx 10 (até R$ 99.999.999,99)
+  const d = maskOnlyDigits(s, 10);
+  if (d.length === 0) return "";
+  // Garante 3 dígitos pra ter pelo menos "0,01" representável
+  const padded = d.padStart(3, "0");
+  const cents = padded.slice(-2);
+  const intPart = padded.slice(0, -2).replace(/^0+(?=\d)/, "") || "0";
+  // Separador de milhar
+  const intFmt = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return intFmt + "," + cents;
+}
+function unmaskMoney(masked) {
+  // "1.450,00" -> "R$ 1.450,00" pra storage
+  if (!masked) return "—";
+  return "R$ " + masked;
+}
+
+const MASKS = {
+  nf:     { fn: (v) => maskOnlyDigits(v, 12), inputmode: "numeric", placeholder: "—",          maxlength: 12, align: "left"  },
+  dataNf: { fn: maskDate,                     inputmode: "numeric", placeholder: "dd/mm/aaaa", maxlength: 10, align: "left"  },
+  preco:  { fn: maskMoney,                    inputmode: "numeric", placeholder: "0,00",       maxlength: 13, align: "right", prefix: "R$ " },
+};
+
+function startCellEdit(td) {
+  // Se já estamos editando esta MESMA célula, ignora (evita re-trigger)
+  if (editingCellEl === td) return;
+  if (editingCellEl) commitCellEdit();
+  const id    = td.dataset.id;
+  const field = td.dataset.f;
+  const type  = td.dataset.type || "text";
+  const p = findProto(id);
+  if (!p) return;
+  editingCellEl = td;
+  editingCellOriginal = p[field];
+  td.classList.add("cell-editing");
+
+  // Tipos diferentes geram inputs diferentes
+  if (type === "select") {
+    const opts = JSON.parse(td.dataset.options || "[]");
+    const v = p[field];
+    td.innerHTML = `<select class="qty-inline-input" style="text-align:left">${
+      opts.map(o => `<option value="${o.replace(/"/g, '&quot;')}"${o === v ? ' selected' : ''}>${o}</option>`).join("")
+    }</select>`;
+  } else if (type === "number") {
+    const min = field === "qtdProtocolo" ? rules.minVolume(p) : 0;
+    const max = field === "qtdProtocolo" ? p.qtdProtocolo : "";
+    td.innerHTML = `<input type="number" class="qty-inline-input" min="${min}" ${max !== "" ? `max="${max}"` : ""} value="${p[field]}" />`;
+  } else {
+    const mask = MASKS[field];
+    let v = p[field] === "—" ? "" : (p[field] || "");
+    // Se tem prefixo (ex: "R$ "), remove pra editar
+    if (mask && mask.prefix && v.startsWith(mask.prefix)) v = v.slice(mask.prefix.length);
+    const align = mask ? mask.align : "left";
+    const placeholder = mask ? mask.placeholder : "—";
+    const inputmode = mask ? `inputmode="${mask.inputmode}"` : "";
+    const maxlen = mask ? `maxlength="${mask.maxlength}"` : "";
+    td.innerHTML = `<input type="text" class="qty-inline-input" ${inputmode} ${maxlen} style="text-align:${align}" value="${String(v).replace(/"/g, '&quot;')}" placeholder="${placeholder}" />`;
+    // Aplica a máscara ao digitar
+    if (mask) {
+      const input = td.querySelector("input");
+      input.addEventListener("input", () => {
+        const cursorEnd = input.value.length;
+        input.value = mask.fn(input.value);
+        // Mantém cursor no fim (mais simples que recalcular posição)
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+    }
+  }
+  const input = td.querySelector("input, select");
+  input.focus();
+  if (input.select) input.select();
+  input.addEventListener("keydown", onCellKeyDown);
+  // Adiciona blur listener no próximo tick — evita blurs espúrios que
+  // alguns browsers disparam quando o input acabou de ser criado e o
+  // focus ainda está propagando.
+  setTimeout(() => input.addEventListener("blur", commitCellEdit), 0);
+}
+
+function onCellKeyDown(e) {
+  if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
+  if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
+}
+
+function commitCellEdit() {
+  if (!editingCellEl) return;
+  const td = editingCellEl;
+  const id    = td.dataset.id;
+  const field = td.dataset.f;
+  const type  = td.dataset.type || "text";
+  const input = td.querySelector("input, select");
+  if (!input) { editingCellEl = null; return; }
+  let newVal = input.value;
+  const p = findProto(id);
+  editingCellEl = null;
+  editingCellOriginal = null;
+  if (!p) return;
+
+  if (type === "number") {
+    newVal = newVal === "" ? 0 : Number(newVal);
+    // Aplica clamping para Volume (não pode ir abaixo do mínimo)
+    if (field === "qtdProtocolo") {
+      const minV = rules.minVolume(p);
+      if (newVal < minV) newVal = minV;
+      if (newVal > editingCellOriginal && editingCellOriginal != null) {
+        // Volume só pode reduzir (mas guardamos o original — depois do reset acima isso é null, então usamos p[field] atual)
+      }
+    }
+  } else if (type === "text") {
+    // Aplica prefixo da máscara se necessário (ex: "R$ " no preço)
+    const mask = MASKS[field];
+    if (newVal === "" || newVal == null) {
+      newVal = "—";
+    } else if (mask && mask.prefix) {
+      newVal = mask.prefix + newVal;
+    }
+  }
+
+  if (String(newVal) !== String(p[field])) {
+    p[field] = newVal;
+    // Recalcula derivados se mudou Volume
+    if (field === "qtdProtocolo") {
+      p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+      p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+    }
+    render();
+    const display = type === "number" ? Number(newVal).toLocaleString("pt-BR") + " t" : newVal;
+    showBulkToast(`Protocolo ${id} · ${labelOfField(field)}: ${display}`);
+  } else {
+    render();
+  }
+}
+
+function cancelCellEdit() {
+  if (!editingCellEl) return;
+  editingCellEl = null;
+  editingCellOriginal = null;
+  render();
+}
+
+/* ============== Edição de LINHA INTEIRA ============== */
+function attachRowMasks(rowEl) {
+  rowEl.querySelectorAll("input.inline-edit[data-f]").forEach(input => {
+    const mask = MASKS[input.dataset.f];
+    if (mask) {
+      input.addEventListener("input", () => {
+        input.value = mask.fn(input.value);
+        input.setSelectionRange(input.value.length, input.value.length);
+      });
+    }
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter")  { e.preventDefault(); saveRowEdit(rowEl.dataset.protoId); }
+      if (e.key === "Escape") { e.preventDefault(); cancelRowEdit(); }
+    });
+  });
+}
+
+function startRowEdit(id) {
+  if (editingRowId === id) return;
+  // troca de linha em edição descarta a anterior (sem salvar)
+  const p = findProto(id);
+  if (!p) return;
+  editingRowId = id;
+  editingRowSnapshot = { ...p };
+  closeAllActionMenus();
+  render();
+  const rowEl = document.querySelector(`tr[data-proto-id="${CSS.escape(id)}"]`);
+  if (rowEl) {
+    attachRowMasks(rowEl);
+    const first = rowEl.querySelector(".inline-edit");
+    if (first) { first.focus(); if (first.select) first.select(); }
+  }
+}
+
+function saveRowEdit(id) {
+  const p = findProto(id);
+  if (!p) { editingRowId = null; editingRowSnapshot = null; render(); return; }
+  const rowEl = document.querySelector(`tr[data-proto-id="${CSS.escape(id)}"]`);
+  if (rowEl) {
+    rowEl.querySelectorAll(".inline-edit[data-f]").forEach(input => {
+      const field = input.dataset.f;
+      let val = input.value;
+      if (input.type === "number") {
+        val = val === "" ? 0 : Number(val);
+        if (field === "qtdProtocolo") {
+          const minV = rules.minVolume(p);
+          const origMax = editingRowSnapshot ? editingRowSnapshot.qtdProtocolo : p.qtdProtocolo;
+          if (val < minV) val = minV;       // não abaixo do já agendado
+          if (val > origMax) val = origMax; // Volume só pode reduzir
+        }
+      } else {
+        const mask = MASKS[field];
+        if (val === "" || val == null) val = "—";
+        else if (mask && mask.prefix) val = mask.prefix + val;
+      }
+      p[field] = val;
+    });
+    // recalcula derivados de Volume
+    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  }
+  editingRowId = null;
+  editingRowSnapshot = null;
+  render();
+  showBulkToast(`Protocolo ${id} atualizado · enviado ao SAP`);
+}
+
+function cancelRowEdit() {
+  if (!editingRowId) return;
+  // nada foi mutado em p durante a digitação (valores ficam no DOM),
+  // então basta sair do modo edição e re-renderizar.
+  editingRowId = null;
+  editingRowSnapshot = null;
+  render();
+}
+
+function labelOfField(f) {
+  return {
+    qtdProtocolo: "Qtd. Protocolo",
+    qtdAgendada:  "Qtd. Agendada",
+    qtdFaturada:  "Qtd. Faturada",
+    embalagem:    "Embalagem",
+    nf:           "NF Protocolo",
+    dataNf:       "Data NF",
+    preco:        "Preço NF",
+  }[f] || f;
+}
+
+function showBulkToast(msg) {
+  const toast = document.getElementById("bulkToast");
+  document.getElementById("bulkToastText").textContent = msg;
+  toast.classList.add("is-visible");
+  setTimeout(() => toast.classList.remove("is-visible"), 3000);
+}
+
+/* ================================================================
+   Modal "Editar protocolo" — campos NÃO-quantidade
+   ================================================================ */
+const editModal = document.getElementById("editFieldsModal");
+let editFieldsCurrentId = null;
+let editFieldsSnapshot = null;
+
+function openEditFieldsModal(id) {
+  const p = findProto(id);
+  if (!p) return;
+  editFieldsCurrentId = id;
+  editFieldsSnapshot = {
+    qtdProtocolo: p.qtdProtocolo,
+    embalagem:    p.embalagem,
+    roteiro:      p.roteiro || "",
+    nf:           p.nf,
+    dataNf:       p.dataNf,
+    preco:        p.preco,
+  };
+
+  // Header
+  document.getElementById("efModalProtoId").textContent = p.id;
+
+  // Volumes
+  setVal("efQtdProto",     p.qtdProtocolo);
+  setVal("efQtdAgendada",  p.qtdAgendada);
+  setVal("efQtdSaldo",     p.saldo);
+  setVal("efQtdFaturada",  p.qtdFaturada);
+
+  // ===== Regras de edição (SMDP-161) =====
+  const elProto      = document.getElementById("efQtdProto");
+  const elEmbalagem  = document.getElementById("efEmbalagem");
+  const elRoteiro    = document.getElementById("efRoteiro");
+  const elNf         = document.getElementById("efNf");
+  const elDataNf     = document.getElementById("efDataNf");
+  const elPreco      = document.getElementById("efPreco");
+
+  // (1) Volume: só pode reduzir, min = qtdAgendada
+  const minVol = rules.minVolume(p);
+  elProto.min = minVol;
+  elProto.max = p.qtdProtocolo;
+  if (rules.canEditVolume(p)) {
+    elProto.removeAttribute("readonly");
+    elProto.style.background = "#fff";
+    document.getElementById("efQtdProtoHint").innerHTML =
+      `Só pode reduzir · mínimo ${minVol.toLocaleString("pt-BR")} t (qtd. agendada)`;
+    document.getElementById("efQtdProtoHint").style.color = "var(--text-3)";
+  } else {
+    elProto.setAttribute("readonly", "true");
+    elProto.style.background = "#f7f9f8";
+    document.getElementById("efQtdProtoHint").innerHTML =
+      `🔒 Bloqueado · status "${p.status}" não permite alteração`;
+    document.getElementById("efQtdProtoHint").style.color = "var(--mosaic-red)";
+  }
+
+  // Recalcula saldo ao vivo
+  elProto.oninput = () => {
+    let v = Number(elProto.value) || 0;
+    if (v < minVol) v = minVol; // não permite ir abaixo do mínimo
+    if (v > editFieldsSnapshot.qtdProtocolo) v = editFieldsSnapshot.qtdProtocolo; // não permite aumentar
+    elProto.value = v;
+    document.getElementById("efQtdSaldo").value = Math.max(0, v - p.qtdAgendada);
+  };
+
+  // (2) Embalagem: editável antes do SO (status pre-SO)
+  elEmbalagem.value = p.embalagem;
+  if (rules.canEditPackaging(p)) {
+    elEmbalagem.removeAttribute("disabled");
+    elEmbalagem.style.background = "#fff";
+    document.getElementById("efEmbalagemHint").innerHTML = "Pode ser alterada antes da geração do Sales Order";
+    document.getElementById("efEmbalagemHint").style.color = "var(--text-3)";
+  } else {
+    elEmbalagem.setAttribute("disabled", "true");
+    elEmbalagem.style.background = "#f7f9f8";
+    document.getElementById("efEmbalagemHint").innerHTML =
+      `🔒 Bloqueada · Sales Order já gerada (status "${p.status}")`;
+    document.getElementById("efEmbalagemHint").style.color = "var(--mosaic-red)";
+  }
+
+  // (3) Roteiro: editável while Active. Required CIF, locked FOB.
+  elRoteiro.value = p.roteiro || "";
+  if (rules.canEditRoute(p)) {
+    elRoteiro.removeAttribute("readonly");
+    elRoteiro.style.background = "#fff";
+    document.getElementById("efRoteiroHint").innerHTML =
+      `Obrigatório para CIF · em alteração enquanto status Active`;
+    document.getElementById("efRoteiroHint").style.color = "var(--text-3)";
+  } else {
+    elRoteiro.setAttribute("readonly", "true");
+    elRoteiro.style.background = "#f7f9f8";
+    if (p.frete === "FOB") {
+      document.getElementById("efRoteiroHint").innerHTML =
+        `🔒 Bloqueado · frete FOB não exige roteiro (responsabilidade do cliente)`;
+    } else {
+      document.getElementById("efRoteiroHint").innerHTML =
+        `🔒 Bloqueado · status "${p.status}" não permite alteração`;
+    }
+    document.getElementById("efRoteiroHint").style.color = "var(--mosaic-red)";
+  }
+
+  // (4) NF Número / Data / Preço: editáveis até billing
+  const setNfField = (el, val) => {
+    el.value = val === "—" ? "" : (val || "");
+    if (rules.canEditInvoice(p)) {
+      el.removeAttribute("readonly");
+      el.style.background = "#fff";
+    } else {
+      el.setAttribute("readonly", "true");
+      el.style.background = "#f7f9f8";
+    }
+  };
+  setNfField(elNf, p.nf);
+  setNfField(elDataNf, p.dataNf);
+  setNfField(elPreco, p.preco);
+  if (rules.canEditInvoice(p)) {
+    document.getElementById("efNfHint").innerHTML = "Editáveis até o faturamento ser concluído";
+    document.getElementById("efNfHint").style.color = "var(--text-3)";
+  } else {
+    document.getElementById("efNfHint").innerHTML =
+      `🔒 Bloqueados · faturamento já concluído (status "${p.status}")`;
+    document.getElementById("efNfHint").style.color = "var(--mosaic-red)";
+  }
+
+  // Ficha read-only (imutáveis — Cooperado/Contrato/Cotação/Produto/Filial/Cidade/Planta)
+  const setText = (idEl, v) => { const el = document.getElementById(idEl); if (el) el.textContent = v ?? "—"; };
+  document.getElementById("efViewStatus").innerHTML  = statusBadge(p.status);
+  setText("efViewFrete",        p.frete);
+  setText("efViewContrato",     p.contrato);
+  setText("efViewCotacao",      p.cotacao);
+  setText("efViewCooperado",    p.cooperado);
+  setText("efViewCnpjCoop",     p.cnpjCoop);
+  setText("efViewIe",           p.ie);
+  setText("efViewFilial",       p.filial);
+  setText("efViewCnpjFilial",   p.cnpjFilial);
+  setText("efViewCidadeUf",     `${p.cidade} · ${p.uf}`);
+  setText("efViewProduto",      p.produto);
+  setText("efViewDescProduto",  p.descProduto);
+  setText("efViewPlanta",       p.planta);
+
+  editModal.classList.add("is-open");
+}
+
+function setVal(id, v) {
+  const el = document.getElementById(id);
+  if (el && v !== undefined && v !== null) el.value = v;
+}
+
+function readEditFieldsValues() {
+  const proto = Number(document.getElementById("efQtdProto").value) || 0;
+  return {
+    qtdProtocolo: proto,
+    saldo:        Math.max(0, proto - (editFieldsSnapshot?.qtdAgendada ?? 0)),
+    qtdFaturar:   Math.max(0, proto - (editFieldsSnapshot?.qtdFaturada ?? 0)),
+    embalagem:    document.getElementById("efEmbalagem").value,
+    roteiro:      document.getElementById("efRoteiro").value,
+    nf:           document.getElementById("efNf").value || "—",
+    dataNf:       document.getElementById("efDataNf").value || "—",
+    preco:        document.getElementById("efPreco").value,
+  };
+}
+
+function isEditFieldsDirty() {
+  if (!editFieldsSnapshot) return false;
+  const u = readEditFieldsValues();
+  return (
+    u.qtdProtocolo !== editFieldsSnapshot.qtdProtocolo ||
+    u.embalagem    !== editFieldsSnapshot.embalagem ||
+    u.roteiro      !== (editFieldsSnapshot.roteiro || "") ||
+    u.nf           !== editFieldsSnapshot.nf ||
+    u.dataNf       !== editFieldsSnapshot.dataNf ||
+    u.preco        !== editFieldsSnapshot.preco
+  );
+}
+
+function saveEditFields() {
+  const p = findProto(editFieldsCurrentId);
+  if (!p) return;
+  const u = readEditFieldsValues();
+  // Recalcula saldo/qtdFaturar a partir dos campos novos
+  p.qtdProtocolo = u.qtdProtocolo;
+  p.embalagem    = u.embalagem;
+  p.roteiro      = u.roteiro;
+  p.nf           = u.nf;
+  p.dataNf       = u.dataNf;
+  p.preco        = u.preco;
+  p.saldo        = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  p.qtdFaturar   = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  const id = p.id;
+  closeEditFieldsModal();
+  render();
+  showBulkToast(`Protocolo ${id} atualizado · alterações replicadas ao SAP`);
+}
+
+function requestCloseEditFields() {
+  if (!isEditFieldsDirty()) {
+    closeEditFieldsModal();
+    return;
+  }
+  // Modal de confirmação reusado
+  const cm = document.getElementById("confirmDiscardModal");
+  document.getElementById("confirmDiscardProto").textContent = editFieldsCurrentId;
+  cm.dataset.protoId = editFieldsCurrentId;
+  cm.dataset.source = "editFields";
+  cm.classList.add("is-open");
+}
+
+function closeEditFieldsModal() {
+  editModal.classList.remove("is-open");
+  editFieldsCurrentId = null;
+  editFieldsSnapshot = null;
+}
+
+document.getElementById("efModalClose").addEventListener("click", requestCloseEditFields);
+document.getElementById("efCancelBtn").addEventListener("click", requestCloseEditFields);
+document.getElementById("efSaveBtn").addEventListener("click", saveEditFields);
+editModal.addEventListener("click", (e) => {
+  if (e.target === editModal) requestCloseEditFields();
+});
+
+/* ================================================================
+   Modal "Agendar protocolo" — fluxo rápido
+   ================================================================ */
+const agendarModal = document.getElementById("agendarModal");
+let agendarCurrentId = null;
+
+function buildSemanaOptions() {
+  // gera 6 semanas a partir da próxima segunda-feira
+  const today = new Date();
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const baseMonday = new Date(today);
+  baseMonday.setDate(today.getDate() + diffToMonday);
+  baseMonday.setHours(0, 0, 0, 0);
+
+  const pad = n => String(n).padStart(2, "0");
+  const fmt = d => `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  const opts = [];
+  for (let i = 0; i < 6; i++) {
+    const mon = new Date(baseMonday);
+    mon.setDate(baseMonday.getDate() + i * 7);
+    const sun = new Date(mon);
+    sun.setDate(mon.getDate() + 6);
+    const label = `${fmt(mon)} — ${fmt(sun)}`;
+    const tag = i === 0 ? " (vigente)" : i === 1 ? " (próxima)" : "";
+    opts.push({ value: label, label: label + tag });
+  }
+  return opts;
+}
+
+function openAgendarModal(id) {
+  const p = findProto(id);
+  if (!p) return;
+  agendarCurrentId = id;
+
+  // Preenche contexto
+  document.getElementById("agModalProtoId").textContent = p.id;
+  document.getElementById("agCtxCooperado").textContent = p.cooperado;
+  document.getElementById("agCtxContrato").textContent  = p.contrato;
+  document.getElementById("agCtxProduto").textContent   = p.descProduto;
+  document.getElementById("agCtxSaldo").innerHTML =
+    `${p.saldo.toLocaleString("pt-BR")}<span class="unit">t</span>`;
+
+  // Popula semana
+  const semanaSel = document.getElementById("agSemana");
+  semanaSel.innerHTML = buildSemanaOptions()
+    .map((o, i) => `<option value="${o.value}"${i === 1 ? ' selected' : ''}>${o.label}</option>`)
+    .join("");
+
+  // Volume = saldo por default, max = saldo
+  const volEl = document.getElementById("agVolume");
+  volEl.value = p.saldo;
+  volEl.max = p.saldo;
+  document.getElementById("agVolumeHint").textContent =
+    `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+  document.getElementById("agVolumeHint").classList.remove("error");
+
+  // Frete (mantém o atual)
+  document.getElementById("agFrete").value = p.frete;
+
+  // Observação
+  document.getElementById("agObs").value = "";
+
+  validateAgendarForm();
+  agendarModal.classList.add("is-open");
+  setTimeout(() => semanaSel.focus(), 50);
+}
+
+function closeAgendarModal() {
+  agendarModal.classList.remove("is-open");
+  agendarCurrentId = null;
+}
+
+function validateAgendarForm() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol = Number(document.getElementById("agVolume").value);
+  const hint = document.getElementById("agVolumeHint");
+  let ok = true;
+  if (!vol || vol <= 0) {
+    hint.textContent = "Volume deve ser maior que zero";
+    hint.classList.add("error");
+    ok = false;
+  } else if (vol > p.saldo) {
+    hint.textContent = `Volume excede o saldo disponível (${p.saldo} t)`;
+    hint.classList.add("error");
+    ok = false;
+  } else {
+    hint.textContent = `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+    hint.classList.remove("error");
+  }
+  document.getElementById("agConfirmBtn").disabled = !ok;
+}
+
+function confirmAgendamento() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol     = Number(document.getElementById("agVolume").value);
+  const semana  = document.getElementById("agSemana").value;
+  // Atualiza saldo do protocolo simulando agendamento
+  p.qtdAgendada += vol;
+  p.saldo = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  // Se saldo zerou e status era "Novo" ou "Liberado", muda para "Em agendamento"
+  if (p.saldo === 0 && (p.status === "Novo" || p.status === "Liberado para agendar")) {
+    p.status = "Em agendamento";
+  }
+  closeAgendarModal();
+  render();
+  showBulkToast(`Protocolo ${p.id} agendado · ${vol} t para ${semana.split(' — ')[0]}`);
+}
+
+document.getElementById("agModalClose").addEventListener("click", closeAgendarModal);
+document.getElementById("agCancelBtn").addEventListener("click", closeAgendarModal);
+document.getElementById("agConfirmBtn").addEventListener("click", confirmAgendamento);
+agendarModal.addEventListener("click", (e) => {
+  if (e.target === agendarModal) closeAgendarModal();
+});
+document.getElementById("agVolume").addEventListener("input", validateAgendarForm);
+
+/* ================================================================
+   Modal de confirmação de cancelamento (SMDP-161)
+   ================================================================ */
+const cancelModal = document.getElementById("cancelProtoModal");
+let cancelingId = null;
+
+function openCancelModal(id) {
+  const p = findProto(id);
+  if (!p) return;
+  if (!rules.canCancel(p)) {
+    showBulkToast(`Não foi possível cancelar: ${rules.cancelReason(p)}`);
+    return;
+  }
+  cancelingId = id;
+  document.getElementById("cpProtoId").textContent  = p.id;
+  document.getElementById("cpContrato").textContent = p.contrato;
+  document.getElementById("cpVolume").innerHTML     = `${p.qtdProtocolo.toLocaleString("pt-BR")} <span style="color:var(--text-3);font-weight:600;font-size:11px">t</span>`;
+  cancelModal.classList.add("is-open");
+}
+
+function closeCancelModal() {
+  cancelModal.classList.remove("is-open");
+  cancelingId = null;
+}
+
+function confirmCancelProtocol() {
+  const p = findProto(cancelingId);
+  if (!p) return;
+  // Aplica: status = "Cancelado", preserva quantidade original
+  p.status = "Cancelado";
+  // O volume sai do "available balance" do contrato — simulado:
+  // saldo continua o mesmo (preservado), mas agora não conta como ativo
+  closeCancelModal();
+  render();
+  showBulkToast(`Protocolo ${p.id} cancelado. Volume preservado.`);
+}
+
+document.getElementById("cpModalClose").addEventListener("click", closeCancelModal);
+document.getElementById("cpKeepBtn").addEventListener("click", closeCancelModal);
+document.getElementById("cpConfirmBtn").addEventListener("click", confirmCancelProtocol);
+cancelModal.addEventListener("click", (e) => {
+  if (e.target === cancelModal) closeCancelModal();
+});
+
+const confirmModal     = document.getElementById("confirmDiscardModal");
+const confirmYes       = document.getElementById("confirmDiscardYes");
+const confirmNo        = document.getElementById("confirmDiscardNo");
+
+confirmYes.addEventListener("click", () => {
+  const source = confirmModal.dataset.source;
+  confirmModal.classList.remove("is-open");
+  if (source === "editFields") {
+    // Descarta alterações do modal "Editar campos" e fecha
+    closeEditFieldsModal();
+  }
+  delete confirmModal.dataset.source;
+});
+confirmNo.addEventListener("click", () => {
+  confirmModal.classList.remove("is-open");
+  delete confirmModal.dataset.source;
+});
+confirmModal.addEventListener("click", (e) => {
+  if (e.target === confirmModal) {
+    confirmModal.classList.remove("is-open");
+    delete confirmModal.dataset.source;
+  }
+});
+
+/* Esc fecha modais abertos / dropdown / cell edit */
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (document.querySelector(".action-cluster.is-open")) { closeAllActionMenus(); return; }
+  if (cancelModal.classList.contains("is-open"))  { closeCancelModal(); return; }
+  if (agendarModal.classList.contains("is-open")) { closeAgendarModal(); return; }
+  if (confirmModal.classList.contains("is-open")) {
+    confirmModal.classList.remove("is-open");
+    delete confirmModal.dataset.source;
+    return;
+  }
+  if (editModal.classList.contains("is-open"))    { requestCloseEditFields(); return; }
+  if (editingCellEl) cancelCellEdit();
+});
+
+/* ================================================================
+   Toast helper — agora só pra mensagens gerais (CSV removido)
+   ================================================================ */
+const bulkToast      = document.getElementById("bulkToast");
+const bulkToastText  = document.getElementById("bulkToastText");
+
+/* ============================================================
+   Ordenação por coluna (clica no header)
+   ============================================================ */
+let sortField = null;
+let sortDir   = 1; // 1 = asc, -1 = desc
+
+function applySort(rows) {
+  if (!sortField) return;
+  const field = sortField;
+  const dir   = sortDir;
+  // Detecta se é numérico — campos calculados ou de quantidade
+  const numFields = new Set(["preco","qtdProtocolo","qtdAgendada","saldo","qtdFaturada","qtdFaturar"]);
+  const toNum = v => {
+    if (typeof v === "number") return v;
+    if (!v) return 0;
+    const s = String(v).replace(/[R$\s.]/g, "").replace(",", ".");
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  };
+  rows.sort((a, b) => {
+    let va = a[field], vb = b[field];
+    if (numFields.has(field)) { va = toNum(va); vb = toNum(vb); }
+    else { va = String(va || "").toLowerCase(); vb = String(vb || "").toLowerCase(); }
+    if (va < vb) return -1 * dir;
+    if (va > vb) return  1 * dir;
+    return 0;
+  });
+}
+
+document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const field = th.dataset.sort;
+    if (sortField === field) {
+      // Mesma coluna: asc -> desc -> nenhuma
+      if (sortDir === 1)      sortDir = -1;
+      else                    { sortField = null; sortDir = 1; }
+    } else {
+      sortField = field;
+      sortDir   = 1;
+    }
+    // Atualiza classes visuais
+    document.querySelectorAll("#mainTable thead th.sortable").forEach(t => {
+      t.classList.remove("sort-asc", "sort-desc");
+    });
+    if (sortField) {
+      th.classList.add(sortDir === 1 ? "sort-asc" : "sort-desc");
+    }
+    render();
+  });
+});
+
+render();
+
+/* ============================================================================
+   Solução C — barra grande SEMPRE visível, com thumb verde DESENHADO em DIV
+   (não usa scrollbar nativo, que some no macOS). Fica colada no rodapé da
+   tabela, afastada da borda de baixo. Arrasta o thumb ou clica na pista.
+   ============================================================================ */
+(function initCustomHScroll() {
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.hscroll === "1") return;
+    wrap.dataset.hscroll = "1";
+
+    const bar = document.createElement("div");
+    bar.className = "hbar";
+    const thumb = document.createElement("div");
+    thumb.className = "hbar-thumb";
+    bar.appendChild(thumb);
+    document.body.appendChild(bar);
+
+    const footerH = () => {
+      const f = document.querySelector(".summary-footer");
+      return (f && getComputedStyle(f).display !== "none") ? f.offsetHeight : 0;
+    };
+
+    const layout = () => {
+      if (!wrap.isConnected) { bar.remove(); return; }
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
+      bar.classList.toggle("is-visible", overflows && inView);
+      if (!overflows || !inView) return;
+      // Posição: no rodapé da tabela, com folga da borda de baixo (e do footer).
+      const barH = bar.offsetHeight || 20;
+      const gap = 18;
+      const maxTop = window.innerHeight - footerH() - gap - barH;
+      const top = Math.min(r.bottom - barH - 6, maxTop);
+      bar.style.left = r.left + "px";
+      bar.style.width = r.width + "px";
+      bar.style.top = top + "px";
+      // Thumb proporcional
+      const trackW = bar.clientWidth;
+      const ratio = wrap.clientWidth / wrap.scrollWidth;
+      const thumbW = Math.max(64, Math.round(trackW * ratio));
+      const maxThumbX = trackW - thumbW;
+      const maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const x = maxScroll > 0 ? Math.round((wrap.scrollLeft / maxScroll) * maxThumbX) : 0;
+      thumb.style.width = thumbW + "px";
+      thumb.style.left = x + "px";
+    };
+
+    // Arrastar o thumb
+    let dragging = false, startX = 0, startScroll = 0;
+    thumb.addEventListener("pointerdown", (e) => {
+      dragging = true; startX = e.clientX; startScroll = wrap.scrollLeft;
+      try { thumb.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+    thumb.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const dx = e.clientX - startX;
+      wrap.scrollLeft = startScroll + (maxThumbX > 0 ? (dx / maxThumbX) * maxScroll : 0);
+      layout();
+    });
+    const endDrag = (e) => { dragging = false; try { thumb.releasePointerCapture(e.pointerId); } catch (_) {} };
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+    // Clique na pista → pula em direção ao ponto clicado
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target === thumb) return;
+      const rect = bar.getBoundingClientRect();
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const targetX = Math.max(0, Math.min(maxThumbX, (e.clientX - rect.left) - thumbW / 2));
+      wrap.scrollLeft = maxThumbX > 0 ? (targetX / maxThumbX) * maxScroll : 0;
+      layout();
+    });
+
+    wrap.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("resize", layout);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(layout).observe(wrap);
+    layout();
+  }
+
+  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(attach);
+})();
+</script>
+<script src="review-overlay.js" defer></script>
+</body>
+</html>

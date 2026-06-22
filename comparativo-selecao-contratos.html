@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Comparativo · Modal vs Sidenav — Selecionar Contratos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  body { background: var(--bg-page); }
+
+  /* ============== Hero ============== */
+  .cc-hero {
+    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
+    border-bottom: 1px solid var(--border-soft);
+    padding: var(--space-6) 0 var(--space-5);
+  }
+  .cc-eyebrow {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--mosaic-green-700);
+    margin-bottom: var(--space-2);
+  }
+  .cc-hero h1 { margin: 0 0 var(--space-2); font-size: 30px; font-weight: 800; color: var(--text-1); letter-spacing: -0.01em; }
+  .cc-hero p { margin: 0; max-width: 780px; color: var(--text-2); line-height: 1.55; font-size: 14px; }
+
+  /* ============== Switch bar ============== */
+  .cc-switch-bar {
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff; position: sticky; top: 0; z-index: 50;
+  }
+  .cc-switch-bar .container { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: var(--space-4) 0; }
+  .cc-switch {
+    display: inline-flex; gap: 4px; background: var(--bg-section);
+    padding: 4px; border-radius: 8px; border: 1px solid var(--border-soft);
+  }
+  .cc-switch button {
+    border: none; background: transparent; cursor: pointer;
+    padding: 9px 18px; border-radius: 6px; font-family: inherit;
+    font-size: 13px; font-weight: 700; color: var(--text-2);
+    transition: all .15s; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .cc-switch button:hover { color: var(--text-1); }
+  .cc-switch button.is-active { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .cc-switch button.is-modal.is-active { color: var(--mosaic-red); }
+  .cc-switch button.is-sidenav.is-active { color: var(--mosaic-green-800); }
+  .cc-switch button .verdict {
+    font-size: 10px; padding: 2px 6px; border-radius: 8px;
+    background: var(--bg-section); color: var(--text-3); letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .cc-switch button.is-modal.is-active .verdict { background: rgba(185,32,42,0.12); color: var(--mosaic-red); }
+  .cc-switch button.is-sidenav.is-active .verdict { background: rgba(0,106,77,0.12); color: var(--mosaic-green-800); }
+  .cc-share { margin-left: auto; font-size: 12px; color: var(--text-3); display: inline-flex; align-items: center; gap: 6px; }
+  .cc-share code { background: var(--bg-section); padding: 3px 7px; border-radius: 4px; font-size: 11px; color: var(--text-1); }
+
+  /* ============== Background simulado: Agendar Contrato Normal ============== */
+  .ag-shell { position: relative; padding: var(--space-5) 0 var(--space-6); min-height: 60vh; }
+  .ag-breadcrumb { font-size: 13px; color: var(--text-3); margin-bottom: var(--space-3); }
+  .ag-breadcrumb a { color: var(--mosaic-green-700); text-decoration: none; }
+  .ag-title-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+  .ag-title { font-size: 28px; font-weight: 800; color: var(--text-1); margin: 0; }
+  .ag-action-row {
+    background: var(--bg-section); border: 1px solid var(--border-soft);
+    padding: 16px 18px; border-radius: 4px; margin-bottom: var(--space-4);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .ag-action-row .lede { flex: 1; color: var(--text-2); font-size: 13.5px; }
+  .ag-btn-add {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--mosaic-green-800); color: #fff; border: none;
+    height: 38px; padding: 0 18px; border-radius: 4px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,88,61,0.18);
+  }
+  .ag-btn-add:hover { background: var(--mosaic-green-900); }
+
+  /* tabela de itens já adicionados (contexto a preservar) */
+  .ag-cart { background: #fff; border: 1px solid var(--border-soft); border-radius: 4px; overflow: hidden; }
+  .ag-cart-head { padding: 12px 16px; background: var(--bg-section); border-bottom: 1px solid var(--border-soft); font-size: 13px; font-weight: 700; color: var(--text-1); }
+  .ag-cart table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ag-cart th, .ag-cart td { padding: 11px 16px; text-align: left; border-bottom: 1px solid var(--border-soft); }
+  .ag-cart th { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-3); font-weight: 700; }
+  .ag-cart td { color: var(--text-1); }
+  .ag-cart tr:last-child td { border-bottom: none; }
+  .ag-cart .saldo { font-weight: 800; color: var(--mosaic-green-800); }
+  .pill-frete { display: inline-block; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; border: 1.5px solid; }
+  .pill-frete.cif { color: var(--mosaic-orange); border-color: var(--mosaic-orange); }
+  .pill-frete.fob { color: var(--mosaic-green-800); border-color: var(--mosaic-green-800); }
+
+  /* ============== Overlay base ============== */
+  .cc-overlay {
+    position: fixed; inset: 0; background: rgba(15,32,27,0.55);
+    z-index: 1000; display: none; opacity: 0; transition: opacity .15s;
+  }
+  .cc-overlay.is-open { display: flex; opacity: 1; }
+  .cc-overlay.is-modal { align-items: center; justify-content: center; padding: 20px; }
+  .cc-overlay.is-sidenav { align-items: stretch; justify-content: flex-end; }
+
+  /* ============== Lista de contratos (compartilhada) ============== */
+  .ct-search-wrap { padding: 16px 20px; border-bottom: 1px solid var(--border-soft); }
+  .ct-search {
+    width: 100%; height: 44px; padding: 0 16px 0 42px; box-sizing: border-box;
+    border: 2px solid var(--mosaic-green-700); border-radius: 8px;
+    font-family: inherit; font-size: 14px; color: var(--text-1);
+    background: #fff url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>") no-repeat 14px center;
+  }
+  .ct-search:focus { outline: none; box-shadow: 0 0 0 3px rgba(0,106,77,0.15); }
+  .ct-results-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; border-bottom: 1px solid var(--border-soft);
+    font-size: 13px; font-weight: 700; color: var(--text-2);
+  }
+  .ct-select-all { color: var(--mosaic-green-700); cursor: pointer; font-weight: 800; font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; background:none;border:none;font-family:inherit; }
+  .ct-list { /* preenchido via altura do container */ }
+  .ct-item {
+    display: flex; gap: 14px; padding: 16px 20px;
+    border-bottom: 1px solid var(--border-soft); cursor: pointer;
+    transition: background .12s;
+  }
+  .ct-item:hover { background: rgba(0,106,77,0.03); }
+  .ct-check {
+    width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 4px;
+    flex-shrink: 0; margin-top: 2px; display: inline-flex; align-items: center; justify-content: center;
+    color: #fff; transition: all .12s;
+  }
+  .ct-item.is-checked .ct-check { background: var(--mosaic-green-700); border-color: var(--mosaic-green-700); }
+  .ct-body { flex: 1; min-width: 0; }
+  .ct-row1 { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+  .ct-row1-left { display: flex; align-items: center; gap: 8px; }
+  .ct-id { font-size: 15px; font-weight: 800; color: var(--text-1); }
+  .ct-item-num { font-size: 12px; color: var(--text-3); }
+  .ct-saldo { font-size: 16px; font-weight: 800; color: var(--mosaic-green-800); }
+  .ct-saldo span { font-size: 11px; font-weight: 600; }
+  .ct-prod { font-size: 13px; font-weight: 700; color: var(--text-1); margin: 4px 0; }
+  .ct-meta { font-size: 12px; color: var(--text-2); line-height: 1.6; }
+  .ct-meta b { color: var(--text-1); font-weight: 700; }
+
+  /* footer compartilhado */
+  .ct-foot {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 20px; border-top: 1px solid var(--border-soft); background: var(--bg-section);
+  }
+  .ct-foot .count { font-size: 13px; color: var(--text-3); font-weight: 600; }
+  .ct-foot-actions { margin-left: auto; display: flex; gap: 8px; }
+  .ff-btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--mosaic-green-800); color: #fff; border: none;
+    height: 38px; padding: 0 20px; border-radius: 4px;
+    font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .ff-btn-primary:disabled { background: #9bb5ab; cursor: not-allowed; }
+  .ff-btn-primary:not(:disabled):hover { background: var(--mosaic-green-900); }
+  .ff-btn-secondary {
+    background: #fff; color: var(--text-1); border: 1px solid var(--border);
+    height: 38px; padding: 0 18px; border-radius: 4px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+  }
+  .ff-btn-secondary:hover { background: var(--bg-section); }
+
+  .cc-close {
+    background: transparent; border: none; width: 32px; height: 32px;
+    border-radius: 50%; cursor: pointer; color: var(--text-3);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .cc-close:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
+
+  /* ============== Variante MODAL ============== */
+  .cc-modal {
+    background: #fff; width: 100%; max-width: 720px;
+    border-radius: 6px; overflow: hidden; position: relative;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+    max-height: calc(100vh - 80px); display: flex; flex-direction: column;
+  }
+  .cc-modal-head {
+    padding: 18px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .cc-modal-head .icon-box {
+    width: 36px; height: 36px; border-radius: 4px; background: var(--mosaic-green-800); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .cc-modal-head .titles { flex: 1; }
+  .cc-modal-head h2 { margin: 0; font-size: 17px; font-weight: 800; color: var(--text-1); }
+  .cc-modal-head .sub { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+  .cc-modal-list { overflow-y: auto; flex: 1; min-height: 0; }
+
+  /* ============== Variante SIDENAV ============== */
+  .cc-sidenav {
+    background: #fff; width: 100%; max-width: 560px; height: 100vh;
+    box-shadow: -20px 0 50px rgba(0,0,0,0.20);
+    display: flex; flex-direction: column; position: relative;
+    transform: translateX(100%); transition: transform .25s ease;
+  }
+  .cc-overlay.is-sidenav.is-open .cc-sidenav { transform: translateX(0); }
+  .cc-sidenav-head {
+    padding: 18px 20px; display: flex; align-items: center; gap: 12px;
+    border-bottom: 1px solid var(--border-soft);
+    background: linear-gradient(180deg, #fff 0%, var(--bg-section) 100%);
+  }
+  .cc-sidenav-head .icon-box {
+    width: 36px; height: 36px; border-radius: 4px; background: var(--mosaic-green-800); color: #fff;
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .cc-sidenav-head .titles { flex: 1; }
+  .cc-sidenav-head h2 { margin: 0; font-size: 17px; font-weight: 800; color: var(--text-1); }
+  .cc-sidenav-head .sub { font-size: 11.5px; color: var(--text-3); margin-top: 2px; }
+  .cc-sidenav-list { overflow-y: auto; flex: 1; min-height: 0; }
+
+  /* ============== Annotations ============== */
+  .cc-annot {
+    position: absolute; background: var(--mosaic-red); color: #fff;
+    font-size: 11.5px; font-weight: 700; padding: 6px 10px; border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(185,32,42,0.35); z-index: 1100; pointer-events: none; max-width: 230px; line-height: 1.4;
+  }
+  .cc-annot::before { content: ''; position: absolute; width: 0; height: 0; border-style: solid; }
+  .cc-annot.is-good { background: var(--mosaic-green-800); box-shadow: 0 4px 12px rgba(0,88,61,0.30); }
+
+  .cc-annot.modal-ctx { top: 50%; left: -250px; transform: translateY(-50%); }
+  .cc-annot.modal-ctx::before { right: -6px; top: 50%; margin-top: -6px; border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-red); }
+  .cc-annot.modal-scroll { bottom: -38px; left: 50%; transform: translateX(-50%); white-space: nowrap; max-width:none; }
+  .cc-annot.modal-scroll::before { top: -6px; left: 50%; margin-left: -6px; border-width: 0 6px 6px 6px; border-color: transparent transparent var(--mosaic-red) transparent; }
+
+  .cc-annot.side-ctx { top: 100px; left: -230px; }
+  .cc-annot.side-ctx::before { right: -6px; top: 50%; margin-top: -6px; border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-green-800); }
+  .cc-annot.side-foot { bottom: 70px; left: -230px; }
+  .cc-annot.side-foot::before { right: -6px; top: 50%; margin-top: -6px; border-width: 6px 0 6px 6px; border-color: transparent transparent transparent var(--mosaic-green-800); }
+
+  /* ============== Tabela comparativa ============== */
+  .cc-compare { background: #fff; padding: var(--space-6) 0; border-top: 1px solid var(--border-soft); }
+  .cc-compare h2 { margin: 0 0 var(--space-4); font-size: 22px; font-weight: 800; color: var(--text-1); }
+  .cc-compare-table { width: 100%; border-collapse: collapse; font-size: 13.5px; border: 1px solid var(--border-soft); border-radius: 6px; overflow: hidden; }
+  .cc-compare-table th, .cc-compare-table td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border-soft); vertical-align: top; }
+  .cc-compare-table th { background: var(--bg-section); font-weight: 800; color: var(--text-1); }
+  .cc-compare-table th.col-crit { width: 24%; }
+  .cc-compare-table tr:last-child td { border-bottom: none; }
+  .verdict-bad { display: inline-block; background: rgba(185,32,42,0.10); color: var(--mosaic-red); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 6px; }
+  .verdict-good { display: inline-block; background: rgba(0,88,61,0.10); color: var(--mosaic-green-800); padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.04em; margin-right: 6px; }
+  .cc-verdict-final { margin-top: var(--space-5); background: linear-gradient(135deg, var(--mosaic-green-800) 0%, var(--mosaic-green-900) 100%); color: #fff; padding: 22px 26px; border-radius: 6px; }
+  .cc-verdict-final h3 { margin: 0 0 8px; font-size: 16px; font-weight: 800; }
+  .cc-verdict-final p { margin: 0; font-size: 13.5px; line-height: 1.55; opacity: 0.95; }
+  .cc-slds-ref { margin-top: var(--space-4); padding: 16px 18px; border: 1px dashed var(--border); border-radius: 6px; background: var(--bg-section); font-size: 13px; color: var(--text-2); }
+  .cc-slds-ref strong { color: var(--text-1); } .cc-slds-ref code { background: #fff; padding: 2px 6px; border-radius: 3px; font-size: 12px; } .cc-slds-ref a { color: var(--mosaic-green-700); font-weight: 700; }
+
+  @media (max-width: 720px) {
+    .cc-annot { display: none; }
+    .ag-cart { overflow-x: auto; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">PT <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Victor Dias</span>
+        <span class="user-org">COOPERCITRUS</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="cc-hero">
+  <div class="container container-main">
+    <div class="cc-eyebrow">Comparativo UX · defesa técnica</div>
+    <h1>Modal vs Sidenav — Selecionar Contratos</h1>
+    <p>
+      A seleção de contratos do <strong>Agendar Contrato Normal</strong> nos dois containers. À esquerda fica o
+      <strong>carrinho de agendamento</strong> que o usuário está montando. Veja como o Modal central
+      <strong>bloqueia esse contexto</strong> — o usuário não enxerga o que já adicionou enquanto escolhe novos —
+      enquanto o Sidenav mantém a lista visível, permite seleção iterativa e segura footer + busca fixos.
+    </p>
+  </div>
+</section>
+
+<!-- SWITCH BAR -->
+<div class="cc-switch-bar">
+  <div class="container container-main">
+    <div class="cc-switch" role="tablist" aria-label="Variante">
+      <button type="button" class="is-modal" data-variant="modal" role="tab" aria-selected="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="1"/></svg>
+        Modal central
+        <span class="verdict">proposto p/ trocar</span>
+      </button>
+      <button type="button" class="is-sidenav is-active" data-variant="sidenav" role="tab" aria-selected="true">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="14" y1="3" x2="14" y2="21"/></svg>
+        Sidenav (Panel SLDS)
+        <span class="verdict">atual · recomendado</span>
+      </button>
+    </div>
+    <div class="cc-share">Compartilhe: <code>/comparativo-selecao-contratos.html</code></div>
+  </div>
+</div>
+
+<!-- BACKGROUND: Agendar Contrato Normal com carrinho -->
+<main class="ag-shell">
+  <div class="container container-main">
+    <div class="ag-breadcrumb"><a href="#">Agendamento</a> &nbsp;›&nbsp; <span>Agendar Contrato Normal</span></div>
+    <div class="ag-title-row">
+      <h1 class="ag-title">Agendar Contrato Normal</h1>
+    </div>
+
+    <div class="ag-action-row">
+      <span class="lede"><strong>2 itens</strong> no agendamento. Adicione mais contratos ou preencha os volumes para agendar.</span>
+      <button class="ag-btn-add" id="btnOpenVariant" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Adicionar contratos
+      </button>
+    </div>
+
+    <!-- Carrinho (o contexto que precisa ser preservado) -->
+    <div class="ag-cart">
+      <div class="ag-cart-head">Contratos no agendamento (2)</div>
+      <table>
+        <thead>
+          <tr><th>Contrato</th><th>Item</th><th>Produto</th><th>Frete</th><th>Volume</th><th>Semana</th><th style="text-align:right">Saldo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Q-39742</strong></td><td>10</td><td>EXCLN 18 09 27 UR</td>
+            <td><span class="pill-frete fob">FOB</span></td>
+            <td>200 t</td><td>11/05 — 17/05</td><td style="text-align:right" class="saldo">640,00 t</td>
+          </tr>
+          <tr>
+            <td><strong>Q-20392</strong></td><td>10</td><td>MPANITRO 20 05 20 UR</td>
+            <td><span class="pill-frete cif">CIF</span></td>
+            <td>150 t</td><td>18/05 — 24/05</td><td style="text-align:right" class="saldo">750,00 t</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ============== OVERLAY: MODAL ============== -->
+<div class="cc-overlay is-modal" id="overlayModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="cc-modal">
+    <div class="cc-modal-head">
+      <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="titles">
+        <h2 id="modalTitle">Selecionar contratos</h2>
+        <div class="sub">Escolha um ou mais contratos para adicionar ao agendamento.</div>
+      </div>
+      <button class="cc-close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="ct-search-wrap"><input class="ct-search" placeholder="Buscar por contrato, item, produto, planta, frete..."/></div>
+    <div class="ct-results-bar"><span>11 resultado(s)</span><button class="ct-select-all" type="button">Selecionar todos</button></div>
+    <div class="cc-modal-list" data-list="modal"></div>
+    <div class="ct-foot">
+      <span class="count" data-count="modal">Nenhum contrato selecionado</span>
+      <div class="ct-foot-actions">
+        <button class="ff-btn-secondary" data-close type="button">Cancelar</button>
+        <button class="ff-btn-primary" disabled data-confirm="modal">Adicionar selecionados</button>
+      </div>
+    </div>
+
+    <div class="cc-annot modal-ctx">⚠️ Carrinho (2 itens) bloqueado atrás do overlay — usuário não vê o que já adicionou nem confere saldos/duplicatas</div>
+    <div class="cc-annot modal-scroll">⚠️ Lista longa força scroll dentro do modal · header e footer competem por espaço vertical</div>
+  </div>
+</div>
+
+<!-- ============== OVERLAY: SIDENAV ============== -->
+<div class="cc-overlay is-sidenav is-open" id="overlaySidenav" role="dialog" aria-modal="true" aria-labelledby="sideTitle">
+  <div class="cc-sidenav">
+    <div class="cc-sidenav-head">
+      <div class="icon-box"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+      <div class="titles">
+        <h2 id="sideTitle">Selecionar contratos</h2>
+        <div class="sub">Escolha um ou mais contratos para adicionar ao agendamento.</div>
+      </div>
+      <button class="cc-close" data-close type="button" aria-label="Fechar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="ct-search-wrap"><input class="ct-search" placeholder="Buscar por contrato, item, produto, planta, frete..."/></div>
+    <div class="ct-results-bar"><span>11 resultado(s)</span><button class="ct-select-all" type="button">Selecionar todos</button></div>
+    <div class="cc-sidenav-list" data-list="sidenav"></div>
+    <div class="ct-foot">
+      <span class="count" data-count="sidenav">Nenhum contrato selecionado</span>
+      <div class="ct-foot-actions">
+        <button class="ff-btn-secondary" data-close type="button">Cancelar</button>
+        <button class="ff-btn-primary" disabled data-confirm="sidenav">Adicionar selecionados</button>
+      </div>
+    </div>
+
+    <div class="cc-annot is-good side-ctx">✓ Carrinho continua visível à esquerda — usuário confere saldos e evita duplicar contrato</div>
+    <div class="cc-annot is-good side-foot">✓ Busca e footer fixos · só a lista scrolla · seleção iterativa natural</div>
+  </div>
+</div>
+
+<!-- ============== TABELA COMPARATIVA ============== -->
+<section class="cc-compare">
+  <div class="container container-main">
+    <h2>Por que Sidenav vence neste fluxo</h2>
+    <table class="cc-compare-table">
+      <thead>
+        <tr>
+          <th class="col-crit">Critério</th>
+          <th>Modal central <span style="font-size:11px;font-weight:600;color:var(--text-3)">(proposto)</span></th>
+          <th>Sidenav · Panel SLDS <span style="font-size:11px;font-weight:600;color:var(--mosaic-green-800)">(atual)</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ver o carrinho enquanto escolhe</strong></td>
+          <td><span class="verdict-bad">⚠ Não</span> O agendamento em construção (itens já adicionados, saldos, fretes) some atrás do overlay. Usuário não confere duplicatas nem volume restante.</td>
+          <td><span class="verdict-good">✓ Sim</span> A tabela de itens permanece à esquerda. Usuário compara saldo, evita adicionar contrato repetido, confere antes de fechar.</td>
+        </tr>
+        <tr>
+          <td><strong>Seleção iterativa</strong></td>
+          <td><span class="verdict-bad">⚠ Tudo ou nada</span> Modal força "abre → seleciona tudo → fecha". Voltar pra conferir e abrir de novo = re-trabalho e re-busca.</td>
+          <td><span class="verdict-good">✓ Vai-e-vem</span> Seleciona 2, confere no carrinho, abre de novo e adiciona mais. Fluxo natural de montagem de pedido.</td>
+        </tr>
+        <tr>
+          <td><strong>Busca + footer fixos</strong></td>
+          <td><span class="verdict-bad">⚠ Disputam espaço</span> Com 11 resultados, o modal cresce; header de busca e footer de ação competem com a lista pela altura. Em laptop, "Adicionar" pode ficar abaixo da dobra.</td>
+          <td><span class="verdict-good">✓ Estáveis</span> Altura = viewport. Busca no topo, footer embaixo, ambos sempre visíveis; só a lista de contratos scrolla.</td>
+        </tr>
+        <tr>
+          <td><strong>Largura útil dos cards</strong></td>
+          <td><span class="verdict-bad">⚠ Centralizado estreito</span> Modal centrado limita largura; cards de contrato (com 6 metadados: ref, embalagem, planta, CNPJ, IE, preço, vigência) ficam apertados.</td>
+          <td><span class="verdict-good">✓ 560px laterais</span> Panel aproveita a altura inteira e largura confortável para os cards densos de contrato.</td>
+        </tr>
+        <tr>
+          <td><strong>Consistência</strong></td>
+          <td><span class="verdict-bad">⚠ Exceção</span> Agendar Protocolo e Criar Protocolo já usam o mesmo drawer lateral. Modal só aqui quebra o padrão aprendido.</td>
+          <td><span class="verdict-good">✓ Mesmo padrão</span> Reaproveita o drawer de seleção já validado nas outras telas — mesmo gesto, mesma posição.</td>
+        </tr>
+        <tr>
+          <td><strong>Aderência SLDS</strong></td>
+          <td><span class="verdict-bad">⚠ Mau uso</span> SLDS: modal é pra <em>"single task"</em>. Buscar + filtrar + multi-selecionar contratos é workflow, não single task.</td>
+          <td><span class="verdict-good">✓ Componente certo</span> <code>slds-panel slds-panel_docked-right</code> — padrão oficial pra seleção lateral.</td>
+        </tr>
+        <tr>
+          <td><strong>Custo de implementação</strong></td>
+          <td>Igual.</td>
+          <td>Igual. Já implementado e em produção no protótipo.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="cc-slds-ref">
+      <strong>Referência SLDS:</strong> Panels → <a href="https://www.lightningdesignsystem.com/components/panels/" target="_blank" rel="noopener">lightningdesignsystem.com/components/panels</a> · Modals → <a href="https://www.lightningdesignsystem.com/components/modals/" target="_blank" rel="noopener">lightningdesignsystem.com/components/modals</a>
+      <br><strong>Salesforce usa Panel nativamente em:</strong> Service Console, Path Assistant, Utility Bar, Omni-Channel, CPQ Quote Line Editor.
+      <br><strong>Ver também:</strong> <a href="comparativo-cadastro-cliente.html">comparativo do cadastro de cliente (Add New Customer) →</a>
+    </div>
+
+    <div class="cc-verdict-final">
+      <h3>Veredito</h3>
+      <p>
+        Para selecionar contratos durante a montagem de um agendamento, o Sidenav é objetivamente superior:
+        preserva o carrinho visível (evitando duplicatas e erros de volume), permite seleção iterativa, mantém busca e footer fixos,
+        dá largura confortável aos cards densos, e é consistente com as outras telas de seleção do Mosaic Direct.
+        Trocar por Modal central neste fluxo prejudica o usuário sem nenhum ganho técnico.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  // Dados reais dos contratos (mesmos do Agendar Contrato Normal)
+  const CONTRACTS = [
+    { id:"Q-85721", item:"10", ref:"612847", prod:"STRAF 04 30 10 STR + 50 BMI2", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão", para:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.620,00", vig:"01/07/2025 → 30/09/2025", saldo:"1.500,00" },
+    { id:"Q-20303", item:"10", ref:"474663", prod:"EXCLN 24 05 24 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", vig:"01/08/2025 → 30/10/2025", saldo:"1.000,00" },
+    { id:"Q-20303", item:"20", ref:"474663", prod:"EXCLN 24 05 24 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", vig:"01/08/2025 → 30/10/2025", saldo:"1.000,00" },
+    { id:"Q-20303", item:"30", ref:"474663", prod:"EXCLN 24 05 24 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Sertãozinho/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.450,00", vig:"01/08/2025 → 30/10/2025", saldo:"1.000,00" },
+    { id:"Q-20392", item:"10", ref:"488221", prod:"MPANITRO 20 05 20 UR", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão", para:"Bebedouro/SP", cnpj:"71.320.915/0006-37", ie:"415.728.633.020", preco:"2.190,00", vig:"15/08/2025 → 15/11/2025", saldo:"750,00" },
+    { id:"Q-20392", item:"20", ref:"488221", prod:"MPANITRO 20 05 20 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Bebedouro/SP", cnpj:"71.320.915/0006-37", ie:"415.728.633.020", preco:"2.190,00", vig:"15/08/2025 → 15/11/2025", saldo:"500,00" },
+    { id:"Q-39742", item:"10", ref:"729104", prod:"EXCLN 18 09 27 UR", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Alfenas/MG", cnpj:"71.320.915/0006-37", ie:"638.092.514.275", preco:"2.380,00", vig:"10/08/2025 → 30/10/2025", saldo:"640,00" },
+    { id:"Q-39801", item:"10", ref:"802551", prod:"FFALM 04 30 10", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão", para:"Limeira/SP", cnpj:"71.320.915/0006-37", ie:"192.554.418.336", preco:"1.980,00", vig:"01/09/2025 → 30/12/2025", saldo:"820,00" },
+    { id:"Q-40115", item:"10", ref:"915723", prod:"EXCLN 24 05 24 UR", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão", para:"Ribeirão Preto/SP", cnpj:"71.320.915/0006-37", ie:"287.456.987.114", preco:"2.510,00", vig:"01/09/2025 → 30/11/2025", saldo:"1.200,00" },
+    { id:"Q-40220", item:"10", ref:"103884", prod:"MAP 11 52 00", emb:"BagOneWay Liner 1,40", frete:"FOB", planta:"Toll Cefértil - Cubatão", para:"Uberaba/MG", cnpj:"71.320.915/0006-37", ie:"445.221.998.011", preco:"3.050,00", vig:"15/09/2025 → 15/12/2025", saldo:"480,00" },
+    { id:"Q-40310", item:"10", ref:"221007", prod:"KCL 00 00 60", emb:"BagOneWay Liner 1,40", frete:"CIF", planta:"Toll Cefértil - Cubatão", para:"Catanduva/SP", cnpj:"71.320.915/0006-37", ie:"556.108.332.774", preco:"2.760,00", vig:"01/10/2025 → 31/12/2025", saldo:"900,00" },
+  ];
+
+  const CHECK_SVG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+  // estado de seleção por variante
+  const selected = { modal: new Set(), sidenav: new Set() };
+
+  function cardHTML(c, variant, idx) {
+    const checked = selected[variant].has(idx);
+    return `
+      <div class="ct-item${checked ? ' is-checked' : ''}" data-variant="${variant}" data-idx="${idx}">
+        <span class="ct-check">${checked ? CHECK_SVG : ''}</span>
+        <div class="ct-body">
+          <div class="ct-row1">
+            <div class="ct-row1-left">
+              <span class="ct-id">${c.id}</span>
+              <span class="ct-item-num">· Item ${c.item} ·</span>
+              <span class="pill-frete ${c.frete.toLowerCase()}">${c.frete}</span>
+            </div>
+            <span class="ct-saldo">${c.saldo} <span>t</span></span>
+          </div>
+          <div class="ct-prod">${c.prod}</div>
+          <div class="ct-meta">
+            <b>Ref. Cliente:</b> ${c.ref} &nbsp; <b>Embalagem:</b> ${c.emb}<br>
+            <b>Planta:</b> ${c.planta} &nbsp; <b>Enviar para:</b> ${c.para}<br>
+            <b>CNPJ Filial:</b> ${c.cnpj} &nbsp; <b>IE:</b> ${c.ie}<br>
+            <b>Preço/Ton:</b> R$ ${c.preco} &nbsp; <b>Vigência:</b> ${c.vig}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderList(variant) {
+    const el = document.querySelector(`[data-list="${variant}"]`);
+    if (!el) return;
+    el.innerHTML = CONTRACTS.map((c, i) => cardHTML(c, variant, i)).join("");
+    updateFooter(variant);
+  }
+
+  function updateFooter(variant) {
+    const n = selected[variant].size;
+    const countEl = document.querySelector(`[data-count="${variant}"]`);
+    const btnEl = document.querySelector(`[data-confirm="${variant}"]`);
+    if (countEl) countEl.textContent = n === 0 ? "Nenhum contrato selecionado" : `${n} contrato${n>1?'s':''} selecionado${n>1?'s':''}`;
+    if (btnEl) btnEl.disabled = n === 0;
+  }
+
+  document.querySelectorAll("[data-list]").forEach(list => {
+    list.addEventListener("click", e => {
+      const item = e.target.closest(".ct-item");
+      if (!item) return;
+      const variant = item.dataset.variant;
+      const idx = Number(item.dataset.idx);
+      if (selected[variant].has(idx)) selected[variant].delete(idx);
+      else selected[variant].add(idx);
+      renderList(variant);
+    });
+  });
+
+  document.querySelectorAll(".ct-select-all").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const list = btn.closest(".cc-modal, .cc-sidenav").querySelector("[data-list]");
+      const variant = list.dataset.list;
+      if (selected[variant].size === CONTRACTS.length) selected[variant].clear();
+      else CONTRACTS.forEach((_, i) => selected[variant].add(i));
+      renderList(variant);
+    });
+  });
+
+  renderList("modal");
+  renderList("sidenav");
+
+  // Switch entre variantes
+  const overlays = { modal: document.getElementById("overlayModal"), sidenav: document.getElementById("overlaySidenav") };
+  const switchBtns = document.querySelectorAll(".cc-switch button");
+  const btnOpen = document.getElementById("btnOpenVariant");
+  let currentVariant = "sidenav";
+
+  function setVariant(v) {
+    currentVariant = v;
+    switchBtns.forEach(b => {
+      const active = b.dataset.variant === v;
+      b.classList.toggle("is-active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  }
+  function openCurrent() {
+    Object.values(overlays).forEach(o => o.classList.remove("is-open"));
+    requestAnimationFrame(() => overlays[currentVariant].classList.add("is-open"));
+  }
+  function closeAll() { Object.values(overlays).forEach(o => o.classList.remove("is-open")); }
+
+  switchBtns.forEach(b => b.addEventListener("click", () => { setVariant(b.dataset.variant); openCurrent(); }));
+  btnOpen.addEventListener("click", openCurrent);
+  Object.values(overlays).forEach(o => o.addEventListener("click", e => {
+    if (e.target === o || e.target.closest("[data-close]")) closeAll();
+  }));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+})();
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>

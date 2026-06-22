@@ -1,0 +1,3434 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Relatório de Protocolos (Inline Row)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ================================================================
+     Status badges — Relatório de Protocolos
+     ================================================================ */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: var(--radius-pill);
+    font-size: 11.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    line-height: 1.4;
+  }
+  .status-badge .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-novo        { background: var(--status-aprovado-bg);   color: var(--status-aprovado-fg);   }
+  .status-novo .dot   { background: var(--status-aprovado-fg); }
+  .status-liberado    { background: var(--status-carregando-bg); color: var(--status-carregando-fg); }
+  .status-liberado .dot { background: var(--status-carregando-fg); }
+  .status-agendamento { background: var(--status-analise-bg);    color: var(--status-analise-fg);    }
+  .status-agendamento .dot { background: var(--status-analise-fg); }
+  .status-concluido   { background: var(--status-faturado-bg);   color: var(--status-faturado-fg);   }
+  .status-concluido .dot { background: var(--status-faturado-fg); }
+  .status-cancelado   { background: var(--status-cancelado-bg);  color: var(--status-cancelado-fg);  }
+  .status-cancelado .dot { background: var(--status-cancelado-fg); }
+  .status-sap         { background: #f4f4f2; color: var(--text-3); border: 1px solid var(--border); }
+  .status-sap .dot    { background: var(--text-3); }
+
+  /* ================================================================
+     Wide table wrap (overflow-x: scroll + radius)
+     ================================================================ */
+  .wide-table-wrap {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+  .wide-table {
+    width: 100%;
+    min-width: 2200px;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  /* Apply the unified thead pattern via base.css .report-table rules */
+  .wide-table thead tr:first-child th:first-child { border-top-left-radius: var(--radius-md); }
+  .wide-table thead tr:first-child th:last-child  { border-top-right-radius: var(--radius-md); }
+  .wide-table thead th {
+    background: var(--bg-section) !important;
+    color: var(--mosaic-green-800) !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    padding: 13px 14px !important;
+    border-bottom: 1px solid var(--border-soft) !important;
+    white-space: nowrap;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .wide-table thead th.num { text-align: right; }
+  .wide-table thead th .th-hint {
+    display: block;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-3);
+    margin-top: 1px;
+    letter-spacing: 0;
+    white-space: normal;
+    max-width: 140px;
+    line-height: 1.3;
+  }
+  .wide-table tbody td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .wide-table tbody tr:last-child td { border-bottom: none; }
+  .wide-table tbody tr:hover td { background: var(--bg-hover); }
+  .wide-table tbody td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  .wide-table tbody td.num.highlight {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+  }
+  .wide-table tbody td.muted { color: var(--text-3); }
+  .wide-table tbody td.proto-id {
+    font-weight: 700;
+    color: var(--mosaic-green-800);
+    font-size: 13px;
+  }
+  .cell-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border: none;
+    border-radius: 5px;
+    color: var(--text-3);
+    cursor: pointer;
+    background: transparent;
+    padding: 0;
+    transition: color var(--ease-fast), background var(--ease-fast);
+    text-decoration: none;
+    font-family: inherit;
+    flex-shrink: 0;
+  }
+  .cell-action:hover {
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.10);
+  }
+  /* Cluster de ações inline na célula do Protocolo */
+  .action-cluster {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.025);
+    margin-right: 4px;
+  }
+  .wide-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
+  .cell-action.action-edit { color: var(--text-3); }
+  .cell-action.action-edit:hover {
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.14);
+  }
+  .cell-action.action-save {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.10);
+  }
+  .cell-action.action-save:hover {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .cell-action.action-cancel { color: var(--text-3); }
+  .cell-action.action-cancel:hover {
+    background: var(--mosaic-red);
+    color: #fff;
+  }
+  /* "Agendar protocolo" — só em linhas com saldo > 0 e status permitido */
+  .cell-action.action-agendar {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.08);
+  }
+  .cell-action.action-agendar:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+  }
+
+  /* ================================================================
+     Inline edit — linha em modo edicao
+     ================================================================ */
+  .wide-table tbody tr.is-editing td,
+  .wide-table tbody tr.is-editing td.col-check,
+  .wide-table tbody tr.is-editing td.col-action,
+  .wide-table tbody tr.is-editing td.col-proto {
+    background: #fffbed !important; /* amarelo bem sutil */
+  }
+  .wide-table tbody tr.is-editing td.col-proto {
+    box-shadow: 4px 0 8px -4px rgba(240,192,32,0.40);
+  }
+  .inline-edit {
+    width: 100%;
+    min-width: 90px;
+    padding: 5px 8px;
+    font-size: 12.5px;
+    font-family: inherit;
+    color: var(--text-1);
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .inline-edit:hover { border-color: var(--border-strong); }
+  .inline-edit:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 2px rgba(0,106,77,0.15);
+  }
+  .inline-edit.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+  }
+  select.inline-edit {
+    padding-right: 24px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 6px center;
+  }
+
+  /* ================================================================
+     Confirmation modal (descartar alteracoes)
+     ================================================================ */
+  .confirm-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open {
+    display: flex;
+    opacity: 1;
+  }
+  .confirm-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 24px 18px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .confirm-modal-backdrop.is-open .confirm-modal { transform: scale(1); }
+  .confirm-modal-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .confirm-modal-icon {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(213,107,26,0.12);
+    color: var(--mosaic-orange);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .confirm-modal h3 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .confirm-modal-text {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .confirm-modal-text strong {
+    color: var(--text-1);
+    font-weight: 700;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .confirm-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+  .confirm-btn {
+    height: 36px; padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast), border-color var(--ease-fast);
+  }
+  .confirm-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .confirm-btn-secondary:hover { background: var(--bg-section); }
+  .confirm-btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+  }
+  .confirm-btn-danger:hover { background: #8a1820; }
+
+  /* ================================================================
+     Células de quantidade editáveis (click-to-edit)
+     ================================================================ */
+  .wide-table td.editable-qty {
+    position: relative;
+    cursor: pointer;
+    padding-right: 22px !important;
+  }
+
+  /* ================================================================
+     Edição inline da LINHA — apenas quantidades viram inputs
+     ================================================================ */
+  .wide-table tbody tr.is-editing-row td { background: #fffbed !important; }
+  .wide-table tbody tr.is-editing-row td.col-proto {
+    background: #fffbed !important;
+    box-shadow: 4px 0 8px -4px rgba(240,192,32,0.50);
+  }
+  .wide-table tbody tr.is-editing-row td.cell-row-edit {
+    padding: 0 !important;
+    background: #fff !important;
+    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
+  }
+  .row-qty-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 14px 12px;
+    text-align: right;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-1);
+    background: transparent;
+  }
+
+  /* ================================================================
+     Modal "Editar campos do protocolo"
+     ================================================================ */
+  .edit-fields-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 260;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .edit-fields-modal-backdrop.is-open { display: flex; opacity: 1; }
+  .edit-fields-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 720px;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+    overflow: hidden;
+  }
+  .edit-fields-modal-backdrop.is-open .edit-fields-modal { transform: scale(1); }
+  .edit-fields-modal-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .edit-fields-modal-head h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .edit-fields-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .edit-fields-modal-head-sub strong {
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 800;
+  }
+  .edit-fields-modal-body {
+    padding: 18px 22px 20px;
+    overflow-y: auto;
+    flex: 1;
+  }
+
+  /* Resumo de quantidades — read-only */
+  .ef-qty-summary {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: 20px;
+  }
+  .ef-qty-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .ef-qty-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-qty-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .ef-qty-hint strong { color: var(--mosaic-green-800); font-weight: 700; }
+  .ef-qty-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 640px) { .ef-qty-grid { grid-template-columns: repeat(2, 1fr); } }
+  .ef-qty-item .lbl {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .ef-qty-item .val {
+    font-size: 14px;
+    color: var(--text-1);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .ef-qty-item.saldo .val {
+    color: var(--mosaic-green-800);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  .ef-qty-item .unit {
+    font-size: 10px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  /* Form sections */
+  .ef-section {
+    margin-bottom: 18px;
+  }
+  .ef-section-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--mosaic-green-800);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .ef-form-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .ef-form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .ef-form-row.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) {
+    .ef-form-row, .ef-form-row.cols-2, .ef-form-row.cols-4 { grid-template-columns: 1fr 1fr; }
+  }
+  .ef-field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .ef-field.span-2 { grid-column: span 2; }
+  .ef-field-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .ef-field-input,
+  .ef-field-select {
+    height: 36px;
+    padding: 0 11px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .ef-field-input:focus,
+  .ef-field-select:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .ef-field-select {
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  .edit-fields-modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .ef-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast);
+  }
+  .ef-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .ef-btn-secondary:hover { background: var(--bg-section); }
+  .ef-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .ef-btn-primary:hover { background: var(--mosaic-green-700); }
+
+  /* ================================================================
+     Modal "Agendar protocolo"
+     ================================================================ */
+  .agendar-modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 270;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open { display: flex; opacity: 1; }
+  .agendar-modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 560px;
+    max-height: 92vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
+    transform: scale(0.96);
+    transition: transform var(--ease-base);
+  }
+  .agendar-modal-backdrop.is-open .agendar-modal { transform: scale(1); }
+  .agendar-modal-head {
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .agendar-modal-head-text { flex: 1; min-width: 0; }
+  .agendar-modal-head-text h2 {
+    font-size: 17px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .agendar-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .agendar-modal-head-sub strong {
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-weight: 800;
+  }
+  .agendar-modal-head .modal-x {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+    flex-shrink: 0;
+  }
+  .agendar-modal-head .modal-x:hover { background: var(--bg-section); }
+  .agendar-modal-body {
+    padding: 18px 22px 20px;
+    overflow-y: auto;
+  }
+
+  /* Card de contexto */
+  .agendar-context {
+    background: linear-gradient(135deg, rgba(0,106,77,0.05) 0%, rgba(122,217,181,0.07) 100%);
+    border: 1px solid rgba(0,106,77,0.18);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 18px;
+  }
+  .agendar-context-item .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 2px;
+  }
+  .agendar-context-item .val {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+  }
+  .agendar-context-item .val.saldo {
+    color: var(--mosaic-green-800);
+    font-size: 16px;
+    font-weight: 800;
+  }
+  .agendar-context-item .val.saldo .unit {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-left: 2px;
+  }
+
+  /* Form */
+  .agendar-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .agendar-form-row.cols-1 { grid-template-columns: 1fr; }
+  .agendar-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .agendar-field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .agendar-field-label .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .agendar-field-input,
+  .agendar-field-select,
+  .agendar-field-textarea {
+    padding: 0 12px;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .agendar-field-textarea {
+    height: 70px;
+    padding: 9px 12px;
+    resize: vertical;
+  }
+  .agendar-field-input:focus,
+  .agendar-field-select:focus,
+  .agendar-field-textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .agendar-field-select {
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .agendar-input-with-suffix { position: relative; }
+  .agendar-input-with-suffix .suffix {
+    position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    font-size: 12px; font-weight: 700; color: var(--text-3);
+    pointer-events: none;
+  }
+  .agendar-input-with-suffix input { padding-right: 36px; }
+  .agendar-field-hint {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .agendar-field-hint.error { color: var(--mosaic-red); font-weight: 600; }
+
+  /* Footer */
+  .agendar-modal-foot {
+    padding: 14px 22px;
+    border-top: 1px solid var(--border-soft);
+    background: #fafaf8;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .agendar-modal-foot-link {
+    font-size: 12px;
+    color: var(--mosaic-green-700);
+    font-weight: 600;
+    text-decoration: none;
+    margin-right: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .agendar-modal-foot-link:hover { text-decoration: underline; }
+  .agendar-modal-foot-actions { display: flex; gap: 10px; }
+  .agendar-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background var(--ease-fast);
+  }
+  .agendar-btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .agendar-btn-secondary:hover { background: var(--bg-section); }
+  .agendar-btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .agendar-btn-primary:hover { background: var(--mosaic-green-700); }
+  .agendar-btn-primary:disabled {
+    background: var(--bg-section);
+    color: var(--text-3);
+    cursor: not-allowed;
+  }
+
+  /* Tooltip on the action button */
+  .cell-action-wrap {
+    position: relative;
+    display: inline-flex;
+  }
+  .cell-action-wrap[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 6px);
+    transform: translateX(-50%);
+    background: var(--text-1);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 9px;
+    border-radius: 4px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--ease-fast);
+    z-index: 10;
+  }
+  .cell-action-wrap[data-tooltip]:hover::after { opacity: 1; }
+
+  /* ================================================================
+     Sticky column: Protocolo (com ações inline ao lado do número)
+     ================================================================ */
+  .wide-table th.col-proto,
+  .wide-table td.col-proto {
+    position: sticky;
+    left: 0;
+    z-index: 3;
+    background: #fff;
+    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
+    min-width: 200px;
+    padding: 8px 14px !important;
+  }
+  /* Thead da col-proto: sticky em DUAS direções (top + left) — fica
+     fixo no canto superior esquerdo independente do scroll. */
+  .wide-table thead th.col-proto {
+    position: sticky;
+    top: 0;
+    left: 0;
+    z-index: 5;
+    background: var(--bg-section) !important;
+  }
+  /* Wrapper interno da célula proto: ações + número */
+  .proto-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .proto-cell-number {
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .proto-cell-number a {
+    color: var(--mosaic-green-800);
+    text-decoration: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .proto-cell-number a:hover {
+    color: var(--mosaic-green-700);
+    border-bottom-color: var(--mosaic-green-700);
+  }
+  /* Hover keeps sticky cell on top of zebra hover */
+  .wide-table tbody tr:hover td.col-proto { background: var(--bg-hover); }
+
+  /* ================================================================
+     Toolbar: botão "Importar via CSV" sutil
+     ================================================================ */
+  .toolbar-csv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    background: #fff;
+    border: 1px solid var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    border-radius: var(--radius-md);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background var(--ease-fast), color var(--ease-fast);
+  }
+  .toolbar-csv-btn:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+  }
+
+  /* ================================================================
+     Bulk-edit SIDENAV DRAWER (substitui o modal centralizado)
+     ================================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 250;
+    display: none;
+    opacity: 0;
+    transition: opacity var(--ease-base);
+  }
+  .modal-backdrop.is-open {
+    display: block;
+    opacity: 1;
+  }
+  .bulk-modal {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 100%;
+    max-width: 560px;
+    background: #fff;
+    box-shadow: -12px 0 32px rgba(0,0,0,0.18);
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform var(--ease-base);
+    z-index: 260;
+  }
+  .modal-backdrop.is-open .bulk-modal {
+    transform: translateX(0);
+  }
+  .bulk-modal-head {
+    padding: 18px 24px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    background: #fff;
+  }
+  .bulk-modal-head-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .bulk-modal-head h2 {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .bulk-modal-head-sub {
+    font-size: 12px;
+    color: var(--text-3);
+    margin-top: 2px;
+  }
+  .bulk-modal-head-sub strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-modal-head .modal-x {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--ease-fast);
+    flex-shrink: 0;
+  }
+  .bulk-modal-head .modal-x:hover { background: var(--bg-section); }
+
+  /* Tabs */
+  .bulk-tabs {
+    display: flex;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .bulk-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-3);
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 2px solid transparent;
+    transition: all var(--ease-fast);
+  }
+  .bulk-tab:hover { color: var(--text-1); }
+  .bulk-tab.is-active {
+    color: var(--mosaic-green-800);
+    background: #fff;
+    border-bottom-color: var(--mosaic-green-700);
+  }
+
+  .bulk-modal-body {
+    padding: 20px 24px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .bulk-modal-lede {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .bulk-modal-lede strong { color: var(--mosaic-green-800); font-weight: 800; }
+
+  .bulk-tab-pane { display: none; }
+  .bulk-tab-pane.is-active { display: block; }
+  .bulk-field-group {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color var(--ease-fast);
+  }
+  .bulk-field-group.is-active {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .bulk-field-toggle {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg-section);
+    cursor: pointer;
+    user-select: none;
+  }
+  .bulk-field-group.is-active .bulk-field-toggle {
+    background: rgba(0,106,77,0.06);
+  }
+  .bulk-field-toggle-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    flex: 1;
+  }
+  .bulk-field-toggle-hint {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .bulk-field-body {
+    padding: 0 16px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--ease-base), padding var(--ease-base);
+  }
+  .bulk-field-group.is-active .bulk-field-body {
+    padding: 14px 16px 16px;
+    max-height: 220px;
+  }
+  .bulk-field-body label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 5px;
+  }
+  .bulk-field-body select,
+  .bulk-field-body input,
+  .bulk-field-body textarea {
+    width: 100%;
+    height: 38px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .bulk-field-body textarea { height: 70px; padding: 10px 12px; resize: vertical; }
+  .bulk-field-body select:focus,
+  .bulk-field-body input:focus,
+  .bulk-field-body textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  /* ============== CSV UPLOAD ============== */
+  .csv-dropzone {
+    border: 2px dashed var(--border);
+    border-radius: var(--radius-md);
+    padding: 28px 20px;
+    text-align: center;
+    background: #fafaf8;
+    transition: all var(--ease-fast);
+    cursor: pointer;
+    margin-bottom: 18px;
+  }
+  .csv-dropzone:hover,
+  .csv-dropzone.is-dragover {
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .csv-dropzone.has-file {
+    border-style: solid;
+    border-color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+    text-align: left;
+    padding: 18px 20px;
+    cursor: default;
+  }
+  .csv-drop-icon {
+    width: 48px; height: 48px;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .csv-drop-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .csv-drop-hint {
+    font-size: 11.5px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .csv-drop-hint strong { color: var(--mosaic-green-700); }
+  .csv-file-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .csv-file-icon {
+    width: 36px; height: 36px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-file-info { flex: 1; min-width: 0; }
+  .csv-file-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .csv-file-meta {
+    font-size: 11px;
+    color: var(--text-3);
+  }
+  .csv-file-meta strong { color: var(--mosaic-green-700); font-weight: 700; }
+  .csv-file-remove {
+    background: transparent;
+    border: none;
+    color: var(--text-3);
+    cursor: pointer;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all var(--ease-fast);
+  }
+  .csv-file-remove:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .csv-template-section {
+    background: var(--bg-section);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .csv-template-icon {
+    width: 32px; height: 32px;
+    background: #fff;
+    border-radius: 8px;
+    color: var(--mosaic-green-700);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .csv-template-content { flex: 1; min-width: 0; }
+  .csv-template-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 2px;
+  }
+  .csv-template-text {
+    font-size: 12px;
+    color: var(--text-2);
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .csv-template-btn {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    border: 1px solid var(--mosaic-green-700);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: inherit;
+    text-decoration: none;
+    transition: background var(--ease-fast);
+  }
+  .csv-template-btn:hover { background: var(--mosaic-green-800); color: #fff; }
+
+  .csv-fields-info {
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+  }
+  .csv-fields-info-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 8px;
+  }
+  .csv-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .csv-field-chip {
+    background: var(--bg-section);
+    color: var(--text-1);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .csv-field-chip.required {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-800);
+  }
+  .csv-fields-legend {
+    font-size: 10.5px;
+    color: var(--text-3);
+    margin-top: 8px;
+  }
+  .csv-fields-legend .req-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--mosaic-green-700);
+    border-radius: 2px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  /* Preview de CSV após upload */
+  .csv-preview {
+    margin-top: 16px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .csv-preview-head {
+    background: var(--bg-section);
+    padding: 10px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .csv-preview-head .csv-preview-badge {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+  }
+  .csv-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    overflow-x: auto;
+    display: block;
+  }
+  .csv-preview-table th,
+  .csv-preview-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    white-space: nowrap;
+    text-align: left;
+  }
+  .csv-preview-table th {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+    font-size: 10.5px;
+  }
+  .csv-preview-table td { color: var(--text-2); }
+  .csv-preview-table tbody tr:nth-child(even) td { background: #f7f9f8; }
+
+  .bulk-modal-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fafaf8;
+    flex-shrink: 0;
+  }
+  .bulk-modal-foot-info {
+    font-size: 12px;
+    color: var(--text-2);
+  }
+  .bulk-modal-foot-info strong { color: var(--mosaic-green-800); font-weight: 800; }
+  .bulk-modal-foot-actions { display: flex; gap: 10px; }
+  .bulk-modal-foot-actions .btn {
+    height: 38px; padding: 0 16px; border-radius: var(--radius-md);
+    font-size: 13px; font-weight: 700; cursor: pointer; border: none;
+    font-family: inherit;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .bulk-modal-foot-actions .btn-primary { background: var(--mosaic-green-800); color: #fff; }
+  .bulk-modal-foot-actions .btn-primary:hover { background: var(--mosaic-green-700); }
+  .bulk-modal-foot-actions .btn-primary:disabled {
+    background: var(--bg-section); color: var(--text-3); cursor: not-allowed;
+  }
+  .bulk-modal-foot-actions .btn-secondary {
+    background: #fff; color: var(--text-1); border: 1px solid var(--border);
+  }
+  .bulk-modal-foot-actions .btn-secondary:hover { background: var(--bg-section); }
+
+  /* Responsivo: em mobile o drawer ocupa tela toda */
+  @media (max-width: 600px) {
+    .bulk-modal { max-width: 100%; }
+  }
+
+  /* Success toast (bulk-edit) */
+  .bulk-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    z-index: 300;
+    transition: transform var(--ease-base);
+    pointer-events: none;
+  }
+  .bulk-toast.is-visible {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ================================================================
+     Toolbar (results count + export)
+     ================================================================ */
+  .results-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .results-count {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-right: auto;
+  }
+  .results-count strong { color: var(--text-1); font-weight: 700; }
+
+  /* ================================================================
+     Advanced filter panel
+     ================================================================ */
+  .advanced-filter {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+  .advanced-filter.is-hidden { display: none; }
+  .filter-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .filter-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+  }
+  .filter-block label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .filter-block input,
+  .filter-block select {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast);
+  }
+  .filter-block input:focus,
+  .filter-block select:focus { border-color: var(--mosaic-green-700); }
+  .filter-block--actions {
+    align-self: end;
+    display: flex;
+    gap: 8px;
+  }
+  .btn-clear-filters {
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-clear-filters:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+
+  /* ================================================================
+     Autocomplete dos filtros (mesmo padrão do "Campo de busca com
+     autocomplete" defendido na página de usabilidade)
+     ================================================================ */
+  .filter-ac {
+    position: relative;
+  }
+  .filter-ac input {
+    width: 100%;
+    height: 38px;
+    padding: 0 56px 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .filter-ac input:hover { border-color: var(--border-strong); }
+  .filter-ac.is-open input,
+  .filter-ac input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .filter-ac input::placeholder {
+    color: var(--text-3);
+    font-weight: 400;
+  }
+  .filter-ac-chev {
+    position: absolute;
+    right: 10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    transition: transform var(--ease-base), color var(--ease-fast);
+  }
+  .filter-ac.is-open .filter-ac-chev { transform: translateY(-50%) rotate(180deg); }
+  .filter-ac-clear {
+    position: absolute;
+    right: 28px; top: 50%;
+    transform: translateY(-50%);
+    width: 20px; height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--text-3);
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background var(--ease-fast), color var(--ease-fast);
+  }
+  .filter-ac.has-value .filter-ac-clear { display: inline-flex; }
+  .filter-ac-clear:hover {
+    background: rgba(185,32,42,0.10);
+    color: var(--mosaic-red);
+  }
+  .filter-ac.has-value .filter-ac-chev { opacity: 0; }
+  .filter-ac-list {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0; right: 0;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+    max-height: 240px;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 4px;
+    z-index: 20;
+    display: none;
+  }
+  .filter-ac.is-open .filter-ac-list { display: block; }
+  .filter-ac-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-1);
+    cursor: pointer;
+    line-height: 1.4;
+    transition: background var(--ease-fast);
+  }
+  .filter-ac-item:hover,
+  .filter-ac-item.is-active {
+    background: rgba(0,106,77,0.08);
+  }
+  .filter-ac-item mark {
+    background: rgba(240,192,32,0.40);
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .filter-ac-empty {
+    padding: 12px 10px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 12px;
+    font-style: italic;
+  }
+  .filter-ac-all {
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--text-3);
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 4px;
+    padding-bottom: 10px;
+    font-weight: 600;
+  }
+  .filter-ac-all:hover { background: var(--bg-section); color: var(--text-1); }
+
+  /* search-bar (reuses base.css pattern) */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .search-bar-input {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+  }
+  .search-bar-input input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 42px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+  }
+  .search-bar-input input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .search-bar-input input::placeholder { color: var(--text-3); }
+  .search-bar-input .icon-left {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-3);
+    pointer-events: none;
+    display: flex;
+  }
+  .search-bar-input .search-clear {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    padding: 4px;
+    color: var(--text-3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border-radius: 50%;
+    transition: color var(--ease-fast), background var(--ease-fast);
+  }
+  .search-bar-input .search-clear:hover { color: var(--text-1); background: var(--bg-section); }
+  .search-bar-input .search-clear.is-hidden { display: none !important; }
+
+  .btn-advanced-filter {
+    height: 44px;
+    padding: 0 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .btn-advanced-filter:hover,
+  .btn-advanced-filter[aria-expanded="true"] {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+  }
+  .adv-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: var(--radius-pill);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+  .adv-count.is-hidden { display: none; }
+
+  .btn-export-xls {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    opacity: 0.85;
+    transition: opacity var(--ease-fast);
+  }
+  .btn-export-xls:hover { opacity: 1; }
+
+  /* breadcrumb + page-title */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    padding-top: 24px;
+  }
+  .breadcrumbs a { color: var(--mosaic-green-700); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 4px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.015em;
+    margin: 0 0 20px;
+  }
+
+  .info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--text-3);
+  }
+  .pagination-pages {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: var(--font-family-base);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color var(--ease-fast), color var(--ease-fast);
+  }
+  .page-btn:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); }
+  .page-btn.is-active {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* ============================================================
+     Headers de tabela com seta única de ordenação (estilo Salesforce)
+     ============================================================ */
+  .wide-table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 22px !important;
+    position: relative;
+  }
+  .wide-table thead th.sortable:hover { color: var(--mosaic-green-700) !important; }
+  .wide-table thead th.sortable .sort-icon {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    opacity: 0;
+    transition: opacity var(--ease-fast), transform var(--ease-fast);
+    color: var(--text-3);
+  }
+  .wide-table thead th.sortable .sort-icon svg { width: 11px; height: 11px; }
+  .wide-table thead th.sortable:hover .sort-icon { opacity: 0.5; }
+  .wide-table thead th.sortable.sort-asc  .sort-icon,
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    opacity: 1;
+    color: var(--mosaic-green-800);
+  }
+  .wide-table thead th.sortable.sort-desc .sort-icon {
+    transform: translateY(-50%) rotate(180deg);
+  }
+
+  /* Esconde spinner do input type="number" no edit inline */
+  .qty-inline-input::-webkit-outer-spin-button,
+  .qty-inline-input::-webkit-inner-spin-button,
+  .row-qty-input::-webkit-outer-spin-button,
+  .row-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .qty-inline-input,
+  .row-qty-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER ========================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item is-active" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html" class="is-active">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
+    </div>
+  </nav>
+</header>
+
+<!-- PAGE =========================================================== -->
+<main class="page">
+
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <span>Contratos</span>
+    <span class="sep">›</span>
+    <span class="current">Relatório de Protocolos</span>
+  </div>
+  <h1 class="page-title">Relatório de Protocolos</h1>
+
+  <div class="info-banner">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
+    <span>Acompanhe os protocolos por status, quantidades agendadas, faturadas e saldos disponíveis. Clique em <strong>uma célula de quantidade</strong> para editar rápido, ou use o ícone de <strong>✏️ lápis</strong> para abrir os campos da linha com Salvar/Cancelar.</span>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <div class="search-bar-input">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="filterSearch" placeholder="Buscar Protocolo, Contrato SAP ou Cotação..." autocomplete="off" />
+      <button type="button" class="search-clear is-hidden" id="searchClearBtn" aria-label="Limpar busca">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <button type="button" class="btn-advanced-filter" id="btnToggleAdvanced" aria-expanded="false">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M10 18h4"/></svg>
+      Filtros
+      <span class="adv-count is-hidden" id="advCount">0</span>
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <button type="button" class="btn-export-xls" id="btnExport" title="Exportar (CSV)" aria-label="Exportar relatório">
+      <svg width="26" height="32" viewBox="0 0 28 34" aria-hidden="true">
+        <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
+        <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
+        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Barlow, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Advanced filter panel -->
+  <div class="advanced-filter is-hidden" id="advancedFilter">
+    <div class="filter-row">
+      <div class="filter-block">
+        <label for="filterStatus">Status</label>
+        <div class="filter-ac" data-options='["Novo","Liberado para agendar","Em agendamento","Concluído","Cancelado"]'>
+          <input id="filterStatus" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          <span class="filter-ac-chev" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCnpjFilial">CPF/CNPJ da Filial</label>
+        <div class="filter-ac" data-options='["12.345.678/0001-90","23.456.789/0001-12","34.567.890/0001-34","45.678.901/0001-56"]'>
+          <input id="filterCnpjFilial" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterFilial">Filial do Cliente</label>
+        <div class="filter-ac" data-options='["Filial São Paulo","Filial Curitiba","Filial Porto Alegre","Filial Londrina"]'>
+          <input id="filterFilial" type="text" placeholder="Todas" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCnpjCoop">CPF/CNPJ do Cooperado</label>
+        <div class="filter-ac" data-options='["123.456.789-00","234.567.890-00","345.678.901-00","456.789.012-00","567.890.123-00"]'>
+          <input id="filterCnpjCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterCoop">Nome do Cooperado</label>
+        <div class="filter-ac" data-options='["CARLOS ALVES","AGUINALDO GOMES","TEREZA AKEMI","BETO DOS SANTOS","RENATO CESAR"]'>
+          <input id="filterCoop" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterIe">IE do Cooperado</label>
+        <div class="filter-ac" data-options='["123456789","234567890","345678901","456789012","567890123"]'>
+          <input id="filterIe" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterProduto">Descrição Produto</label>
+        <div class="filter-ac" data-options='["FFALM 10 20 30","FFALM 20 20 00","MAP 11-52-00","KCl","FFALM 15 30 00"]'>
+          <input id="filterProduto" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block">
+        <label for="filterNf">NF do Protocolo</label>
+        <div class="filter-ac" data-options='["NF-2024-001","NF-2024-089"]'>
+          <input id="filterNf" type="text" placeholder="Todos" autocomplete="off" />
+          <button type="button" class="filter-ac-clear" aria-label="Limpar"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <span class="filter-ac-chev"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+          <ul class="filter-ac-list" role="listbox"></ul>
+        </div>
+      </div>
+      <div class="filter-block filter-block--actions">
+        <button type="button" class="btn-clear-filters" id="btnClearFilters">Limpar filtros</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results count + table -->
+  <div class="results-toolbar">
+    <span class="results-count"><strong id="resultCount">5</strong> protocolos encontrados</span>
+    <button class="toolbar-csv-btn" id="csvImportBtn" type="button" title="Importar atualizações em massa via planilha CSV">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Atualizar em massa (CSV)
+    </button>
+  </div>
+
+  <div class="wide-table-wrap">
+    <table class="wide-table" id="mainTable">
+      <thead>
+        <tr>
+          <th class="col-proto sortable" data-sort="id">Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="status">Status<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="contrato">Contrato SAP<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cotacao">Cotação<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="filial">Filial do Cliente<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjFilial">CPF/CNPJ da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cidade">Cidade da Filial<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="uf">UF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cooperado">Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="cnpjCoop">CPF/CNPJ do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="ie">IE do Cooperado<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="produto">Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="descProduto">Descrição Produto<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="embalagem">Embalagem<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="frete">Frete<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="planta">Planta<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="nf">NF Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="sortable" data-sort="dataNf">Data NF<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="preco">Preço NF (unit.)<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdProtocolo">Qtd. Protocolo<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdAgendada">Qtd. Agendada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="saldo">Saldo Agendar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturada">Qtd. Faturada<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+          <th class="num sortable" data-sort="qtdFaturar">Qtd. a Faturar<span class="sort-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span></th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <!-- rows rendered by JS -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <span class="results-count" id="paginationInfo">Exibindo 1–5 de 5 protocolos</span>
+    <div class="pagination-pages">
+      <button class="page-btn" disabled aria-label="Anterior">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="page-btn is-active">1</button>
+      <button class="page-btn" disabled aria-label="Próxima">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- CSV IMPORT SIDENAV DRAWER -->
+<div class="modal-backdrop" id="bulkModal" role="dialog" aria-modal="true" aria-labelledby="bulkModalTitle">
+  <aside class="bulk-modal">
+    <div class="bulk-modal-head">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--mosaic-green-700)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <div class="bulk-modal-head-text">
+        <h2 id="bulkModalTitle">Atualizar em massa via planilha</h2>
+        <div class="bulk-modal-head-sub">Importe atualizações de centenas de protocolos via CSV</div>
+      </div>
+      <button class="modal-x" id="bulkModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="bulk-modal-body">
+      <!-- UPLOAD CSV -->
+      <div class="bulk-tab-pane is-active" data-pane="csv">
+        <p class="bulk-modal-lede">
+          Edição em lote por planilha — atualize <strong>centenas de protocolos</strong> de uma só vez.
+          Baixe o template, preencha as colunas que deseja alterar e faça upload.
+        </p>
+
+        <!-- Template download -->
+        <div class="csv-template-section">
+          <div class="csv-template-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="csv-template-content">
+            <div class="csv-template-title">Template de edição em massa</div>
+            <div class="csv-template-text">
+              Modelo CSV com cabeçalhos prontos. Mantenha a coluna <code>Protocolo</code> intacta e preencha apenas os campos que quer atualizar.
+            </div>
+            <button class="csv-template-btn" id="downloadTemplateBtn" type="button">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Baixar template CSV
+            </button>
+          </div>
+        </div>
+
+        <!-- Dropzone -->
+        <div class="csv-dropzone" id="csvDropzone">
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden />
+          <div class="csv-drop-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <div class="csv-drop-title">Arraste sua planilha aqui</div>
+          <div class="csv-drop-hint">
+            ou <strong>clique para selecionar</strong> · Aceita .csv até 5 MB
+          </div>
+        </div>
+
+        <!-- Campos suportados -->
+        <div class="csv-fields-info">
+          <div class="csv-fields-info-title">Colunas reconhecidas no CSV</div>
+          <div class="csv-fields-list">
+            <span class="csv-field-chip required">Protocolo</span>
+            <span class="csv-field-chip">Embalagem</span>
+            <span class="csv-field-chip">Frete</span>
+            <span class="csv-field-chip">Planta</span>
+            <span class="csv-field-chip">Vigencia_Fim</span>
+            <span class="csv-field-chip">Observacao</span>
+          </div>
+          <div class="csv-fields-legend">
+            <span class="req-dot"></span>
+            Obrigatório · usado para identificar a linha. Os demais são opcionais — só atualizam se preenchidos.
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+    <div class="bulk-modal-foot">
+      <div class="bulk-modal-foot-info">
+        <span id="bulkFootInfo">Aguardando upload de planilha CSV</span>
+      </div>
+      <div class="bulk-modal-foot-actions">
+        <button class="btn btn-secondary" id="bulkCancelBtn" type="button">Cancelar</button>
+        <button class="btn btn-primary" id="bulkApplyBtn" type="button" disabled>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span id="bulkApplyLabel">Aplicar <span>0</span> atualizações</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- CONFIRM DISCARD MODAL -->
+<div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="confirm-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <h3>Descartar alterações?</h3>
+    </div>
+    <p class="confirm-modal-text">
+      Você está prestes a descartar as alterações feitas no protocolo
+      <strong id="confirmDiscardProto">—</strong>. Essa ação não pode ser desfeita.
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-btn confirm-btn-secondary" id="confirmDiscardNo" type="button">Voltar a editar</button>
+      <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+        Descartar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- AGENDAR PROTOCOLO MODAL -->
+<div class="agendar-modal-backdrop" id="agendarModal" role="dialog" aria-modal="true" aria-labelledby="agendarModalTitle">
+  <div class="agendar-modal">
+    <div class="agendar-modal-head">
+      <span class="agendar-modal-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/>
+          <line x1="16" y1="2" x2="16" y2="6"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+          <path d="M12 14v4"/><path d="M10 16h4"/>
+        </svg>
+      </span>
+      <div class="agendar-modal-head-text">
+        <h2 id="agendarModalTitle">Agendar protocolo</h2>
+        <div class="agendar-modal-head-sub">Protocolo <strong id="agModalProtoId">—</strong></div>
+      </div>
+      <button class="modal-x" id="agModalClose" type="button" aria-label="Fechar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="agendar-modal-body">
+
+      <!-- Contexto do protocolo -->
+      <div class="agendar-context">
+        <div class="agendar-context-item">
+          <div class="lbl">Cooperado</div>
+          <div class="val" id="agCtxCooperado">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Contrato SAP</div>
+          <div class="val" id="agCtxContrato">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Produto</div>
+          <div class="val" id="agCtxProduto">—</div>
+        </div>
+        <div class="agendar-context-item">
+          <div class="lbl">Saldo disponível</div>
+          <div class="val saldo" id="agCtxSaldo">—</div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agSemana">Semana de agendamento <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agSemana"></select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agVolume">Volume a agendar <span class="req">*</span></label>
+          <div class="agendar-input-with-suffix">
+            <input class="agendar-field-input" type="number" id="agVolume" min="0" />
+            <span class="suffix">t</span>
+          </div>
+          <span class="agendar-field-hint" id="agVolumeHint">—</span>
+        </div>
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agFrete">Frete <span class="req">*</span></label>
+          <select class="agendar-field-select" id="agFrete">
+            <option value="CIF">CIF · Por conta da Mosaic</option>
+            <option value="FOB">FOB · Por conta do cliente</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="agendar-form-row cols-1">
+        <div class="agendar-field">
+          <label class="agendar-field-label" for="agObs">Observações (opcional)</label>
+          <textarea class="agendar-field-textarea" id="agObs" placeholder="Instruções de entrega, restrições de horário, contatos no local..."></textarea>
+        </div>
+      </div>
+
+    </div>
+    <div class="agendar-modal-foot">
+      <a class="agendar-modal-foot-link" id="agFullFlowLink" href="#">
+        Fluxo completo de agendamento
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </a>
+      <div class="agendar-modal-foot-actions">
+        <button class="agendar-btn agendar-btn-secondary" id="agCancelBtn" type="button">Cancelar</button>
+        <button class="agendar-btn agendar-btn-primary" id="agConfirmBtn" type="button">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Confirmar agendamento
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="bulk-toast" id="bulkToast">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="bulkToastText">Alterações aplicadas</span>
+</div>
+
+<!-- FOOTER ========================================================= -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   Data
+   ================================================================ */
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    status: "Novo",
+    contrato: "C-001-2024",
+    cotacao: "Q-12345",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "CARLOS ALVES",
+    cnpjCoop: "123.456.789-00",
+    ie: "123456789",
+    produto: "123245",
+    descProduto: "FFALM 10 20 30",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.450,00",
+    qtdProtocolo: 300,
+    qtdAgendada: 250,
+    saldo: 50,
+    qtdFaturada: 50,
+    qtdFaturar: 250,
+  },
+  {
+    id: "M9W47291",
+    status: "Em agendamento",
+    contrato: "C-002-2024",
+    cotacao: "Q-23456",
+    filial: "Filial Curitiba",
+    cnpjFilial: "23.456.789/0001-12",
+    cidade: "Curitiba",
+    uf: "PR",
+    cooperado: "AGUINALDO GOMES",
+    cnpjCoop: "234.567.890-00",
+    ie: "234567890",
+    produto: "123246",
+    descProduto: "FFALM 20 20 00",
+    embalagem: "Big Bag 1t",
+    frete: "FOB",
+    planta: "Cascavel",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.380,00",
+    qtdProtocolo: 500,
+    qtdAgendada: 200,
+    saldo: 300,
+    qtdFaturada: 0,
+    qtdFaturar: 500,
+  },
+  {
+    id: "M9W51038",
+    status: "Concluído",
+    contrato: "C-003-2024",
+    cotacao: "Q-34567",
+    filial: "Filial Porto Alegre",
+    cnpjFilial: "34.567.890/0001-34",
+    cidade: "Porto Alegre",
+    uf: "RS",
+    cooperado: "TEREZA AKEMI",
+    cnpjCoop: "345.678.901-00",
+    ie: "345678901",
+    produto: "123247",
+    descProduto: "MAP 11-52-00",
+    embalagem: "Saco 40kg",
+    frete: "CIF",
+    planta: "Três Lagoas",
+    nf: "NF-2024-089",
+    dataNf: "20/03/2025",
+    preco: "R$ 1.620,00",
+    qtdProtocolo: 200,
+    qtdAgendada: 200,
+    saldo: 0,
+    qtdFaturada: 200,
+    qtdFaturar: 0,
+  },
+  {
+    id: "M9W63847",
+    status: "Cancelado",
+    contrato: "C-004-2024",
+    cotacao: "Q-45678",
+    filial: "Filial São Paulo",
+    cnpjFilial: "12.345.678/0001-90",
+    cidade: "São Paulo",
+    uf: "SP",
+    cooperado: "BETO DOS SANTOS",
+    cnpjCoop: "456.789.012-00",
+    ie: "456789012",
+    produto: "123248",
+    descProduto: "KCl",
+    embalagem: "Granel",
+    frete: "FOB",
+    planta: "Paranaguá",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 890,00",
+    qtdProtocolo: 150,
+    qtdAgendada: 30,
+    saldo: 120,
+    qtdFaturada: 0,
+    qtdFaturar: 150,
+  },
+  {
+    id: "M9W71205",
+    status: "Liberado para agendar",
+    contrato: "C-005-2024",
+    cotacao: "Q-56789",
+    filial: "Filial Londrina",
+    cnpjFilial: "45.678.901/0001-56",
+    cidade: "Londrina",
+    uf: "PR",
+    cooperado: "RENATO CESAR",
+    cnpjCoop: "567.890.123-00",
+    ie: "567890123",
+    produto: "123249",
+    descProduto: "FFALM 15 30 00",
+    embalagem: "Saco 50kg",
+    frete: "CIF",
+    planta: "Limeira",
+    nf: "—",
+    dataNf: "—",
+    preco: "R$ 1.290,00",
+    qtdProtocolo: 400,
+    qtdAgendada: 0,
+    saldo: 400,
+    qtdFaturada: 0,
+    qtdFaturar: 400,
+  },
+];
+
+/* ================================================================
+   Status badge
+   ================================================================ */
+function statusBadge(s) {
+  const map = {
+    "Novo":                   "status-novo",
+    "Liberado para agendar":  "status-liberado",
+    "Em agendamento":         "status-agendamento",
+    "Concluído":              "status-concluido",
+    "Cancelado":              "status-cancelado",
+    "Enviar ao SAP":          "status-sap",
+  };
+  const cls = map[s] || "status-sap";
+  return `<span class="status-badge ${cls}"><span class="dot"></span>${s}</span>`;
+}
+
+function numCell(v, highlight) {
+  if (v === 0) return `<td class="num muted">—</td>`;
+  return `<td class="num${highlight ? " highlight" : ""}">${v.toLocaleString("pt-BR")}</td>`;
+}
+
+/* ================================================================
+   Status que permitem agendamento (controla o botão calendário)
+   ================================================================ */
+const STATUS_PODE_AGENDAR = new Set([
+  "Novo",
+  "Liberado para agendar",
+  "Em agendamento",
+]);
+
+/* Estado de edição inline da linha (Versão B) */
+let editingId = null;
+let editingSnapshot = null;
+
+const SVG_EDIT       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+const SVG_X          = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+const SVG_EDIT_SMALL = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
+const SVG_CAL        = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M12 14v4"/><path d="M10 16h4"/></svg>`;
+
+function actionCell(p) {
+  const isEditing = editingId === p.id;
+  if (isEditing) {
+    return `
+      <div class="action-cluster">
+        <button class="cell-action action-save" data-act="save" data-id="${p.id}" type="button" title="Salvar quantidades" aria-label="Salvar">${SVG_CHECK}</button>
+        <button class="cell-action action-cancel" data-act="cancel" data-id="${p.id}" type="button" title="Cancelar edição" aria-label="Cancelar">${SVG_X}</button>
+      </div>`;
+  }
+  const podeAgendar = p.saldo > 0 && STATUS_PODE_AGENDAR.has(p.status);
+  return `
+    <div class="action-cluster">
+      <button class="cell-action action-edit" data-act="edit" data-id="${p.id}" type="button" title="Editar quantidades" aria-label="Editar">${SVG_EDIT}</button>
+      ${podeAgendar
+        ? `<button class="cell-action action-agendar" data-act="agendar" data-id="${p.id}" type="button" title="Agendar este protocolo" aria-label="Agendar protocolo ${p.id}">${SVG_CAL}</button>`
+        : ``}
+    </div>`;
+}
+
+/* ================================================================
+   Render
+   ================================================================ */
+function render() {
+  const q      = (document.getElementById("filterSearch").value || "").trim().toLowerCase();
+  const status = document.getElementById("filterStatus").value;
+  const cnpjF  = document.getElementById("filterCnpjFilial").value;
+  const filial = document.getElementById("filterFilial").value;
+  const cnpjC  = document.getElementById("filterCnpjCoop").value;
+  const coop   = document.getElementById("filterCoop").value;
+  const ie     = document.getElementById("filterIe").value;
+  const prod   = document.getElementById("filterProduto").value;
+  const nf     = document.getElementById("filterNf").value;
+
+  // Autocomplete: aceita match parcial (contém), case-insensitive
+  const matches = (val, needle) => {
+    if (!needle) return true;
+    return String(val ?? "").toLowerCase().includes(needle.toLowerCase());
+  };
+  const rows = PROTOCOLS.filter(p => {
+    if (q && ![p.id, p.contrato, p.cotacao].some(v => v.toLowerCase().includes(q))) return false;
+    if (!matches(p.status,      status)) return false;
+    if (!matches(p.cnpjFilial,  cnpjF))  return false;
+    if (!matches(p.filial,      filial)) return false;
+    if (!matches(p.cnpjCoop,    cnpjC))  return false;
+    if (!matches(p.cooperado,   coop))   return false;
+    if (!matches(p.ie,          ie))     return false;
+    if (!matches(p.descProduto, prod))   return false;
+    if (!matches(p.nf,          nf))     return false;
+    return true;
+  });
+
+  // Ordenação
+  applySort(rows);
+
+  document.getElementById("resultCount").textContent = rows.length;
+  document.getElementById("paginationInfo").textContent =
+    rows.length === 0 ? "Nenhum protocolo encontrado" :
+    `Exibindo 1–${rows.length} de ${rows.length} protocolo${rows.length !== 1 ? "s" : ""}`;
+
+  const body = document.getElementById("tableBody");
+  if (!rows.length) {
+    body.innerHTML = `<tr><td colspan="24" style="text-align:center;padding:48px 24px;color:var(--text-3);font-size:14px;">Nenhum protocolo encontrado com os filtros selecionados.</td></tr>`;
+    return;
+  }
+
+  body.innerHTML = rows.map(p => renderRow(p)).join("");
+}
+
+/* ================================================================
+   Render — escolhe entre linha normal ou linha em edicao
+   ================================================================ */
+const STATUS_OPTIONS    = ["Novo", "Liberado para agendar", "Em agendamento", "Concluído", "Cancelado", "Enviar ao SAP"];
+const UF_OPTIONS        = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
+const EMBALAGEM_OPTIONS = ["Saco 50kg","Saco 25kg","Big Bag 1000kg","Granel"];
+const FRETE_OPTIONS     = ["CIF","FOB"];
+const PLANTA_OPTIONS    = ["Limeira","Paranaguá","Cubatão","Rondonópolis","Uberaba","Candeias"];
+
+function selOptions(list, current) {
+  return list.map(o => `<option value="${o}"${o===current?' selected':''}>${o}</option>`).join("");
+}
+function escAttr(v) {
+  return String(v ?? "").replace(/"/g, "&quot;");
+}
+
+function editableQtyCell(p, field, highlight) {
+  const v = p[field];
+  const cls = "num editable-qty" + (highlight ? " highlight" : "");
+  return `<td class="${cls}" data-id="${p.id}" data-f="${field}" title="Clique para editar">${v.toLocaleString("pt-BR")}<span class="qty-pencil" aria-hidden="true">${SVG_EDIT_SMALL}</span></td>`;
+}
+
+function renderRow(p) {
+  if (editingId === p.id) return renderRowEditing(p);
+  return renderRowNormal(p);
+}
+
+function renderRowEditing(p) {
+  // Pega valores possivelmente em edição (do snapshot do DOM, se já renderizou)
+  const proto = p.qtdProtocolo;
+  const ag    = p.qtdAgendada;
+  const fat   = p.qtdFaturada;
+  const saldo = Math.max(0, proto - ag);
+  const faturar = Math.max(0, proto - fat);
+  return `
+    <tr data-proto-id="${p.id}" class="is-editing-row">
+      <td class="col-proto">
+        <div class="proto-cell">
+          ${actionCell(p)}
+          <span class="proto-cell-number">${p.id}</span>
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      <td>${p.embalagem}</td>
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
+      <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
+      <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdProtocolo" type="number" min="0" value="${proto}" autofocus /></td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdAgendada"  type="number" min="0" value="${ag}" /></td>
+      <td class="num muted" data-saldo-cell>${saldo.toLocaleString("pt-BR")}</td>
+      <td class="num cell-row-edit"><input class="row-qty-input" data-f="qtdFaturada"  type="number" min="0" value="${fat}" /></td>
+      <td class="num muted" data-faturar-cell>${faturar.toLocaleString("pt-BR")}</td>
+    </tr>
+  `;
+}
+
+function renderRowNormal(p) {
+  return `
+    <tr data-proto-id="${p.id}">
+      <td class="col-proto">
+        <div class="proto-cell">
+          ${actionCell(p)}
+          <span class="proto-cell-number"><a href="editar-protocolo.html?protocolo=${encodeURIComponent(p.id)}" title="Abrir tela completa de edição">${p.id}</a></span>
+        </div>
+      </td>
+      <td>${statusBadge(p.status)}</td>
+      <td>${p.contrato}</td>
+      <td>${p.cotacao}</td>
+      <td>${p.filial}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjFilial}</td>
+      <td>${p.cidade}</td>
+      <td style="font-weight:600">${p.uf}</td>
+      <td style="font-weight:600">${p.cooperado}</td>
+      <td style="font-variant-numeric:tabular-nums">${p.cnpjCoop}</td>
+      <td class="muted">${p.ie}</td>
+      <td class="muted">${p.produto}</td>
+      <td style="font-weight:600">${p.descProduto}</td>
+      <td>${p.embalagem}</td>
+      <td><span style="font-weight:700;font-size:11px;padding:2px 8px;border-radius:999px;background:${p.frete==='CIF'?'#d8eee6':'#fff5ec'};color:${p.frete==='CIF'?'#1c6b5a':'#c76814'}">${p.frete}</span></td>
+      <td>${p.planta}</td>
+      <td class="${p.nf==='—'?'muted':''}">${p.nf}</td>
+      <td class="${p.dataNf==='—'?'muted':''}">${p.dataNf}</td>
+      <td class="num" style="font-variant-numeric:tabular-nums">${p.preco}</td>
+      ${editableQtyCell(p, "qtdProtocolo", true)}
+      ${editableQtyCell(p, "qtdAgendada", false)}
+      ${numCell(p.saldo, p.saldo > 0)}
+      ${editableQtyCell(p, "qtdFaturada", false)}
+      ${numCell(p.qtdFaturar, false)}
+    </tr>
+  `;
+}
+
+/* (renderRowEditing removido — agora a linha tem 1 render só. Quantidades
+   editam célula-a-célula via click direto; demais campos editam via modal.) */
+
+/* ================================================================
+   Events
+   ================================================================ */
+const elSearch = document.getElementById("filterSearch");
+const elClear  = document.getElementById("searchClearBtn");
+
+elSearch.addEventListener("input", () => {
+  elClear.classList.toggle("is-hidden", !elSearch.value);
+  render();
+});
+elClear.addEventListener("click", () => {
+  elSearch.value = "";
+  elClear.classList.add("is-hidden");
+  render();
+  elSearch.focus();
+});
+
+/* ============================================================
+   Autocomplete dos filtros — comportamento idêntico ao "Campo de
+   busca com autocomplete" da página de Usabilidade
+   ============================================================ */
+const FILTER_IDS = ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+                    "filterCoop","filterIe","filterProduto","filterNf"];
+
+function escHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+function highlight(text, needle) {
+  if (!needle) return escHtml(text);
+  const t = escHtml(text);
+  const re = new RegExp("(" + needle.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ")", "ig");
+  return t.replace(re, "<mark>$1</mark>");
+}
+
+function mountAutocomplete(rootEl) {
+  const input   = rootEl.querySelector("input");
+  const list    = rootEl.querySelector(".filter-ac-list");
+  const clear   = rootEl.querySelector(".filter-ac-clear");
+  const options = JSON.parse(rootEl.dataset.options || "[]");
+
+  let activeIdx = -1;
+
+  function buildList(needle) {
+    activeIdx = -1;
+    const matches = options.filter(o => o.toLowerCase().includes((needle||"").toLowerCase()));
+    let html = `<li class="filter-ac-all" data-val="">Todos</li>`;
+    if (matches.length === 0) {
+      html += `<li class="filter-ac-empty">Nenhum resultado para "${escHtml(needle)}"</li>`;
+    } else {
+      html += matches.map(o => `<li class="filter-ac-item" data-val="${escHtml(o)}">${highlight(o, needle)}</li>`).join("");
+    }
+    list.innerHTML = html;
+  }
+
+  function open() {
+    buildList(input.value);
+    rootEl.classList.add("is-open");
+  }
+  function close() {
+    rootEl.classList.remove("is-open");
+  }
+
+  input.addEventListener("focus", open);
+  input.addEventListener("click", open);
+  input.addEventListener("input", () => {
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    buildList(input.value);
+    rootEl.classList.add("is-open");
+    updateAdvCount();
+    render();
+  });
+  input.addEventListener("keydown", (e) => {
+    const items = list.querySelectorAll(".filter-ac-item, .filter-ac-all");
+    if (e.key === "ArrowDown") { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, items.length - 1); }
+    if (e.key === "ArrowUp")   { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); }
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const item = items[activeIdx] || items[0];
+      if (item) item.click();
+    }
+    if (e.key === "Escape") { e.preventDefault(); close(); input.blur(); }
+    items.forEach((el, i) => el.classList.toggle("is-active", i === activeIdx));
+  });
+
+  list.addEventListener("mousedown", (e) => {
+    const item = e.target.closest("[data-val]");
+    if (!item) return;
+    e.preventDefault();
+    input.value = item.dataset.val;
+    rootEl.classList.toggle("has-value", input.value.length > 0);
+    close();
+    updateAdvCount();
+    render();
+  });
+
+  clear.addEventListener("click", (e) => {
+    e.preventDefault();
+    input.value = "";
+    rootEl.classList.remove("has-value");
+    updateAdvCount();
+    render();
+    input.focus();
+  });
+
+  // Click fora fecha
+  document.addEventListener("click", (e) => {
+    if (!rootEl.contains(e.target)) close();
+  });
+}
+
+document.querySelectorAll(".filter-ac").forEach(mountAutocomplete);
+
+/* Toggle filtros */
+document.getElementById("btnToggleAdvanced").addEventListener("click", () => {
+  const btn = document.getElementById("btnToggleAdvanced");
+  const panel = document.getElementById("advancedFilter");
+  const isOpen = btn.getAttribute("aria-expanded") === "true";
+  btn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+  panel.classList.toggle("is-hidden", isOpen);
+});
+
+document.getElementById("btnClearFilters").addEventListener("click", () => {
+  FILTER_IDS.forEach(id => {
+    const el = document.getElementById(id);
+    el.value = "";
+    el.closest(".filter-ac")?.classList.remove("has-value");
+  });
+  updateAdvCount();
+  render();
+});
+
+document.getElementById("btnClearFilters").addEventListener("click", () => {
+  ["filterStatus","filterCnpjFilial","filterFilial","filterCnpjCoop",
+   "filterCoop","filterIe","filterProduto","filterNf"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  updateAdvCount();
+  render();
+});
+
+function updateAdvCount() {
+  const n = FILTER_IDS.filter(id => document.getElementById(id).value).length;
+  const el = document.getElementById("advCount");
+  el.textContent = String(n);
+  el.classList.toggle("is-hidden", n === 0);
+}
+
+/* Export CSV */
+document.getElementById("btnExport").addEventListener("click", () => {
+  const headers = ["Protocolo","Status","Contrato SAP","Cotação","Filial do Cliente",
+    "CPF/CNPJ da Filial","Cidade da Filial","UF","Cooperado","CPF/CNPJ do Cooperado",
+    "IE do Cooperado","Produto","Descrição Produto","Embalagem","Tipo de Frete","Planta",
+    "NF Protocolo","Data NF Protocolo","Preço NF (unit.)","Qtd. Protocolo","Qtd. Agendada",
+    "Saldo Agendar","Qtd. Faturada","Qtd. a Faturar"];
+  const csvRows = [headers.join(";")];
+  PROTOCOLS.forEach(p => {
+    csvRows.push([p.id,p.status,p.contrato,p.cotacao,p.filial,p.cnpjFilial,p.cidade,p.uf,
+      p.cooperado,p.cnpjCoop,p.ie,p.produto,p.descProduto,p.embalagem,p.frete,p.planta,
+      p.nf,p.dataNf,p.preco,p.qtdProtocolo,p.qtdAgendada,p.saldo,p.qtdFaturada,p.qtdFaturar
+    ].join(";"));
+  });
+  const blob = new Blob(["﻿" + csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "relatorio-protocolos.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ================================================================
+   Eventos no tbody — botões de ação + inline cell edit
+   ================================================================ */
+const tableBodyEl = document.getElementById("tableBody");
+
+tableBodyEl.addEventListener("click", (e) => {
+  // Click em célula de quantidade editável (modo rápido — sem precisar do lápis)
+  const tdCell = e.target.closest("td.editable-qty");
+  if (tdCell && !editingId) { startCellEdit(tdCell); return; }
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const act = btn.dataset.act;
+  if (act === "edit")    startRowEdit(id);
+  if (act === "save")    saveRowEdit(id);
+  if (act === "cancel")  requestCancelRowEdit(id);
+  if (act === "agendar") openAgendarModal(id);
+});
+
+/* Recalcula saldo/qtdFaturar ao vivo enquanto edita os inputs */
+tableBodyEl.addEventListener("input", (e) => {
+  if (!e.target.classList.contains("row-qty-input")) return;
+  if (!editingId) return;
+  const tr = e.target.closest("tr");
+  if (!tr) return;
+  const proto = Number(tr.querySelector('input[data-f="qtdProtocolo"]').value) || 0;
+  const ag    = Number(tr.querySelector('input[data-f="qtdAgendada"]').value)  || 0;
+  const fat   = Number(tr.querySelector('input[data-f="qtdFaturada"]').value)  || 0;
+  const saldoCell   = tr.querySelector('[data-saldo-cell]');
+  const faturarCell = tr.querySelector('[data-faturar-cell]');
+  if (saldoCell)   saldoCell.textContent   = Math.max(0, proto - ag).toLocaleString("pt-BR");
+  if (faturarCell) faturarCell.textContent = Math.max(0, proto - fat).toLocaleString("pt-BR");
+});
+
+function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+/* ============== Inline cell edit (só quantidades) ============== */
+let editingCellEl = null;
+let editingCellOriginal = null;
+
+function findProto(id) { return PROTOCOLS.find(x => x.id === id); }
+
+function startCellEdit(td) {
+  if (editingCellEl) commitCellEdit(); // fecha qualquer outra célula em edição
+  const id = td.dataset.id;
+  const field = td.dataset.f;
+  const p = findProto(id);
+  if (!p) return;
+  editingCellEl = td;
+  editingCellOriginal = p[field];
+  td.classList.add("cell-editing");
+  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${p[field]}" />`;
+  const input = td.querySelector("input");
+  input.focus();
+  input.select();
+  input.addEventListener("blur",   commitCellEdit);
+  input.addEventListener("keydown", onCellKeyDown);
+}
+
+function onCellKeyDown(e) {
+  if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
+  if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
+}
+
+function commitCellEdit() {
+  if (!editingCellEl) return;
+  const td = editingCellEl;
+  const id = td.dataset.id;
+  const field = td.dataset.f;
+  const input = td.querySelector("input");
+  if (!input) { editingCellEl = null; return; }
+  const newVal = input.value === "" ? 0 : Number(input.value);
+  const p = findProto(id);
+  editingCellEl = null;
+  editingCellOriginal = null;
+  if (!p) return;
+  if (newVal !== p[field]) {
+    p[field] = newVal;
+    // Recalcula derivados
+    p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+    p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+    render();
+    showBulkToast(`Protocolo ${id} · ${labelOfField(field)} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
+  } else {
+    render();
+  }
+}
+
+function cancelCellEdit() {
+  if (!editingCellEl) return;
+  editingCellEl = null;
+  editingCellOriginal = null;
+  render();
+}
+
+function labelOfField(f) {
+  return {
+    qtdProtocolo: "Qtd. Protocolo",
+    qtdAgendada:  "Qtd. Agendada",
+    qtdFaturada:  "Qtd. Faturada",
+  }[f] || f;
+}
+
+/* ============== Row-level edit (só quantidades) ============== */
+function startRowEdit(id) {
+  if (editingId && editingId !== id) {
+    // Descarta silenciosamente outra linha em edição
+    editingId = null;
+    editingSnapshot = null;
+  }
+  const p = findProto(id);
+  if (!p) return;
+  editingId = id;
+  editingSnapshot = { qtdProtocolo: p.qtdProtocolo, qtdAgendada: p.qtdAgendada, qtdFaturada: p.qtdFaturada };
+  render();
+  // Foca primeiro input
+  const first = document.querySelector(`tr[data-proto-id="${id}"] .row-qty-input`);
+  if (first) { first.focus(); first.select(); }
+}
+
+function readRowEditValues(id) {
+  const tr = document.querySelector(`tr[data-proto-id="${id}"]`);
+  if (!tr) return null;
+  return {
+    qtdProtocolo: Number(tr.querySelector('input[data-f="qtdProtocolo"]').value) || 0,
+    qtdAgendada:  Number(tr.querySelector('input[data-f="qtdAgendada"]').value)  || 0,
+    qtdFaturada:  Number(tr.querySelector('input[data-f="qtdFaturada"]').value)  || 0,
+  };
+}
+
+function saveRowEdit(id) {
+  const p = findProto(id);
+  if (!p) return;
+  const upd = readRowEditValues(id);
+  if (!upd) return;
+  p.qtdProtocolo = upd.qtdProtocolo;
+  p.qtdAgendada  = upd.qtdAgendada;
+  p.qtdFaturada  = upd.qtdFaturada;
+  p.saldo      = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  p.qtdFaturar = Math.max(0, p.qtdProtocolo - p.qtdFaturada);
+  editingId = null;
+  editingSnapshot = null;
+  render();
+  showBulkToast(`Protocolo ${id} · quantidades atualizadas`);
+}
+
+function requestCancelRowEdit(id) {
+  const upd = readRowEditValues(id);
+  const snap = editingSnapshot || {};
+  const dirty = upd && (
+    upd.qtdProtocolo !== snap.qtdProtocolo ||
+    upd.qtdAgendada  !== snap.qtdAgendada  ||
+    upd.qtdFaturada  !== snap.qtdFaturada
+  );
+  if (!dirty) {
+    editingId = null;
+    editingSnapshot = null;
+    render();
+    return;
+  }
+  const cm = document.getElementById("confirmDiscardModal");
+  document.getElementById("confirmDiscardProto").textContent = id;
+  cm.dataset.protoId = id;
+  cm.dataset.source = "rowEdit";
+  cm.classList.add("is-open");
+}
+
+function discardRowEdit() {
+  editingId = null;
+  editingSnapshot = null;
+  render();
+}
+
+function showBulkToast(msg) {
+  const toast = document.getElementById("bulkToast");
+  document.getElementById("bulkToastText").textContent = msg;
+  toast.classList.add("is-visible");
+  setTimeout(() => toast.classList.remove("is-visible"), 3000);
+}
+
+/* ================================================================
+   Modal "Editar protocolo" REMOVIDO na Versão B.
+   Edição inline da linha (qtds) cobre toda a funcionalidade.
+   ================================================================ */
+
+/* ================================================================
+   Modal "Agendar protocolo" — fluxo rápido
+   ================================================================ */
+const agendarModal = document.getElementById("agendarModal");
+let agendarCurrentId = null;
+
+function buildSemanaOptions() {
+  // gera 6 semanas a partir da próxima segunda-feira
+  const today = new Date();
+  const day = today.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const baseMonday = new Date(today);
+  baseMonday.setDate(today.getDate() + diffToMonday);
+  baseMonday.setHours(0, 0, 0, 0);
+
+  const pad = n => String(n).padStart(2, "0");
+  const fmt = d => `${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()}`;
+  const opts = [];
+  for (let i = 0; i < 6; i++) {
+    const mon = new Date(baseMonday);
+    mon.setDate(baseMonday.getDate() + i * 7);
+    const sun = new Date(mon);
+    sun.setDate(mon.getDate() + 6);
+    const label = `${fmt(mon)} — ${fmt(sun)}`;
+    const tag = i === 0 ? " (vigente)" : i === 1 ? " (próxima)" : "";
+    opts.push({ value: label, label: label + tag });
+  }
+  return opts;
+}
+
+function openAgendarModal(id) {
+  const p = findProto(id);
+  if (!p) return;
+  agendarCurrentId = id;
+
+  // Preenche contexto
+  document.getElementById("agModalProtoId").textContent = p.id;
+  document.getElementById("agCtxCooperado").textContent = p.cooperado;
+  document.getElementById("agCtxContrato").textContent  = p.contrato;
+  document.getElementById("agCtxProduto").textContent   = p.descProduto;
+  document.getElementById("agCtxSaldo").innerHTML =
+    `${p.saldo.toLocaleString("pt-BR")}<span class="unit">t</span>`;
+
+  // Popula semana
+  const semanaSel = document.getElementById("agSemana");
+  semanaSel.innerHTML = buildSemanaOptions()
+    .map((o, i) => `<option value="${o.value}"${i === 1 ? ' selected' : ''}>${o.label}</option>`)
+    .join("");
+
+  // Volume = saldo por default, max = saldo
+  const volEl = document.getElementById("agVolume");
+  volEl.value = p.saldo;
+  volEl.max = p.saldo;
+  document.getElementById("agVolumeHint").textContent =
+    `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+  document.getElementById("agVolumeHint").classList.remove("error");
+
+  // Frete (mantém o atual)
+  document.getElementById("agFrete").value = p.frete;
+
+  // Observação
+  document.getElementById("agObs").value = "";
+
+  // Link de fluxo completo
+  document.getElementById("agFullFlowLink").href =
+    `agendar-protocolo.html?protocolo=${encodeURIComponent(p.id)}&contrato=${encodeURIComponent(p.contrato)}`;
+
+  validateAgendarForm();
+  agendarModal.classList.add("is-open");
+  setTimeout(() => semanaSel.focus(), 50);
+}
+
+function closeAgendarModal() {
+  agendarModal.classList.remove("is-open");
+  agendarCurrentId = null;
+}
+
+function validateAgendarForm() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol = Number(document.getElementById("agVolume").value);
+  const hint = document.getElementById("agVolumeHint");
+  let ok = true;
+  if (!vol || vol <= 0) {
+    hint.textContent = "Volume deve ser maior que zero";
+    hint.classList.add("error");
+    ok = false;
+  } else if (vol > p.saldo) {
+    hint.textContent = `Volume excede o saldo disponível (${p.saldo} t)`;
+    hint.classList.add("error");
+    ok = false;
+  } else {
+    hint.textContent = `Máximo ${p.saldo.toLocaleString("pt-BR")} t (saldo disponível)`;
+    hint.classList.remove("error");
+  }
+  document.getElementById("agConfirmBtn").disabled = !ok;
+}
+
+function confirmAgendamento() {
+  const p = findProto(agendarCurrentId);
+  if (!p) return;
+  const vol     = Number(document.getElementById("agVolume").value);
+  const semana  = document.getElementById("agSemana").value;
+  // Atualiza saldo do protocolo simulando agendamento
+  p.qtdAgendada += vol;
+  p.saldo = Math.max(0, p.qtdProtocolo - p.qtdAgendada);
+  // Se saldo zerou e status era "Novo" ou "Liberado", muda para "Em agendamento"
+  if (p.saldo === 0 && (p.status === "Novo" || p.status === "Liberado para agendar")) {
+    p.status = "Em agendamento";
+  }
+  closeAgendarModal();
+  render();
+  showBulkToast(`Protocolo ${p.id} agendado · ${vol} t para ${semana.split(' — ')[0]}`);
+}
+
+document.getElementById("agModalClose").addEventListener("click", closeAgendarModal);
+document.getElementById("agCancelBtn").addEventListener("click", closeAgendarModal);
+document.getElementById("agConfirmBtn").addEventListener("click", confirmAgendamento);
+agendarModal.addEventListener("click", (e) => {
+  if (e.target === agendarModal) closeAgendarModal();
+});
+document.getElementById("agVolume").addEventListener("input", validateAgendarForm);
+
+const confirmModal     = document.getElementById("confirmDiscardModal");
+const confirmYes       = document.getElementById("confirmDiscardYes");
+const confirmNo        = document.getElementById("confirmDiscardNo");
+
+confirmYes.addEventListener("click", () => {
+  const source = confirmModal.dataset.source;
+  confirmModal.classList.remove("is-open");
+  if (source === "rowEdit") discardRowEdit();
+  delete confirmModal.dataset.source;
+});
+confirmNo.addEventListener("click", () => {
+  confirmModal.classList.remove("is-open");
+  delete confirmModal.dataset.source;
+});
+confirmModal.addEventListener("click", (e) => {
+  if (e.target === confirmModal) {
+    confirmModal.classList.remove("is-open");
+    delete confirmModal.dataset.source;
+  }
+});
+
+/* Esc fecha modais abertos ou cancela edição da linha */
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (agendarModal.classList.contains("is-open")) { closeAgendarModal(); return; }
+  if (confirmModal.classList.contains("is-open")) {
+    confirmModal.classList.remove("is-open");
+    delete confirmModal.dataset.source;
+    return;
+  }
+  if (editingCellEl) { cancelCellEdit(); return; }
+  if (editingId) requestCancelRowEdit(editingId);
+});
+
+/* ================================================================
+   CSV Import modal (sidenav drawer)
+   ================================================================ */
+const bulkModal      = document.getElementById("bulkModal");
+const bulkOpenBtn    = document.getElementById("csvImportBtn");
+const bulkClose      = document.getElementById("bulkModalClose");
+const bulkCancel     = document.getElementById("bulkCancelBtn");
+const bulkApply      = document.getElementById("bulkApplyBtn");
+const bulkToast      = document.getElementById("bulkToast");
+const bulkToastText  = document.getElementById("bulkToastText");
+
+let uploadedCsvFile = null; // { name, size, rows, header, preview }
+
+function openBulkModal() {
+  uploadedCsvFile = null;
+  renderCsvDropzone();
+  updateBulkActiveCount();
+  bulkModal.classList.add("is-open");
+}
+function closeBulkModal() { bulkModal.classList.remove("is-open"); }
+
+if (bulkOpenBtn) bulkOpenBtn.addEventListener("click", openBulkModal);
+bulkClose.addEventListener("click", closeBulkModal);
+bulkCancel.addEventListener("click", closeBulkModal);
+bulkModal.addEventListener("click", (e) => {
+  if (e.target === bulkModal) closeBulkModal();
+});
+
+/* ============ UPLOAD CSV ============ */
+const csvDropzone   = document.getElementById("csvDropzone");
+const csvFileInput  = document.getElementById("csvFileInput");
+const downloadTplBtn = document.getElementById("downloadTemplateBtn");
+
+csvDropzone.addEventListener("click", () => {
+  if (!uploadedCsvFile) csvFileInput.click();
+});
+csvFileInput.addEventListener("change", (e) => {
+  if (e.target.files && e.target.files[0]) handleCsvFile(e.target.files[0]);
+});
+["dragenter", "dragover"].forEach(evt => {
+  csvDropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    csvDropzone.classList.add("is-dragover");
+  });
+});
+["dragleave", "drop"].forEach(evt => {
+  csvDropzone.addEventListener(evt, (e) => {
+    e.preventDefault(); e.stopPropagation();
+    csvDropzone.classList.remove("is-dragover");
+  });
+});
+csvDropzone.addEventListener("drop", (e) => {
+  const file = e.dataTransfer.files && e.dataTransfer.files[0];
+  if (file) handleCsvFile(file);
+});
+
+function handleCsvFile(file) {
+  if (!file.name.toLowerCase().endsWith(".csv")) {
+    alert("Por favor, envie um arquivo .csv");
+    return;
+  }
+  // Parse simples — apenas para mostrar preview
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+    const rows = lines.slice(1); // exclui header
+    uploadedCsvFile = {
+      name: file.name,
+      size: file.size,
+      rowCount: rows.length,
+      header: lines[0] ? lines[0].split(",").map(h => h.trim()) : [],
+      preview: rows.slice(0, 3).map(l => l.split(",").map(c => c.trim())),
+    };
+    renderCsvDropzone();
+    updateBulkActiveCount();
+  };
+  reader.readAsText(file);
+}
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function renderCsvDropzone() {
+  // limpa o preview anterior
+  const existingPrev = document.querySelector(".csv-preview");
+  if (existingPrev) existingPrev.remove();
+
+  if (!uploadedCsvFile) {
+    csvDropzone.classList.remove("has-file");
+    csvDropzone.innerHTML = `
+      <input type="file" id="csvFileInput" accept=".csv,text/csv" hidden />
+      <div class="csv-drop-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      </div>
+      <div class="csv-drop-title">Arraste sua planilha aqui</div>
+      <div class="csv-drop-hint">ou <strong>clique para selecionar</strong> · Aceita .csv até 5 MB</div>
+    `;
+    // re-bind input (foi recriado)
+    const newInput = document.getElementById("csvFileInput");
+    newInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) handleCsvFile(e.target.files[0]);
+    });
+  } else {
+    csvDropzone.classList.add("has-file");
+    csvDropzone.innerHTML = `
+      <div class="csv-file-row">
+        <div class="csv-file-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        </div>
+        <div class="csv-file-info">
+          <div class="csv-file-name">${uploadedCsvFile.name}</div>
+          <div class="csv-file-meta">${fmtSize(uploadedCsvFile.size)} · <strong>${uploadedCsvFile.rowCount}</strong> linha${uploadedCsvFile.rowCount === 1 ? '' : 's'} para atualizar</div>
+        </div>
+        <button class="csv-file-remove" type="button" id="csvRemoveBtn" aria-label="Remover arquivo">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    `;
+    document.getElementById("csvRemoveBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      uploadedCsvFile = null;
+      renderCsvDropzone();
+      updateBulkActiveCount();
+    });
+
+    // Preview da tabela (até 3 linhas)
+    if (uploadedCsvFile.header.length) {
+      const preview = document.createElement("div");
+      preview.className = "csv-preview";
+      preview.innerHTML = `
+        <div class="csv-preview-head">
+          <span>Preview</span>
+          <span class="csv-preview-badge">${uploadedCsvFile.rowCount} linha${uploadedCsvFile.rowCount === 1 ? '' : 's'}</span>
+        </div>
+        <table class="csv-preview-table">
+          <thead><tr>${uploadedCsvFile.header.map(h => `<th>${h}</th>`).join("")}</tr></thead>
+          <tbody>${uploadedCsvFile.preview.map(row => `<tr>${row.map(c => `<td>${c || '<span style="color:var(--text-3)">—</span>'}</td>`).join("")}</tr>`).join("")}</tbody>
+        </table>
+      `;
+      csvDropzone.insertAdjacentElement("afterend", preview);
+    }
+  }
+}
+
+downloadTplBtn.addEventListener("click", () => {
+  const header = "Protocolo,Embalagem,Frete,Planta,Vigencia_Fim,Observacao";
+  const samples = [
+    "M9W38746,Saco 50kg,CIF,Limeira,31/08/2026,Atualizado em lote",
+    "M9W47291,Granel,FOB,Paranaguá,,",
+    "M9W51038,,,Cubatão,30/09/2026,Estende prazo de entrega",
+  ];
+  const csv = "﻿" + [header, ...samples].join("\n");
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "template-edicao-em-massa.csv"; a.click();
+  URL.revokeObjectURL(url);
+});
+
+/* ============ Footer count/apply ============ */
+function updateBulkActiveCount() {
+  const n = uploadedCsvFile ? uploadedCsvFile.rowCount : 0;
+  document.getElementById("bulkFootInfo").innerHTML = uploadedCsvFile
+    ? `<strong>${n}</strong> linha${n === 1 ? '' : 's'} pronta${n === 1 ? '' : 's'} para aplicar`
+    : `Aguardando upload de planilha CSV`;
+  document.getElementById("bulkApplyLabel").innerHTML =
+    `Aplicar <span>${n}</span> atualizações`;
+  bulkApply.disabled = !uploadedCsvFile;
+}
+
+bulkApply.addEventListener("click", () => {
+  if (!uploadedCsvFile) return;
+  const n = uploadedCsvFile.rowCount;
+  closeBulkModal();
+  bulkToastText.textContent =
+    `${n} protocolo${n === 1 ? "" : "s"} atualizado${n === 1 ? "" : "s"} via planilha`;
+  bulkToast.classList.add("is-visible");
+  setTimeout(() => bulkToast.classList.remove("is-visible"), 3500);
+});
+
+/* Esc fecha modal */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && bulkModal.classList.contains("is-open")) {
+    closeBulkModal();
+  }
+});
+
+/* ============================================================
+   Ordenação por coluna (clica no header)
+   ============================================================ */
+let sortField = null;
+let sortDir   = 1; // 1 = asc, -1 = desc
+
+function applySort(rows) {
+  if (!sortField) return;
+  const field = sortField;
+  const dir   = sortDir;
+  const numFields = new Set(["preco","qtdProtocolo","qtdAgendada","saldo","qtdFaturada","qtdFaturar"]);
+  const toNum = v => {
+    if (typeof v === "number") return v;
+    if (!v) return 0;
+    const s = String(v).replace(/[R$\s.]/g, "").replace(",", ".");
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  };
+  rows.sort((a, b) => {
+    let va = a[field], vb = b[field];
+    if (numFields.has(field)) { va = toNum(va); vb = toNum(vb); }
+    else { va = String(va || "").toLowerCase(); vb = String(vb || "").toLowerCase(); }
+    if (va < vb) return -1 * dir;
+    if (va > vb) return  1 * dir;
+    return 0;
+  });
+}
+
+document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const field = th.dataset.sort;
+    if (sortField === field) {
+      if (sortDir === 1) sortDir = -1;
+      else               { sortField = null; sortDir = 1; }
+    } else {
+      sortField = field;
+      sortDir   = 1;
+    }
+    document.querySelectorAll("#mainTable thead th.sortable").forEach(t => {
+      t.classList.remove("sort-asc", "sort-desc");
+    });
+    if (sortField) {
+      th.classList.add(sortDir === 1 ? "sort-asc" : "sort-desc");
+    }
+    render();
+  });
+});
+
+render();
+
+/* Sticky horizontal scrollbar — espelha scrollLeft do wrap numa barra fixa */
+(function initStickyHScroll() {
+  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
+    const sticky = document.createElement("div");
+    sticky.className = "sticky-h-scroll";
+    const inner = document.createElement("div");
+    inner.className = "sticky-h-scroll-inner";
+    sticky.appendChild(inner);
+    document.body.appendChild(sticky);
+    let syncing = false;
+    const update = () => {
+      inner.style.width = wrap.scrollWidth + "px";
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      sticky.classList.toggle("is-visible", overflows && r.bottom > window.innerHeight + 20);
+    };
+    wrap.addEventListener("scroll", () => { if (syncing) return; syncing = true; sticky.scrollLeft = wrap.scrollLeft; requestAnimationFrame(() => { syncing = false; }); });
+    sticky.addEventListener("scroll", () => { if (syncing) return; syncing = true; wrap.scrollLeft = sticky.scrollLeft; requestAnimationFrame(() => { syncing = false; }); });
+    window.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
+    update();
+  });
+})();
+</script>
+<script src="review-overlay.js" defer></script>
+</body>
+</html>

@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo</title>
+<title>Mosaic Direct — Agendar Contrato Normal · V3</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /* ================================================================
      Mosaic Direct — Design tokens
@@ -53,7 +53,7 @@
     --link-green:     #006a4d;
 
     /* Type */
-    --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
     /* Effects */
     --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
@@ -468,14 +468,12 @@
   }
   .big-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 14px 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
     vertical-align: middle;
   }
@@ -805,16 +803,13 @@
     font-size: 12.5px;
   }
   .results-table thead th {
-    background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
+    background: #fff;
   }
   .results-table tbody td {
     padding: 14px 12px;
@@ -984,7 +979,7 @@
     line-height: 1;
   }
   .logo .wordmark {
-    font-family: "Barlow", sans-serif;
+    font-family: "Manrope", sans-serif;
     font-style: italic;
     font-weight: 800;
     font-size: 36px;
@@ -1482,24 +1477,6 @@
     justify-content: space-between;
     gap: 24px;
     z-index: 50;
-  }
-  /* Inner wrapper centra/limita o footer ao max-width da page */
-  .summary-footer > .summary-stats,
-  .summary-footer > .summary-actions {
-    /* nada — fallback */
-  }
-  .summary-footer.summary-footer--centered {
-    padding: 0;
-    justify-content: center;
-  }
-  .summary-footer--centered .summary-footer-inner {
-    width: 100%;
-    max-width: 1320px;
-    padding: 16px 56px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
   }
   /* Reserve space at the bottom of the page so content doesn't sit under
      the fixed footer */
@@ -2081,23 +2058,19 @@
   }
   .drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(820px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
     z-index: 101;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
     padding: 22px 28px 18px;
@@ -2268,62 +2241,8 @@
   }
   .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
   .drawer-item.is-disabled {
-    pointer-events: none;
-    cursor: not-allowed;
-  }
-  /* Dimming individual (evita opacity cascade que apaga a tag) */
-  .drawer-item.is-disabled .checkbox,
-  .drawer-item.is-disabled .drawer-item-contract,
-  .drawer-item.is-disabled .drawer-item-item,
-  .drawer-item.is-disabled .drawer-item-frete,
-  .drawer-item.is-disabled .drawer-item-product,
-  .drawer-item.is-disabled .drawer-item-meta,
-  .drawer-item.is-disabled .drawer-item-saldo {
     opacity: 0.45;
-  }
-  /* Status tag: fundo solido vermelho/laranja vivo */
-  .status-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 2px 7px;
-    border: 1.5px solid;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.2;
-  }
-  .status-tag--amendment {
-    color: var(--status-orange, #c76814);
-    border-color: var(--status-orange, #c76814);
-    background: var(--status-orange-bg, rgba(199,104,20,0.08));
-  }
-  .status-tag--unsigned {
-    color: var(--mosaic-red);
-    border-color: var(--mosaic-red);
-    background: rgba(185,32,42,0.06);
-  }
-  .status-tag--canceled {
-    color: var(--text-3);
-    border-color: var(--text-3);
-    background: var(--bg-section);
-  }
-  .drawer-item.is-disabled .status-tag {
-    opacity: 1;
-    font-weight: 800;
-    color: #fff !important;
-  }
-  .drawer-item.is-disabled .status-tag--unsigned {
-    background: var(--mosaic-red) !important;
-    border-color: var(--mosaic-red) !important;
-  }
-  .drawer-item.is-disabled .status-tag--amendment {
-    background: var(--status-orange, #c76814) !important;
-    border-color: var(--status-orange, #c76814) !important;
-  }
-  .drawer-item.is-disabled .status-tag--canceled {
-    background: var(--text-2) !important;
-    border-color: var(--text-2) !important;
+    pointer-events: none;
   }
 
   .checkbox {
@@ -2529,28 +2448,6 @@
     transition: color 200ms;
   }
   /* Reset the strong red styling: only apply when validation has been triggered */
-  /* Inputs invalidos (regras de consistencia NF/Data/Preco/Semana) */
-  .is-invalid input,
-  .is-invalid select,
-  input.is-invalid,
-  select.is-invalid,
-  .v5-money-wrap.is-invalid input,
-  .v5-date-wrap.is-invalid input,
-  .input-with-suffix.is-invalid input,
-  .proto-money-wrap.is-invalid input,
-  .proto-date-wrap.is-invalid input,
-  .card-date-wrap.is-invalid input {
-    border-color: var(--mosaic-red) !important;
-    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
-  }
-  .field-error {
-    display: block;
-    font-size: 10.5px;
-    color: var(--mosaic-red);
-    font-weight: 700;
-    margin-top: 2px;
-    line-height: 1.3;
-  }
   .cards-container:not(.show-validation) .field-block.is-missing label .req { color: var(--text-3); }
   .cards-container:not(.show-validation) .field-block.is-missing .input-with-suffix input,
   .cards-container:not(.show-validation) .field-block.is-missing .card-date-wrap input,
@@ -2827,9 +2724,7 @@
   /* ================================================================
      V3 — View toggle (cards / table)
      ================================================================ */
-  /* Toggle Cards/Tabela removido — apenas tabela */
-  .view-toggle { display: none !important; }
-  .view-toggle.__legacy_unused {
+  .view-toggle {
     display: inline-flex;
     background: #fff;
     border: 1.5px solid var(--border);
@@ -2903,14 +2798,14 @@
   }
   .v3-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 14px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
     white-space: nowrap;
     vertical-align: middle;
     position: sticky;
@@ -3419,23 +3314,19 @@
   }
   .roteiro-drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(640px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(540px, 100%);
     background: #fff;
     z-index: 111;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .roteiro-drawer.is-open { transform: translateX(0); }
 
   .roteiro-drawer-header {
     background: var(--bg-section);
@@ -3974,948 +3865,8 @@
   .roteiro-open-btn { display: none; }
 
 
-  /* Criar Protocolo — extras */
-  .action-row--protocol {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 16px;
-    align-items: center;
-  }
-  /* Secundário com contraste correto — vence a regra .btn-secondary duplicada
-     via especificidade (button.classe). Default: fundo branco + verde;
-     hover: preenche verde + branco. */
-  button.btn-cadastrar-coop {
-    background: #fff;
-    color: var(--mosaic-green-800);
-    border: 1.5px solid var(--mosaic-green-800);
-  }
-  button.btn-cadastrar-coop:hover {
-    background: var(--mosaic-green-800);
-    border-color: var(--mosaic-green-800);
-    color: #fff;
-  }
-  button.btn-cadastrar-coop svg { color: var(--mosaic-green-800); stroke: var(--mosaic-green-800); }
-  button.btn-cadastrar-coop:hover svg { color: #fff; stroke: #fff; }
-  .proto-table-wrap {
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    overflow-x: auto;
-    margin-bottom: 16px;
-  }
-  .proto-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 1700px;
-  }
-  .proto-table thead th {
-    background: var(--bg-section);
-    text-align: left;
-    padding: 12px 12px;
-    font-weight: 800;
-    color: var(--text-1);
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-    vertical-align: middle;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  .proto-table thead th .req { color: var(--mosaic-red); margin-left: 2px; }
-  .proto-table thead th .opt-tag {
-    font-size: 9px;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-left: 4px;
-    text-transform: uppercase;
-  }
-  .proto-table thead th.col-optional { color: var(--text-2); }
-  .proto-table tbody td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    font-weight: 500;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .proto-table tbody tr {
-    transition: background-color 120ms;
-    border-left: 4px solid transparent;
-  }
-  .proto-table tbody tr:hover td { background: var(--bg-row-alt); }
-  .proto-table tbody tr.is-incomplete { border-left-color: var(--border-strong); }
-  .proto-table tbody tr.is-progress {
-    border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.04), transparent 30%);
-  }
-  .proto-table tbody tr.is-complete {
-    border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
-  }
-  .proto-table-wrap.show-validation tr.is-incomplete,
-  .proto-table-wrap.show-validation tr.is-progress {
-    border-left-color: var(--mosaic-red);
-    background: linear-gradient(to right, rgba(185,32,42,0.04), transparent 30%);
-  }
-  .proto-table .col-saldo .saldo-primary {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
-  .proto-table .col-saldo .saldo-unit {
-    font-size: 11px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-  }
-  .proto-table .col-saldo .saldo-secondary {
-    font-size: 10.5px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-  .col-status-cell { width: 36px; text-align: center; }
-  .col-actions { width: 70px; }
-  .col-volume { min-width: 100px; }
-  .col-date { min-width: 130px; }
-  .col-emb { min-width: 150px; }
-  .col-money { min-width: 130px; }
-  .col-nf-num { min-width: 110px; }
-  .col-roteiro { min-width: 180px; }
-  .col-saldo { min-width: 110px; }
-  .col-coop { min-width: 200px; }
-
-  /* Sticky-left columns na proto-table (Status + Contrato/Item + Produto/Embalagem/Origem)
-     pra usuario manter contexto ao scrollar horizontalmente */
-  .proto-table { border-collapse: separate; border-spacing: 0; }
-  .proto-table thead th { background: var(--bg-section); }
-  .proto-table tbody td { background: #fff; }
-  .proto-table tbody tr:nth-child(even) td { background: #f5f5f2; }
-  .proto-table tbody tr:hover td { background: #eef4f1; } /* solido, sem transparencia (col sticky precisa de bg opaco) */
-
-  .proto-table thead th:nth-child(1),
-  .proto-table tbody td:nth-child(1),
-  .proto-table thead th:nth-child(2),
-  .proto-table tbody td:nth-child(2),
-  .proto-table thead th:nth-child(3),
-  .proto-table tbody td:nth-child(3) {
-    position: sticky;
-    z-index: 1;
-  }
-  .proto-table thead th:nth-child(1) { left: 0; width: 36px; z-index: 3; }
-  .proto-table tbody td:nth-child(1) { left: 0; }
-  .proto-table thead th:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; z-index: 3; }
-  .proto-table tbody td:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; }
-  .proto-table thead th:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; z-index: 3; }
-  .proto-table tbody td:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; box-shadow: 1px 0 0 var(--border-soft); }
-  .proto-table thead th:nth-child(3) { box-shadow: 1px 0 0 var(--border-soft); }
-  .coop-pick-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    overflow: hidden;
-  }
-  .coop-pick-btn .coop-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .coop-pick-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-  }
-  .coop-pick-btn.has-value { color: var(--text-1); }
-  .proto-cell-input {
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms, box-shadow 120ms;
-  }
-  .proto-cell-input:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .proto-cell-input.is-num { text-align: right; font-variant-numeric: tabular-nums; }
-  .proto-volume-wrap, .proto-date-wrap, .proto-money-wrap, .proto-roteiro-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .proto-volume-wrap .suffix, .proto-money-wrap .prefix {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-3);
-    pointer-events: none;
-  }
-  .proto-volume-wrap .suffix { right: 10px; }
-  .proto-volume-wrap input { padding-right: 24px; }
-  .proto-money-wrap .prefix { left: 10px; }
-  .proto-money-wrap input { padding-left: 30px; }
-  .proto-date-wrap input { padding-right: 32px; cursor: pointer; }
-  .proto-date-wrap .cal-trigger {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: transparent;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .proto-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
-  .proto-roteiro-wrap .proto-cell-input { padding-right: 30px; }
-  .proto-roteiro-wrap .roteiro-expand {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: transparent;
-    color: var(--text-3);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .proto-roteiro-wrap .roteiro-expand:hover { color: var(--mosaic-green-800); }
-  .proto-emb-select {
-    width: 100%;
-    height: 34px;
-    padding: 0 28px 0 10px;
-    border: 1.5px solid var(--border);
-    background-color: #fff;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    appearance: none;
-    -webkit-appearance: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-    cursor: pointer;
-  }
-  .proto-emb-select:focus { border-color: var(--mosaic-green-700); }
-  td.is-missing .proto-cell-input,
-  td.is-missing .coop-pick-btn,
-  td.is-missing .proto-emb-select {
-    border-color: var(--border);
-  }
-  .proto-table-wrap.show-validation td.is-missing .proto-cell-input,
-  .proto-table-wrap.show-validation td.is-missing .coop-pick-btn,
-  .proto-table-wrap.show-validation td.is-missing .proto-emb-select {
-    border-color: rgba(185, 32, 42, 0.55);
-    background: rgba(185, 32, 42, 0.025);
-  }
-  .coop-drawer-list .drawer-item-coop {
-    display: grid;
-    grid-template-columns: 24px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-soft);
-    cursor: pointer;
-    align-items: center;
-    transition: background-color 120ms;
-  }
-  .coop-drawer-list .drawer-item-coop:hover { background: rgba(0,106,77,0.04); }
-  .coop-drawer-list .drawer-item-coop.is-selected { background: rgba(0,106,77,0.08); }
-  .coop-drawer-list .drawer-item-coop.is-pending {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: rgba(199,104,20,0.04);
-  }
-  .coop-drawer-list .drawer-item-coop.is-pending:hover {
-    background: rgba(199,104,20,0.04);
-  }
-  .coop-pending-tag {
-    display: inline-block;
-    background: var(--status-orange-bg);
-    color: var(--status-orange);
-    border: 1.5px solid var(--status-orange);
-    padding: 1px 6px;
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
-  .coop-drawer-list .coop-radio {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border-strong);
-    border-radius: 50%;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .coop-drawer-list .drawer-item-coop.is-selected .coop-radio {
-    border-color: var(--mosaic-green-700);
-    background: var(--mosaic-green-700);
-  }
-  .coop-drawer-list .drawer-item-coop.is-selected .coop-radio::after {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    background: #fff;
-    border-radius: 50%;
-  }
-  .coop-name { font-size: 13px; font-weight: 800; color: var(--text-1); }
-  .coop-fazenda { font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 2px; }
-  .coop-doc, .coop-loc { font-size: 11px; color: var(--text-2); font-weight: 600; }
-  .coop-doc strong, .coop-loc strong {
-    display: block;
-    color: var(--text-3);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 800;
-    margin-bottom: 1px;
-  }
-  /* Cadastrar Cooperado — centered modal (Adicionar novo cliente) */
-  .modal-cad-coop {
-    max-width: 920px;
-    background: #fff;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
-  }
-  .modal-cad-coop .cad-coop-header {
-    background: var(--bg-section);
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-soft);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .modal-cad-coop .cad-coop-header h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-1);
-    letter-spacing: -0.005em;
-  }
-  .modal-cad-coop .cad-coop-close {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text-2);
-    width: 28px; height: 28px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 4px;
-  }
-  .modal-cad-coop .cad-coop-close:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
-  .modal-cad-coop .cad-coop-body {
-    padding: 24px;
-  }
-  .modal-cad-coop .cad-coop-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px 18px;
-    margin-bottom: 24px;
-  }
-  .modal-cad-coop .cad-coop-field { min-width: 0; }
-  .modal-cad-coop .cad-coop-field.full { grid-column: 1 / -1; }
-  .modal-cad-coop .cad-coop-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-1);
-    margin-bottom: 6px;
-  }
-  .modal-cad-coop .cad-coop-field label .req { color: var(--mosaic-red); margin-right: 2px; }
-  .modal-cad-coop .cad-coop-input {
-    position: relative;
-  }
-  .modal-cad-coop input,
-  .modal-cad-coop select,
-  .modal-cad-coop textarea {
-    width: 100%;
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid var(--border);
-    background: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 500;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .modal-cad-coop textarea {
-    height: auto;
-    min-height: 60px;
-    padding: 10px 12px;
-    resize: vertical;
-  }
-  .modal-cad-coop input:focus,
-  .modal-cad-coop select:focus,
-  .modal-cad-coop textarea:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .modal-cad-coop input::placeholder,
-  .modal-cad-coop textarea::placeholder {
-    color: var(--text-3);
-    font-weight: 500;
-  }
-  .modal-cad-coop select {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-color: #fff;
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 32px;
-    cursor: pointer;
-    color: var(--text-3);
-    font-weight: 500;
-  }
-  .modal-cad-coop select.has-value { color: var(--text-1); font-weight: 600; }
-  /* Validation state (red border + icon + message) */
-  .modal-cad-coop .cad-coop-field.is-error input,
-  .modal-cad-coop .cad-coop-field.is-error select,
-  .modal-cad-coop .cad-coop-field.is-error textarea {
-    border-color: var(--mosaic-red);
-    padding-left: 36px;
-  }
-  .modal-cad-coop .cad-coop-field.is-error .cad-coop-input::before {
-    content: "";
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 14px; height: 14px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b9202a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><line x1='4.93' y1='4.93' x2='19.07' y2='19.07'/></svg>");
-    background-repeat: no-repeat;
-    background-size: contain;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .modal-cad-coop .cad-coop-err {
-    display: none;
-    font-size: 11.5px;
-    color: var(--mosaic-red);
-    font-weight: 500;
-    margin-top: 4px;
-  }
-  .modal-cad-coop .cad-coop-field.is-error .cad-coop-err { display: block; }
-  /* .cad-coop-submit usa .btn .btn-primary do design system (44px verde) */
-  .modal-cad-coop .cad-coop-submit { padding: 0 28px; }
-  @media (max-width: 720px) {
-    .modal-cad-coop .cad-coop-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ================================================================
-     V2 — V5-style grouped cards (ported from agendar-contrato-normal-v5)
-     ================================================================ */
-  .v5-card {
-    display: flex !important;
-    flex-direction: column;
-    grid-template-columns: none !important;
-  }
-
-  .v5-level-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #fff;
-    background: var(--mosaic-green-800);
-    padding: 3px 7px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .v5-level-tag--item { background: var(--mosaic-green-700); }
-
-  .v5-card-head {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px !important;
-    border-bottom: 2px solid var(--border);
-    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
-    cursor: default !important;
-    flex-wrap: wrap;
-  }
-  .v5-card-head .card-contract {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text-1);
-    letter-spacing: -0.005em;
-    flex-shrink: 0;
-  }
-  .v5-head-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-  .v5-head-inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text-2);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .v5-head-inline strong { color: var(--text-1); font-weight: 800; }
-  .v5-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
-  .v5-card-head .v5-meta-label,
-  .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 1px;
-  }
-  .v5-item-count {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 800;
-    color: var(--text-3);
-    background: var(--bg-section-2, var(--bg-section));
-    padding: 3px 8px;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .v5-head-remove { flex-shrink: 0; }
-
-  .v5-items-list { display: flex; flex-direction: column; }
-  .v5-item-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
-    gap: 14px;
-    padding: 12px 16px;
-    align-items: center;
-    border-bottom: 1px solid var(--border-soft);
-    border-left: 3px solid transparent;
-    transition: background-color 120ms, border-left-color 200ms;
-  }
-  .v5-item-row.is-incomplete { border-left-color: var(--border-strong); }
-  .v5-item-row.is-progress {
-    border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
-  }
-  .v5-item-row.is-complete {
-    border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 25%);
-  }
-  .cards-container.show-validation .v5-item-row.is-incomplete,
-  .cards-container.show-validation .v5-item-row.is-progress {
-    border-left-color: var(--mosaic-red);
-    background: linear-gradient(to right, rgba(185,32,42,0.03), transparent 25%);
-  }
-  .v5-item-row:last-of-type { border-bottom: none; }
-
-  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-  .v5-item-cell-stacks {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 16px;
-    padding: 4px 0;
-  }
-  .v5-item-cell-stacks .v5-cell-tags {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-  /* Card stack--produto: tags em coluna a esquerda + corpo (produto/embalagem/origem) */
-  .v5-item-cell-stacks .cell-stack--produto {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: start;
-  }
-  .v5-item-cell-stacks .v5-cell-tags-col {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
-  }
-  .v5-item-cell-stacks .v5-cell-tags-col .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-cell-stacks .v5-cell-produto-body { min-width: 0; }
-  .v5-item-cell-stacks .v5-cell-tags .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-cell-stacks .v5-cell-saldo {
-    margin-bottom: 6px;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-  }
-  .v5-item-cell-stacks .v5-cell-saldo .unit {
-    font-size: 10px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-    letter-spacing: 0.04em;
-  }
-  .v5-item-cell-stacks .cell-stack { min-width: 0; }
-  .v5-item-cell-stacks .stack-tertiary,
-  .proto-table .cell-stack .stack-tertiary {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 1px;
-  }
-  .proto-table .cell-stack .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .v5-item-cell-stacks .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .v5-item-saldo-inline {
-    margin-left: auto;
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-  }
-  .v5-item-saldo-inline .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
-  .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
-  .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
-  .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
-  .v5-item-line .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-product {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-1);
-    line-height: 1.3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-    flex: 1;
-  }
-  .v5-item-meta-piece { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-  .v5-item-meta-piece strong { color: var(--text-1); font-weight: 800; }
-  .v5-meta-sep { color: var(--border); font-weight: 800; }
-  .v5-item-line--bottom .arrow { color: var(--mosaic-green-700); font-weight: 800; margin: 0 1px; }
-  .v5-item-saldo {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
-  .v5-item-saldo .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
-
-  /* Item form fields — V5 layout adaptado pro criar-protocolo
-     (mais campos: cooperado + volume + embalagem + roteiro) */
-  .v5-item-fields {
-    display: grid;
-    grid-template-columns: minmax(180px, 220px) 110px 130px minmax(180px, 220px);
-    gap: 8px;
-    align-items: end;
-  }
-  .v5-item-fields .field-block { gap: 2px; min-width: 0; }
-  .v5-item-fields .field-block label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-bottom: 0;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .v5-item-fields .field-block label .req { color: var(--mosaic-red); }
-  .v5-item-fields .field-block label .opt-tag { font-size: 8px; }
-  .v5-item-fields .input-with-suffix,
-  .v5-item-fields .card-date-wrap,
-  .v5-item-fields .roteiro-toggle-btn,
-  .v5-item-fields .v5-coop-pick-btn,
-  .v5-item-fields select.proto-emb-select,
-  .v5-item-fields .v5-money-wrap {
-    height: 32px !important;
-    box-sizing: border-box;
-  }
-  .v5-item-fields .input-with-suffix input,
-  .v5-item-fields .card-date-wrap input,
-  .v5-item-fields select.proto-emb-select {
-    height: 32px !important;
-    line-height: 32px;
-    font-size: 12.5px;
-    padding-top: 0;
-    padding-bottom: 0;
-    box-sizing: border-box;
-  }
-  .v5-item-fields .input-with-suffix {
-    position: relative;
-    display: block;
-  }
-  .v5-item-fields .input-with-suffix input {
-    width: 100%;
-    padding: 0 22px 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .v5-item-fields .input-with-suffix input:focus { border-color: var(--mosaic-green-700); }
-  .v5-item-fields .input-with-suffix .suffix {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 700;
-    pointer-events: none;
-  }
-  .v5-item-fields select.proto-emb-select {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    padding: 0 28px 0 10px;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    cursor: pointer;
-  }
-  .v5-item-fields select.proto-emb-select:focus { border-color: var(--mosaic-green-700); outline: none; }
-
-  /* Cooperado picker button */
-  .v5-coop-pick-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    line-height: 32px;
-  }
-  .v5-coop-pick-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-  }
-  .v5-coop-pick-btn.has-value {
-    color: var(--text-1);
-    font-weight: 700;
-    border-color: var(--mosaic-green-700);
-  }
-  .v5-coop-pick-btn .coop-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .v5-coop-pick-btn svg { color: var(--text-3); flex-shrink: 0; }
-  .v5-coop-pick-btn:hover svg { color: var(--mosaic-green-700); }
-
-  /* Roteiro toggle button */
-  .roteiro-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-    height: 32px;
-    padding: 0 10px;
-    border: 1.5px dashed var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    box-sizing: border-box;
-    line-height: 32px;
-  }
-  .roteiro-toggle-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-    background: rgba(0, 106, 77, 0.03);
-  }
-  .roteiro-toggle-btn.has-value {
-    border-style: solid;
-    color: var(--text-1);
-    background: #fff;
-  }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
-  .roteiro-toggle-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-  }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
-  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
-  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
-
-  .v5-item-actions { display: flex; gap: 4px; align-items: center; }
-
-  /* Add-item bar */
-  .v5-add-item { position: relative; border-top: 1px solid var(--border-soft); }
-  .v5-add-item-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    background: var(--bg-section);
-    border: none;
-    border-bottom: 1px solid var(--border-soft);
-    padding: 8px 16px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--mosaic-green-800);
-    cursor: pointer;
-    text-align: left;
-    transition: background-color 120ms, color 120ms;
-    letter-spacing: 0.01em;
-  }
-  .v5-add-item-btn:hover { background: rgba(0, 106, 77, 0.06); color: var(--mosaic-green-900); }
-  .v5-add-item-count {
-    margin-left: auto;
-    font-size: 10px;
-    color: var(--text-3);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .v5-card .card-status {
-    border-top: 1px solid var(--border-soft);
-    padding: 8px 16px;
-  }
-
-  /* V2 — force list-only mode (Lista/Grid toggle removed) */
-  #cardsLayoutToggle { display: none !important; }
-
-  /* Optional fields row (NF / Preço / Semana) — second row inside card */
-  .v5-item-extra {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr) minmax(130px, 1fr) minmax(140px, 1fr);
-    gap: 8px;
-    align-items: end;
-    padding-top: 10px;
-    margin-top: 10px;
-    border-top: 1px dashed var(--border-soft);
-  }
-  .v5-item-extra .field-block { gap: 2px; min-width: 0; }
-  .v5-item-extra .field-block label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-bottom: 0;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .v5-item-extra input,
-  .v5-item-extra .v5-money-wrap,
-  .v5-item-extra .card-date-wrap {
-    height: 32px !important;
-    box-sizing: border-box;
-  }
-  .v5-item-extra input {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 12.5px;
-    padding: 0 10px;
-    line-height: 32px;
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .v5-item-extra input:focus { border-color: var(--mosaic-green-700); }
-  .v5-money-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .v5-money-wrap .prefix {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 700;
-    pointer-events: none;
-  }
-  .v5-money-wrap input {
-    padding-left: 28px;
-  }
+  /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
+  .v3-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
 
 
   /* Banner hero removido — layout limpo (so top-nav). */
@@ -4925,76 +3876,102 @@
 
 
 </style>
+<!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
 
+<!-- Hotjar Tracking Code — substituir HOTJAR_SITE_ID -->
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:HOTJAR_SITE_ID,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
 
-
-
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="base.css" />
 </head>
 <body>
 
 
 
 <!-- Top header ==================================================== -->
-<header class="mosaic-header">
-  <div class="mosaic-header-top">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="mosaic-search">
-      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
-      <span class="search-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-    </div>
-    <div class="mosaic-user-cluster">
-      <button class="lang-switch" type="button">
-        PT
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="mosaic-user-info">
-        <span class="user-name">Alyssa Harris</span>
-        <span class="user-org">MAR JAC POULT...</span>
-      </div>
-      <button class="icon-btn" aria-label="Trocar empresa" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Carrinho" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </button>
-    </div>
+<header class="topbar">
+  <div class="logo" aria-label="Mosaic">
+    <span class="wordmark">Mosaic<sup>®</sup></span>
+    <img class="shapes" src="data:image/png;base64,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" alt="" />
   </div>
-  <nav class="mosaic-nav" aria-label="Principal">
-    <div class="mosaic-nav-inner">
-      <a href="index.html" class="nav-item">Home</a>
-      <a href="#" class="nav-item">Produtos</a>
-      <a href="#" class="nav-item">Cotações</a>
-      <span class="nav-item is-active" tabindex="0">
-        Contratos<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="criar-protocolo.html" class="is-active">Criar Protocolo</a>
-          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
-        </div>
-      </span>
-      <span class="nav-item" tabindex="0">
-        Agendamento<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
-          <a href="agendar-protocolo.html">Agendar Protocolo</a>
-          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
-        </div>
-      </span>
-      <a href="#" class="nav-item">Faturamento</a>
-      <a href="#" class="nav-item">Documentos</a>
-      <a href="#" class="nav-item">Financeiro</a>
-      <a href="#" class="nav-item">Suporte</a>
+
+  <div class="global-search" role="search">
+    <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+    <span class="icon-search" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </span>
+  </div>
+
+  <div class="user-cluster">
+    <button class="lang-select" type="button">
+      EN
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 3 3-3"/></svg>
+    </button>
+    <div class="user-info">
+      <div class="name">Alyssa Harris</div>
+      <div class="org">MAR JAC POULT...</div>
     </div>
-  </nav>
+    <span class="icon-pill" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18"/><line x1="9" y1="7" x2="9" y2="7"/><line x1="13" y1="7" x2="13" y2="7"/><line x1="9" y1="11" x2="9" y2="11"/><line x1="13" y1="11" x2="13" y2="11"/><line x1="9" y1="15" x2="9" y2="15"/><line x1="13" y1="15" x2="13" y2="15"/><path d="M10 21v-3h4v3"/></svg>
+    </span>
+    <span class="icon-cart" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h2l3 12h13l2-9H6"/></svg>
+    </span>
+  </div>
 </header>
 
+<!-- Main nav ====================================================== -->
+<nav class="mainnav">
+  <div class="mainnav-inner">
+    <a href="#" class="navitem">Home</a>
+    <a href="#" class="navitem has-dropdown">Produtos</a>
+    <a href="#" class="navitem has-dropdown">Cotações</a>
+    <span class="navitem has-dropdown" id="navContratos">
+      Contratos
+      <div class="submenu">
+        <a href="#">Meus contratos</a>
+        <a href="criar-protocolo.html">Criar Protocolo</a>
+      </div>
+    </span>
+    <span class="navitem has-dropdown" id="navAgendamento">
+      Agendamento
+      <div class="submenu">
+        <a href="#" class="current">Agendar Contrato Normal</a>
+        <a href="agendar-protocolo.html">Agendar Protocolo</a>
+        <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
+        <a href="#">Relatório Planejado vs Realizado</a>
+        <a href="#">Relatório de Embarques</a>
+      </div>
+    </span>
+    <a href="#" class="navitem has-dropdown">Faturamento</a>
+    <a href="#" class="navitem">Documentos</a>
+    <a href="#" class="navitem has-dropdown">Financeiro</a>
+    <a href="#" class="navitem has-dropdown">Suporte</a>
+  </div>
+</nav>
 
+<!-- Hero ========================================================== -->
+<div class="hero">
+  <div class="mosaic-overlay">
+    <div class="logo logo--hero" aria-hidden="true">
+      <span class="wordmark">Mosaic<sup>®</sup></span>
+      <img class="shapes" src="data:image/png;base64,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" alt="" />
+    </div>
+  </div>
 </div>
 
 <!-- Workspace ===================================================== -->
@@ -5002,14 +3979,14 @@
   <div class="breadcrumbs">
     <a href="#">Home</a>
     <span class="sep">›</span>
-    <a href="#">Contratos</a>
+    <a href="#">Agendamento</a>
     <span class="sep">›</span>
-    <span class="current">Criar Protocolo</span>
+    <span class="current">Agendar Contratos Normais</span>
   </div>
 
   <div class="title-row">
-    <h1 class="page-title">Criar Protocolo(s)</h1>
-    <div>
+    <h1 class="page-title">Agendar Contratos Normais</h1>
+    <div style="display:flex;align-items:center;gap:0;">
       <div class="view-toggle" id="viewToggle" role="tablist" aria-label="Visualização">
         <button data-view="cards" type="button" class="is-active" role="tab" aria-selected="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -5020,7 +3997,7 @@
           Tabela
         </button>
       </div>
-      <div class="cards-layout-toggle" id="cardsLayoutToggle" role="tablist" aria-label="Disposição dos cards" hidden style="display:none !important;">
+      <div class="cards-layout-toggle" id="cardsLayoutToggle" role="tablist" aria-label="Disposição dos cards">
         <button data-layout="list" type="button" class="is-active" role="tab" aria-selected="true" title="Cards em lista">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
           Lista
@@ -5033,18 +4010,14 @@
     </div>
   </div>
 
-  <div class="action-row action-row--protocol">
+  <div class="action-row">
     <div>
       <div class="action-label">Selecionar contrato(s)</div>
-      <div class="action-help">Pesquise pelos contratos e itens para criação de protocolos.</div>
+      <div class="action-help">Clique no botão ao lado para escolher contratos para agendar.</div>
     </div>
     <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       Selecionar contratos
-    </button>
-    <button class="btn btn-secondary btn-with-icon btn-cadastrar-coop" id="openCadastrarCoopBtn" type="button">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-      Cadastrar Cooperado
     </button>
   </div>
 
@@ -5053,27 +4026,25 @@
     <!-- Rendered by JS -->
   </div>
 
-  <!-- Sticky summary footer (inner wrapper acompanha max-width da page) -->
-  <div class="summary-footer summary-footer--centered" id="summaryFooter">
-    <div class="summary-footer-inner">
-      <div class="summary-stats">
-        <div class="summary-stat">
-          <span class="label">Contratos</span>
-          <span class="value" id="statContracts">0</span>
-        </div>
-        <div class="summary-stat">
-          <span class="label">Volume Total</span>
-          <span class="value" id="statVolume">0<span class="unit">t</span></span>
-        </div>
-        <div class="summary-stat">
-          <span class="label">Prontos para Criar</span>
-          <span class="value" id="statReady">0/0</span>
-        </div>
+  <!-- Sticky summary footer -->
+  <div class="summary-footer" id="summaryFooter">
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="label">Contratos</span>
+        <span class="value" id="statContracts">0</span>
       </div>
-      <div class="summary-actions">
-        <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-        <button class="btn btn-primary" id="agendarBtn" disabled>Criar Protocolo(s)</button>
+      <div class="summary-stat">
+        <span class="label">Volume Total</span>
+        <span class="value" id="statVolume">0<span class="unit">t</span></span>
       </div>
+      <div class="summary-stat">
+        <span class="label">Prontos para Agendar</span>
+        <span class="value" id="statReady">0/0</span>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
     </div>
   </div>
 </main>
@@ -5091,7 +4062,7 @@
     </span>
     <div class="titles">
       <h3 id="drawerTitle">Selecionar contratos</h3>
-      <div class="subtitle">Escolha um ou mais contratos para adicionar à criação de protocolos.</div>
+      <div class="subtitle">Escolha um ou mais contratos para adicionar ao agendamento.</div>
     </div>
     <button class="close-x" data-close-drawer aria-label="Fechar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -5226,7 +4197,7 @@
 <div class="modal-backdrop" id="cancelModal">
   <div class="modal modal-confirm-v2 modal-confirm-v2--warn" role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
     <div class="confirm-v2-header">
-      <h3 id="cancelTitle">Cancelar criação de protocolos</h3>
+      <h3 id="cancelTitle">Cancelar agendamentos</h3>
       <button class="confirm-v2-close" data-close="cancelModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5239,7 +4210,7 @@
           <circle cx="12" cy="17.5" r="0.5" fill="currentColor"/>
         </svg>
       </div>
-      <p class="confirm-v2-text">Você está prestes a <strong>cancelar a criação de todos os protocolos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
+      <p class="confirm-v2-text">Você está prestes a <strong>cancelar todos os agendamentos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
       <div class="confirm-v2-actions">
         <button class="btn btn-secondary" data-close="cancelModal" type="button">Voltar</button>
         <button class="btn btn-danger" id="cancelConfirm" type="button">Sim, cancelar agendamentos</button>
@@ -5255,7 +4226,7 @@
 <div class="modal-backdrop" id="submitModal">
   <div class="modal modal-confirm-v2" role="dialog" aria-modal="true" aria-labelledby="submitTitle">
     <div class="confirm-v2-header">
-      <h3 id="submitTitle">Confirmar criação de protocolos</h3>
+      <h3 id="submitTitle">Confirmar agendamento</h3>
       <button class="confirm-v2-close" data-close="submitModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5267,11 +4238,11 @@
           <path d="m9 12 2 2 4-4"/>
         </svg>
       </div>
-      <p class="confirm-v2-text">Você está prestes a criar todos os seus protocolos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <p class="confirm-v2-text">Você está prestes a enviar todos os seus agendamentos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
       <div class="confirm-v2-summary" id="submitSummary"></div>
       <div class="confirm-v2-actions">
         <button class="btn btn-secondary" data-close="submitModal" type="button">Voltar</button>
-        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar criação</button>
+        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar e enviar</button>
       </div>
     </div>
   </div>
@@ -5284,7 +4255,7 @@
 <div class="modal-backdrop" id="successModal">
   <div class="modal modal-confirm-v2" role="dialog" aria-modal="true" aria-labelledby="successTitle">
     <div class="confirm-v2-header">
-      <h3 id="successTitle">Protocolos criados</h3>
+      <h3 id="successTitle">Agendamentos enviados</h3>
       <button class="confirm-v2-close" data-close="successModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5296,10 +4267,10 @@
           <polyline points="8 12.5 11 15.5 16 9.5"/>
         </svg>
       </div>
-      <p class="confirm-v2-text"><strong>Seus protocolos foram criados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Protocolos.</p>
+      <p class="confirm-v2-text"><strong>Seus agendamentos foram enviados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
       <div class="confirm-v2-actions confirm-v2-actions--stack">
-        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Protocolos</button>
-        <button class="btn btn-secondary" id="successNew" type="button">Agendar Protocolos</button>
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar novos contratos</button>
       </div>
     </div>
   </div>
@@ -5332,196 +4303,22 @@
 </aside>
 
 
-
-<!-- COOP DRAWER -->
-<div class="drawer-backdrop" id="coopDrawerBackdrop"></div>
-<aside class="drawer" id="coopDrawer" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="drawer-header">
-    <span class="modal-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
-    </span>
-    <div class="titles">
-      <h3>Selecionar cooperado</h3>
-      <div class="subtitle">Escolha o cooperado para este protocolo.</div>
-    </div>
-    <button class="close-x" data-close-coop-drawer type="button" aria-label="Fechar">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="drawer-search">
-    <div class="drawer-search-wrap">
-      <span class="icon-left" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span>
-      <input type="text" id="coopDrawerSearch" placeholder="Buscar por nome, CPF/CNPJ ou fazenda…" autocomplete="off" />
-    </div>
-    <button class="btn btn-secondary btn-with-icon" id="coopDrawerCadastrarBtn" type="button" style="margin-top:10px; width:100%; justify-content:center;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Cadastrar novo cooperado
-    </button>
-  </div>
-  <div class="drawer-body coop-drawer-list" id="coopDrawerList"></div>
-  <div class="drawer-footer">
-    <button class="btn btn-secondary" data-close-coop-drawer type="button">Cancelar</button>
-    <button class="btn btn-primary" id="coopDrawerSelect" type="button" disabled>Selecionar</button>
-  </div>
-</aside>
-
-
-<!-- CAD COOP MODAL -->
-<!-- CAD COOP DRAWER (side-drawer, V5-style) -->
-<div class="modal-backdrop" id="cadCoopBackdrop">
-  <div class="modal modal-cad-coop" id="cadCoopDrawer" role="dialog" aria-modal="true" aria-labelledby="cadCoopTitle" aria-hidden="true">
-    <div class="cad-coop-header">
-      <h3 id="cadCoopTitle">Adicionar novo cliente</h3>
-      <button class="cad-coop-close" data-close-cad-coop-drawer aria-label="Fechar" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-
-    <div class="cad-coop-body">
-      <div class="cad-coop-grid">
-        <!-- Row 1 -->
-        <div class="cad-coop-field" data-field="tipo">
-          <label><span class="req">*</span>Tipo de cliente</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopTipo">
-              <option value="">Tipo de cliente</option>
-              <option value="PF">Pessoa Física</option>
-              <option value="PJ">Pessoa Jurídica</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">Tipo de cliente é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="nome">
-          <label><span class="req">*</span>Nome do agricultor</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopNome" placeholder="Nome do agricultor" />
-          </div>
-          <div class="cad-coop-err">Nome do agricultor é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="telefone">
-          <label>Telefone de contato</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopTelefone" placeholder="Telefone de contato" />
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="cad-coop-field" data-field="email">
-          <label>E-mail de contato</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEmail" placeholder="E-mail de contato" />
-          </div>
-        </div>
-        <div class="cad-coop-field" data-field="rua">
-          <label><span class="req">*</span>Rua</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEndereco" placeholder="Rua" />
-          </div>
-          <div class="cad-coop-err">Rua é necessário</div>
-        </div>
-        <div class="cad-coop-field"><!-- spacer --></div>
-
-        <!-- Row 3 -->
-        <div class="cad-coop-field" data-field="cep">
-          <label><span class="req">*</span>Código Postal</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopCEP" inputmode="numeric" maxlength="9" placeholder="Código Postal" />
-          </div>
-          <div class="cad-coop-err">Código Postal é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="end2">
-          <label>Linha de endereço 2 (opcional)</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEnd2" placeholder="Linha de endereço 2 (opcional)" />
-          </div>
-        </div>
-        <div class="cad-coop-field" data-field="cidade">
-          <label><span class="req">*</span>Cidade</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopCidade" placeholder="Cidade" />
-          </div>
-          <div class="cad-coop-err">Cidade é necessário</div>
-        </div>
-
-        <!-- Row 4 -->
-        <div class="cad-coop-field" data-field="pais">
-          <label><span class="req">*</span>País</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopPais">
-              <option value="">País</option>
-              <option value="Brasil">Brasil</option>
-              <option value="Argentina">Argentina</option>
-              <option value="Paraguai">Paraguai</option>
-              <option value="Uruguai">Uruguai</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">País é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="estado">
-          <label><span class="req">*</span>Estado/Província</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopEstado">
-              <option value="">Estado/Província</option>
-              <option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>RS</option>
-              <option>SC</option><option>BA</option><option>GO</option><option>MT</option><option>MS</option>
-              <option>DF</option><option>ES</option><option>PA</option><option>AM</option><option>CE</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">Estado/Província é necessário</div>
-        </div>
-        <div class="cad-coop-field"><!-- spacer --></div>
-
-        <!-- Row 5 -->
-        <div class="cad-coop-field full" data-field="roteiro">
-          <label>Instruções de entrega (opcional)</label>
-          <div class="cad-coop-input">
-            <textarea id="cadCoopRoteiro" placeholder=""></textarea>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary cad-coop-submit" id="cadCoopSalvar" type="button">Adicionar novo cliente</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- CAD COOP SUCCESS -->
-<div class="modal-backdrop" id="cadCoopSuccessModal">
-  <div class="modal modal-confirm-v2" style="max-width: 380px;">
-    <div class="confirm-v2-body" style="padding-top:32px; text-align:center;">
-      <div class="confirm-v2-icon confirm-v2-icon--success" style="margin: 0 auto 18px;" aria-hidden="true">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
-          <polyline points="8 12.5 11 15.5 16 9.5"/>
-        </svg>
-      </div>
-      <p class="confirm-v2-text" style="text-align:center;"><strong>Cadastro realizado com sucesso!</strong></p>
-      <div class="confirm-v2-actions" style="justify-content:center;">
-        <button class="btn btn-primary" data-close="cadCoopSuccessModal" type="button" style="min-width: 140px;">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ===================================================================
    DATA: contracts in the advanced-search results
    =================================================================== */
 const SEARCH_RESULTS = [
-  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
-  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
-  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", ie: "192.554.418.336", precoTon: "1.980,00", status: "unsigned", statusReason: "Contrato não assinado — bloqueado", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
-  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.620,00", status: "ativo", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
-  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", ie: "638.092.514.275", precoTon: "2.380,00", status: "ativo", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
+  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
+  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
+  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
+  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
+  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
 ];
 
 /* Indices that come pre-selected in advanced-selected step */
@@ -5533,30 +4330,18 @@ const ROTEIRO_SHORT = "Lorem Impsum Lorem Impsum Lorem Impsum";
 /* ===================================================================
    STATE
    =================================================================== */
-const COOPERADOS = [
-  { id: "C001", nome: "AGUINADO GOMES",  ie: "785.208.958.045", doc: "618.281.300-87",     fazenda: "FAZENDA 132",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C002", nome: "BETO DOS SANTOS", ie: "265.346.809.516", doc: "922.915.570-50",     fazenda: "FAZENDA 846",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C003", nome: "CARLOS ALVES",    ie: "877.714.770.605", doc: "488.722.440-05",     fazenda: "FAZENDA 0487", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C004", nome: "JORGE DOS ANJOS", ie: "712.865.870.640", doc: "61.906.309/0001-30", fazenda: "FAZENDA 493",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C005", nome: "RENATO CESAR",    ie: "118.299.922.567", doc: "40.908.039/0001-26", fazenda: "FAZENDA 0387", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C006", nome: "TEREZA AKEMI",    ie: "032.475.991.210", doc: "91.459.226/0001-00", fazenda: "FAZENDA 3284", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-];
-
-const EMBALAGENS = [
-  "BagOneWay Liner 1,40",
-  "BagOneWay Liner 1,20",
-  "Saco PE 50kg",
-  "Granel",
-  "BigBag 1.000kg",
-];
-
 const state = {
   view: "empty",
   rows: [],
   selectedInModal: new Set(),
   searchTerm: "",
   collapsed: new Set(),   // indices of cards currently collapsed (accordion)
-  viewMode: "table",  // toggle Cards/Tabela removido — sempre tabela
+  viewMode: (function() {
+    try {
+      const saved = localStorage.getItem("mosaicViewMode");
+      return saved === "table" || saved === "cards" ? saved : "cards";
+    } catch (_) { return "cards"; }
+  })(),
   cardsLayout: (function() {
     try {
       const saved = localStorage.getItem("mosaicCardsLayout");
@@ -5601,29 +4386,23 @@ const ICON_DOT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentC
 const ICON_WARN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>`;
 
 function rowStatus(r) {
-  return protoRowStatus(r);
-}
-
-function protoRowStatus(r) {
-  const requiredFilled =
-    !!(r.cooperado && r.volumeDesejado && r.embalagemSelected && r.roteiro);
-  if (requiredFilled) return "complete";
-  const anyTouched = !!(r.cooperado || r.volumeDesejado || r.embalagemSelected ||
-                        r.roteiro || r.nfVendaNum || r.nfVendaData || r.precoVenda ||
-                        r.semana);
-  return anyTouched ? "progress" : "incomplete";
+  const isCIF = r.frete === "CIF";
+  const filled = [r.volume, r.semana, isCIF ? r.roteiro : "skip"].filter(v => v && v !== "skip");
+  const requiredCount = isCIF ? 3 : 2;
+  if (r.volume && r.semana && (!isCIF || r.roteiro)) return "complete";
+  if (filled.length === 0) return "incomplete";       // nothing touched
+  return "progress";                                   // some fields filled, some still missing
 }
 
 const ICON_CHEVRON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 const ICON_CALENDAR = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
 
 function pendingFields(r) {
-  const out = [];
-  if (!r.cooperado) out.push("Cooperado");
-  if (!r.volumeDesejado) out.push("Volume");
-  if (!r.embalagemSelected) out.push("Embalagem");
-  if (!r.roteiro) out.push("Roteiro");
-  return out;
+  const missing = [];
+  if (!r.volume) missing.push("volume");
+  if (!r.semana) missing.push("data");
+  if (r.frete === "CIF" && !r.roteiro) missing.push("roteiro");
+  return missing;
 }
 
 function refreshHintV2() {
@@ -5645,14 +4424,13 @@ function refreshHintV2() {
 }
 
 function renderCardsView() {
-  /* V2 — V5-style grouped cards for criar-protocolo */
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
     elBody.innerHTML = `
       <div class="cards-empty">
         <strong>Nenhum contrato selecionado</strong>
-        Use o botão "Selecionar contratos" para começar a criação dos protocolos.
+        Use o campo de busca acima para adicionar contratos ao agendamento.
       </div>`;
     elAgendar.disabled = true;
     updateSummary();
@@ -5660,172 +4438,160 @@ function renderCardsView() {
     return;
   }
 
-  /* Group rows by contract code, preserving insertion order */
-  const groups = [];
-  const groupIndex = new Map();
-  state.rows.forEach((r, idx) => {
-    let g = groupIndex.get(r.contrato);
-    if (!g) {
-      g = { contrato: r.contrato, items: [] };
-      groupIndex.set(r.contrato, g);
-      groups.push(g);
-    }
-    g.items.push({ idx, row: r });
-  });
-
-  const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
-  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
-  const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
-  const ICON_SEARCH = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`;
-  const ICON_EXPAND = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
-  const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
-
   const list = document.createElement("div");
-  list.className = "cards-list layout-list";
+  list.className = `cards-list layout-${state.cardsLayout}`;
 
-  groups.forEach(group => {
-    const first = group.items[0].row;
-    const allComplete = group.items.every(i => protoRowStatus(i.row) === "complete");
-    const anyTouched = group.items.some(i => i.row.cooperado || i.row.volumeDesejado || i.row.embalagemSelected || i.row.roteiro);
-    const groupStatus = allComplete ? "complete" : (anyTouched ? "progress" : "incomplete");
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const missing = pendingFields(r);
+    const collapsed = state.cardsLayout === "grid" ? false : state.collapsed.has(idx);
 
     const card = document.createElement("article");
-    card.className = `contract-card v5-card is-${groupStatus}`;
-    card.setAttribute("data-contract", group.contrato);
+    card.className = `contract-card is-${status} ${collapsed ? "is-collapsed" : ""}`;
+    card.setAttribute("data-row", idx);
 
-    const headerHTML = `
-      <header class="card-head v5-card-head">
-        <span class="v5-level-tag">Contrato</span>
-        <span class="card-contract">${first.contrato}</span>
-        <span class="v5-head-divider"></span>
-        <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente}</strong></span>
-        <span class="v5-head-divider"></span>
-        <span class="v5-head-inline"><span class="v5-meta-label">Vigência</span><strong>${first.dataInicio}</strong><span class="arrow">→</span><strong>${first.dataFim}</strong></span>
-        <span class="v5-item-count">${group.items.length} ${group.items.length === 1 ? 'item' : 'itens'}</span>
-      </header>`;
+    const missVolume = !r.volume;
+    const missSemana = !r.semana;
+    const missRoteiro = isCIF && !r.roteiro;
 
-    const itemsHTML = group.items.map(({ idx, row: r }) => {
-      const status = protoRowStatus(r);
-      const isCIF = r.frete === "CIF";
-      const missCoop = !r.cooperado;
-      const missVolume = !r.volumeDesejado;
-      const missEmb = !r.embalagemSelected;
-      const missRoteiro = !r.roteiro;
-      const coopName = r.cooperado ? r.cooperado.nome : "";
-      const coopPendingBadge = r.cooperado && isCoopPending(r.cooperado)
-        ? '<span class="coop-pending-tag" title="Cadastro aguardando aprovação">Pendente</span>'
-        : '';
-      const maxVol = parseFloat((r.saldo || '0').toString().replace(/\./g,'').replace(',','.'));
+    card.innerHTML = `
+      <header class="card-head">
+        <div class="card-id">
+          <span class="card-contract">${r.contrato}</span>
+          <span class="card-sep">·</span>
+          <span class="card-item">Item ${r.item}</span>
+          <span class="card-sep">·</span>
+          <span class="card-item" style="font-weight:600;color:var(--text-3);">Ref. ${r.refCliente}</span>
+        </div>
+        <div class="card-head-right">
+          <span class="badge ${isCIF ? 'badge--cif' : 'badge--fob'}">${r.frete}</span>
+          <span class="card-action-icons">
+            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar contrato" aria-label="Duplicar">${ICON_DUPLICATE}</button>
+            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover contrato" aria-label="Remover">${ICON_TRASH}</button>
+          </span>
+          <button class="card-toggle" data-action="toggle" data-row="${idx}" aria-label="Recolher / Expandir" type="button">${ICON_CHEVRON}</button>
+        </div>
+      </header>
 
-      return `
-        <div class="v5-item-row is-${status}" data-row="${idx}">
-          <div class="v5-item-info">
-            <div class="v5-item-cell-stacks">
-              <div class="cell-stack cell-stack--produto">
-                <div class="v5-cell-tags-col">
-                  <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
-                  <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-                </div>
-                <div class="v5-cell-produto-body">
-                  <div class="stack-primary cell-strong">${r.produto}</div>
-                  <div class="stack-secondary">${r.embalagem}</div>
-                  <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
-                </div>
-              </div>
-              <div class="cell-stack">
-                <div class="v5-cell-saldo">${r.saldo}<span class="unit">t</span></div>
-                <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
-                <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
-              </div>
+      <div class="card-collapsed-summary">
+        <span class="product">${r.produto}</span>
+        <span class="dot-sep">·</span>
+        <span class="qty ${r.volume ? '' : 'is-empty'}">${r.volume ? r.volume + 't' : 'sem volume'}</span>
+        <span class="dot-sep">·</span>
+        <span class="qty ${r.semana ? '' : 'is-empty'}">${r.semana || 'sem data'}</span>
+        ${ status === "complete"
+          ? `<span class="pending-pill is-complete">${ICON_CHECK} Pronto</span>`
+          : `<span class="pending-pill">${ICON_WARN} ${missing.length} ${missing.length === 1 ? 'pendência' : 'pendências'}</span>`
+        }
+      </div>
+
+      <div class="card-product">
+        <div class="card-product-name">${r.produto}</div>
+        <div class="card-product-meta">
+          <span>Embalagem <strong>${r.embalagem}</strong></span>
+        </div>
+        <div class="list-meta-inline">
+          <span><strong>${r.planta}</strong> → ${r.enviarPara}</span>
+          <span>Vigência ${r.dataInicio} → ${r.dataFim} · <span class="saldo-tag">${r.saldo} t</span></span>
+        </div>
+      </div>
+
+      <div class="card-meta-grid">
+        <div class="meta-cell">
+          <div class="meta-label">Planta</div>
+          <div class="meta-value">${r.planta}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Enviar Para</div>
+          <div class="meta-value">${r.enviarPara}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">CNPJ Filial</div>
+          <div class="meta-value">${r.cnpj}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Vigência</div>
+          <div class="meta-value">${r.dataInicio} <span style="color:var(--text-3);font-weight:600;">→</span> ${r.dataFim}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Saldo Disponível</div>
+          <div class="meta-value meta-value--saldo">${r.saldo}<span class="meta-unit">t</span></div>
+        </div>
+      </div>
+
+      <div class="card-action-zone">
+        <div class="card-action-title">Agendamento</div>
+        <div class="card-action-grid">
+          <div class="field-block ${missVolume ? 'is-missing' : ''}">
+            <label>Volume Desejado <span class="req">*</span></label>
+            <div class="input-with-suffix">
+              <input type="number"
+                     value="${r.volume ?? ''}"
+                     placeholder="0"
+                     min="0"
+                     max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                     data-row="${idx}" data-field="volume" />
+              <span class="suffix">t</span>
             </div>
           </div>
-
-          <div class="v5-item-fields">
-            <div class="field-block ${missCoop ? 'is-missing' : ''}">
-              <label>Cooperado <span class="req">*</span></label>
-              <button class="v5-coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
-                <span class="coop-text">${coopName || 'Selecionar'}${coopPendingBadge}</span>
-                ${ICON_SEARCH}
+          <div class="field-block ${missSemana ? 'is-missing' : ''}">
+            <label>Semana Desejada <span class="req">*</span></label>
+            <div class="card-date-wrap" data-row="${idx}">
+              <input type="text"
+                     class="card-date-input"
+                     value="${r.semana || ''}"
+                     placeholder="DD/MM/AAAA"
+                     data-row="${idx}" data-field="semana"
+                     readonly />
+              <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CALENDAR}</button>
+            </div>
+          </div>
+          <div class="field-block field-block--roteiro ${missRoteiro ? 'is-missing' : ''}">
+            <label>
+              Roteiro de Entrega
+              ${isCIF ? '<span class="req">*</span>' : '<span class="opt-tag">Opcional</span>'}
+            </label>
+            <div class="roteiro-with-expand">
+              <textarea class="roteiro-textarea"
+                        placeholder="${isCIF ? 'Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc.' : 'Adicione observações de entrega se necessário (opcional para FOB).'}"
+                        data-row="${idx}" data-field="roteiro"
+                        rows="2">${r.roteiro || ''}</textarea>
+              <button class="expand-roteiro-btn" data-row="${idx}" type="button" aria-label="Expandir roteiro" title="Abrir editor">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
               </button>
             </div>
-            <div class="field-block ${missVolume ? 'is-missing' : ''}">
-              <label>Volume <span class="req">*</span></label>
-              <div class="input-with-suffix">
-                <input type="text" inputmode="decimal"
-                       value="${r.volumeDesejado ?? ''}"
-                       placeholder="0,00"
-                       data-row="${idx}" data-field="volumeDesejado" />
-                <span class="suffix">t</span>
-              </div>
-            </div>
-            <div class="field-block ${missEmb ? 'is-missing' : ''}">
-              <label>Embalagem <span class="req">*</span></label>
-              <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-                <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-                ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-              </select>
-            </div>
-            <div class="field-block field-block--roteiro-btn ${missRoteiro ? 'is-missing' : ''}">
-              <label>Roteiro <span class="req">*</span></label>
-              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-action="open-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
-                <span class="roteiro-toggle-text">${r.roteiro ? r.roteiro.substring(0, 36) + (r.roteiro.length > 36 ? '…' : '') : 'Adicionar roteiro'}</span>
-                <svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-              </button>
-            </div>
-          </div>
-
-          <div class="v5-item-actions">
-            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar item" type="button">${ICON_DUP}</button>
-            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover item" type="button">${ICON_DEL}</button>
-          </div>
-
-          <div class="v5-item-extra">
-            <div class="field-block">
-              <label>Nº NF Venda <span class="opt-tag">opc.</span></label>
-              <input type="text" inputmode="numeric"
-                     value="${r.nfVendaNum ?? ''}"
-                     placeholder="—"
-                     data-row="${idx}" data-field="nfVendaNum" />
-            </div>
-            <div class="field-block">
-              <label>Data NF Venda <span class="opt-tag">opc.</span></label>
-              <div class="card-date-wrap" data-row="${idx}">
-                <input type="text" class="card-date-input"
-                       value="${r.nfVendaData || ''}"
-                       placeholder="DD/MM/AAAA"
-                       data-row="${idx}" data-field="nfVendaData" readonly />
-                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-              </div>
-            </div>
-            <div class="field-block">
-              <label>Preço/Ton <span class="opt-tag">opc.</span></label>
-              <div class="v5-money-wrap">
-                <span class="prefix">R$</span>
-                <input type="text" inputmode="decimal"
-                       value="${r.precoVenda ?? ''}"
-                       placeholder="0,00"
-                       data-row="${idx}" data-field="precoVenda" />
-              </div>
-            </div>
-            <div class="field-block">
-              <label>Semana desejada</label>
-              <div class="card-date-wrap" data-row="${idx}">
-                <input type="text" class="card-date-input"
-                       value="${r.semana || ''}"
-                       placeholder="DD/MM/AAAA"
-                       data-row="${idx}" data-field="semana" readonly />
-                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-              </div>
-            </div>
+            <button class="roteiro-open-btn ${r.roteiro ? 'has-value' : ''} ${isCIF ? 'is-required' : ''}"
+                    data-action="open-roteiro" data-row="${idx}" type="button"
+                    aria-label="${r.roteiro ? 'Editar roteiro de entrega' : 'Adicionar roteiro de entrega'}">
+              <svg class="roteiro-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                ${r.roteiro
+                  ? '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'
+                  : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>'}
+              </svg>
+              <span class="roteiro-btn-text">${r.roteiro
+                ? r.roteiro.replace(/[<>"]/g, c => ({'<':'&lt;','>':'&gt;','"':'&quot;'}[c]))
+                : (isCIF ? 'Adicionar roteiro (obrigatório)' : 'Adicionar roteiro de entrega')
+              }</span>
+            </button>
           </div>
         </div>
-      `;
-    }).join("");
+      </div>
 
-    /* Footer "Todos os itens prontos" removido (sem valor visual, ocupava espaco).
-       Status do grupo ja transparece via border-left colorida do card. */
-    card.innerHTML = headerHTML + `<div class="v5-items-list">${itemsHTML}</div>`;
+      ${ status === "complete" ? `
+        <div class="card-status card-status--complete">
+          ${ICON_CHECK} Pronto para agendar
+        </div>
+      ` : `
+        <div class="card-status card-status--incomplete">
+          ${ICON_WARN} Pendências:
+          <span class="pending-list">
+            ${missing.map(m => `<span class="chip">${m}</span>`).join("")}
+          </span>
+        </div>
+      `}
+    `;
+
     list.appendChild(card);
   });
 
@@ -5833,7 +4599,6 @@ function renderCardsView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
-  refreshAllValidations();
 }
 
 /* No longer needed in v2 — kept as no-op for compatibility */
@@ -5841,89 +4606,17 @@ function upgradeTableForInputs() {}
 
 function canAgendar() {
   if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete" && !rowHasInvalid(r));
-}
-
-function parseBRNumber(s) {
-  if (s == null || s === "") return 0;
-  const n = parseFloat(String(s).replace(/\./g, "").replace(",", "."));
-  return isNaN(n) ? 0 : n;
-}
-
-function sumVolumeDesejado() {
-  return state.rows.reduce((sum, r) => sum + parseBRNumber(r.volumeDesejado), 0);
-}
-
-/* DD/MM/YYYY -> Date (00:00 local). Retorna null se invalido. */
-function brDateToDate(br) {
-  if (!br) return null;
-  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return null;
-  return new Date(+m[3], +m[2] - 1, +m[1]);
-}
-function todayStart() {
-  const t = new Date();
-  t.setHours(0, 0, 0, 0);
-  return t;
-}
-
-/* Validations:
-   - Grupo NF (nfVendaNum, nfVendaData, precoVenda): se um preenchido, os outros tres viram obrigatorios
-   - nfVendaData: nao pode ser futura
-   - precoVenda: deve ser > 0 quando preenchido
-   - semana: nao pode ser passada
-   Retorna { field: msg } pra cada problema. */
-function rowValidationErrors(r) {
-  const errs = {};
-  const numFilled   = !!(r.nfVendaNum && String(r.nfVendaNum).trim());
-  const dataFilled  = !!(r.nfVendaData && String(r.nfVendaData).trim());
-  const precoVal    = parseBRNumber(r.precoVenda);
-  const precoFilled = precoVal > 0 || (r.precoVenda && String(r.precoVenda).trim() !== "");
-  const anyFilled   = numFilled || dataFilled || precoFilled;
-  if (anyFilled) {
-    if (!numFilled)   errs.nfVendaNum  = "Preencha o Nº NF Venda";
-    if (!dataFilled)  errs.nfVendaData = "Preencha a Data NF Venda";
-    if (precoVal <= 0) errs.precoVenda = "Preço deve ser maior que 0";
-  }
-  if (dataFilled) {
-    const d = brDateToDate(r.nfVendaData);
-    if (d && d > todayStart()) errs.nfVendaData = "Data da NF não pode ser futura";
-  }
-  if (r.semana && String(r.semana).trim()) {
-    const d = brDateToDate(r.semana);
-    if (d && d < todayStart()) errs.semana = "Semana desejada não pode ser passada";
-  }
-  return errs;
-}
-
-function rowHasInvalid(r) {
-  return Object.keys(rowValidationErrors(r)).length > 0;
-}
-
-/* Aplica classe .is-invalid nos inputs conforme rowValidationErrors */
-function refreshRowValidation(idx) {
-  const r = state.rows[idx];
-  if (!r) return;
-  const errs = rowValidationErrors(r);
-  ["nfVendaNum", "nfVendaData", "precoVenda", "semana"].forEach(field => {
-    document.querySelectorAll(`[data-row="${idx}"][data-field="${field}"]`).forEach(el => {
-      const wrap = el.closest('.v5-money-wrap, .v5-date-wrap, .input-with-suffix, .proto-money-wrap, .proto-date-wrap, .card-date-wrap') || el;
-      const bad = !!errs[field];
-      wrap.classList.toggle('is-invalid', bad);
-      el.classList.toggle('is-invalid', bad);
-      el.title = errs[field] || "";
-    });
-  });
-}
-function refreshAllValidations() {
-  state.rows.forEach((_, idx) => refreshRowValidation(idx));
+  return state.rows.every(r => rowStatus(r) === "complete");
 }
 
 function updateSummary() {
-  const totalVolume = sumVolumeDesejado();
+  const totalVolume = state.rows.reduce((sum, r) => {
+    const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
+    return sum + (isNaN(v) ? 0 : v);
+  }, 0);
   const ready = state.rows.filter(r => rowStatus(r) === "complete").length;
   document.getElementById("statContracts").textContent = state.rows.length;
-  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span class="unit">t</span>`;
+  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR')}<span class="unit">t</span>`;
   document.getElementById("statReady").textContent = `${ready}/${state.rows.length || 0}`;
   document.getElementById("statReady").classList.toggle("muted", ready < state.rows.length);
 }
@@ -5988,10 +4681,9 @@ document.getElementById("cardsLayoutToggle").addEventListener("click", e => {
 });
 
 function refreshLayoutToggleVisibility() {
-  /* V2: Lista/Grid toggle removido — sempre escondido. */
   const tog = document.getElementById("cardsLayoutToggle");
   if (!tog) return;
-  tog.style.display = "none";
+  tog.style.display = state.viewMode === "cards" ? "inline-flex" : "none";
 }
 refreshLayoutToggleVisibility();
 /* Reflect persisted layout button state on load */
@@ -6028,35 +4720,19 @@ function isAlreadyAdded(r) {
   return state.rows.some(row => row.contrato === r.contrato && row.item === r.item);
 }
 
-function _drawerSortKey(brDate) {
-  if (!brDate) return Infinity;
-  const m = String(brDate).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return Infinity;
-  return new Date(+m[3], +m[2] - 1, +m[1]).getTime();
-}
-
 function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
-  /* Ordenacao por End Date (dataFim) asc — alinha com V5 / US SMDP-131 */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
       if (!q) return true;
       const haystack = [
         r.contrato, r.item, r.refCliente, r.produto, r.embalagem,
-        r.frete, r.planta, r.enviarPara, r.cnpj, r.ie || '', r.precoTon || '',
-        r.dataInicio, r.dataFim, r.saldo
+        r.frete, r.planta, r.enviarPara, r.cnpj, r.dataInicio, r.dataFim, r.saldo
       ].join(" ").toLowerCase();
       return haystack.includes(q);
-    })
-    .sort((a, b) => {
-      const dA = _drawerSortKey(a.r.dataFim);
-      const dB = _drawerSortKey(b.r.dataFim);
-      if (dA !== dB) return dA - dB;
-      if (a.r.contrato !== b.r.contrato) return a.r.contrato.localeCompare(b.r.contrato);
-      return String(a.r.item).localeCompare(String(b.r.item), undefined, { numeric: true });
     });
 
   elDrawerCount.textContent = filtered.length;
@@ -6070,9 +4746,8 @@ function renderDrawerList() {
   elDrawerList.innerHTML = filtered.map(({ r, i }) => {
     const selected = state.selectedInModal.has(i);
     const added = isAlreadyAdded(r);
-    const blocked = r.status && r.status !== "ativo";
     return `
-      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added || blocked ? 'is-disabled' : ''}" data-i="${i}" ${blocked ? `title="${r.statusReason || 'Contrato bloqueado'}"` : ''}>
+      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added ? 'is-disabled' : ''}" data-i="${i}">
         <span class="checkbox">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </span>
@@ -6084,17 +4759,12 @@ function renderDrawerList() {
             <span style="color:var(--border-strong);">·</span>
             <span class="drawer-item-frete drawer-item-frete--${r.frete === 'CIF' ? 'cif' : 'fob'}">${r.frete}</span>
             ${ added ? `<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>` : ''}
-            ${ blocked ? `<span class="status-tag status-tag--${r.status}">${r.statusReason || 'Bloqueado'}</span>` : ''}
           </div>
           <div class="drawer-item-product">${highlightMatch(r.produto, q)}</div>
           <div class="drawer-item-meta">
-            <span><strong>Ref. Cliente:</strong> ${highlightMatch(r.refCliente || '—', q)}</span>
             <span><strong>Embalagem:</strong> ${highlightMatch(r.embalagem, q)}</span>
             <span><strong>Planta:</strong> ${highlightMatch(r.planta, q)}</span>
             <span><strong>Enviar para:</strong> ${highlightMatch(r.enviarPara, q)}</span>
-            <span><strong>CNPJ Filial:</strong> ${highlightMatch(r.cnpj || '—', q)}</span>
-            ${r.ie ? `<span><strong>IE:</strong> ${highlightMatch(r.ie, q)}</span>` : ''}
-            ${r.precoTon ? `<span><strong>Preço/Ton:</strong> R$ ${r.precoTon}</span>` : ''}
             <span><strong>Vigência:</strong> ${r.dataInicio} → ${r.dataFim}</span>
           </div>
         </div>
@@ -6177,24 +4847,20 @@ elDrawerSelectAll.addEventListener("click", () => {
 
 elDrawerAddBtn.addEventListener("click", () => {
   const indices = [...state.selectedInModal].sort((a, b) => a - b);
+  const wasEmpty = state.rows.length === 0;
   indices.forEach(i => {
     const r = SEARCH_RESULTS[i];
     if (!isAlreadyAdded(r)) {
-      state.rows.push({
-        ...r,
-        cooperado: null,
-        volumeDesejado: "",
-        embalagemSelected: r.embalagem || "",
-        roteiro: "",
-        nfVendaNum: "",
-        nfVendaData: "",
-        precoVenda: "",
-        semana: "",
-      });
+      state.rows.push({ ...r, volume: "", semana: "", roteiro: "" });
     }
   });
   state.selectedInModal.clear();
   closeDrawer();
+
+  /* Auto-collapse rule: only the first incomplete card is open;
+     everything else starts collapsed. */
+  collapseAllExceptFirstIncomplete();
+
   renderTable();
 });
 
@@ -6305,31 +4971,6 @@ elBuscaSel.addEventListener("click", () => {
 /* ===================================================================
    Workspace table — input + action wiring (event delegation)
    =================================================================== */
-/* Enter avanca pro proximo campo (preenchimento rapido). */
-function focusNextFieldInRow(currentEl) {
-  if (!currentEl) return;
-  const tr = currentEl.closest("tr[data-row], [data-row]");
-  if (!tr) return;
-  const focusables = Array.from(tr.querySelectorAll(
-    "input[data-field]:not([readonly]):not([disabled]), select[data-field]:not([disabled]), button[data-action='open-coop']:not(:disabled), button[data-action='open-roteiro']:not(:disabled)"
-  ));
-  const idx = focusables.indexOf(currentEl);
-  if (idx === -1 || idx >= focusables.length - 1) return;
-  const next = focusables[idx + 1];
-  if (next) {
-    next.focus();
-    if (next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }
-}
-elBody.addEventListener("keydown", e => {
-  if (e.key !== "Enter") return;
-  const t = e.target;
-  if (!t.matches || !t.matches("[data-field]")) return;
-  if (t.tagName === "TEXTAREA") return;
-  e.preventDefault();
-  focusNextFieldInRow(t);
-});
-
 elBody.addEventListener("input", e => {
   const t = e.target;
   if (!t.matches('[data-field]')) return;
@@ -6340,48 +4981,98 @@ elBody.addEventListener("input", e => {
   afterFieldChange(idx, t);
 });
 
-/* Auto-scroll horizontal: ao terminar de preencher um campo (change/blur),
-   scrolla o proximo campo da mesma linha pra dentro da viewport. */
-function scrollNextFieldIntoView(sourceEl) {
-  if (!sourceEl || !sourceEl.value) return;
-  const tr = sourceEl.closest("tr[data-row]");
-  if (!tr) return;
-  const fields = Array.from(tr.querySelectorAll("input[data-field], select[data-field], button[data-action='open-coop'], button[data-action='open-roteiro']"));
-  const i = fields.indexOf(sourceEl);
-  if (i === -1 || i >= fields.length - 1) return;
-  const next = fields[i + 1];
-  if (next) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-}
-elBody.addEventListener("change", e => {
-  const t = e.target;
-  if (!t.matches('[data-field]')) return;
-  setTimeout(() => scrollNextFieldIntoView(t), 30);
-});
-
 /* Lightweight update on each keystroke — never re-render the source
    element (would lose focus/cursor). Only update siblings that don't
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
-  refreshRowValidation(idx);
   elAgendar.disabled = !canAgendar();
   updateSummary();
+
   const r = state.rows[idx];
   if (!r) return;
+
+  /* Table-view path: update <tr> class and cell is-missing */
   const tr = sourceEl.closest("tr[data-row]");
-  if (!tr) return;
-  const newStatus = protoRowStatus(r);
-  tr.classList.remove("is-incomplete", "is-progress", "is-complete");
-  tr.classList.add(`is-${newStatus}`);
-  const dot = tr.querySelector(".v3-status-dot");
-  if (dot) dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
-  const td = sourceEl.closest("td");
-  if (td) {
-    const f = sourceEl.dataset.field;
-    const missing =
-      (f === "volumeDesejado" && !r.volumeDesejado) ||
-      (f === "embalagemSelected" && !r.embalagemSelected) ||
-      (f === "roteiro" && !r.roteiro);
-    td.classList.toggle("is-missing", !!missing);
+  if (tr) {
+    const newStatus = rowStatus(r);
+    tr.classList.remove("is-incomplete", "is-progress", "is-complete");
+    tr.classList.add(`is-${newStatus}`);
+
+    /* Update the status dot in the first cell */
+    const dot = tr.querySelector(".v3-status-dot");
+    if (dot) {
+      dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
+    }
+
+    /* Update missing-state on the source cell */
+    const td = sourceEl.closest("td");
+    if (td) {
+      const fieldName = sourceEl.dataset.field;
+      const isCIF = r.frete === "CIF";
+      const missing = (fieldName === "volume" && !r.volume) ||
+                      (fieldName === "semana" && !r.semana) ||
+                      (fieldName === "roteiro" && isCIF && !r.roteiro);
+      td.classList.toggle("is-missing", !!missing);
+    }
+    /* Toggle is-empty on the date wrap so it switches between icon-only and
+       value-displayed visual states */
+    if (sourceEl.dataset.field === "semana") {
+      const wrap = sourceEl.closest(".v3-cell-date-wrap");
+      if (wrap) wrap.classList.toggle("is-empty", !r.semana);
+    }
+    /* Mark roteiro cell with has-text class for non-italic styling */
+    if (sourceEl.dataset.field === "roteiro") {
+      sourceEl.classList.toggle("has-text", !!r.roteiro);
+    }
+    return;
+  }
+
+  /* Card-view path */
+  const card = sourceEl.closest(".contract-card");
+  if (!card) return;
+
+  // Update the field wrapper's missing class (visual only — kicks in only
+  // once the user has tried to submit, gated by .show-validation on parent)
+  const fieldWrap = sourceEl.closest(".field-block");
+  if (fieldWrap) {
+    const fieldName = sourceEl.dataset.field;
+    const isCIF = r.frete === "CIF";
+    const missing = (fieldName === "volume" && !r.volume) ||
+                    (fieldName === "semana" && !r.semana) ||
+                    (fieldName === "roteiro" && isCIF && !r.roteiro);
+    fieldWrap.classList.toggle("is-missing", !!missing);
+  }
+
+  // Update card border state — 3 states: incomplete / progress / complete
+  const prevStatus = card.classList.contains("is-complete") ? "complete"
+                   : card.classList.contains("is-progress") ? "progress"
+                   : "incomplete";
+  const newStatus = rowStatus(r);
+  card.classList.remove("is-incomplete", "is-progress", "is-complete");
+  card.classList.add(`is-${newStatus}`);
+
+  // Status footer & collapsed summary live OUTSIDE the action zone, so we
+  // can safely update them without touching the active input.
+  updateCardStatusFooter(card, r);
+  updateCardCollapsedSummary(card, r);
+
+  /* Auto-collapse on completion → auto-expand the next incomplete card */
+  if (prevStatus !== "complete" && newStatus === "complete") {
+    setTimeout(() => {
+      // Sometimes the user is still typing in the field; only auto-collapse
+      // if they're not currently focused on it
+      if (document.activeElement === sourceEl) return;
+      autoAdvanceFromCard(idx);
+    }, 250);
+    /* Also listen for blur — if they tab/click away and it's still complete,
+       advance immediately */
+    sourceEl.addEventListener("blur", function onBlur() {
+      sourceEl.removeEventListener("blur", onBlur);
+      const r2 = state.rows[idx];
+      if (r2 && rowStatus(r2) === "complete") {
+        autoAdvanceFromCard(idx);
+      }
+    }, { once: true });
   }
 }
 
@@ -6429,17 +5120,13 @@ function renderTable() {
 }
 
 function renderTableView() {
-  renderProtocolTable();
-}
-
-function renderProtocolTable() {
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
     elBody.innerHTML = `
       <div class="cards-empty">
         <strong>Nenhum contrato selecionado</strong>
-        Use o botão "Selecionar contratos" para começar a criação dos protocolos.
+        Use o botão "Selecionar contratos" para adicionar itens ao agendamento.
       </div>`;
     elAgendar.disabled = true;
     updateSummary();
@@ -6448,151 +5135,112 @@ function renderProtocolTable() {
   }
 
   const wrap = document.createElement("div");
-  wrap.className = "proto-table-wrap";
+  wrap.className = "v3-table-wrap";
   if (elBody.classList.contains("show-validation")) wrap.classList.add("show-validation");
 
   wrap.innerHTML = `
-    <table class="proto-table">
+    <table class="v3-table" id="v3Table">
       <thead>
         <tr>
-          <th class="col-status-cell" aria-label="Status"></th>
+          <th class="v3-status-cell" aria-label="Status"></th>
           <th>Contrato / Item</th>
-          <th>Produto / Embalagem / Origem</th>
-          <th>Destino / CNPJ Filial</th>
-          <th class="col-saldo">Saldo / Vigência</th>
-          <th class="col-coop">Cooperado <span class="req">*</span></th>
-          <th class="col-volume">Volume desejado <span class="req">*</span></th>
-          <th class="col-emb">Embalagem <span class="req">*</span></th>
-          <th class="col-roteiro">Roteiro <span class="req">*</span></th>
-          <th class="col-nf-num col-optional">Nº NF Venda <span class="opt-tag">opc.</span></th>
-          <th class="col-date col-optional">Data NF Venda <span class="opt-tag">opc.</span></th>
-          <th class="col-money col-optional">Preço/Ton <span class="opt-tag">opc.</span></th>
-          <th class="col-date">Semana desejada</th>
-          <th class="col-actions" aria-label="Ações"></th>
+          <th>Produto / Embalagem</th>
+          <th>Origem → Destino</th>
+          <th>Saldo / Vigência</th>
+          <th>Volume <span class="req">*</span></th>
+          <th>Semana <span class="req">*</span></th>
+          <th>Roteiro <span class="opt-tag" id="roteiroHeaderTag">opc. FOB</span></th>
+          <th aria-label="Ações"></th>
         </tr>
       </thead>
-      <tbody id="protoTbody"></tbody>
+      <tbody id="v3TableBody"></tbody>
     </table>
   `;
   elBody.appendChild(wrap);
 
-  const tbody = wrap.querySelector("#protoTbody");
+  const tbody = wrap.querySelector("#v3TableBody");
   const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
-  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
+  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
   const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
   const ICON_DOT = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>`;
   const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
   const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
-  const ICON_SEARCH = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`;
-  const ICON_EXPAND = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
 
   state.rows.forEach((r, idx) => {
-    const status = protoRowStatus(r);
-    const missCoop = !r.cooperado;
-    const missVolume = !r.volumeDesejado;
-    const missEmb = !r.embalagemSelected;
-    const missRoteiro = !r.roteiro;
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const missVolume = !r.volume;
+    const missSemana = !r.semana;
+    const missRoteiro = isCIF && !r.roteiro;
 
     let dot;
-    if (status === "complete") dot = `<span class="v3-status-dot v3-status-dot--complete">${ICON_CHK}</span>`;
-    else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress">${ICON_BANG}</span>`;
-    else dot = `<span class="v3-status-dot v3-status-dot--incomplete">${ICON_DOT}</span>`;
+    if (status === "complete") dot = `<span class="v3-status-dot v3-status-dot--complete" title="Pronto">${ICON_CHK}</span>`;
+    else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress" title="Em progresso">${ICON_BANG}</span>`;
+    else dot = `<span class="v3-status-dot v3-status-dot--incomplete" title="Aguardando">${ICON_DOT}</span>`;
 
+    /* Vigência short form: dd/mm → dd/mm/yyyy */
     const startShort = r.dataInicio ? r.dataInicio.slice(0, 5) : "";
     const endLong = r.dataFim || "";
-    const coopName = r.cooperado ? r.cooperado.nome : "";
-    const coopPendingBadge = r.cooperado && isCoopPending(r.cooperado)
-      ? '<span class="coop-pending-tag" title="Cadastro aguardando aprovação">Pendente</span>'
-      : '';
 
     const tr = document.createElement("tr");
     tr.className = `is-${status}`;
     tr.setAttribute("data-row", idx);
     tr.innerHTML = `
-      <td class="col-status-cell">${dot}</td>
+      <td class="v3-status-cell">${dot}</td>
       <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.contrato}</div>
-        <div class="stack-secondary">Item <strong>${r.item}</strong> · Ref. ${r.refCliente}</div>
+        <div class="stack-primary">
+          <span class="cell-strong">${r.contrato}</span>
+          <span class="v3-frete-badge v3-frete-badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
+        </div>
+        <div class="stack-secondary">
+          Item <strong>${r.item}</strong> · Ref. ${r.refCliente}
+        </div>
       </td>
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.produto}</div>
         <div class="stack-secondary">${r.embalagem}</div>
-        <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
       </td>
       <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
-        <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
+        <div class="stack-primary">${r.planta}</div>
+        <div class="stack-secondary"><span class="arrow-to">→</span> ${r.enviarPara}</div>
       </td>
-      <td class="cell-stack col-saldo">
-        <div class="saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
-        <div class="saldo-secondary">${startShort} → ${endLong}</div>
-      </td>
-      <td class="${missCoop ? 'is-missing' : ''}">
-        <button class="coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
-          <span class="coop-text">${coopName || 'Selecionar cooperado'}${coopPendingBadge}</span>
-          ${ICON_SEARCH}
-        </button>
+      <td class="cell-stack cell-saldo-emphasis">
+        <div class="stack-primary saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
+        <div class="stack-secondary">${startShort} → ${endLong}</div>
       </td>
       <td class="${missVolume ? 'is-missing' : ''}">
-        <div class="proto-volume-wrap">
-          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
-                 value="${r.volumeDesejado ?? ''}"
-                 placeholder="0,00"
-                 data-row="${idx}" data-field="volumeDesejado" />
+        <div class="v3-cell-volume-wrap">
+          <input type="number" class="v3-cell-input v3-cell-num"
+                 value="${r.volume ?? ''}"
+                 placeholder="0"
+                 min="0"
+                 max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                 data-row="${idx}" data-field="volume" />
           <span class="suffix">t</span>
         </div>
       </td>
-      <td class="${missEmb ? 'is-missing' : ''}">
-        <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-          <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-          ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-        </select>
-      </td>
-      <td class="${missRoteiro ? 'is-missing' : ''}">
-        <div class="proto-roteiro-wrap">
-          <input type="text" class="proto-cell-input"
-                 value="${r.roteiro ?? ''}"
-                 placeholder="Obrigatório"
-                 data-row="${idx}" data-field="roteiro" />
-          <button class="roteiro-expand" data-row="${idx}" type="button" aria-label="Expandir roteiro">${ICON_EXPAND}</button>
-        </div>
-      </td>
-      <td>
-        <input type="text" inputmode="numeric" class="proto-cell-input"
-               value="${r.nfVendaNum ?? ''}"
-               placeholder="—"
-               data-row="${idx}" data-field="nfVendaNum" />
-      </td>
-      <td>
-        <div class="proto-date-wrap card-date-wrap" data-row="${idx}">
-          <input type="text" class="proto-cell-input card-date-input"
-                 value="${r.nfVendaData || ''}"
-                 placeholder="DD/MM/AAAA"
-                 data-row="${idx}" data-field="nfVendaData"
-                 readonly />
-          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-        </div>
-      </td>
-      <td>
-        <div class="proto-money-wrap">
-          <span class="prefix">R$</span>
-          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
-                 value="${r.precoVenda ?? ''}"
-                 placeholder="0,00"
-                 data-row="${idx}" data-field="precoVenda" />
-        </div>
-      </td>
-      <td>
-        <div class="proto-date-wrap card-date-wrap" data-row="${idx}">
-          <input type="text" class="proto-cell-input card-date-input"
+      <td class="${missSemana ? 'is-missing' : ''}">
+        <div class="v3-cell-date-wrap card-date-wrap" data-row="${idx}">
+          <input type="text" class="v3-cell-input card-date-input"
                  value="${r.semana || ''}"
                  placeholder="DD/MM/AAAA"
                  data-row="${idx}" data-field="semana"
                  readonly />
-          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
+          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="${r.semana ? 'Trocar data' : 'Selecionar data'}">${ICON_CAL}</button>
         </div>
       </td>
-      <td class="col-actions">
+      <td class="${missRoteiro ? 'is-missing' : ''}">
+        <div class="roteiro-with-expand">
+          <input type="text" class="v3-cell-roteiro ${r.roteiro ? 'has-text' : ''}"
+                 value="${r.roteiro ?? ''}"
+                 placeholder="${isCIF ? 'Obrigatório' : 'Opcional'}"
+                 data-row="${idx}" data-field="roteiro" />
+          <button class="expand-roteiro-btn" data-row="${idx}" type="button" aria-label="Expandir roteiro" title="Abrir editor">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
+          </button>
+        </div>
+      </td>
+      <td class="cell-actions">
         <span class="v3-row-actions">
           <button data-action="duplicate" data-row="${idx}" title="Duplicar">${ICON_DUP}</button>
           <button data-action="remove" data-row="${idx}" class="danger" title="Remover">${ICON_DEL}</button>
@@ -6602,10 +5250,17 @@ function renderProtocolTable() {
     tbody.appendChild(tr);
   });
 
+  /* Update the roteiro header tag if all rows are CIF */
+  const allCIF = state.rows.every(r => r.frete === "CIF");
+  const tag = wrap.querySelector("#roteiroHeaderTag");
+  if (tag && allCIF) {
+    tag.textContent = "obr. CIF";
+    tag.style.color = "var(--mosaic-red)";
+  }
+
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
-  refreshAllValidations();
 }
 
 function updateCardStatusFooter(card, r) {
@@ -6753,10 +5408,13 @@ document.getElementById("agendarBtn").addEventListener("click", () => {
   // Populate the submit-modal summary
   const summaryEl = document.getElementById("submitSummary");
   if (summaryEl) {
-    const totalVolume = sumVolumeDesejado();
+    const totalVolume = state.rows.reduce((sum, r) => {
+      const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
+      return sum + (isNaN(v) ? 0 : v);
+    }, 0);
     summaryEl.innerHTML = `
-      <div class="row"><span>Protocolos a criar</span><strong>${state.rows.length}</strong></div>
-      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2})} t</strong></div>
+      <div class="row"><span>Contratos a agendar</span><strong>${state.rows.length}</strong></div>
+      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR")} t</strong></div>
     `;
   }
   openModal("submitModal");
@@ -6973,9 +5631,6 @@ function renderDP() {
   }
 
   const grid = dpPopup.querySelector(".dp-grid");
-  const dataField = dpCurrentInput && dpCurrentInput.dataset ? dpCurrentInput.dataset.field : "";
-  const blockPast   = dataField === "semana";        /* Semana: nao pode passada */
-  const blockFuture = dataField === "nfVendaData";   /* Data NF: nao pode futura */
   grid.innerHTML = cells.map(({ d, isOther }) => {
     const sameDay = (a, b) => a && b &&
       a.getFullYear() === b.getFullYear() &&
@@ -6985,12 +5640,7 @@ function renderDP() {
     if (isOther) classes.push("is-other");
     if (sameDay(d, today)) classes.push("is-today");
     if (sameDay(d, dpSelected)) classes.push("is-selected");
-    let disabledReason = "";
-    if (blockPast && d < today) disabledReason = "Não pode data anterior à atual";
-    if (blockFuture && d > today) disabledReason = "Data NF não pode ser futura";
-    if (disabledReason) classes.push("is-disabled");
-    const titleAttr = disabledReason ? ` title="${disabledReason}"` : "";
-    return `<button type="button" class="${classes.join(" ")}"${titleAttr} data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
+    return `<button type="button" class="${classes.join(" ")}" data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
   }).join("");
 }
 
@@ -7136,8 +5786,6 @@ function saveRoteiroDrawer() {
   /* If we couldn't find any element (e.g. between renders), still update state */
   if (typeof updateSummary === "function") updateSummary();
   if (typeof refreshHintV2 === "function") refreshHintV2();
-  /* V2: re-render so V5 cards (.roteiro-toggle-btn) reflect the new value */
-  if (typeof renderTable === "function") renderTable();
   closeRoteiroDrawer();
 }
 
@@ -7164,352 +5812,7 @@ elBody.addEventListener("click", e => {
   openRoteiroDrawer(idx, sourceEl);
 });
 
-
-/* Cooperado picker + Cadastrar Cooperado */
-const elCoopDrawer = document.getElementById("coopDrawer");
-const elCoopBackdrop = document.getElementById("coopDrawerBackdrop");
-const elCoopList = document.getElementById("coopDrawerList");
-const elCoopSearch = document.getElementById("coopDrawerSearch");
-const elCoopSelectBtn = document.getElementById("coopDrawerSelect");
-let coopPickContext = { rowIdx: null, tempSelected: null };
-
-function openCoopDrawer(rowIdx) {
-  coopPickContext.rowIdx = rowIdx;
-  coopPickContext.tempSelected = state.rows[rowIdx]?.cooperado || null;
-  elCoopSearch.value = "";
-  renderCoopDrawerList();
-  elCoopDrawer.classList.add("is-open");
-  elCoopDrawer.setAttribute("aria-hidden", "false");
-  elCoopBackdrop.classList.add("is-open");
-  setTimeout(() => elCoopSearch.focus(), 320);
-}
-function closeCoopDrawer() {
-  elCoopDrawer.classList.remove("is-open");
-  elCoopDrawer.setAttribute("aria-hidden", "true");
-  elCoopBackdrop.classList.remove("is-open");
-  coopPickContext = { rowIdx: null, tempSelected: null };
-}
-function renderCoopDrawerList() {
-  const q = (elCoopSearch.value || "").trim().toLowerCase();
-  const filtered = COOPERADOS.filter(c => {
-    if (!q) return true;
-    return [c.nome, c.doc, c.ie, c.fazenda, c.cidade].some(v => v.toLowerCase().includes(q));
-  });
-  if (filtered.length === 0) {
-    elCoopList.innerHTML = `<div style="padding:32px 16px; text-align:center; color: var(--text-3);">Nenhum cooperado encontrado.</div>`;
-    elCoopSelectBtn.disabled = true;
-    return;
-  }
-  elCoopList.innerHTML = filtered.map(c => {
-    const isPending = isCoopPending(c);
-    const sel = coopPickContext.tempSelected && coopPickContext.tempSelected.id === c.id;
-    const pendingBadge = isPending
-      ? `<span class="coop-pending-tag" title="Aguardando aprovação cadastral">Pendente</span>`
-      : "";
-    return `
-      <div class="drawer-item-coop ${sel ? 'is-selected' : ''} ${isPending ? 'is-pending' : ''}" data-coop-id="${c.id}" ${isPending ? 'aria-disabled="true"' : ''}>
-        <div class="coop-radio"></div>
-        <div>
-          <div class="coop-name">${c.nome} ${pendingBadge}</div>
-          <div class="coop-fazenda">${c.fazenda}${isPending ? ' · <em style="color:var(--status-orange)">aguardando aprovação</em>' : ''}</div>
-        </div>
-        <div class="coop-doc">
-          <strong>CPF/CNPJ</strong>
-          ${c.doc}
-        </div>
-        <div class="coop-loc">
-          <strong>Cidade</strong>
-          ${c.cidade}/${c.uf}
-        </div>
-      </div>
-    `;
-  }).join("");
-  elCoopSelectBtn.disabled = !coopPickContext.tempSelected || isCoopPending(coopPickContext.tempSelected);
-}
-
-elCoopSearch.addEventListener("input", renderCoopDrawerList);
-elCoopList.addEventListener("click", e => {
-  const item = e.target.closest(".drawer-item-coop");
-  if (!item) return;
-  if (item.classList.contains("is-pending")) return;
-  const id = item.dataset.coopId;
-  coopPickContext.tempSelected = COOPERADOS.find(c => c.id === id);
-  renderCoopDrawerList();
-});
-elCoopSelectBtn.addEventListener("click", () => {
-  if (coopPickContext.rowIdx == null || !coopPickContext.tempSelected) return;
-  const r = state.rows[coopPickContext.rowIdx];
-  if (!r) return;
-  r.cooperado = coopPickContext.tempSelected;
-  closeCoopDrawer();
-  renderTable();
-});
-document.querySelectorAll("[data-close-coop-drawer]").forEach(b =>
-  b.addEventListener("click", closeCoopDrawer));
-elCoopBackdrop.addEventListener("click", closeCoopDrawer);
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && elCoopDrawer.classList.contains("is-open")) closeCoopDrawer();
-});
-
-/* CadCoop side-drawer open/close */
-const elCadCoopDrawer = document.getElementById("cadCoopDrawer");
-const elCadCoopBackdrop = document.getElementById("cadCoopBackdrop");
-/* Lembrar se o cad-coop foi aberto a partir do coopDrawer pra reabrir
-   automaticamente depois do Salvar */
-let cadCoopOpenedFromCoopDrawer = false;
-function openCadCoopDrawer() {
-  if (!elCadCoopDrawer) return;
-  elCadCoopDrawer.classList.add("is-open");
-  elCadCoopDrawer.setAttribute("aria-hidden", "false");
-  elCadCoopBackdrop.classList.add("is-open");
-}
-function closeCadCoopDrawer() {
-  if (!elCadCoopDrawer) return;
-  elCadCoopDrawer.classList.remove("is-open");
-  elCadCoopDrawer.setAttribute("aria-hidden", "true");
-  elCadCoopBackdrop.classList.remove("is-open");
-}
-document.querySelectorAll("[data-close-cad-coop-drawer]").forEach(b =>
-  b.addEventListener("click", () => { cadCoopOpenedFromCoopDrawer = false; closeCadCoopDrawer(); }));
-elCadCoopBackdrop.addEventListener("click", () => { cadCoopOpenedFromCoopDrawer = false; closeCadCoopDrawer(); });
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && elCadCoopDrawer.classList.contains("is-open")) {
-    cadCoopOpenedFromCoopDrawer = false;
-    closeCadCoopDrawer();
-  }
-});
-
-document.getElementById("openCadastrarCoopBtn").addEventListener("click", () => {
-  ["cadCoopTipo","cadCoopNome","cadCoopTelefone","cadCoopEmail",
-   "cadCoopCEP","cadCoopEndereco","cadCoopEnd2","cadCoopEstado","cadCoopCidade",
-   "cadCoopRoteiro"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-  document.getElementById("cadCoopPais").value = "";
-  /* Limpa estados de erro */
-  document.querySelectorAll("#cadCoopDrawer .cad-coop-field.is-error")
-    .forEach(f => f.classList.remove("is-error"));
-  /* Resetar visual do select (sem cor) */
-  document.querySelectorAll("#cadCoopDrawer select").forEach(s => s.classList.remove("has-value"));
-  openCadCoopDrawer();
-});
-
-/* Atualiza visual do select (cinza placeholder vs preto preenchido) */
-document.querySelectorAll("#cadCoopDrawer select").forEach(s => {
-  s.addEventListener("change", () => {
-    s.classList.toggle("has-value", !!s.value);
-    /* Limpa erro ao começar a digitar/escolher */
-    const f = s.closest(".cad-coop-field");
-    if (f) f.classList.remove("is-error");
-  });
-});
-/* Limpa erro ao digitar em inputs/textarea */
-document.querySelectorAll("#cadCoopDrawer input, #cadCoopDrawer textarea").forEach(el => {
-  el.addEventListener("input", () => {
-    const f = el.closest(".cad-coop-field");
-    if (f) f.classList.remove("is-error");
-  });
-});
-
-document.getElementById("cadCoopSalvar").addEventListener("click", () => {
-  const tipo = document.getElementById("cadCoopTipo").value;
-  const nome = document.getElementById("cadCoopNome").value.trim();
-  const cep  = document.getElementById("cadCoopCEP").value.trim();
-  const end  = document.getElementById("cadCoopEndereco").value.trim();
-  const pais = document.getElementById("cadCoopPais").value;
-  const uf   = document.getElementById("cadCoopEstado").value.trim();
-  const cidade = document.getElementById("cadCoopCidade").value.trim();
-
-  /* Required: tipo, nome, rua, cep, cidade, pais, estado */
-  const required = {
-    tipo:    !!tipo,
-    nome:    !!nome,
-    rua:     !!end,
-    cep:     !!cep,
-    cidade:  !!cidade,
-    pais:    !!pais,
-    estado:  !!uf,
-  };
-  let hasError = false;
-  Object.entries(required).forEach(([key, ok]) => {
-    const field = document.querySelector(`#cadCoopDrawer .cad-coop-field[data-field="${key}"]`);
-    if (!field) return;
-    if (ok) {
-      field.classList.remove("is-error");
-    } else {
-      field.classList.add("is-error");
-      hasError = true;
-    }
-  });
-  if (hasError) return;
-
-  const end2 = document.getElementById("cadCoopEnd2").value.trim();
-  const newCoop = {
-    id: "C" + String(COOPERADOS.length + 1).padStart(3, "0"),
-    nome: nome.toUpperCase(),
-    ie: "—", doc: "—",
-    fazenda: "—",
-    rua: end + (end2 ? ", " + end2 : ""),
-    cidade: cidade.toUpperCase(),
-    uf: uf, cep: cep,
-    pending: true,           /* lock for ~10 min (approval pending) */
-    pendingUntil: Date.now() + 10 * 60 * 1000,
-  };
-  COOPERADOS.push(newCoop);
-  closeCadCoopDrawer();
-  /* Se veio do drawer de Selecionar cooperado, reabre ele com o novo
-     destacado (em vez de mostrar o modal de sucesso). */
-  if (cadCoopOpenedFromCoopDrawer && typeof openCoopDrawer === "function" && coopPickContext.rowIdx != null) {
-    cadCoopOpenedFromCoopDrawer = false;
-    openCoopDrawer(coopPickContext.rowIdx);
-    if (typeof elCoopSearch !== "undefined" && elCoopSearch) {
-      elCoopSearch.value = newCoop.nome;
-      if (typeof renderCoopDrawerList === "function") renderCoopDrawerList();
-    }
-  } else {
-    openModal("cadCoopSuccessModal");
-  }
-});
-
-/* Coop pendente: fica travado por 10 min apos cadastro */
-function isCoopPending(c) {
-  if (!c || !c.pending) return false;
-  if (c.pendingUntil && Date.now() > c.pendingUntil) {
-    c.pending = false;
-    return false;
-  }
-  return true;
-}
-
-elBody.addEventListener("click", e => {
-  const btn = e.target.closest('[data-action="open-coop"]');
-  if (!btn) return;
-  e.preventDefault();
-  const idx = parseInt(btn.dataset.row, 10);
-  if (!isNaN(idx)) openCoopDrawer(idx);
-});
-
-elBody.addEventListener("click", e => {
-  const btn = e.target.closest(".roteiro-expand");
-  if (!btn) return;
-  e.preventDefault();
-  const idx = parseInt(btn.dataset.row, 10);
-  if (isNaN(idx)) return;
-  const sourceEl = btn.parentElement.querySelector("input[data-field='roteiro']");
-  if (typeof openRoteiroDrawer === "function") openRoteiroDrawer(idx, sourceEl);
-});
-
-/* ===================================================================
-   V2 — Inline "Cadastrar novo cooperado" trigger inside coop drawer
-   =================================================================== */
-(function wireCoopCadastrarInline() {
-  const btn = document.getElementById("coopDrawerCadastrarBtn");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    cadCoopOpenedFromCoopDrawer = true;
-    if (typeof closeCoopDrawer === "function") closeCoopDrawer();
-    const triggerBtn = document.getElementById("openCadastrarCoopBtn");
-    if (triggerBtn) triggerBtn.click();
-  });
-})();
-
-/* ===================================================================
-   V2 — Input masks (volume, currency, CPF/CNPJ, CEP, IE, numeric)
-   =================================================================== */
-function maskVolumeDecimal(input) {
-  let v = (input.value || "").replace(/[^\d,]/g, "");
-  const parts = v.split(",");
-  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
-  const segs = v.split(",");
-  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
-  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
-  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  input.value = segs.join(",");
-}
-
-function maskCurrencyBRL(input) {
-  const raw = (input.value || "").replace(/\D/g, "");
-  if (!raw) { input.value = ""; return; }
-  const padded = raw.padStart(3, "0");
-  const cents = padded.slice(-2);
-  let intPart = padded.slice(0, -2).replace(/^0+(\d)/, "$1");
-  intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  input.value = intPart + "," + cents;
-}
-
-function maskOnlyDigits(input) {
-  input.value = (input.value || "").replace(/\D/g, "");
-}
-
-function maskCEP(input) {
-  let v = (input.value || "").replace(/\D/g, "").slice(0, 8);
-  if (v.length > 5) v = v.slice(0, 5) + "-" + v.slice(5);
-  input.value = v;
-}
-
-function maskCPFCNPJ(input) {
-  let v = (input.value || "").replace(/\D/g, "");
-  if (v.length <= 11) {
-    v = v.slice(0, 11);
-    if (v.length > 9)      v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6,9) + "-" + v.slice(9);
-    else if (v.length > 6) v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6);
-    else if (v.length > 3) v = v.slice(0,3) + "." + v.slice(3);
-  } else {
-    v = v.slice(0, 14);
-    v = v.slice(0,2) + "." + v.slice(2,5) + "." + v.slice(5,8) + "/" + v.slice(8,12) + "-" + v.slice(12,14);
-  }
-  input.value = v;
-}
-
-/* Wire static cad-coop modal fields */
-(function wireCadCoopMasks() {
-  const doc = document.getElementById("cadCoopDoc");
-  const ie  = document.getElementById("cadCoopIE");
-  const cep = document.getElementById("cadCoopCEP");
-  const num = document.getElementById("cadCoopNumero");
-  if (doc) doc.addEventListener("input", e => maskCPFCNPJ(e.target));
-  if (ie)  ie.addEventListener("input",  e => maskOnlyDigits(e.target));
-  if (cep) cep.addEventListener("input", e => {
-    maskCEP(e.target);
-    /* Quando CEP atinge 8 digitos, busca ViaCEP e preenche endereco */
-    const digits = (e.target.value || "").replace(/\D/g, "");
-    if (digits.length === 8) lookupCEP(digits);
-  });
-  if (num) num.addEventListener("input", e => maskOnlyDigits(e.target));
-})();
-
-/* Busca CEP via ViaCEP e preenche Endereco, Bairro, Cidade, Estado */
-function lookupCEP(cep) {
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (!data || data.erro) return;
-      const setIf = (id, val) => {
-        const el = document.getElementById(id);
-        if (el && !el.value) el.value = val || "";
-      };
-      setIf("cadCoopEndereco", data.logradouro);
-      setIf("cadCoopBairro",   data.bairro);
-      setIf("cadCoopCidade",   data.localidade);
-      const uf = document.getElementById("cadCoopEstado");
-      if (uf && !uf.value && data.uf) uf.value = data.uf;
-    })
-    .catch(() => { /* silent */ });
-}
-
-/* Delegated mask wiring for dynamic per-row inputs (re-rendered) */
-document.body.addEventListener("input", e => {
-  const t = e.target;
-  if (!(t.matches && t.matches("[data-field]"))) return;
-  const f = t.dataset.field;
-  if (f === "volumeDesejado") maskVolumeDecimal(t);
-  else if (f === "precoVenda") maskCurrencyBRL(t);
-  else if (f === "nfVendaNum") maskOnlyDigits(t);
-}, true);
-
 goTo("empty");
 </script>
-<script src="review-overlay.js" defer></script>
 </body>
 </html>

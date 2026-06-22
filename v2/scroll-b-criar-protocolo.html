@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo</title>
+<title>Mosaic Direct — Criar Protocolo — Solução B (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -4924,6 +4924,60 @@
   }
 
 
+  /* ================================================================
+     SOLUÇÃO B — Barra grande que aparece no hover
+     A barra nativa fica sempre escondida; uma barra flutuante grande
+     (pista 22px / thumb verde 14px) aparece fixa acima do footer
+     quando o mouse está sobre a tabela ou sobre a própria barra.
+     ================================================================ */
+
+  /* Mata a barra nativa verde do base.css (carrega DEPOIS deste style) */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
+    scrollbar-width: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    display: none !important; height: 0 !important; width: 0 !important;
+  }
+  html .proto-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  /* results-table-wrap (busca legada): só esconde a barra nativa;
+     mantém overflow-y auto porque a lista rola na vertical (max-height 420px) */
+  html .results-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  .h-scrollbar-float {
+    position: fixed;
+    z-index: 120;
+    height: 22px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #eef2f0;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease-out;
+    scrollbar-width: auto;
+    scrollbar-color: var(--mosaic-green-800) #eef2f0;
+  }
+  .h-scrollbar-float.is-visible { opacity: 1; pointer-events: auto; }
+  .h-scrollbar-float::-webkit-scrollbar { height: 22px; }
+  .h-scrollbar-float::-webkit-scrollbar-track { background: transparent; }
+  .h-scrollbar-float::-webkit-scrollbar-thumb {
+    background: var(--mosaic-green-800);
+    border-radius: 999px;
+    border: 4px solid #eef2f0;
+    min-width: 80px;
+  }
+  .h-scrollbar-float::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
+  .h-scrollbar-float-inner { height: 1px; }
 </style>
 
 
@@ -4934,7 +4988,8 @@
 </head>
 <body>
 
-
+<!-- Badge identificador da demo (Solução B) -->
+<div style="position:fixed; left:50%; bottom:110px; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução B — barra grande aparece ao passar o mouse na tabela</div>
 
 <!-- Top header ==================================================== -->
 <header class="mosaic-header">
@@ -7509,6 +7564,126 @@ document.body.addEventListener("input", e => {
 }, true);
 
 goTo("empty");
+
+/* ============================================================================
+   SOLUÇÃO B — Barra grande que aparece no hover.
+   Barra flutuante fixa acima do .summary-footer (alinhada ao left/width do
+   wrap), visível com fade-in enquanto o mouse está sobre a tabela ou sobre a
+   barra (ou durante scroll horizontal); fade-out ~700ms após o mouse sair.
+   O .proto-table-wrap nasce dinamicamente, então um MutationObserver anexa a
+   barra a qualquer wrap novo (guarda wrap.dataset.hscroll evita duplicar).
+   ============================================================================ */
+(function initHoverHScrollbar() {
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.hscroll === "1") return;
+    wrap.dataset.hscroll = "1";
+
+    const bar = document.createElement("div");
+    bar.className = "h-scrollbar-float";
+    const inner = document.createElement("div");
+    inner.className = "h-scrollbar-float-inner";
+    bar.appendChild(inner);
+    document.body.appendChild(bar);
+
+    let syncing = false;
+    let hovering = false;
+    let scrolling = false;
+    let hideTimer = null;
+    let scrollTimer = null;
+    let ro = null;
+
+    const detach = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      if (scrollTimer) clearTimeout(scrollTimer);
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      if (ro) ro.disconnect();
+      bar.remove();
+    };
+
+    const update = () => {
+      if (!wrap.isConnected) { detach(); return; }
+      const r = wrap.getBoundingClientRect();
+      const f = document.querySelector(".summary-footer");
+      const footerH = (f && getComputedStyle(f).display !== "none") ? f.offsetHeight : 0;
+      bar.style.left = r.left + "px";
+      bar.style.width = r.width + "px";
+      bar.style.bottom = footerH + "px";
+      inner.style.width = wrap.scrollWidth + "px";
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const inView = r.top < window.innerHeight - footerH - 24 && r.bottom > footerH + 40;
+      const visible = overflows && inView && (hovering || scrolling);
+      bar.classList.toggle("is-visible", visible);
+      if (Math.abs(bar.scrollLeft - wrap.scrollLeft) > 1) {
+        syncing = true;
+        bar.scrollLeft = wrap.scrollLeft;
+        requestAnimationFrame(() => { syncing = false; });
+      }
+    };
+
+    const show = () => {
+      hovering = true;
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      update();
+    };
+    const scheduleHide = () => {
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => {
+        hideTimer = null;
+        hovering = false;
+        update();
+      }, 700);
+    };
+    const markScrolling = () => {
+      scrolling = true;
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => {
+        scrollTimer = null;
+        scrolling = false;
+        update();
+      }, 700);
+      update();
+    };
+
+    wrap.addEventListener("mouseenter", show);
+    wrap.addEventListener("mouseleave", scheduleHide);
+    bar.addEventListener("mouseenter", show);
+    bar.addEventListener("mouseleave", scheduleHide);
+
+    wrap.addEventListener("scroll", () => {
+      if (syncing) return;
+      syncing = true;
+      bar.scrollLeft = wrap.scrollLeft;
+      requestAnimationFrame(() => { syncing = false; });
+      markScrolling();
+    });
+    bar.addEventListener("scroll", () => {
+      if (syncing) return;
+      syncing = true;
+      wrap.scrollLeft = bar.scrollLeft;
+      requestAnimationFrame(() => { syncing = false; });
+      markScrolling();
+    });
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(update);
+      ro.observe(wrap);
+    }
+    update();
+  }
+
+  const attachAll = () => {
+    document.querySelectorAll(".proto-table-wrap").forEach(attach);
+  };
+
+  // Wraps já presentes (se houver) + os que nascerem via render dinâmico
+  attachAll();
+  if (typeof MutationObserver !== "undefined") {
+    new MutationObserver(attachAll).observe(document.body, { childList: true, subtree: true });
+  }
+})();
 </script>
 <script src="review-overlay.js" defer></script>
 </body>

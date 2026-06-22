@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct 2.0 — Documentação de Melhorias UX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --g900:#003e2a; --g800:#00583d; --g700:#006a4d; --teal:#2c8b78;
+    --yellow:#f0c020; --orange:#d56b1a; --red:#b9202a;
+    --bg:#fafaf8; --card:#fff; --section:#f1f5f3;
+    --border:#e1e1e1; --border-strong:#cdcdcd;
+    --t1:#15201b; --t2:#3b4642; --t3:#6b7570;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body {
+    margin: 0; background: var(--bg); color: var(--t1);
+    font-family: "Barlow", -apple-system, system-ui, sans-serif;
+    font-size: 15px; line-height: 1.6;
+  }
+  .page { max-width: 980px; margin: 0 auto; padding: 0 40px; }
+
+  /* ===================== CAPA ===================== */
+  .cover {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    background: radial-gradient(1200px 600px at 80% -10%, rgba(44,139,120,.18), transparent 60%),
+                linear-gradient(160deg, var(--g900) 0%, var(--g800) 55%, var(--g700) 100%);
+    color: #fff; padding: 80px 64px; position: relative; overflow: hidden;
+  }
+  .cover::after {
+    content: ""; position: absolute; right: -120px; bottom: -120px;
+    width: 460px; height: 460px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,192,32,.18), transparent 65%);
+  }
+  .cover-logo { display: flex; align-items: center; gap: 14px; margin-bottom: 56px; }
+  .cover-logo .lt { font-size: 34px; font-weight: 900; letter-spacing: -.5px; }
+  .cover-logo .lt sup { font-size: 13px; font-weight: 700; opacity: .8; }
+  .cover-logo img { height: 30px; }
+  .cover .eyebrow {
+    font-size: 13px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase;
+    color: var(--yellow); margin-bottom: 18px;
+  }
+  .cover h1 { font-size: 58px; line-height: 1.05; font-weight: 900; margin: 0 0 20px; letter-spacing: -1.5px; }
+  .cover .sub { font-size: 20px; max-width: 640px; opacity: .92; font-weight: 500; }
+  .cover-meta {
+    margin-top: 56px; display: flex; gap: 48px; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,.22); padding-top: 28px; position: relative; z-index: 1;
+  }
+  .cover-meta .m-label { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; opacity: .7; margin-bottom: 4px; }
+  .cover-meta .m-value { font-size: 16px; font-weight: 700; }
+
+  /* ===================== SEÇÕES ===================== */
+  section { padding: 56px 0; }
+  .sec-eyebrow {
+    font-size: 12px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--g700); margin-bottom: 8px;
+  }
+  h2.sec-title { font-size: 32px; font-weight: 900; margin: 0 0 8px; letter-spacing: -.6px; color: var(--g900); }
+  .sec-lead { font-size: 16px; color: var(--t2); max-width: 720px; margin: 0 0 28px; }
+  h3 { font-size: 20px; font-weight: 800; color: var(--t1); margin: 28px 0 10px; }
+
+  /* Sumário */
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 8px 8px; }
+  .toc a {
+    display: flex; align-items: baseline; gap: 14px; text-decoration: none; color: var(--t1);
+    padding: 13px 18px; border-radius: 8px; font-weight: 600; font-size: 15.5px;
+  }
+  .toc a:hover { background: var(--section); }
+  .toc a + a { border-top: 1px solid var(--border); }
+  .toc .n { font-size: 13px; font-weight: 800; color: var(--g700); width: 26px; }
+  .toc .d { margin-left: auto; font-size: 13px; color: var(--t3); font-weight: 500; }
+
+  /* Cartões de stats */
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin: 8px 0 0; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat .num { font-size: 34px; font-weight: 900; color: var(--g800); line-height: 1; }
+  .stat .lbl { font-size: 12.5px; color: var(--t3); margin-top: 8px; font-weight: 600; }
+
+  /* Design system: paleta */
+  .swatches { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-top: 8px; }
+  .sw { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
+  .sw .chip { height: 64px; }
+  .sw .info { padding: 10px 12px; }
+  .sw .nm { font-size: 13px; font-weight: 700; }
+  .sw .hex { font-size: 12px; color: var(--t3); font-variant-numeric: tabular-nums; }
+
+  /* Tela a tela */
+  .screen {
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+    overflow: hidden; margin-bottom: 28px;
+  }
+  .screen-fig { background: var(--section); padding: 22px 22px 0; border-bottom: 1px solid var(--border); }
+  .screen-fig img {
+    width: 100%; display: block; border-radius: 8px 8px 0 0;
+    border: 1px solid var(--border); border-bottom: none;
+    box-shadow: 0 8px 30px rgba(0,0,0,.08);
+  }
+  .screen-body { padding: 24px 28px 28px; }
+  .screen-kicker { font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--g700); }
+  .screen-body h3 { margin: 4px 0 6px; font-size: 23px; font-weight: 900; color: var(--g900); }
+  .screen-purpose { color: var(--t2); margin: 0 0 16px; font-size: 14.5px; }
+  .imp-label { font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--t3); margin: 0 0 10px; }
+  ul.imp { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  ul.imp li { position: relative; padding-left: 28px; font-size: 14.5px; color: var(--t1); line-height: 1.5; }
+  ul.imp li::before {
+    content: "✓"; position: absolute; left: 0; top: 0;
+    width: 19px; height: 19px; border-radius: 50%;
+    background: var(--g800); color: #fff; font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ul.imp li b { color: var(--g900); }
+  .live {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 18px;
+    background: var(--g800); color: #fff; text-decoration: none;
+    padding: 10px 18px; border-radius: 8px; font-weight: 700; font-size: 14px;
+  }
+  .live svg { width: 15px; height: 15px; }
+
+  /* Destaque (modais) */
+  .feature {
+    display: grid; grid-template-columns: 1.05fr .95fr; gap: 28px; align-items: center;
+    background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-top: 8px;
+  }
+  .feature img { width: 100%; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 8px 30px rgba(0,0,0,.10); }
+  .feature h3 { margin-top: 0; }
+  .pill {
+    display: inline-block; background: rgba(0,88,61,.10); color: var(--g800);
+    font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+    padding: 5px 11px; border-radius: 999px; margin-bottom: 10px;
+  }
+
+  /* Opções de scroll */
+  .opt { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; margin-bottom: 24px; }
+  .opt.rev { grid-template-columns: 1fr 1fr; }
+  .opt img { width: 100%; border-radius: 10px; border: 1px solid var(--border); box-shadow: 0 6px 22px rgba(0,0,0,.10); }
+  .opt .n2 {
+    display: inline-flex; width: 32px; height: 32px; border-radius: 8px; background: var(--g800); color: #fff;
+    align-items: center; justify-content: center; font-weight: 900; font-size: 16px; margin-bottom: 10px;
+  }
+  .opt h3 { margin: 0 0 8px; font-size: 21px; }
+  .opt p { margin: 0 0 12px; color: var(--t2); font-size: 14.5px; }
+  .opt .links a { display: inline-block; margin-right: 14px; font-size: 13.5px; font-weight: 700; color: var(--g700); }
+
+  /* Banner / nota */
+  .note {
+    background: linear-gradient(135deg, var(--g800), var(--g900)); color: #fff;
+    border-radius: 14px; padding: 26px 30px; margin-top: 8px;
+  }
+  .note h3 { color: #fff; margin: 0 0 8px; }
+  .note p { margin: 0; opacity: .94; }
+  .note a { color: var(--yellow); font-weight: 700; }
+
+  .divider { height: 1px; background: var(--border); border: none; margin: 0; }
+
+  footer.doc-foot {
+    background: var(--g900); color: rgba(255,255,255,.85); padding: 40px 0; margin-top: 40px;
+  }
+  footer.doc-foot .page { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  footer.doc-foot .lt { font-size: 22px; font-weight: 900; color: #fff; }
+  footer.doc-foot .lt sup { font-size: 10px; opacity: .8; }
+  footer.doc-foot small { font-size: 12.5px; }
+
+  /* ===================== IMPRESSÃO / PDF ===================== */
+  @page { size: A4; margin: 14mm; }
+  @page capa { size: A4; margin: 0; }
+  @media print {
+    body { background: #fff; font-size: 11.5px; }
+    .page { max-width: none; padding: 0; }
+    .cover { page: capa; min-height: auto; height: 297mm; padding: 64px 54px; page-break-after: always; border-radius: 0; }
+    .cover h1 { font-size: 46px; }
+    section { padding: 16px 0; }
+    .break { page-break-before: always; }
+    .screen, .feature, .opt, .note, .stat, .sw, .toc { page-break-inside: avoid; }
+    h2.sec-title { font-size: 25px; }
+    .live { display: none; }            /* links viram URLs no texto, ver abaixo */
+    .print-url { display: inline !important; }
+    a { color: var(--g800); text-decoration: none; }
+    footer.doc-foot { background: #fff; color: var(--t2); border-top: 1px solid var(--border); }
+    footer.doc-foot .lt { color: var(--g900); }
+  }
+  .print-url { display: none; font-size: 12px; color: var(--t3); margin-top: 10px; word-break: break-all; }
+</style>
+</head>
+<body>
+
+<!-- ===================== CAPA ===================== -->
+<div class="cover">
+  <div class="cover-logo">
+    <span class="lt">Mosaic<sup>®</sup></span>
+    <img src="logo-shapes.png" alt="Mosaic" />
+  </div>
+  <div class="eyebrow">Mosaic Direct 2.0 · Portal do Cliente</div>
+  <h1>Documentação de<br/>Melhorias de UX</h1>
+  <p class="sub">Registro tela a tela das melhorias de experiência aplicadas aos protótipos navegáveis do portal — padronização de modais, tabelas, fluxos de agendamento e protocolo.</p>
+  <div class="cover-meta">
+    <div><div class="m-label">Produto</div><div class="m-value">Mosaic Direct 2.0</div></div>
+    <div><div class="m-label">Escopo</div><div class="m-value">Portal do Cliente (V2)</div></div>
+    <div><div class="m-label">Data</div><div class="m-value">Junho de 2026</div></div>
+    <div><div class="m-label">Autor</div><div class="m-value">Victor Dias</div></div>
+  </div>
+</div>
+
+<div class="page">
+
+  <!-- ===================== VISÃO GERAL + SUMÁRIO ===================== -->
+  <section>
+    <div class="sec-eyebrow">Visão geral</div>
+    <h2 class="sec-title">O que foi melhorado</h2>
+    <p class="sec-lead">
+      Esta documentação reúne as melhorias de usabilidade aplicadas aos protótipos do <b>Mosaic Direct 2.0</b>.
+      O foco foi deixar as telas consistentes entre si, padronizar os componentes de interação
+      (modais, tabelas, edição) e resolver os atritos apontados pelo PO e pelo time —
+      sempre respeitando a identidade visual da Mosaic.
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num">7</div><div class="lbl">Telas do portal documentadas</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">Modais centralizados (sem side-nav)</div></div>
+      <div class="stat"><div class="num">3</div><div class="lbl">Opções de scroll horizontal</div></div>
+      <div class="stat"><div class="num">V2</div><div class="lbl">Original preservada (backup + tag)</div></div>
+    </div>
+
+    <h3>Sumário</h3>
+    <nav class="toc">
+      <a href="#identidade"><span class="n">01</span><span>Identidade &amp; Design System</span><span class="d">paleta, tipografia, componentes</span></a>
+      <a href="#telas"><span class="n">02</span><span>Tela a tela — melhorias</span><span class="d">7 telas do portal</span></a>
+      <a href="#modais"><span class="n">03</span><span>Padrão-chave: modais centralizados</span><span class="d">fim dos side-navs</span></a>
+      <a href="#scroll"><span class="n">04</span><span>Scroll horizontal — 3 opções</span><span class="d">para decisão do PO</span></a>
+      <a href="#versionamento"><span class="n">05</span><span>Preservação &amp; versionamento</span><span class="d">backup da V2</span></a>
+    </nav>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ===================== 01 IDENTIDADE ===================== -->
+  <section id="identidade" class="break">
+    <div class="sec-eyebrow">01 · Identidade</div>
+    <h2 class="sec-title">Identidade &amp; Design System</h2>
+    <p class="sec-lead">
+      Todas as telas usam a mesma base visual da Mosaic: tipografia <b>Barlow</b>, paleta institucional verde,
+      cabeçalho com logo, busca e navegação, e um conjunto compartilhado de componentes. Nada foi inventado
+      fora desse sistema — as melhorias reaproveitam os mesmos blocos.
+    </p>
+
+    <h3>Paleta institucional</h3>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#003e2a"></div><div class="info"><div class="nm">Verde 900</div><div class="hex">#003E2A</div></div></div>
+      <div class="sw"><div class="chip" style="background:#00583d"></div><div class="info"><div class="nm">Verde 800</div><div class="hex">#00583D</div></div></div>
+      <div class="sw"><div class="chip" style="background:#006a4d"></div><div class="info"><div class="nm">Verde 700</div><div class="hex">#006A4D</div></div></div>
+      <div class="sw"><div class="chip" style="background:#2c8b78"></div><div class="info"><div class="nm">Teal</div><div class="hex">#2C8B78</div></div></div>
+      <div class="sw"><div class="chip" style="background:#f0c020"></div><div class="info"><div class="nm">Amarelo</div><div class="hex">#F0C020</div></div></div>
+      <div class="sw"><div class="chip" style="background:#d56b1a"></div><div class="info"><div class="nm">Laranja</div><div class="hex">#D56B1A</div></div></div>
+      <div class="sw"><div class="chip" style="background:#b9202a"></div><div class="info"><div class="nm">Vermelho</div><div class="hex">#B9202A</div></div></div>
+      <div class="sw"><div class="chip" style="background:#fafaf8;border-bottom:1px solid #e1e1e1"></div><div class="info"><div class="nm">Fundo</div><div class="hex">#FAFAF8</div></div></div>
+    </div>
+
+    <h3>Componentes compartilhados</h3>
+    <ul class="imp">
+      <li><b>Cabeçalho único</b> — logo Mosaic, busca centralizada, usuário e navegação (Home, Produtos, Cotações, Contratos, Agendamento, Faturamento, Documentos, Financeiro, Suporte) com item ativo em destaque.</li>
+      <li><b>Tabelas</b> — linha zebrada, colunas concatenadas (informação relacionada na mesma célula), truncate, saldo destacado em verde, borda de status à esquerda.</li>
+      <li><b>Modais</b> — confirmação, sucesso e seleção, todos com a mesma estrutura (cabeçalho, corpo, rodapé com ação primária verde).</li>
+      <li><b>Datepicker, badges de status e frete (CIF/FOB)</b> — idênticos em todas as telas.</li>
+    </ul>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ===================== 02 TELA A TELA ===================== -->
+  <section id="telas" class="break">
+    <div class="sec-eyebrow">02 · Tela a tela</div>
+    <h2 class="sec-title">Melhorias por tela</h2>
+    <p class="sec-lead">Cada tela abaixo traz a captura atual, a função e a lista de melhorias aplicadas. Os links levam à versão navegável.</p>
+
+    <!-- HUB -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/index.png" alt="Hub do portal" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Início</div>
+        <h3>Hub do Portal</h3>
+        <p class="screen-purpose">Página inicial que lista e dá acesso a todas as telas do portal do cliente.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Telas <b>organizadas em grupos visuais</b> por contexto.</li>
+          <li>Telas internas de Salesforce (manutenção) <b>ocultadas</b> do hub do cliente.</li>
+          <li>Relatório de Protocolos promovido ao <b>grupo principal</b>.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/index.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/index.html</div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIO DE PROTOCOLOS -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/relatorio-protocolos.png" alt="Relatório de Protocolos" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Contratos</div>
+        <h3>Relatório de Protocolos</h3>
+        <p class="screen-purpose">Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Removido o alternador <b>Cards/Tabela</b> — só tabela, mais direta.</li>
+          <li>Tabela <b>compacta</b> com colunas concatenadas, linha zebrada e saldo destacado.</li>
+          <li>Edição padronizada: <b>chevron → menu → modal "Editar protocolo"</b>.</li>
+          <li>Removida a <b>edição inline</b> na célula (a pedido do PO).</li>
+          <li>Modal <b>"Cancelar"</b> com texto corrigido: o volume <b>volta para o saldo do contrato</b> (sem menção a interface com o SAP).</li>
+          <li>Modal <b>"Agendar"</b> sem o link "Fluxo completo" — o agendamento se resolve no próprio modal.</li>
+          <li><b>Edição em massa</b> agora em modal centralizado.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/relatorio-protocolos.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/relatorio-protocolos.html</div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIO DE STATUS DE AGENDAMENTO -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/relatorio-status.png" alt="Relatório de Status de Agendamento" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Agendamento</div>
+        <h3>Relatório de Status de Agendamento</h3>
+        <p class="screen-purpose">Acompanhamento das solicitações de agendamento por semana, tipo e status.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Mesmo padrão visual do Relatório de Protocolos: <b>tags PLAN/REPLAN/ADIÇÃO</b>, badges de status, chevron e cabeçalho.</li>
+          <li>Edição via <b>chevron → modal "Editar Solicitação"</b> (campo Qtd. Solicitada).</li>
+          <li>Corrigido o bug que <b>impedia a tela de carregar</b> os dados.</li>
+          <li>Drawers convertidos em <b>modais centralizados</b>.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/relatorio-status-agendamento.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/relatorio-status-agendamento.html</div>
+      </div>
+    </div>
+
+    <!-- AGENDAR CONTRATO NORMAL -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/agendar-contrato.png" alt="Agendar Contrato Normal" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Agendamento</div>
+        <h3>Agendar Contrato Normal</h3>
+        <p class="screen-purpose">Seleção de contratos e itens para criação de agendamentos.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Modal <b>"Selecionar contratos" centralizado</b> (antes era um painel lateral / side-nav).</li>
+          <li><b>Roteiro de entrega</b> também em modal centralizado.</li>
+          <li><b>Calendário</b> para a semana e <b>pré-seleção</b> dos contratos já adicionados.</li>
+          <li>Tema Mosaic real (Barlow, cabeçalho e navegação com item ativo em laranja).</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/agendar-contrato-normal.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/agendar-contrato-normal.html</div>
+      </div>
+    </div>
+
+    <!-- AGENDAR PROTOCOLO -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/agendar-protocolo.png" alt="Agendar Protocolo" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Agendamento</div>
+        <h3>Agendar Protocolo</h3>
+        <p class="screen-purpose">Seleção de protocolos para criação de agendamentos.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Modal <b>"Selecionar protocolo" centralizado</b>.</li>
+          <li><b>Roteiro</b> em modal centralizado.</li>
+          <li>Mesmo padrão de action-row e fluxo do Agendar Contrato Normal.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/agendar-protocolo.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/agendar-protocolo.html</div>
+      </div>
+    </div>
+
+    <!-- CRIAR PROTOCOLO -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/criar-protocolo.png" alt="Criar Protocolo" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Contratos</div>
+        <h3>Criar Protocolo</h3>
+        <p class="screen-purpose">Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Modais centralizados: <b>Selecionar contratos</b>, <b>Selecionar cooperado</b> e <b>Roteiro</b>.</li>
+          <li>Botão <b>"Cadastrar Cooperado"</b> com contraste corrigido (fundo branco, texto e ícone verdes; ícone agora visível).</li>
+          <li>Modal <b>"Adicionar novo cliente / cooperado"</b> centralizado, com seções de Dados e Endereço.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/criar-protocolo.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/criar-protocolo.html</div>
+      </div>
+    </div>
+
+    <!-- EDITAR PROTOCOLO -->
+    <div class="screen">
+      <div class="screen-fig"><img src="doc-assets/editar-protocolo.png" alt="Editar Protocolo" /></div>
+      <div class="screen-body">
+        <div class="screen-kicker">Contratos</div>
+        <h3>Editar Protocolo</h3>
+        <p class="screen-purpose">Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</p>
+        <p class="imp-label">Melhorias</p>
+        <ul class="imp">
+          <li>Tela completa de edição com os campos do protocolo, no padrão Salesforce.</li>
+          <li>Campo <b>Roteiro em largura total</b> para leitura/edição confortável.</li>
+        </ul>
+        <a class="live" href="https://mosaic-direct.vercel.app/v2/editar-protocolo.html">Ver tela ao vivo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+        <div class="print-url">mosaic-direct.vercel.app/v2/editar-protocolo.html</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ===================== 03 MODAIS ===================== -->
+  <section id="modais" class="break">
+    <div class="sec-eyebrow">03 · Padrão-chave</div>
+    <h2 class="sec-title">Modais centralizados</h2>
+    <p class="sec-lead">A principal padronização: <b>todos os painéis laterais (side-nav) viraram modais centralizados</b>, em todas as telas — seleção de contratos, protocolos, cooperado, roteiro e edição em massa.</p>
+    <div class="feature">
+      <img src="doc-assets/modal-centralizado.png" alt="Modal centralizado de seleção de contratos" />
+      <div>
+        <span class="pill">Antes: painel lateral · Agora: modal central</span>
+        <h3>Foco no centro da tela</h3>
+        <ul class="imp">
+          <li>Janela centralizada, com cantos arredondados e fundo escurecido.</li>
+          <li>Rolagem interna na lista e rodapé fixo com a ação primária.</li>
+          <li>Mesmo comportamento em <b>Selecionar contratos</b>, <b>Selecionar protocolo</b>, <b>Selecionar cooperado</b>, <b>Roteiro</b> e <b>edição em massa</b>.</li>
+          <li>Aplicado de forma consistente em todo o portal.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ===================== 04 SCROLL ===================== -->
+  <section id="scroll" class="break">
+    <div class="sec-eyebrow">04 · Tabelas largas</div>
+    <h2 class="sec-title">Scroll horizontal — 3 opções</h2>
+    <p class="sec-lead">
+      As tabelas largas (Relatório de Protocolos com 24 colunas e Criar Protocolo com 14) precisavam de uma forma
+      melhor de acessar as colunas que não cabem na tela — <b>sem duas barras simultâneas</b> e com uma barra
+      <b>maior e mais fácil de pegar</b>. Três opções foram preparadas para decisão.
+    </p>
+
+    <div class="opt">
+      <img src="doc-assets/scroll-jira.png" alt="Estilo Jira — tela travada" />
+      <div>
+        <span class="n2">1</span>
+        <h3>Estilo Jira (tela travada)</h3>
+        <p>A página inteira não rola: topo e rodapé ficam fixos e a tabela ocupa o resto da tela, rolando só por dentro (horizontal e vertical), com cabeçalho fixo.</p>
+        <div class="links">
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-e-relatorio-protocolos.html">Relatório →</a>
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-e-criar-protocolo.html">Criar Protocolo →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="opt">
+      <div>
+        <span class="n2">2</span>
+        <h3>Barra sempre visível</h3>
+        <p>A tabela mantém todas as colunas e uma barra verde grande fica fixa no rodapé da própria tabela — sempre visível, arrastável e clicável.</p>
+        <div class="links">
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-c-relatorio-protocolos.html">Relatório →</a>
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-c-criar-protocolo.html">Criar Protocolo →</a>
+        </div>
+      </div>
+      <img src="doc-assets/scroll-barra.png" alt="Barra verde sempre visível" />
+    </div>
+
+    <div class="opt">
+      <img src="doc-assets/scroll-botoes.png" alt="Botões de bloco" />
+      <div>
+        <span class="n2">3</span>
+        <h3>Botões de bloco (‹ ›)</h3>
+        <p>A tabela mantém todas as colunas e exibe setas nas bordas; cada clique avança ou retorna um bloco de colunas.</p>
+        <div class="links">
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-d-relatorio-protocolos.html">Relatório →</a>
+          <a href="https://mosaic-direct.vercel.app/v2/scroll-d-criar-protocolo.html">Criar Protocolo →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <h3>Comparativo lado a lado</h3>
+      <p>As três opções, com prós e contras e demos navegáveis, estão reunidas em uma página:
+      <a href="https://mosaic-direct.vercel.app/v2/comparativo-scroll-tabelas.html">mosaic-direct.vercel.app/v2/comparativo-scroll-tabelas.html</a></p>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- ===================== 05 VERSIONAMENTO ===================== -->
+  <section id="versionamento" class="break">
+    <div class="sec-eyebrow">05 · Governança</div>
+    <h2 class="sec-title">Preservação &amp; versionamento</h2>
+    <p class="sec-lead">A versão original foi preservada antes das mudanças, e o histórico fica versionado.</p>
+    <ul class="imp">
+      <li><b>Backup navegável da V2 original</b> (com os painéis laterais) mantido em uma pasta à parte, acessível por URL.</li>
+      <li><b>Tag de versão</b> marcando o estado anterior às mudanças.</li>
+      <li><b>V3 = cópia 100% fiel da V2</b> — mesmo conteúdo, filtros, campos e tabelas.</li>
+      <li>Deploy automático a cada atualização; histórico completo no repositório.</li>
+    </ul>
+  </section>
+
+</div>
+
+<footer class="doc-foot">
+  <div class="page">
+    <span class="lt">Mosaic<sup>®</sup> Direct 2.0</span>
+    <small>Documentação de Melhorias de UX · Portal do Cliente · Junho de 2026</small>
+  </div>
+</footer>
+
+</body>
+</html>

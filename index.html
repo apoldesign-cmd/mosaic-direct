@@ -3,162 +3,52 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mosaic Direct — Protótipos UX</title>
+<title>Mosaic Direct — Protótipos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
 <style>
-  :root {
-    --mosaic-green-900: #003e2a;
-    --mosaic-green-800: #00583d;
-    --mosaic-green-700: #006a4d;
-    --mosaic-yellow:    #f0c020;
-    --mosaic-orange:    #d56b1a;
-    --mosaic-red:       #b9202a;
-    --mosaic-teal:      #2c8b78;
-    --bg-page:          #fafaf8;
-    --bg-card:          #ffffff;
-    --bg-section:       #f4f4f4;
-    --border-soft:      #e1e1e1;
-    --border:           #cdcdcd;
-    --text-1:           #15201b;
-    --text-2:           #3b4642;
-    --text-3:           #6b7570;
-    --shadow-card:      0 1px 2px rgba(0,0,0,0.04), 0 3px 8px rgba(0,0,0,0.05);
-    --shadow-hover:     0 6px 20px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  .hub-hero {
+    padding: var(--space-6) 0 var(--space-5);
   }
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--bg-page);
-    color: var(--text-1);
-    font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    font-weight: 500;
-    font-size: 14px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    min-height: 100vh;
-  }
-  a { color: var(--mosaic-green-700); text-decoration: none; }
-  a:hover { color: var(--mosaic-green-800); }
-
-  /* Top mini-bar */
-  .topbar-mini {
-    position: sticky; top: 0; left: 0; right: 0;
-    width: 100%;
-    background: var(--mosaic-green-900);
-    color: #fff;
-    z-index: 200;
-    height: 40px;
-    display: flex; align-items: center;
-    padding: 0 56px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  }
-  .topbar-mini-brand {
-    display: inline-flex; align-items: center; gap: 10px;
-    color: #fff;
-    font-weight: 800; font-size: 14px;
-    letter-spacing: 0.01em;
-  }
-  .topbar-mini-brand:hover { color: var(--mosaic-yellow); }
-  .topbar-mini-brand sup { font-size: 9px; font-weight: 700; margin-left: 1px; vertical-align: super; }
-  .topbar-mini-divider { width: 1px; height: 18px; background: rgba(255,255,255,0.2); margin: 0 14px; }
-  .topbar-mini-meta { font-size: 11.5px; color: rgba(255,255,255,0.7); font-weight: 600; }
-  @media (max-width: 720px) { .topbar-mini { padding: 0 16px; } .topbar-mini-meta { display: none; } }
-
-  /* Hero */
-  .hero-header {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 48px 56px 24px;
-  }
-  .hero-eyebrow {
-    font-size: 11px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.16em;
+  .hub-eyebrow {
+    font-size: var(--fs-label);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--mosaic-green-700);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-2);
   }
-  .hero-title {
-    font-size: 36px; font-weight: 800;
-    line-height: 1.1; letter-spacing: -0.015em;
-    margin: 0 0 12px;
-    color: var(--text-1);
-  }
-  .hero-lede {
-    font-size: 15px; line-height: 1.6;
+  .hub-lede {
+    font-size: 15px;
     color: var(--text-2);
     max-width: 720px;
-    margin: 0;
-    font-weight: 500;
+    margin: var(--space-2) 0 0;
+    line-height: 1.6;
   }
-  .hero-meta {
-    display: flex; flex-wrap: wrap; gap: 8px;
-    margin-top: 18px;
+
+  .grid-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 14px;
+    margin-top: var(--space-5);
   }
-  .meta-chip {
-    display: inline-flex; align-items: center; gap: 6px;
-    font-size: 11.5px; font-weight: 700;
-    color: var(--text-2);
+  @media (max-width: 720px) { .grid-cards { grid-template-columns: 1fr; } }
+
+  .proto-card {
+    position: relative;
     background: #fff;
     border: 1px solid var(--border-soft);
-    padding: 5px 10px;
-    border-radius: 999px;
-  }
-  .meta-chip strong { color: var(--mosaic-green-800); font-weight: 800; }
-
-  /* Container + sections */
-  .container {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 16px 56px 80px;
-  }
-  .section { margin-top: 36px; }
-  .section:first-of-type { margin-top: 16px; }
-  .section-head {
-    display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
-    margin-bottom: 18px;
-    border-bottom: 1px solid var(--border-soft);
-    padding-bottom: 12px;
-  }
-  .section-head h2 {
-    margin: 0;
-    font-size: 20px; font-weight: 800;
-    letter-spacing: -0.005em;
-    color: var(--text-1);
-  }
-  .section-head .lede {
-    color: var(--text-3);
-    font-size: 12.5px; font-weight: 600;
-  }
-
-  /* Grid — 3 columns */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
-  }
-  @media (max-width: 1080px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 720px)  { .grid { grid-template-columns: 1fr; } }
-
-  /* Card (compacto) */
-  .task-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-soft);
-    display: flex; flex-direction: column;
-    color: inherit;
-    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 200ms, border-color 200ms;
-    box-shadow: var(--shadow-card);
-    position: relative;
+    border-radius: var(--radius-card);
     overflow: hidden;
-    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast), transform var(--ease-base);
   }
-  .task-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--mosaic-green-700);
-  }
-  .task-card::before {
+  .proto-card::before {
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
@@ -166,393 +56,484 @@
     background: var(--mosaic-green-700);
     transform: scaleX(0);
     transform-origin: left;
-    transition: transform 220ms ease-out;
+    transition: transform var(--ease-base);
   }
-  .task-card:hover::before { transform: scaleX(1); }
-  .task-card--variant::before { background: var(--text-3); }
-  .task-card--variant:hover { border-color: var(--text-2); }
-
-  .task-head {
-    padding: 14px 16px 6px;
-    display: flex; align-items: center; justify-content: space-between; gap: 8px;
-  }
-  .task-jira {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 10px; font-weight: 800;
-    color: var(--text-3);
-    text-transform: uppercase; letter-spacing: 0.06em;
-  }
-  .task-jira-id {
-    color: var(--text-1);
-    background: var(--bg-section);
-    padding: 2px 6px;
-    font-size: 10px;
-  }
-  .task-jira-id--epic { color: var(--mosaic-green-800); }
-  .task-status-chip {
-    display: inline-flex; align-items: center;
-    font-size: 9.5px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 0.07em;
-    padding: 3px 7px;
-    border: 1.5px solid;
-  }
-  .task-status-chip--final {
-    color: var(--mosaic-green-700);
+  .proto-card:hover {
     border-color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
+    box-shadow: var(--shadow-hover);
+    text-decoration: none;
+    transform: translateY(-2px);
   }
-  .task-status-chip--variant {
-    color: var(--text-3);
-    border-color: var(--border);
-    background: var(--bg-section);
-  }
+  .proto-card:hover::before { transform: scaleX(1); }
 
-  .task-title {
-    padding: 0 16px 4px;
-    font-size: 15px; font-weight: 800;
+  .proto-card-head {
+    padding: 14px 18px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .proto-id {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .proto-id-chip {
+    background: var(--bg-section);
+    color: var(--text-1);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+  .proto-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--mosaic-green-700);
+    border: 1.5px solid var(--mosaic-green-700);
+    background: rgba(0,106,77,0.06);
+    padding: 3px 7px;
+    border-radius: var(--radius-sm);
+  }
+  .proto-title {
+    padding: 0 18px 4px;
+    font-size: 16px;
+    font-weight: 700;
     color: var(--text-1);
     letter-spacing: -0.005em;
-    line-height: 1.25;
+    line-height: 1.3;
   }
-  .task-desc {
-    padding: 0 16px 12px;
-    font-size: 12.5px;
+  .proto-desc {
+    padding: 0 18px 14px;
+    font-size: var(--fs-body-sm);
     color: var(--text-2);
-    line-height: 1.5;
+    line-height: 1.55;
     flex: 1;
-    font-weight: 500;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
-
-  .task-foot {
-    padding: 10px 16px;
-    border-top: 1px solid var(--border-soft);
+  .proto-foot {
+    padding: 10px 18px;
     background: var(--bg-section);
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 11.5px; font-weight: 700;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11.5px;
+    font-weight: 700;
     color: var(--mosaic-green-800);
   }
-  .task-card--variant .task-foot { color: var(--text-2); }
-  .task-foot svg { transition: transform 200ms; }
-  .task-card:hover .task-foot svg { transform: translateX(4px); }
-  .task-foot-meta {
+  .proto-foot-meta {
     font-size: 10.5px;
     color: var(--text-3);
     font-weight: 600;
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
+  .proto-foot-arrow { transition: transform var(--ease-fast); display: flex; }
+  .proto-card:hover .proto-foot-arrow { transform: translateX(4px); }
 
-  /* Footer */
-  .page-footer {
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: 28px 56px 56px;
+  .section-block { margin-top: var(--space-7); }
+  .section-block-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: var(--space-4);
+    padding: 14px 16px;
+    background: var(--bg-section);
+    border-left: 4px solid var(--mosaic-green-700);
+  }
+  .section-block-head .icon {
+    width: 36px; height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+  }
+  .section-block-head .titles { flex: 1; min-width: 0; }
+  .section-block-head h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .section-block-head .lede {
     color: var(--text-3);
-    font-size: 12px; font-weight: 600;
-    border-top: 1px solid var(--border-soft);
+    font-size: 12.5px;
+    font-weight: 600;
+    display: block;
+    margin-top: 2px;
   }
-
-  @media (max-width: 720px) {
-    .hero-header, .container, .page-footer { padding-left: 20px; padding-right: 20px; }
-    .hero-title { font-size: 28px; }
+  .section-block-head .count {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    flex-shrink: 0;
   }
+  /* Variantes de grupo */
+  .section-block.sf .section-block-head { border-left-color: var(--slds-blue, #0176d3); }
+  .section-block.sf .section-block-head .icon { color: var(--slds-blue, #0176d3); }
+  .section-block.sf .section-block-head .count { background: var(--slds-blue, #0176d3); }
+  .section-block.variants .section-block-head { border-left-color: var(--mosaic-yellow); }
+  .section-block.variants .section-block-head .icon { color: var(--mosaic-orange); }
+  .section-block.variants .section-block-head .count { background: var(--mosaic-orange); }
+  .section-block.docs .section-block-head { border-left-color: var(--mosaic-teal); }
+  .section-block.docs .section-block-head .icon { color: var(--mosaic-teal); }
+  .section-block.docs .section-block-head .count { background: var(--mosaic-teal); }
 </style>
 </head>
 <body>
 
-<!-- Top mini-bar -->
-<div class="topbar-mini">
-  <a class="topbar-mini-brand" href="index.html" aria-label="Mosaic Direct — Home">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M3 13l3-4 4 3 4-6 4 5 3-3v6H3z" fill="#fff" opacity="0.95"/>
-    </svg>
-    <span>Mosaic<sup>®</sup> Direct</span>
-  </a>
-  <span class="topbar-mini-divider" aria-hidden="true"></span>
-  <span class="topbar-mini-meta">Protótipos UX · Mosaic Direct</span>
-</div>
-
-<!-- Hero -->
-<header class="hero-header">
-  <div class="hero-eyebrow">Mosaic Direct · Protótipos UX</div>
-  <h1 class="hero-title">Hub de telas em desenvolvimento</h1>
-  <p class="hero-lede">
-    Protótipos HTML interativos do portal Mosaic Direct (agribusiness BR).
-    Cada card é uma User Story do Jira, com a tela navegável correspondente.
-  </p>
-  <div class="hero-meta">
-    <span class="meta-chip"><strong>5</strong> telas principais</span>
-    <span class="meta-chip"><strong>6</strong> variantes</span>
-    <span class="meta-chip">Ambiente Vercel · auto-deploy</span>
+<!-- HEADER -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
   </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item is-active">Home</a>
+      <a href="#" class="nav-item">Produtos<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Cotações<span class="chev" aria-hidden="true"></span></a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro<span class="chev" aria-hidden="true"></span></a>
+      <a href="#" class="nav-item">Suporte<span class="chev" aria-hidden="true"></span></a>
+    </div>
+  </nav>
 </header>
 
-<main class="container">
+<!-- MAIN -->
+<main>
+  <div class="container container-main">
 
-  <!-- ============================================================
-       SECTION 1 — Telas principais (versões recomendadas)
-       ============================================================ -->
-  <section class="section">
-    <div class="section-head">
-      <h2>Telas principais</h2>
-      <span class="lede">Versões recomendadas para validação com PO</span>
+    <div class="hub-hero">
+      <div class="hub-eyebrow">Mosaic Direct · Protótipos 2.0</div>
+      <h1 class="page-title">Hub de telas</h1>
+      <p class="hub-lede">
+        Protótipos navegáveis do portal Mosaic Direct com a nova identidade visual
+        (Barlow, header de 2 linhas, footer Mosaic). Use para validação com PO.
+      </p>
     </div>
 
-    <div class="grid">
+    <!-- ============================================================
+         GRUPO 1: Mosaic Direct · Portal do Cliente (cooperado)
+         ============================================================ -->
+    <section class="section-block">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </span>
+        <div class="titles">
+          <h2>Mosaic Direct · Portal do Cliente</h2>
+          <span class="lede">Telas finais que o cooperado usa no portal Mosaic Direct</span>
+        </div>
+        <span class="count">5 telas</span>
+      </div>
 
-      <!-- Cadastro de Cooperado -->
-      <a href="criar-protocolo.html#cadastrar-cooperado" class="task-card">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id task-jira-id--epic">SMDP-70</span>
-            <span>/</span>
-            <span class="task-jira-id">SMDP-238</span>
+      <div class="grid-cards">
+
+        <a href="criar-protocolo.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-70</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-238</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
           </div>
-          <span class="task-status-chip task-status-chip--final">✓ Final</span>
-        </div>
-        <div class="task-title">Cadastro de Cooperado</div>
-        <div class="task-desc">
-          Drawer V5-style para registrar novo cooperado (PF ou PJ) sem sair do fluxo de protocolo. Máscaras pt-BR, autofill ViaCEP, retorno preservando linhas.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">Drawer · criar-protocolo</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Agendar Contrato Normal V5 -->
-      <a href="agendar-contrato-normal-v5.html" class="task-card">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id task-jira-id--epic">SMDP-131</span>
-            <span>/</span>
-            <span class="task-jira-id">SMDP-237</span>
+          <div class="proto-title">Criar Protocolo</div>
+          <div class="proto-desc">
+            Criação de protocolos a partir de contratos. Cooperado picker com cadastro
+            inline, máscaras pt-BR, validações de NF, sticky columns.
           </div>
-          <span class="task-status-chip task-status-chip--final">✓ Final · V5</span>
-        </div>
-        <div class="task-title">Agendar Contrato Normal</div>
-        <div class="task-desc">
-          Fluxo de agendamento de contratos normais. Cards multi-item, drawer de seleção com Ref. Cliente/CNPJ/IE/Preço/Status, validações de volume agregado por contrato.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">agendar-contrato-normal-v5</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Criar Protocolo -->
-      <a href="criar-protocolo.html" class="task-card">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id task-jira-id--epic">SMDP-167</span>
-            <span>/</span>
-            <span class="task-jira-id">SMDP-233</span>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">criar-protocolo</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
           </div>
-          <span class="task-status-chip task-status-chip--final">✓ Final</span>
-        </div>
-        <div class="task-title">Criar Protocolo</div>
-        <div class="task-desc">
-          Criação de protocolos a partir de contratos. Toggle Cards/Tabela, cooperado picker com cadastro inline, máscaras, validações de NF, sticky columns.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">criar-protocolo</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
+        </a>
 
-      <!-- Agendar Protocolo -->
-      <a href="agendar-protocolo.html" class="task-card">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id task-jira-id--epic">SMDP-168</span>
-            <span>/</span>
-            <span class="task-jira-id">SMDP-235</span>
+        <a href="agendar-contrato-normal.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-131</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-237</span>
+            </div>
+            <span class="proto-tag">✓ Final · V5</span>
           </div>
-          <span class="task-status-chip task-status-chip--final">✓ Final</span>
-        </div>
-        <div class="task-title">Agendar Protocolo</div>
-        <div class="task-desc">
-          Agendamento de protocolos já criados. Cards agrupados por contrato, tabela compacta com Volume/Semana/Roteiro, hint pulse no empty, confirmação V5.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">agendar-protocolo</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Relatório de Status de Agendamento -->
-      <a href="relatorio-status-agendamento.html" class="task-card">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id task-jira-id--epic">SMDP-137</span>
+          <div class="proto-title">Agendar Contrato Normal</div>
+          <div class="proto-desc">
+            Cards multi-item, drawer de seleção com Ref. Cliente/CNPJ/IE/Preço/Status,
+            validações de volume agregado por contrato.
           </div>
-          <span class="task-status-chip task-status-chip--final">✓ Final</span>
-        </div>
-        <div class="task-title">Relatório de Status de Agendamento</div>
-        <div class="task-desc">
-          Listagem read-only de todas as solicitações de agendamento, filtros avançados colapsáveis, autocomplete na busca, exportação XLS, breakdown semanal.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">relatorio-status-agendamento</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">agendar-contrato-normal</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
 
+        <a href="agendar-protocolo.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-168</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-235</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
+          </div>
+          <div class="proto-title">Agendar Protocolo</div>
+          <div class="proto-desc">
+            Agendamento de protocolos já criados. Cards agrupados por contrato, tabela
+            compacta com Volume/Semana/Roteiro, confirmação multi-step.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">agendar-protocolo</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="relatorio-status-agendamento.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-137</span>
+            </div>
+            <span class="proto-tag">✓ Final</span>
+          </div>
+          <div class="proto-title">Relatório de Status de Agendamento</div>
+          <div class="proto-desc">
+            Listagem read-only de todas as solicitações. Filtros, autocomplete, exportação
+            XLS, breakdown semanal expansível.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">relatorio-status-agendamento</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="relatorio-protocolos.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">final</span>
+            </div>
+            <span class="proto-tag">✓ Versão final</span>
+          </div>
+          <div class="proto-title">Relatório de Protocolos</div>
+          <div class="proto-desc">
+            Versão final da tela de consulta de protocolos. <strong>Apenas quantidades</strong>
+            editáveis. Clique direto na célula da quantidade para editar inline, ou abra o
+            modal pelo lápis para ajustar com <strong>resumo das demais informações</strong> em
+            modo view.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">relatorio-protocolos</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         GRUPO 2: Salesforce Sales Cloud · Time interno Mosaic
+         OCULTO no hub a pedido — telas continuam acessíveis via URL direta.
+         ============================================================ -->
+    <section class="section-block sf" hidden style="display:none">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18"/><path d="M9 4v16"/></svg>
+        </span>
+        <div class="titles">
+          <h2>Salesforce Sales Cloud · Time Mosaic</h2>
+          <span class="lede">Telas internas (CS team) — não visíveis para cooperados. SMDP-161 + SMDP-162.</span>
+        </div>
+        <span class="count">2 telas</span>
+      </div>
+
+      <div class="grid-cards">
+
+        <a href="manutencao-protocolos.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-161</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-162</span>
+            </div>
+            <span class="proto-tag">🔒 Lista · Interno</span>
+          </div>
+          <div class="proto-title">Manutenção de Protocolos · Lista</div>
+          <div class="proto-desc">
+            List view Salesforce com filter pills (All / Novo / Liberado / Em Agend. /
+            Concluído / Cancelado), mass edit, mass cancel e botão <strong>+ New</strong>
+            funcional. Cadeados nos campos read-only (SAP).
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">manutencao-protocolos</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+        <a href="manutencao-protocolo-detalhe.html?id=M9W38746" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">SMDP-161</span>
+              <span>/</span>
+              <span class="proto-id-chip">SMDP-162</span>
+            </div>
+            <span class="proto-tag">🔒 Detalhe · Interno</span>
+          </div>
+          <div class="proto-title">Manutenção · Detalhe do Protocolo</div>
+          <div class="proto-desc">
+            Lightning Record Page com highlights, Sales Path verde Mosaic, tabs
+            Detalhes/Relacionado/Histórico/Atividade, inline edit multi-campo (fundo
+            amarelo + undo ↩), modal Editar e modal Cancelar com regras SMDP-162 v2.0.
+          </div>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">manutencao-protocolo-detalhe</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
+          </div>
+        </a>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         Link sutil para histórico de versões antigas
+         ============================================================ -->
+    <div style="margin-top: var(--space-6); text-align: right;">
+      <a href="historico-versoes.html" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--text-3);text-decoration:none;padding:8px 12px;border:1px dashed var(--border);border-radius:4px;transition:all .15s;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Versões antigas / Histórico de versões não utilizadas
+        <span style="opacity:.5">→</span>
+      </a>
     </div>
-  </section>
 
-  <!-- ============================================================
-       SECTION 2 — Iterações / variantes (histórico de comparação)
-       ============================================================ -->
-  <section class="section">
-    <div class="section-head">
-      <h2>Iterações e variantes</h2>
-      <span class="lede">Versões alternativas mantidas para comparação histórica</span>
-    </div>
+    <!-- ============================================================
+         GRUPO 4: UX & Documentação
+         ============================================================ -->
+    <section class="section-block docs">
+      <div class="section-block-head">
+        <span class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </span>
+        <div class="titles">
+          <h2>UX & Documentação</h2>
+          <span class="lede">Decisões de UX implementadas com referência ao vivo — para validação com PO</span>
+        </div>
+        <span class="count">1 doc</span>
+      </div>
 
-    <div class="grid">
+      <div class="grid-cards">
 
-      <!-- Agendar Contrato Normal V1 -->
-      <a href="agendar-contrato-normal.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-237</span>
+        <a href="usabilidade.html" class="proto-card">
+          <div class="proto-card-head">
+            <div class="proto-id">
+              <span class="proto-id-chip">UX</span>
+            </div>
+            <span class="proto-tag">📐 Pontos de Usabilidade</span>
           </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V1</span>
-        </div>
-        <div class="task-title">Agendar Contrato Normal · V1</div>
-        <div class="task-desc">
-          Versão inicial baseada em tabela + modal. Mantida para histórico — usar V5 para validação com PO.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">agendar-contrato-normal</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Agendar Contrato Normal V2 cards -->
-      <a href="agendar-contrato-normal-v2-cards.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-237</span>
+          <div class="proto-title">Pontos de Usabilidade</div>
+          <div class="proto-desc">
+            12 decisões de UX implementadas nos protótipos com o componente funcionando ao
+            vivo, defesa de ganho e referência onde aparece. Para validação com PO e time.
           </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
-        </div>
-        <div class="task-title">Agendar Contrato Normal · V2 Cards</div>
-        <div class="task-desc">
-          Iteração com cards e drawer lateral. Etapa intermediária no caminho até a V5.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">agendar-contrato-normal-v2-cards</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Agendar Contrato Normal V3 -->
-      <a href="agendar-contrato-normal-v3.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-237</span>
+          <div class="proto-foot">
+            <span class="proto-foot-meta">usabilidade</span>
+            <span class="proto-foot-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </span>
           </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V3</span>
-        </div>
-        <div class="task-title">Agendar Contrato Normal · V3</div>
-        <div class="task-desc">
-          Iteração com toggle Cards/Tabela. Substituída pela V5 (somente lista).
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">agendar-contrato-normal-v3</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
+        </a>
 
-      <!-- Criar Protocolo V2 -->
-      <a href="criar-protocolo-v2.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-233</span>
-          </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
-        </div>
-        <div class="task-title">Criar Protocolo · V2</div>
-        <div class="task-desc">
-          Iteração V2 do fluxo de criação de protocolo. Mantida para comparar layout e interações.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">criar-protocolo-v2</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
+      </div>
+    </section>
 
-      <!-- Relatório Status Agendamento V2 -->
-      <a href="relatorio-status-agendamento-v2.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-137</span>
-          </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V2</span>
-        </div>
-        <div class="task-title">Relatório de Status · V2</div>
-        <div class="task-desc">
-          Iteração com agrupamento de colunas (Cotação+Contrato, Produto, Recebedor) e detalhe semanal expansível por chevron.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">relatorio-status-agendamento-v2</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-      <!-- Relatório Status Agendamento V3 -->
-      <a href="relatorio-status-agendamento-v3.html" class="task-card task-card--variant">
-        <div class="task-head">
-          <div class="task-jira">
-            <span class="task-jira-id">SMDP-137</span>
-          </div>
-          <span class="task-status-chip task-status-chip--variant">Variante · V3</span>
-        </div>
-        <div class="task-title">Relatório de Status · V3</div>
-        <div class="task-desc">
-          Iteração com os 7 dias da semana (Seg→Dom) inline na própria linha — sem chevron de expansão.
-        </div>
-        <div class="task-foot">
-          <span class="task-foot-meta">relatorio-status-agendamento-v3</span>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-        </div>
-      </a>
-
-    </div>
-  </section>
-
+  </div>
 </main>
 
-<footer class="page-footer">
-  Mosaic Direct · Protótipos UX · iterações com PO em ciclos curtos.
-  Hospedado no Vercel · auto-deploy via GitHub.
+<!-- FOOTER -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
 </footer>
 
-<!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'GA_MEASUREMENT_ID');
-</script>
-
-<!-- Hotjar Tracking Code — substituir HOTJAR_SITE_ID -->
-<script>
-  (function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:HOTJAR_SITE_ID,hjsv:6};
-    a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1;
-    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-    a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script>
+<script src="review-overlay.js" defer></script>
 </body>
 </html>

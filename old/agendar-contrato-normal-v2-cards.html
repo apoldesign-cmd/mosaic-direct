@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Agendar Contrato Normal</title>
+<title>Mosaic Direct — Agendar Contrato Normal · V2 Cards</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /* ================================================================
      Mosaic Direct — Design tokens
@@ -53,7 +53,7 @@
     --link-green:     #006a4d;
 
     /* Type */
-    --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
     /* Effects */
     --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
@@ -979,7 +979,7 @@
     line-height: 1;
   }
   .logo .wordmark {
-    font-family: "Barlow", sans-serif;
+    font-family: "Manrope", sans-serif;
     font-style: italic;
     font-weight: 800;
     font-size: 36px;
@@ -1001,7 +1001,37 @@
     margin-left: 6px;
     display: block;
   }
-  .logo--hero .wordmark { color: #fff; }/* ================================================================
+  .logo--hero .wordmark { color: #fff; }
+
+  /* ================================================================
+     Restart button (floating, subtle)
+     ================================================================ */
+  .restart-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 80;
+    background: rgba(21, 32, 27, 0.92);
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    transition: transform 140ms, background-color 140ms;
+    backdrop-filter: blur(8px);
+  }
+  .restart-btn:hover {
+    background: var(--mosaic-green-800);
+    transform: translateY(-1px);
+  }
+
+  /* ================================================================
      Step indicator (top-right of workspace) — tracks user progress
      ================================================================ */
   .step-indicator {
@@ -1461,33 +1491,20 @@
   /* ================================================================
      V2 — Sticky summary footer (replaces simple Cancelar/Agendar bar)
      ================================================================ */
-  /* Full-width sticky footer — escapes the .page max-width and hugs the
-     viewport from edge to edge */
   .summary-footer {
-    position: fixed;
-    left: 0;
-    right: 0;
+    position: sticky;
     bottom: 0;
     background: #fff;
     border-top: 1px solid var(--border);
-    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    z-index: 50;
-  }
-  .summary-footer-inner {
-    width: 100%;
-    max-width: 1320px;
-    padding: 16px 56px;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.04);
+    padding: 18px 56px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 24px;
+    z-index: 50;
+    margin: 32px -56px -80px;
   }
-  /* Reserve space at the bottom of the page so content doesn't sit under
-     the fixed footer */
-  .page { padding-bottom: 100px !important; }
   .summary-stats {
     display: flex;
     align-items: center;
@@ -2065,23 +2082,19 @@
   }
   .drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(820px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
     z-index: 101;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
     padding: 22px 28px 18px;
@@ -2252,10 +2265,8 @@
   }
   .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
   .drawer-item.is-disabled {
-    /* opacity removida — feito agora individualmente nos elementos
-       de conteudo (linha 4311+) pra a status-tag escapar do cascade */
+    opacity: 0.45;
     pointer-events: none;
-    cursor: not-allowed;
   }
 
   .checkbox {
@@ -2734,1558 +2745,8 @@
   }
 
 
-  /* ================================================================
-     V3 — View toggle (cards / table)
-     ================================================================ */
-  /* Toggle Cards/Tabela removido — apenas tabela */
-  .view-toggle { display: none !important; }
-  .view-toggle.__legacy_unused {
-    display: inline-flex;
-    background: #fff;
-    border: 1.5px solid var(--border);
-    overflow: hidden;
-  }
-  .view-toggle button {
-    background: transparent;
-    border: none;
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: inherit;
-    letter-spacing: 0.02em;
-    transition: background-color 120ms, color 120ms;
-  }
-  .view-toggle button:hover:not(.is-active) {
-    background: var(--bg-section);
-    color: var(--text-1);
-  }
-  .view-toggle button.is-active {
-    background: var(--mosaic-green-800);
-    color: #fff;
-  }
-  .view-toggle button + button {
-    border-left: 1.5px solid var(--border);
-  }
-  .view-toggle button.is-active + button,
-  .view-toggle button + button.is-active {
-    border-left-color: var(--mosaic-green-800);
-  }
-
-  /* Stack the action-row content for v3 — title left, toggle in the middle, button right */
-  .action-row.has-toggle {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 24px;
-    align-items: center;
-  }
-  .action-row.has-toggle .toggle-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-end;
-  }
-  .action-row.has-toggle .toggle-label {
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--text-3);
-  }
-
-  /* ================================================================
-     V3 — Table mode
-     ================================================================ */
-  .v3-table-wrap {
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    overflow-x: auto;
-  }
-  .v3-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 1500px;
-  }
-  .v3-table thead th {
-    background: var(--bg-section);
-    text-align: left;
-    padding: 12px 14px;
-    font-weight: 800;
-    color: var(--text-1);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-    vertical-align: middle;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  .v3-table thead th .req {
-    color: var(--mosaic-red);
-    font-weight: 800;
-    margin-left: 2px;
-  }
-  .v3-table thead th .opt-tag {
-    font-size: 9px;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-left: 4px;
-    text-transform: uppercase;
-  }
-  .v3-table .num { text-align: right; font-variant-numeric: tabular-nums; }
-
-  .v3-table tbody td {
-    padding: 12px 14px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    font-weight: 500;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .v3-table tbody tr {
-    transition: background-color 120ms;
-    border-left: 4px solid transparent;
-  }
-  .v3-table tbody tr:hover td { background: var(--bg-row-alt); }
-  .v3-table tbody tr.is-incomplete { border-left-color: var(--border-strong); }
-  .v3-table tbody tr.is-progress {
-    border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.04), transparent 30%);
-  }
-  .v3-table tbody tr.is-complete {
-    border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
-  }
-  .v3-table-wrap.show-validation tr.is-incomplete,
-  .v3-table-wrap.show-validation tr.is-progress {
-    border-left-color: var(--mosaic-red);
-    background: linear-gradient(to right, rgba(185,32,42,0.04), transparent 30%);
-  }
-
-  /* Bold primary identifiers in the table */
-  .v3-table tbody td.col-contract,
-  .v3-table tbody td.col-item,
-  .v3-table tbody td.col-product,
-  .v3-table tbody td.col-frete {
-    font-weight: 800;
-    color: var(--text-1);
-  }
-
-  .v3-frete-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 2px 8px;
-    border: 1.5px solid;
-    font-weight: 800;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    background: #fff;
-  }
-  .v3-frete-badge--fob {
-    color: var(--mosaic-green-700);
-    border-color: var(--mosaic-green-700);
-  }
-  .v3-frete-badge--cif {
-    color: var(--status-orange);
-    border-color: var(--status-orange);
-    background: var(--status-orange-bg);
-  }
-
-  /* Inline edit cells */
-  .v3-cell-input,
-  .v3-cell-roteiro {
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms, box-shadow 120ms;
-  }
-  .v3-cell-input:focus,
-  .v3-cell-roteiro:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .v3-cell-roteiro {
-    min-width: 220px;
-    font-style: italic;
-    color: var(--text-2);
-    cursor: pointer;
-  }
-  .v3-cell-roteiro.has-text {
-    font-style: normal;
-    color: var(--text-1);
-  }
-  .v3-cell-num { text-align: right; }
-
-  .v3-cell-volume-wrap {
-    position: relative;
-    width: 130px;
-  }
-  .v3-cell-volume-wrap input {
-    padding-right: 28px;
-  }
-  .v3-cell-volume-wrap .suffix {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-3);
-    pointer-events: none;
-  }
-
-  .v3-cell-date-wrap {
-    position: relative;
-    width: 140px;
-  }
-  .v3-cell-date-wrap input {
-    padding-right: 32px;
-    cursor: pointer;
-  }
-  .v3-cell-date-wrap .cal-trigger {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: transparent;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .v3-cell-date-wrap .cal-trigger:hover {
-    color: var(--mosaic-green-800);
-  }
-
-  /* Required field highlighting in table — only after submit attempt */
-  .v3-table-wrap:not(.show-validation) td.is-missing .v3-cell-input,
-  .v3-table-wrap:not(.show-validation) td.is-missing .v3-cell-roteiro,
-  .v3-table-wrap:not(.show-validation) td.is-missing .v3-cell-date-wrap input {
-    border-color: var(--border);
-  }
-  .v3-table-wrap.show-validation td.is-missing .v3-cell-input,
-  .v3-table-wrap.show-validation td.is-missing .v3-cell-roteiro,
-  .v3-table-wrap.show-validation td.is-missing .v3-cell-date-wrap input {
-    border-color: rgba(185, 32, 42, 0.55);
-    background: rgba(185, 32, 42, 0.025);
-  }
-
-  /* Row actions */
-  .v3-row-actions {
-    display: inline-flex;
-    gap: 4px;
-  }
-  .v3-row-actions button {
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    border: 1px solid transparent;
-    color: var(--text-2);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: color 120ms, background-color 120ms, border-color 120ms;
-  }
-  .v3-row-actions button:hover {
-    color: var(--mosaic-green-800);
-    background: var(--bg-section);
-    border-color: var(--border-soft);
-  }
-  .v3-row-actions button.danger:hover { color: var(--mosaic-red); }
-
-  .v3-status-cell {
-    text-align: center;
-    width: 32px;
-  }
-  .v3-status-dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .v3-status-dot--complete {
-    background: var(--mosaic-green-700);
-    color: #fff;
-  }
-  .v3-status-dot--progress {
-    background: var(--mosaic-yellow);
-    color: var(--text-1);
-  }
-  .v3-status-dot--incomplete {
-    background: var(--bg-section-2);
-    color: var(--text-3);
-    border: 1.5px solid var(--border-strong);
-  }
-  .v3-table-wrap.show-validation tr.is-incomplete .v3-status-dot,
-  .v3-table-wrap.show-validation tr.is-progress .v3-status-dot {
-    background: var(--mosaic-red);
-    color: #fff;
-    border-color: var(--mosaic-red);
-  }
-
-
-  /* ================================================================
-     V3.1 — Title row (page title + view toggle on the same line)
-     ================================================================ */
-  .title-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-bottom: 24px;
-  }
-  .title-row .page-title {
-    margin: 0;
-  }
-
-  /* ================================================================
-     V3.1 — Table — fits without horizontal scroll, grouped columns
-     ================================================================ */
-  .v3-table-wrap {
-    overflow: visible;
-  }
-  .v3-table {
-    width: 100%;
-    table-layout: fixed;
-    min-width: 0;
-  }
-  /* Column widths add up to 100%: status 36 + contract 14% + product 18% +
-     local 14% + vigência 14% + volume 8% + semana 9% + roteiro 14% + actions 60 */
-  .v3-table colgroup col,
-  .v3-table thead th:nth-child(1) { width: 36px; }
-  .v3-table thead th:nth-child(2) { width: 13%; }
-  .v3-table thead th:nth-child(3) { width: 17%; }
-  .v3-table thead th:nth-child(4) { width: 14%; }
-  .v3-table thead th:nth-child(5) { width: 13%; }
-  .v3-table thead th:nth-child(6) { width: 8%; min-width: 95px; }
-  .v3-table thead th:nth-child(7) { width: 9%; min-width: 110px; }
-  .v3-table thead th:nth-child(8) { width: 14%; min-width: 130px; }
-  .v3-table thead th:nth-child(9) { width: 70px; }
-
-  .v3-table thead th {
-    font-size: 10px;
-    padding: 10px 10px;
-  }
-  .v3-table tbody td {
-    padding: 10px 10px;
-    vertical-align: top;
-    white-space: normal;
-    word-break: break-word;
-  }
-
-  /* Stacked cell — primary line + secondary line */
-  .cell-stack {
-    line-height: 1.35;
-  }
-  .stack-primary {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    color: var(--text-1);
-    font-weight: 600;
-    font-size: 13px;
-    margin-bottom: 2px;
-  }
-  .stack-primary.cell-strong,
-  .stack-primary .cell-strong {
-    font-weight: 800;
-    color: var(--text-1);
-  }
-  .stack-secondary {
-    color: var(--text-3);
-    font-size: 11px;
-    font-weight: 600;
-    line-height: 1.35;
-  }
-  .stack-secondary strong {
-    color: var(--text-2);
-    font-weight: 800;
-  }
-  .stack-secondary .arrow-to {
-    color: var(--mosaic-green-700);
-    font-weight: 800;
-  }
-  .stack-secondary .saldo-tag {
-    color: var(--text-3);
-  }
-  .stack-secondary strong + .saldo-tag {
-    margin-left: 4px;
-  }
-
-  /* Compact inputs in the table */
-  .v3-table .v3-cell-input,
-  .v3-table .v3-cell-roteiro {
-    height: 32px;
-    font-size: 12.5px;
-    padding: 0 8px;
-  }
-  .v3-table .v3-cell-volume-wrap {
-    width: 100%;
-    min-width: 0;
-  }
-  .v3-table .v3-cell-volume-wrap input {
-    padding-right: 22px;
-  }
-  .v3-table .v3-cell-date-wrap {
-    width: 100%;
-    min-width: 0;
-  }
-  .v3-table .v3-cell-date-wrap input {
-    padding-right: 28px;
-  }
-  .v3-table .v3-cell-roteiro {
-    min-width: 0;
-    width: 100%;
-    font-size: 12px;
-  }
-  .v3-table .v3-cell-roteiro::placeholder {
-    font-size: 11px;
-  }
-  .cell-actions {
-    text-align: right;
-  }
-
-  /* Frete badge gets smaller in the stacked cell */
-  .v3-table .v3-frete-badge {
-    font-size: 9px;
-    padding: 1px 6px;
-    letter-spacing: 0.06em;
-  }
-
-  /* ================================================================
-     V3.1 — Vertical compact card variant (V3 default in cards mode)
-     Multiple cards laid out in a horizontal grid.
-     ================================================================ */
-  .cards-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-    gap: 12px;
-  }
-
-  /* Compact vertical card overrides */
-  .contract-card {
-    display: flex;
-    flex-direction: column;
-  }
-  .contract-card .card-head {
-    padding: 12px 16px 10px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  .contract-card .card-id {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    flex-wrap: wrap;
-  }
-  .contract-card .card-contract {
-    font-size: 16px;
-  }
-  .contract-card .card-item {
-    font-size: 12px;
-  }
-  .contract-card .card-head-right {
-    gap: 6px;
-  }
-
-  .contract-card .card-product {
-    padding: 10px 16px 8px;
-  }
-  .contract-card .card-product-name {
-    font-size: 14px;
-    line-height: 1.3;
-    /* Allow up to 2 lines, truncate after */
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .contract-card .card-product-meta {
-    font-size: 11px;
-  }
-
-  /* Compact meta — 2 columns instead of 5, items wrap as label:value pairs */
-  .contract-card .card-meta-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
-  }
-  .contract-card .meta-cell {
-    padding: 8px 12px;
-    border-right: 1px solid var(--border-soft);
-    border-top: 1px solid var(--border-soft);
-  }
-  .contract-card .meta-cell:nth-child(2n) {
-    border-right: none;
-  }
-  .contract-card .meta-cell .meta-label {
-    font-size: 9px;
-    margin-bottom: 1px;
-  }
-  .contract-card .meta-cell .meta-value {
-    font-size: 11.5px;
-    line-height: 1.3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .contract-card .meta-cell .meta-value--saldo {
-    font-size: 14px;
-  }
-
-  /* Action zone — fields stacked vertically in compact card */
-  .contract-card .card-action-zone {
-    padding: 10px 16px 14px;
-  }
-  .contract-card .card-action-title {
-    margin-bottom: 8px;
-    font-size: 9px;
-  }
-  .contract-card .card-action-grid,
-  .contract-card .card-action-grid--no-roteiro {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .contract-card .field-block {
-    width: 100%;
-    gap: 4px;
-  }
-  .contract-card .field-block label {
-    font-size: 10px;
-  }
-  .contract-card .input-with-suffix input,
-  .contract-card .card-date-wrap input {
-    height: 36px;
-    font-size: 13px;
-  }
-  .contract-card .roteiro-textarea {
-    min-height: 36px;
-    font-size: 12px;
-    padding: 8px 10px;
-  }
-  .contract-card .roteiro-textarea:focus {
-    min-height: 60px;
-  }
-  .contract-card .roteiro-textarea:not(:placeholder-shown) {
-    min-height: 50px;
-  }
-
-  .contract-card .card-status {
-    padding: 8px 16px;
-    font-size: 10px;
-  }
-  .contract-card .card-collapsed-summary {
-    padding: 6px 16px 10px;
-    font-size: 11px;
-  }
-  .contract-card .card-collapsed-summary .product {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 60%;
-  }
-
-
-
-  /* ================================================================
-     V3.2 — Roteiro side drawer (separate from contracts drawer)
-     ================================================================ */
-  .roteiro-drawer-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 25, 20, 0.45);
-    z-index: 110;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 200ms ease-out;
-  }
-  .roteiro-drawer-backdrop.is-open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .roteiro-drawer {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(640px, 96vw);
-    max-height: calc(100vh - 56px);
-    background: #fff;
-    z-index: 111;
-    display: flex;
-    flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
-  }
-  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
-
-  .roteiro-drawer-header {
-    background: var(--bg-section);
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border-soft);
-    flex-shrink: 0;
-  }
-  .roteiro-drawer-header .titles { flex: 1; min-width: 0; }
-  .roteiro-drawer-header h3 {
-    margin: 0;
-    font-size: 17px;
-    font-weight: 800;
-    color: var(--mosaic-green-900);
-    letter-spacing: -0.005em;
-  }
-  .roteiro-drawer-header .subtitle {
-    font-size: 12px;
-    color: var(--text-2);
-    margin-top: 2px;
-    font-weight: 600;
-  }
-  .roteiro-drawer-header .subtitle strong {
-    color: var(--text-1);
-    font-weight: 800;
-  }
-  .roteiro-drawer-header .close-x {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: transparent;
-    color: var(--mosaic-green-800);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 120ms;
-  }
-  .roteiro-drawer-header .close-x:hover {
-    background: rgba(0,0,0,0.05);
-  }
-  .roteiro-drawer-body {
-    flex: 1;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow-y: auto;
-  }
-  .roteiro-drawer-body label {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-1);
-    letter-spacing: 0.01em;
-  }
-  .roteiro-drawer-body label .opt-tag {
-    color: var(--text-3);
-    font-weight: 600;
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-left: 4px;
-  }
-  .roteiro-drawer-body label .req {
-    color: var(--mosaic-red);
-    margin-left: 2px;
-  }
-  .roteiro-drawer-body textarea {
-    flex: 1;
-    width: 100%;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    padding: 14px 16px;
-    font-size: 14px;
-    line-height: 1.55;
-    font-family: inherit;
-    font-weight: 500;
-    color: var(--text-1);
-    outline: none;
-    resize: none;
-    transition: border-color 120ms, box-shadow 120ms;
-    min-height: 380px;
-  }
-  .roteiro-drawer-body textarea:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .roteiro-drawer-body textarea::placeholder {
-    color: var(--text-3);
-    font-style: italic;
-    font-weight: 500;
-  }
-  .roteiro-drawer-footer {
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    background: #fafafa;
-    display: flex;
-    justify-content: flex-end;
-    gap: 12px;
-    flex-shrink: 0;
-  }
-
-  /* Affordance: a small "expand" icon at the right side of any roteiro
-     input/textarea inside the cards or table. */
-  .roteiro-with-expand {
-    position: relative;
-  }
-  .roteiro-with-expand .expand-roteiro-btn {
-    position: absolute;
-    right: 4px;
-    bottom: 4px;
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: rgba(255,255,255,0.85);
-    color: var(--text-3);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 120ms, background-color 120ms;
-    backdrop-filter: blur(2px);
-  }
-  .roteiro-with-expand .expand-roteiro-btn:hover {
-    color: var(--mosaic-green-800);
-    background: rgba(255,255,255,1);
-  }
-  .v3-table .roteiro-with-expand input { padding-right: 32px; }
-  .contract-card .roteiro-with-expand textarea { padding-right: 32px; }
-  .v3-table .roteiro-with-expand .expand-roteiro-btn {
-    width: 24px; height: 24px; right: 3px; top: 50%; bottom: auto; transform: translateY(-50%);
-  }
-
-  /* ================================================================
-     V3.2 — Cards sub-layout (list vs grid)
-     ================================================================ */
-  .cards-layout-toggle {
-    display: inline-flex;
-    background: #fff;
-    border: 1.5px solid var(--border);
-    margin-left: 12px;
-    overflow: hidden;
-    vertical-align: middle;
-  }
-  .cards-layout-toggle button {
-    background: transparent;
-    border: none;
-    padding: 6px 10px;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-family: inherit;
-    letter-spacing: 0.02em;
-    transition: background-color 120ms, color 120ms;
-  }
-  .cards-layout-toggle button:hover:not(.is-active) {
-    background: var(--bg-section);
-    color: var(--text-1);
-  }
-  .cards-layout-toggle button.is-active {
-    background: var(--mosaic-green-800);
-    color: #fff;
-  }
-  .cards-layout-toggle button + button {
-    border-left: 1.5px solid var(--border);
-  }
-
-  /* List layout — single column, narrower cards stacked vertically (compact) */
-  .cards-list.layout-list {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-  /* In list layout, the cards collapse by default and only the active one
-     is expanded — accordion behavior preserved. */
-
-  /* Grid layout — multiple cards side by side, ALWAYS expanded, no accordion */
-  .cards-list.layout-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 12px;
-  }
-  .cards-list.layout-grid .contract-card.is-collapsed {
-    /* In grid mode, ignore collapse state — always show full content */
-  }
-  .cards-list.layout-grid .contract-card.is-collapsed .card-product,
-  .cards-list.layout-grid .contract-card.is-collapsed .card-meta-grid,
-  .cards-list.layout-grid .contract-card.is-collapsed .card-action-zone,
-  .cards-list.layout-grid .contract-card.is-collapsed .card-status {
-    display: revert;
-  }
-  .cards-list.layout-grid .contract-card.is-collapsed .card-collapsed-summary {
-    display: none;
-  }
-  .cards-list.layout-grid .card-toggle {
-    display: none;
-  }
-  .cards-list.layout-grid .card-head {
-    cursor: default;
-  }
-
-  /* In list layout, denser presentation when card is expanded */
-  .cards-list.layout-list .contract-card .card-head { padding: 10px 16px 8px; }
-  .cards-list.layout-list .contract-card .card-product { padding: 8px 16px 6px; }
-  .cards-list.layout-list .contract-card .card-meta-grid {
-    grid-template-columns: repeat(5, 1fr);
-  }
-  .cards-list.layout-list .contract-card .meta-cell {
-    padding: 6px 10px;
-    border-right: 1px solid var(--border-soft);
-    border-top: 1px solid var(--border-soft);
-  }
-  .cards-list.layout-list .contract-card .meta-cell:nth-child(2n) {
-    border-right: 1px solid var(--border-soft);
-  }
-  .cards-list.layout-list .contract-card .meta-cell:nth-child(5n) {
-    border-right: none;
-  }
-  .cards-list.layout-list .card-action-zone { padding: 10px 16px 12px; }
-  .cards-list.layout-list .card-action-grid,
-  .cards-list.layout-list .card-action-grid--no-roteiro {
-    display: grid;
-    grid-template-columns: 140px 160px minmax(0, 1fr);
-    gap: 12px;
-    align-items: start;
-    flex-direction: row;
-  }
-  .cards-list.layout-list .field-block { width: auto; }
-
-
-  /* ================================================================
-     V3.3 — Table date input — full width within its column, just like volume
-     ================================================================ */
-  .v3-table .v3-cell-date-wrap {
-    width: 100%;
-    position: relative;
-    display: block;
-  }
-  .v3-table .v3-cell-date-wrap input {
-    width: 100%;
-    padding-right: 30px;
-    cursor: pointer;
-  }
-
-
-  /* ================================================================
-     V3.3 — Cards LIST mode = compact inline, NO accordion
-     All info visible at once, packed densely so users see many at once.
-     ================================================================ */
-  /* In list mode, override is-collapsed so the body is always shown */
-  .cards-list.layout-list .contract-card.is-collapsed .card-product,
-  .cards-list.layout-list .contract-card.is-collapsed .card-meta-grid,
-  .cards-list.layout-list .contract-card.is-collapsed .card-action-zone,
-  .cards-list.layout-list .contract-card.is-collapsed .card-status {
-    display: revert;
-  }
-  .cards-list.layout-list .contract-card.is-collapsed .card-collapsed-summary {
-    display: none;
-  }
-  /* Hide the chevron in list mode (no accordion) */
-  .cards-list.layout-list .card-toggle { display: none; }
-  /* Header click should NOT toggle in list mode */
-  .cards-list.layout-list .card-head { cursor: default; }
-
-  /* Make the LIST mode cards super compact horizontally — single row layout */
-  .cards-list.layout-list .contract-card {
-    display: grid;
-    grid-template-columns: minmax(180px, 1.2fr) minmax(180px, 1.6fr) minmax(280px, 2fr) auto;
-    align-items: stretch;
-  }
-  .cards-list.layout-list .contract-card .card-head {
-    border-bottom: none;
-    border-right: 1px solid var(--border-soft);
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .cards-list.layout-list .contract-card .card-id {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1px;
-  }
-  .cards-list.layout-list .contract-card .card-id .card-sep { display: none; }
-  .cards-list.layout-list .contract-card .card-contract { font-size: 14px; }
-  .cards-list.layout-list .contract-card .card-item { font-size: 11px; }
-  .cards-list.layout-list .contract-card .card-id > span:nth-child(5) {
-    font-size: 10.5px;
-    color: var(--text-3);
-    font-weight: 600;
-  }
-  .cards-list.layout-list .contract-card .card-head-right {
-    margin-top: 2px;
-    gap: 6px;
-  }
-  .cards-list.layout-list .contract-card .badge {
-    font-size: 9px;
-    padding: 2px 7px;
-  }
-  .cards-list.layout-list .contract-card .card-action-icons button {
-    width: 26px;
-    height: 26px;
-  }
-
-  /* Product zone — compact, takes the second column */
-  .cards-list.layout-list .contract-card .card-product {
-    border-right: 1px solid var(--border-soft);
-    padding: 10px 14px;
-    margin: 0;
-    background: var(--bg-section);
-  }
-  .cards-list.layout-list .contract-card .card-product-name {
-    font-size: 12.5px;
-    font-weight: 800;
-    margin-bottom: 4px;
-    -webkit-line-clamp: 2;
-  }
-  .cards-list.layout-list .contract-card .card-product-meta {
-    font-size: 10.5px;
-    line-height: 1.35;
-  }
-  /* Hide meta grid in list mode — too much info, we put inline summary instead */
-  .cards-list.layout-list .contract-card .card-meta-grid {
-    display: none;
-  }
-
-  /* Inline meta summary added by JS in list mode */
-  .cards-list.layout-list .contract-card .list-meta-inline {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    font-size: 10.5px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 4px;
-    line-height: 1.35;
-  }
-  .cards-list.layout-list .contract-card .list-meta-inline strong {
-    color: var(--text-2);
-    font-weight: 700;
-  }
-  .cards-list.layout-list .contract-card .list-meta-inline .saldo-tag {
-    color: var(--mosaic-green-800);
-    font-weight: 800;
-  }
-
-  /* Action zone — third column, compact */
-  .cards-list.layout-list .contract-card .card-action-zone {
-    padding: 8px 14px;
-    background: #fff;
-  }
-  .cards-list.layout-list .contract-card .card-action-title {
-    display: none;
-  }
-  .cards-list.layout-list .contract-card .card-action-grid,
-  .cards-list.layout-list .contract-card .card-action-grid--no-roteiro {
-    display: grid;
-    grid-template-columns: 110px 130px minmax(0, 1fr);
-    gap: 8px;
-    align-items: start;
-  }
-  .cards-list.layout-list .contract-card .field-block {
-    width: 100%;
-    gap: 2px;
-  }
-  .cards-list.layout-list .contract-card .field-block label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-3);
-    font-weight: 700;
-  }
-  .cards-list.layout-list .contract-card .input-with-suffix input,
-  .cards-list.layout-list .contract-card .card-date-wrap input {
-    height: 32px;
-    font-size: 12.5px;
-  }
-  .cards-list.layout-list .contract-card .roteiro-textarea {
-    min-height: 32px;
-    font-size: 12px;
-    padding: 7px 10px;
-    resize: vertical;
-  }
-  /* In list mode, the textarea grows naturally with content (no modal) */
-  .cards-list.layout-list .contract-card .roteiro-textarea:focus {
-    min-height: 70px;
-  }
-  /* Hide the expand-roteiro button in list mode */
-  .cards-list.layout-list .contract-card .expand-roteiro-btn {
-    display: none;
-  }
-
-  /* Status footer — fourth column, vertical compact */
-  .cards-list.layout-list .contract-card .card-status {
-    border-top: none;
-    border-left: 1px solid var(--border-soft);
-    padding: 10px 14px;
-    flex-direction: column;
-    justify-content: center;
-    text-align: center;
-    font-size: 10px;
-    line-height: 1.3;
-    min-width: 130px;
-    max-width: 180px;
-  }
-  .cards-list.layout-list .contract-card .card-status svg {
-    margin-bottom: 4px;
-  }
-  .cards-list.layout-list .contract-card .pending-list {
-    margin-left: 0;
-    margin-top: 4px;
-    flex-direction: column;
-    gap: 3px;
-  }
-
-  /* ================================================================
-     V3.4 — Saldo emphasis in table (saldo bigger than vigência)
-     ================================================================ */
-  .v3-table .cell-saldo-emphasis .saldo-primary {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-    margin-bottom: 2px;
-  }
-  .v3-table .cell-saldo-emphasis .saldo-unit {
-    font-size: 11px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-    letter-spacing: 0.04em;
-  }
-  .v3-table .cell-saldo-emphasis .stack-secondary {
-    font-size: 10.5px;
-    color: var(--text-3);
-    font-weight: 600;
-  }
-
-  /* ================================================================
-     V5 / Final — Grouped contract cards (multi-item per contract)
-     Compact horizontal layout — one row for header, one for item info
-     ================================================================ */
-  .v5-card {
-    display: flex !important;
-    flex-direction: column;
-    grid-template-columns: none !important;
-  }
-
-  /* Visual tag indicating the level */
-  .v5-level-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: #fff;
-    background: var(--mosaic-green-800);
-    padding: 3px 7px;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-  .v5-level-tag--item {
-    background: var(--mosaic-green-700);
-  }
-
-  /* CONTRACT-LEVEL HEADER — single horizontal compact line */
-  .v5-card-head {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 16px !important;
-    border-bottom: 2px solid var(--border);
-    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
-    cursor: default !important;
-    flex-wrap: wrap;
-  }
-  .v5-card-head .card-contract {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text-1);
-    letter-spacing: -0.005em;
-    flex-shrink: 0;
-  }
-  .v5-head-divider {
-    width: 1px;
-    height: 16px;
-    background: var(--border);
-    flex-shrink: 0;
-  }
-  .v5-head-inline {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 12px;
-    color: var(--text-2);
-    font-weight: 600;
-    white-space: nowrap;
-  }
-  .v5-head-inline strong {
-    color: var(--text-1);
-    font-weight: 800;
-  }
-  .v5-head-inline .arrow {
-    color: var(--mosaic-green-700);
-    font-weight: 800;
-  }
-  .v5-card-head .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 1px;
-  }
-  .v5-item-count {
-    font-size: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 800;
-    color: var(--text-3);
-    background: var(--bg-section-2);
-    padding: 3px 8px;
-    margin-left: auto;
-    flex-shrink: 0;
-  }
-  .v5-head-remove {
-    flex-shrink: 0;
-  }
-
-  /* ITEM ROWS — compact horizontal */
-  .v5-items-list {
-    display: flex;
-    flex-direction: column;
-  }
-  .v5-item-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
-    gap: 14px;
-    padding: 10px 16px;
-    align-items: center;
-    border-bottom: 1px solid var(--border-soft);
-    border-left: 3px solid transparent;
-    transition: background-color 120ms, border-left-color 200ms;
-  }
-  .v5-item-row.is-incomplete {
-    border-left-color: var(--border-strong);
-  }
-  .v5-item-row.is-progress {
-    border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
-  }
-  .v5-item-row.is-complete {
-    border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 25%);
-  }
-  .cards-container.show-validation .v5-item-row.is-incomplete,
-  .cards-container.show-validation .v5-item-row.is-progress {
-    border-left-color: var(--mosaic-red);
-    background: linear-gradient(to right, rgba(185,32,42,0.03), transparent 25%);
-  }
-  .v5-item-row:last-of-type {
-    border-bottom: none;
-  }
-
-  .v5-item-info {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .v5-item-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    min-width: 0;
-  }
-  .v5-item-line--top {
-    gap: 8px;
-  }
-  .v5-item-line--bottom {
-    gap: 8px;
-    color: var(--text-2);
-    font-size: 11.5px;
-    font-weight: 600;
-  }
-  .v5-item-id {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--text-1);
-  }
-  .v5-item-line .badge {
-    font-size: 9px;
-    padding: 2px 7px;
-  }
-  .v5-item-product {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-1);
-    line-height: 1.3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    min-width: 0;
-    flex: 1;
-  }
-  .v5-item-meta-piece {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    white-space: nowrap;
-  }
-  .v5-item-meta-piece strong {
-    color: var(--text-1);
-    font-weight: 800;
-  }
-  .v5-meta-sep {
-    color: var(--border);
-    font-weight: 800;
-  }
-  .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 1px;
-  }
-  .v5-item-line--bottom .arrow {
-    color: var(--mosaic-green-700);
-    font-weight: 800;
-    margin: 0 1px;
-  }
-  .v5-item-saldo {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
-  .v5-item-saldo .unit {
-    font-size: 10px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-    letter-spacing: 0.04em;
-  }
-
-  /* V5 / Final — Item form fields: horizontal, same height */
-  .v5-item-fields {
-    display: grid;
-    grid-template-columns: 100px 130px minmax(180px, 240px);
-    gap: 8px;
-    align-items: end;
-  }
-  .v5-item-fields .field-block { gap: 2px; }
-  .v5-item-fields .field-block label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-bottom: 0;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  /* Force all three input types to identical 32px height */
-  .v5-item-fields .input-with-suffix,
-  .v5-item-fields .card-date-wrap,
-  .v5-item-fields .roteiro-toggle-btn {
-    height: 32px !important;
-    box-sizing: border-box;
-  }
-  .v5-item-fields .input-with-suffix input,
-  .v5-item-fields .card-date-wrap input {
-    height: 32px !important;
-    line-height: 32px;
-    font-size: 12.5px;
-    padding-top: 0;
-    padding-bottom: 0;
-    box-sizing: border-box;
-  }
-  .v5-item-fields .card-date-wrap .cal-trigger {
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  /* Roteiro toggle button (replaces textarea) */
-  .roteiro-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-    height: 32px;
-    padding: 0 10px;
-    border: 1.5px dashed var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    box-sizing: border-box;
-    line-height: 32px;
-  }
-  .roteiro-toggle-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-    background: rgba(0, 106, 77, 0.03);
-  }
-  .roteiro-toggle-btn.has-value {
-    border-style: solid;
-    color: var(--text-1);
-    background: #fff;
-  }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-icon {
-    color: var(--mosaic-green-700);
-  }
-  .roteiro-toggle-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-weight: 600;
-  }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-text {
-    font-weight: 700;
-  }
-  .roteiro-toggle-icon {
-    flex-shrink: 0;
-    color: var(--text-3);
-  }
-  .roteiro-toggle-btn:hover .roteiro-toggle-icon {
-    color: var(--mosaic-green-700);
-  }
-
-  .v5-item-actions {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-  }
-
-  /* Add-item button + popover */
-  .v5-add-item {
-    position: relative;
-    border-top: 1px solid var(--border-soft);
-  }
-  .v5-add-item-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-    background: var(--bg-section);
-    border: none;
-    border-bottom: 1px solid var(--border-soft);
-    padding: 8px 16px;
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--mosaic-green-800);
-    cursor: pointer;
-    text-align: left;
-    transition: background-color 120ms, color 120ms;
-    letter-spacing: 0.01em;
-  }
-  .v5-add-item-btn:hover {
-    background: rgba(0, 106, 77, 0.06);
-    color: var(--mosaic-green-900);
-  }
-  .v5-add-item-count {
-    margin-left: auto;
-    font-size: 10px;
-    color: var(--text-3);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .v5-add-item-popover {
-    position: absolute;
-    left: 16px;
-    top: 100%;
-    background: #fff;
-    border: 1px solid var(--border);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
-    min-width: 280px;
-    max-width: 380px;
-    z-index: 60;
-    display: none;
-    padding: 6px;
-  }
-  .v5-add-item-popover.is-open {
-    display: block;
-    animation: v5-pop-fade 140ms ease-out;
-  }
-  @keyframes v5-pop-fade {
-    from { opacity: 0; transform: translateY(-4px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .v5-popover-header {
-    padding: 8px 12px;
-    font-size: 10px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    border-bottom: 1px solid var(--border-soft);
-    margin-bottom: 4px;
-  }
-  .v5-popover-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    background: transparent;
-    border: none;
-    padding: 8px 12px;
-    font-family: inherit;
-    cursor: pointer;
-    text-align: left;
-    transition: background-color 120ms;
-  }
-  .v5-popover-item:hover {
-    background: rgba(0, 106, 77, 0.06);
-  }
-  .v5-popover-item-id {
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--text-1);
-    flex: 1;
-  }
-  .v5-popover-item-saldo {
-    font-size: 12px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-  }
-  .v5-popover-item-frete {
-    font-size: 9px;
-    padding: 2px 6px;
-  }
-
-  /* Override list-mode 4-column horizontal layout */
-  .cards-list.layout-list .v5-card .card-head,
-  .cards-list.layout-list .v5-card .card-product,
-  .cards-list.layout-list .v5-card .card-action-zone {
-    grid-column: unset;
-    border-right: none;
-  }
-
-  /* Grid layout: cards can be wider since content is now compact horizontal */
-  .cards-list.layout-grid {
-    grid-template-columns: repeat(auto-fill, minmax(640px, 1fr));
-  }
-
-  .v5-card .card-status {
-    border-top: 1px solid var(--border-soft);
-    padding: 8px 16px;
-  }
-
-  
-
-  /* V5 / Final — force list-only mode (Lista/Grid toggle removed) */
-  #cardsLayoutToggle { display: none !important; }
-
-
-  .v5-table-roteiro {
-    height: 30px !important;
-    line-height: 30px !important;
-    padding: 0 8px !important;
-    font-size: 11.5px;
-    min-width: 130px;
-  }
-
-
-  /* V5 Final round 5 — table contract cell tertiary line (Vigência) + saldo polish */
-  .v3-table .cell-stack .stack-tertiary {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 2px;
-    letter-spacing: 0.01em;
-  }
-  .v3-table .cell-saldo-emphasis,
-  .v3-table thead th.th-saldo {
-    text-align: left;
-    white-space: nowrap;
-  }
-  /* Stack tertiary (Origem under Produto/Embalagem) */
-  .v3-table .cell-stack .stack-tertiary {
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 1px;
-  }
-  .v3-table .v3-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .v3-table .cell-saldo-emphasis .saldo-primary {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
-  .v3-table .cell-saldo-emphasis .saldo-unit {
-    font-size: 11px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-  }
-
-  /* Validation: Semana passada */
-  input.is-invalid,
-  .card-date-wrap.is-invalid input,
-  .v3-date-wrap.is-invalid input,
-  .v3-cell-volume-wrap.is-invalid input {
-    border-color: var(--mosaic-red) !important;
-    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
-  }
-
   /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
-  .v3-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
+  .big-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
 
 
   /* Banner hero removido — layout limpo (so top-nav). */
@@ -4293,138 +2754,111 @@
     display: none !important;
   }
 
-  /* Status tags no drawer (contratos bloqueados / com aditivo / nao assinados) */
-  .status-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 2px 7px;
-    border: 1.5px solid;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.2;
-  }
-  .status-tag--amendment {
-    color: var(--status-orange);
-    border-color: var(--status-orange);
-    background: var(--status-orange-bg, rgba(199,104,20,0.08));
-  }
-  .status-tag--unsigned {
-    color: var(--mosaic-red);
-    border-color: var(--mosaic-red);
-    background: rgba(185,32,42,0.06);
-  }
-  .status-tag--canceled {
-    color: var(--text-3);
-    border-color: var(--text-3);
-    background: var(--bg-section);
-  }
-  .drawer-item.is-disabled {
-    pointer-events: none;
-    cursor: not-allowed;
-  }
-  /* Diminuir conteudo da row dimming individual (nao usa opacity no
-     parent porque opacity cascade evita filho visivel). */
-  .drawer-item.is-disabled .checkbox,
-  .drawer-item.is-disabled .drawer-item-contract,
-  .drawer-item.is-disabled .drawer-item-item,
-  .drawer-item.is-disabled .drawer-item-frete,
-  .drawer-item.is-disabled .drawer-item-product,
-  .drawer-item.is-disabled .drawer-item-meta,
-  .drawer-item.is-disabled .drawer-item-saldo {
-    opacity: 0.5;
-  }
-  /* Tag de bloqueio: fundo solido vermelho/laranja, sempre vivida */
-  .drawer-item.is-disabled .status-tag {
-    opacity: 1;
-    font-weight: 800;
-    color: #fff !important;
-  }
-  .drawer-item.is-disabled .status-tag--unsigned {
-    background: var(--mosaic-red) !important;
-    border-color: var(--mosaic-red) !important;
-  }
-  .drawer-item.is-disabled .status-tag--amendment {
-    background: var(--status-orange) !important;
-    border-color: var(--status-orange) !important;
-  }
-  .drawer-item.is-disabled .status-tag--canceled {
-    background: var(--text-2) !important;
-    border-color: var(--text-2) !important;
-  }
 
 </style>
+<!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
 
+<!-- Hotjar Tracking Code — substituir HOTJAR_SITE_ID -->
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:HOTJAR_SITE_ID,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
 
-
-
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="base.css" />
 </head>
 <body>
 
-
+<!-- Floating restart button (subtle, useful for re-running the demo) -->
+<button class="restart-btn" id="restartBtn" type="button" title="Reiniciar fluxo">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 12a9 9 0 1 0 3-6.7"/>
+    <path d="M3 4v5h5"/>
+  </svg>
+  Reiniciar fluxo
+</button>
 
 <!-- Top header ==================================================== -->
-<header class="mosaic-header">
-  <div class="mosaic-header-top">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="mosaic-search">
-      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
-      <span class="search-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
-    </div>
-    <div class="mosaic-user-cluster">
-      <button class="lang-switch" type="button">
-        PT
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="mosaic-user-info">
-        <span class="user-name">Alyssa Harris</span>
-        <span class="user-org">MAR JAC POULT...</span>
-      </div>
-      <button class="icon-btn" aria-label="Trocar empresa" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Carrinho" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </button>
-    </div>
+<header class="topbar">
+  <div class="logo" aria-label="Mosaic">
+    <span class="wordmark">Mosaic<sup>®</sup></span>
+    <img class="shapes" src="data:image/png;base64,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" alt="" />
   </div>
-  <nav class="mosaic-nav" aria-label="Principal">
-    <div class="mosaic-nav-inner">
-      <a href="index.html" class="nav-item">Home</a>
-      <a href="#" class="nav-item">Produtos</a>
-      <a href="#" class="nav-item">Cotações</a>
-      <span class="nav-item" tabindex="0">
-        Contratos<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="criar-protocolo.html">Criar Protocolo</a>
-          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
-        </div>
-      </span>
-      <span class="nav-item is-active" tabindex="0">
-        Agendamento<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html" class="is-active">Agendar Contratos Normais</a>
-          <a href="agendar-protocolo.html">Agendar Protocolo</a>
-          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
-        </div>
-      </span>
-      <a href="#" class="nav-item">Faturamento</a>
-      <a href="#" class="nav-item">Documentos</a>
-      <a href="#" class="nav-item">Financeiro</a>
-      <a href="#" class="nav-item">Suporte</a>
+
+  <div class="global-search" role="search">
+    <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+    <span class="icon-search" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </span>
+  </div>
+
+  <div class="user-cluster">
+    <button class="lang-select" type="button">
+      EN
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 3 3-3"/></svg>
+    </button>
+    <div class="user-info">
+      <div class="name">Alyssa Harris</div>
+      <div class="org">MAR JAC POULT...</div>
     </div>
-  </nav>
+    <span class="icon-pill" aria-hidden="true">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18"/><line x1="9" y1="7" x2="9" y2="7"/><line x1="13" y1="7" x2="13" y2="7"/><line x1="9" y1="11" x2="9" y2="11"/><line x1="13" y1="11" x2="13" y2="11"/><line x1="9" y1="15" x2="9" y2="15"/><line x1="13" y1="15" x2="13" y2="15"/><path d="M10 21v-3h4v3"/></svg>
+    </span>
+    <span class="icon-cart" aria-hidden="true">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h2l3 12h13l2-9H6"/></svg>
+    </span>
+  </div>
 </header>
 
+<!-- Main nav ====================================================== -->
+<nav class="mainnav">
+  <div class="mainnav-inner">
+    <a href="#" class="navitem">Home</a>
+    <a href="#" class="navitem has-dropdown">Produtos</a>
+    <a href="#" class="navitem has-dropdown">Cotações</a>
+    <span class="navitem has-dropdown" id="navContratos">
+      Contratos
+      <div class="submenu">
+        <a href="#">Meus contratos</a>
+        <a href="criar-protocolo.html">Criar Protocolo</a>
+      </div>
+    </span>
+    <span class="navitem has-dropdown" id="navAgendamento">
+      Agendamento
+      <div class="submenu">
+        <a href="#" class="current">Agendar Contrato Normal</a>
+        <a href="agendar-protocolo.html">Agendar Protocolo</a>
+        <a href="relatorio-status-agendamento.html">Relatório de Status Agendamento</a>
+        <a href="#">Relatório Planejado vs Realizado</a>
+        <a href="#">Relatório de Embarques</a>
+      </div>
+    </span>
+    <a href="#" class="navitem has-dropdown">Faturamento</a>
+    <a href="#" class="navitem">Documentos</a>
+    <a href="#" class="navitem has-dropdown">Financeiro</a>
+    <a href="#" class="navitem has-dropdown">Suporte</a>
+  </div>
+</nav>
 
+<!-- Hero ========================================================== -->
+<div class="hero">
+  <div class="mosaic-overlay">
+    <div class="logo logo--hero" aria-hidden="true">
+      <span class="wordmark">Mosaic<sup>®</sup></span>
+      <img class="shapes" src="data:image/png;base64,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" alt="" />
+    </div>
+  </div>
 </div>
 
 <!-- Workspace ===================================================== -->
@@ -4437,31 +2871,7 @@
     <span class="current">Agendar Contratos Normais</span>
   </div>
 
-  <div class="title-row">
-    <h1 class="page-title">Agendar Contratos Normais</h1>
-    <div style="display:flex;align-items:center;gap:0;">
-      <div class="view-toggle" id="viewToggle" role="tablist" aria-label="Visualização">
-        <button data-view="cards" type="button" class="is-active" role="tab" aria-selected="true">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          Cards
-        </button>
-        <button data-view="table" type="button" role="tab" aria-selected="false">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
-          Tabela
-        </button>
-      </div>
-      <div class="cards-layout-toggle" id="cardsLayoutToggle" role="tablist" aria-label="Disposição dos cards">
-        <button data-layout="list" type="button" class="is-active" role="tab" aria-selected="true" title="Cards em lista">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
-          Lista
-        </button>
-        <button data-layout="grid" type="button" role="tab" aria-selected="false" title="Cards em grid">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          Grid
-        </button>
-      </div>
-    </div>
-  </div>
+  <h1 class="page-title">Agendar Contratos Normais</h1>
 
   <div class="action-row">
     <div>
@@ -4479,27 +2889,25 @@
     <!-- Rendered by JS -->
   </div>
 
-  <!-- Sticky summary footer (inner wrap acompanha max-width da page) -->
+  <!-- Sticky summary footer -->
   <div class="summary-footer" id="summaryFooter">
-    <div class="summary-footer-inner">
-      <div class="summary-stats">
-        <div class="summary-stat">
-          <span class="label">Contratos</span>
-          <span class="value" id="statContracts">0</span>
-        </div>
-        <div class="summary-stat">
-          <span class="label">Volume Total</span>
-          <span class="value" id="statVolume">0<span class="unit">t</span></span>
-        </div>
-        <div class="summary-stat">
-          <span class="label">Prontos para Agendar</span>
-          <span class="value" id="statReady">0/0</span>
-        </div>
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="label">Contratos</span>
+        <span class="value" id="statContracts">0</span>
       </div>
-      <div class="summary-actions">
-        <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-        <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
+      <div class="summary-stat">
+        <span class="label">Volume Total</span>
+        <span class="value" id="statVolume">0<span class="unit">t</span></span>
       </div>
+      <div class="summary-stat">
+        <span class="label">Prontos para Agendar</span>
+        <span class="value" id="statReady">0/0</span>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
     </div>
   </div>
 </main>
@@ -4732,48 +3140,22 @@
 </div>
 
 
-<!-- ================================================================
-     ROTEIRO DRAWER — expanded editor for the roteiro field
-     ================================================================ -->
-<div class="roteiro-drawer-backdrop" id="roteiroDrawerBackdrop"></div>
-<aside class="roteiro-drawer" id="roteiroDrawer" role="dialog" aria-modal="true" aria-labelledby="roteiroDrawerTitle" aria-hidden="true">
-  <div class="roteiro-drawer-header">
-    <div class="titles">
-      <h3 id="roteiroDrawerTitle">Roteiro de entrega</h3>
-      <div class="subtitle" id="roteiroDrawerSubtitle"></div>
-    </div>
-    <button class="close-x" id="roteiroDrawerClose" type="button" aria-label="Fechar">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="roteiro-drawer-body">
-    <label id="roteiroDrawerLabel">Descrição</label>
-    <textarea id="roteiroDrawerText"
-              placeholder="Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
-  </div>
-  <div class="roteiro-drawer-footer">
-    <button class="btn btn-secondary" id="roteiroDrawerCancel" type="button">Cancelar</button>
-    <button class="btn btn-primary" id="roteiroDrawerSave" type="button">Salvar</button>
-  </div>
-</aside>
-
-
 <script>
 /* ===================================================================
    DATA: contracts in the advanced-search results
    =================================================================== */
 const SEARCH_RESULTS = [
-  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.450,00", status: "ativo", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.480,00", status: "amendment", statusReason: "Aditivo em andamento — bloqueado", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
-  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
-  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", ie: "415.728.633.020", precoTon: "2.190,00", status: "ativo", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
-  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", ie: "192.554.418.336", precoTon: "1.980,00", status: "unsigned", statusReason: "Contrato não assinado — bloqueado", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
-  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", ie: "287.456.987.114", precoTon: "2.620,00", status: "ativo", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
-  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", ie: "638.092.514.275", precoTon: "2.380,00", status: "ativo", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
+  { contrato: "Q-20303", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "30", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20303", item: "40", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "10", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20385", item: "20", refCliente: "474663", produto: "EXCLN 24 05 24 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/08/2025", dataFim: "30/10/2025", saldo: "1.000,00" },
+  { contrato: "Q-20392", item: "10", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "750,00" },
+  { contrato: "Q-20392", item: "20", refCliente: "488221", produto: "MPANITRO 20 05 20 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Bebedouro/SP", cnpj: "71.320.915/0006-37", dataInicio: "15/08/2025", dataFim: "15/11/2025", saldo: "500,00" },
+  { contrato: "Q-38542", item: "10", refCliente: "501993", produto: "FFALM 04 30 10", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Limeira/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/09/2025", dataFim: "30/12/2025", saldo: "320,00" },
+  { contrato: "Q-85721", item: "10", refCliente: "612847", produto: "STRAF 04 30 10 STR + 50 BMI2", embalagem: "BagOneWay Liner 1,40", frete: "CIF", planta: "Toll Cefértil - Cubatão", enviarPara: "Sertãozinho/SP", cnpj: "71.320.915/0006-37", dataInicio: "01/07/2025", dataFim: "30/09/2025", saldo: "1.500,00" },
+  { contrato: "Q-39742", item: "10", refCliente: "729104", produto: "EXCLN 18 09 27 UR", embalagem: "BagOneWay Liner 1,40", frete: "FOB", planta: "Toll Cefértil - Cubatão", enviarPara: "Alfenas/MG", cnpj: "71.320.915/0006-37", dataInicio: "10/08/2025", dataFim: "30/10/2025", saldo: "640,00" },
 ];
 
 /* Indices that come pre-selected in advanced-selected step */
@@ -4791,13 +3173,6 @@ const state = {
   selectedInModal: new Set(),
   searchTerm: "",
   collapsed: new Set(),   // indices of cards currently collapsed (accordion)
-  viewMode: "table",  // toggle Cards/Tabela removido — sempre tabela
-  cardsLayout: (function() {
-    try {
-      const saved = "list" /* forced */;
-      return saved === "grid" || saved === "list" ? saved : "list";
-    } catch (_) { return "list"; }
-  })(),
 };
 
 /* Date format helpers — BR (DD/MM/YYYY) <-> ISO (YYYY-MM-DD) */
@@ -4836,21 +3211,23 @@ const ICON_DOT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentC
 const ICON_WARN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>`;
 
 function rowStatus(r) {
-  /* Roteiro is OPTIONAL — only volume + semana are required in V5 final */
-  const requiredFilled = !!(r.volume && r.semana);
-  if (requiredFilled) return "complete";
-  const anyTouched = !!(r.volume || r.semana || r.roteiro);
-  return anyTouched ? "progress" : "incomplete";
+  const isCIF = r.frete === "CIF";
+  const filled = [r.volume, r.semana, isCIF ? r.roteiro : "skip"].filter(v => v && v !== "skip");
+  const requiredCount = isCIF ? 3 : 2;
+  if (r.volume && r.semana && (!isCIF || r.roteiro)) return "complete";
+  if (filled.length === 0) return "incomplete";       // nothing touched
+  return "progress";                                   // some fields filled, some still missing
 }
 
 const ICON_CHEVRON = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
 const ICON_CALENDAR = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
 
 function pendingFields(r) {
-  const out = [];
-  if (!r.volume) out.push("Volume");
-  if (!r.semana) out.push("Semana");
-  return out;
+  const missing = [];
+  if (!r.volume) missing.push("volume");
+  if (!r.semana) missing.push("data");
+  if (r.frete === "CIF" && !r.roteiro) missing.push("roteiro");
+  return missing;
 }
 
 function refreshHintV2() {
@@ -4871,7 +3248,7 @@ function refreshHintV2() {
   }
 }
 
-function renderCardsView() {
+function renderTable() {
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
@@ -4886,156 +3263,136 @@ function renderCardsView() {
     return;
   }
 
-  /* Group rows by contract code, preserving insertion order */
-  const groups = []; // [{ contrato, items: [{idx, row}] }, ...]
-  const groupIndex = new Map();
-  state.rows.forEach((r, idx) => {
-    let g = groupIndex.get(r.contrato);
-    if (!g) {
-      g = { contrato: r.contrato, items: [] };
-      groupIndex.set(r.contrato, g);
-      groups.push(g);
-    }
-    g.items.push({ idx, row: r });
-  });
-
   const list = document.createElement("div");
-  list.className = `cards-list layout-list`;
+  list.className = "cards-list";
 
-  groups.forEach((group, gIdx) => {
-    /* Use the first item to derive contract-level info */
-    const first = group.items[0].row;
-    /* Determine if all items share the same frete (for header badge) */
-    const allSameFrete = group.items.every(i => i.row.frete === first.frete);
-
-    /* Card group status — rolls up from items */
-    const allComplete = group.items.every(i => rowStatus(i.row) === "complete");
-    const anyTouched = group.items.some(i => i.row.volume || i.row.semana || i.row.roteiro);
-    const groupStatus = allComplete ? "complete" : (anyTouched ? "progress" : "incomplete");
-
-    /* Find available items for this contract (not yet in state.rows) */
-    const availableItems = SEARCH_RESULTS.filter(s =>
-      s.contrato === group.contrato &&
-      !state.rows.some(r => r.contrato === s.contrato && r.item === s.item)
-    );
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const missing = pendingFields(r);
+    const collapsed = state.collapsed.has(idx);
 
     const card = document.createElement("article");
-    card.className = `contract-card v5-card is-${groupStatus}`;
-    card.setAttribute("data-contract", group.contrato);
+    card.className = `contract-card is-${status} ${collapsed ? "is-collapsed" : ""}`;
+    card.setAttribute("data-row", idx);
 
-    /* Header: contract identifier + shared info + delete contract action */
-    const headerHTML = `
-      <header class="card-head v5-card-head">
-        <span class="v5-level-tag">Contrato</span>
-        <span class="card-contract">${group.contrato}</span>
-        <span class="v5-head-divider"></span>
-        <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente}</strong></span>
-        <span class="v5-head-divider"></span>
-        <span class="v5-head-inline"><span class="v5-meta-label">Vigência</span><strong>${first.dataInicio}</strong><span class="arrow">→</span><strong>${first.dataFim}</strong></span>
-        <span class="v5-item-count">${group.items.length} ${group.items.length === 1 ? 'item' : 'itens'}</span>
-        <button class="card-action-icon danger v5-head-remove" data-action="remove-contract" data-contract="${group.contrato}" title="Remover contrato inteiro" aria-label="Remover contrato">${ICON_TRASH}</button>
-      </header>`;
+    const missVolume = !r.volume;
+    const missSemana = !r.semana;
+    const missRoteiro = isCIF && !r.roteiro;
 
-    /* For each item: a row with item info + inputs + per-item actions */
-    const itemsHTML = group.items.map(({ idx, row: r }) => {
-      const status = rowStatus(r);
-      const isCIF = r.frete === "CIF";
-      const missVolume = !r.volume;
-      const missSemana = !r.semana;
-      const missRoteiro = isCIF && !r.roteiro;
+    card.innerHTML = `
+      <header class="card-head">
+        <div class="card-id">
+          <span class="card-contract">${r.contrato}</span>
+          <span class="card-sep">·</span>
+          <span class="card-item">Item ${r.item}</span>
+          <span class="card-sep">·</span>
+          <span class="card-item" style="font-weight:600;color:var(--text-3);">Ref. ${r.refCliente}</span>
+        </div>
+        <div class="card-head-right">
+          <span class="badge ${isCIF ? 'badge--cif' : 'badge--fob'}">${r.frete}</span>
+          <span class="card-action-icons">
+            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar contrato" aria-label="Duplicar">${ICON_DUPLICATE}</button>
+            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover contrato" aria-label="Remover">${ICON_TRASH}</button>
+          </span>
+          <button class="card-toggle" data-action="toggle" data-row="${idx}" aria-label="Recolher / Expandir" type="button">${ICON_CHEVRON}</button>
+        </div>
+      </header>
 
-      return `
-        <div class="v5-item-row is-${status}" data-row="${idx}">
-          <div class="v5-item-info">
-            <div class="v5-item-line v5-item-line--top">
-              <span class="v5-level-tag v5-level-tag--item">Item</span>
-              <span class="v5-item-id">${r.item}</span>
-              <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-              <span class="v5-item-product" title="${r.produto}">${r.produto}</span>
-            </div>
-            <div class="v5-item-line v5-item-line--bottom">
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Embalagem</span><strong>${r.embalagem}</strong></span>
-              <span class="v5-meta-sep">·</span>
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Rota</span><strong>${r.planta}</strong><span class="arrow">→</span>${r.enviarPara}</span>
-              <span class="v5-meta-sep">·</span>
-              <span class="v5-item-meta-piece"><span class="v5-meta-label">Saldo</span><span class="v5-item-saldo">${r.saldo}<span class="unit">t</span></span></span>
+      <div class="card-collapsed-summary">
+        <span class="product">${r.produto}</span>
+        <span class="dot-sep">·</span>
+        <span class="qty ${r.volume ? '' : 'is-empty'}">${r.volume ? r.volume + 't' : 'sem volume'}</span>
+        <span class="dot-sep">·</span>
+        <span class="qty ${r.semana ? '' : 'is-empty'}">${r.semana || 'sem data'}</span>
+        ${ status === "complete"
+          ? `<span class="pending-pill is-complete">${ICON_CHECK} Pronto</span>`
+          : `<span class="pending-pill">${ICON_WARN} ${missing.length} ${missing.length === 1 ? 'pendência' : 'pendências'}</span>`
+        }
+      </div>
+
+      <div class="card-product">
+        <div class="card-product-name">${r.produto}</div>
+        <div class="card-product-meta">
+          <span>Embalagem <strong>${r.embalagem}</strong></span>
+        </div>
+      </div>
+
+      <div class="card-meta-grid">
+        <div class="meta-cell">
+          <div class="meta-label">Planta</div>
+          <div class="meta-value">${r.planta}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Enviar Para</div>
+          <div class="meta-value">${r.enviarPara}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">CNPJ Filial</div>
+          <div class="meta-value">${r.cnpj}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Vigência</div>
+          <div class="meta-value">${r.dataInicio} <span style="color:var(--text-3);font-weight:600;">→</span> ${r.dataFim}</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">Saldo Disponível</div>
+          <div class="meta-value meta-value--saldo">${r.saldo}<span class="meta-unit">t</span></div>
+        </div>
+      </div>
+
+      <div class="card-action-zone">
+        <div class="card-action-title">Agendamento</div>
+        <div class="card-action-grid">
+          <div class="field-block ${missVolume ? 'is-missing' : ''}">
+            <label>Volume Desejado <span class="req">*</span></label>
+            <div class="input-with-suffix">
+              <input type="number"
+                     value="${r.volume ?? ''}"
+                     placeholder="0"
+                     min="0"
+                     max="${parseFloat((r.saldo || '0').replace(/\./g,'').replace(',','.'))}"
+                     data-row="${idx}" data-field="volume" />
+              <span class="suffix">t</span>
             </div>
           </div>
-
-          <div class="v5-item-fields">
-            <div class="field-block ${missVolume ? 'is-missing' : ''}">
-              <label>Volume <span class="req">*</span></label>
-              <div class="input-with-suffix">
-                <input type="text" inputmode="decimal"
-                       value="${r.volume ?? ''}"
-                       placeholder="0,00"
-                       data-row="${idx}" data-field="volume" />
-                <span class="suffix">t</span>
-              </div>
-            </div>
-            <div class="field-block ${missSemana ? 'is-missing' : ''}">
-              <label>Semana <span class="req">*</span></label>
-              <div class="card-date-wrap" data-row="${idx}">
-                <input type="text"
-                       class="card-date-input"
-                       value="${r.semana || ''}"
-                       placeholder="DD/MM/AAAA"
-                       data-row="${idx}" data-field="semana"
-                       readonly />
-                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CALENDAR}</button>
-              </div>
-            </div>
-            <div class="field-block field-block--roteiro-btn">
-              <label>Roteiro <span class="opt-tag">Opc.</span></label>
-              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-row="${idx}" type="button" aria-label="Adicionar roteiro" title="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
-                <span class="roteiro-toggle-text">${r.roteiro ? r.roteiro.substring(0, 40) + (r.roteiro.length > 40 ? '…' : '') : 'Adicionar roteiro'}</span>
-                <svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
-              </button>
+          <div class="field-block ${missSemana ? 'is-missing' : ''}">
+            <label>Semana Desejada <span class="req">*</span></label>
+            <div class="card-date-wrap" data-row="${idx}">
+              <input type="text"
+                     class="card-date-input"
+                     value="${r.semana || ''}"
+                     placeholder="DD/MM/AAAA"
+                     data-row="${idx}" data-field="semana"
+                     readonly />
+              <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CALENDAR}</button>
             </div>
           </div>
-
-          <div class="v5-item-actions">
-            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar item">${ICON_DUPLICATE}</button>
-            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover item">${ICON_TRASH}</button>
+          <div class="field-block field-block--roteiro ${missRoteiro ? 'is-missing' : ''}">
+            <label>
+              Roteiro de Entrega
+              ${isCIF ? '<span class="req">*</span>' : '<span class="opt-tag">Opcional</span>'}
+            </label>
+            <textarea class="roteiro-textarea"
+                      placeholder="${isCIF ? 'Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc.' : 'Adicione observações de entrega se necessário (opcional para FOB).'}"
+                      data-row="${idx}" data-field="roteiro"
+                      rows="2">${r.roteiro || ''}</textarea>
           </div>
         </div>
-      `;
-    }).join("");
-
-    /* "+ Adicionar item" picker for the same contract */
-    const addItemHTML = availableItems.length > 0
-      ? `
-        <div class="v5-add-item">
-          <button class="v5-add-item-btn" data-action="open-add-item" data-contract="${group.contrato}" type="button">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            Adicionar outro item de ${group.contrato}
-            <span class="v5-add-item-count">${availableItems.length} disponível${availableItems.length > 1 ? 'eis' : ''}</span>
-          </button>
-          <div class="v5-add-item-popover" id="addItemPop-${group.contrato.replace(/[^a-zA-Z0-9]/g, '')}" data-contract="${group.contrato}">
-            <div class="v5-popover-header">Itens disponíveis em ${group.contrato}</div>
-            ${availableItems.map(av => `
-              <button class="v5-popover-item" data-action="add-item" data-contract="${av.contrato}" data-item="${av.item}" type="button">
-                <span class="v5-popover-item-id">Item ${av.item}</span>
-                <span class="v5-popover-item-saldo">${av.saldo} t</span>
-                <span class="v5-popover-item-frete badge badge--${av.frete === 'CIF' ? 'cif' : 'fob'}">${av.frete}</span>
-              </button>
-            `).join("")}
-          </div>
-        </div>`
-      : '';
-
-    /* Group status footer */
-    const pending = group.items.reduce((sum, i) => sum + pendingFields(i.row).length, 0);
-    const groupFooterHTML = groupStatus === "complete"
-      ? `<div class="card-status card-status--complete">${ICON_CHECK} Todos os itens prontos para agendar</div>`
-      : `<div class="card-status card-status--incomplete">${ICON_WARN} ${pending} ${pending === 1 ? 'pendência' : 'pendências'} neste contrato</div>`;
-
-    card.innerHTML = headerHTML + `
-      <div class="v5-items-list">
-        ${itemsHTML}
       </div>
-      ${addItemHTML}
-      ${groupFooterHTML}
+
+      ${ status === "complete" ? `
+        <div class="card-status card-status--complete">
+          ${ICON_CHECK} Pronto para agendar
+        </div>
+      ` : `
+        <div class="card-status card-status--incomplete">
+          ${ICON_WARN} Pendências:
+          <span class="pending-list">
+            ${missing.map(m => `<span class="chip">${m}</span>`).join("")}
+          </span>
+        </div>
+      `}
     `;
 
     list.appendChild(card);
@@ -5045,72 +3402,14 @@ function renderCardsView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
-  refreshSemanaValidation();
 }
 
 /* No longer needed in v2 — kept as no-op for compatibility */
 function upgradeTableForInputs() {}
 
-/* Validation: Semana nao pode ser passada */
-function brDateToDateV5(br) {
-  if (!br) return null;
-  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return null;
-  return new Date(+m[3], +m[2] - 1, +m[1]);
-}
-function todayStartV5() {
-  const t = new Date(); t.setHours(0, 0, 0, 0); return t;
-}
-function rowInvalidSemana(r) {
-  if (!r.semana) return false;
-  const d = brDateToDateV5(r.semana);
-  return d && d < todayStartV5();
-}
-function refreshSemanaValidation() {
-  state.rows.forEach((r, idx) => {
-    document.querySelectorAll(`[data-row="${idx}"][data-field="semana"]`).forEach(el => {
-      const wrap = el.closest('.card-date-wrap, .v3-date-wrap, .v3-cell-volume-wrap') || el;
-      const bad = rowInvalidSemana(r);
-      wrap.classList.toggle('is-invalid', bad);
-      el.classList.toggle('is-invalid', bad);
-      el.title = bad ? "Semana desejada não pode ser uma data passada" : "";
-    });
-  });
-}
-
-/* Volume <= Saldo individual (US "Individual Row Balance") + soma por contrato (US "Aggregated Balance") */
-function parseBR(s) { if (!s) return 0; const n = parseFloat(String(s).replace(/\./g,'').replace(',','.')); return isNaN(n) ? 0 : n; }
-function rowVolumeExceeds(r) {
-  const vol = parseBR(r.volume);
-  const saldo = parseBR(r.saldo);
-  return vol > 0 && vol > saldo;
-}
-function contractAggregateExceeds(contrato) {
-  const rowsOfContrato = state.rows.filter(r => r.contrato === contrato);
-  if (rowsOfContrato.length === 0) return false;
-  const totalVol = rowsOfContrato.reduce((s, r) => s + parseBR(r.volume), 0);
-  const saldoMax = parseBR(rowsOfContrato[0].saldo);
-  return totalVol > saldoMax;
-}
-function rowInvalidVolume(r) { return rowVolumeExceeds(r) || contractAggregateExceeds(r.contrato); }
-function refreshVolumeValidation() {
-  state.rows.forEach((r, idx) => {
-    document.querySelectorAll(`[data-row="${idx}"][data-field="volume"]`).forEach(el => {
-      const wrap = el.closest('.input-with-suffix, .v3-cell-volume-wrap') || el;
-      const indiv = rowVolumeExceeds(r);
-      const agg = contractAggregateExceeds(r.contrato);
-      const bad = indiv || agg;
-      wrap.classList.toggle('is-invalid', bad);
-      el.classList.toggle('is-invalid', bad);
-      el.title = indiv ? `Volume excede o saldo (${r.saldo} t)` :
-                 agg   ? `Soma de volumes do contrato ${r.contrato} excede o saldo` : "";
-    });
-  });
-}
-
 function canAgendar() {
   if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r) && !rowInvalidVolume(r));
+  return state.rows.every(r => rowStatus(r) === "complete");
 }
 
 function updateSummary() {
@@ -5146,57 +3445,6 @@ document.querySelectorAll(".modal-backdrop").forEach(bd => {
   });
 });
 
-
-/* ===================================================================
-   V3 — view toggle wiring
-   =================================================================== */
-document.getElementById("viewToggle").addEventListener("click", e => {
-  const btn = e.target.closest("button[data-view]");
-  if (!btn) return;
-  const newMode = btn.dataset.view;
-  if (newMode === state.viewMode) return;
-  state.viewMode = newMode;
-  try { localStorage.setItem("mosaicViewMode", newMode); } catch (_) {}
-  refreshLayoutToggleVisibility();
-  renderTable();
-});
-
-document.getElementById("cardsLayoutToggle").addEventListener("click", e => {
-  const btn = e.target.closest("button[data-layout]");
-  if (!btn) return;
-  const newLayout = btn.dataset.layout;
-  if (newLayout === state.cardsLayout) return;
-  state.cardsLayout = newLayout;
-  try { localStorage.setItem("mosaicCardsLayout", newLayout); } catch (_) {}
-  /* When switching to grid, expand all (clear collapsed); when switching to
-     list, restore accordion behavior (only first incomplete is open). */
-  if (newLayout === "grid") {
-    state.collapsed.clear();
-  } else if (state.rows.length > 0 && typeof collapseAllExceptFirstIncomplete === "function") {
-    collapseAllExceptFirstIncomplete();
-  }
-  /* Reflect button state */
-  document.querySelectorAll("#cardsLayoutToggle button").forEach(b => {
-    const active = b.dataset.layout === state.cardsLayout;
-    b.classList.toggle("is-active", active);
-    b.setAttribute("aria-selected", active ? "true" : "false");
-  });
-  renderTable();
-});
-
-function refreshLayoutToggleVisibility() {
-  const tog = document.getElementById("cardsLayoutToggle");
-  if (!tog) return;
-  tog.style.display = state.viewMode === "cards" ? "inline-flex" : "none";
-}
-refreshLayoutToggleVisibility();
-/* Reflect persisted layout button state on load */
-document.querySelectorAll("#cardsLayoutToggle button").forEach(b => {
-  const active = b.dataset.layout === state.cardsLayout;
-  b.classList.toggle("is-active", active);
-  b.setAttribute("aria-selected", active ? "true" : "false");
-});
-
 /* ===================================================================
    Side drawer — Selecionar contratos
    =================================================================== */
@@ -5224,35 +3472,19 @@ function isAlreadyAdded(r) {
   return state.rows.some(row => row.contrato === r.contrato && row.item === r.item);
 }
 
-function _drawerSortKey(brDate) {
-  if (!brDate) return Infinity;
-  const m = String(brDate).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  if (!m) return Infinity;
-  return new Date(+m[3], +m[2] - 1, +m[1]).getTime();
-}
-
 function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
-  /* US SMDP-131 Sorting: por End Date (dataFim) do mais antigo pro novo */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
       if (!q) return true;
       const haystack = [
         r.contrato, r.item, r.refCliente, r.produto, r.embalagem,
-        r.frete, r.planta, r.enviarPara, r.cnpj, r.ie || '', r.precoTon || '',
-        r.dataInicio, r.dataFim, r.saldo
+        r.frete, r.planta, r.enviarPara, r.cnpj, r.dataInicio, r.dataFim, r.saldo
       ].join(" ").toLowerCase();
       return haystack.includes(q);
-    })
-    .sort((a, b) => {
-      const dA = _drawerSortKey(a.r.dataFim);
-      const dB = _drawerSortKey(b.r.dataFim);
-      if (dA !== dB) return dA - dB;
-      if (a.r.contrato !== b.r.contrato) return a.r.contrato.localeCompare(b.r.contrato);
-      return String(a.r.item).localeCompare(String(b.r.item), undefined, { numeric: true });
     });
 
   elDrawerCount.textContent = filtered.length;
@@ -5266,9 +3498,8 @@ function renderDrawerList() {
   elDrawerList.innerHTML = filtered.map(({ r, i }) => {
     const selected = state.selectedInModal.has(i);
     const added = isAlreadyAdded(r);
-    const blocked = r.status && r.status !== "ativo";
     return `
-      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added || blocked ? 'is-disabled' : ''}" data-i="${i}" ${blocked ? `title="${r.statusReason || 'Contrato bloqueado'}"` : ''}>
+      <label class="drawer-item ${selected ? 'is-selected' : ''} ${added ? 'is-disabled' : ''}" data-i="${i}">
         <span class="checkbox">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </span>
@@ -5280,17 +3511,12 @@ function renderDrawerList() {
             <span style="color:var(--border-strong);">·</span>
             <span class="drawer-item-frete drawer-item-frete--${r.frete === 'CIF' ? 'cif' : 'fob'}">${r.frete}</span>
             ${ added ? `<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>` : ''}
-            ${ blocked ? `<span class="status-tag status-tag--${r.status}">${r.statusReason || 'Bloqueado'}</span>` : ''}
           </div>
           <div class="drawer-item-product">${highlightMatch(r.produto, q)}</div>
           <div class="drawer-item-meta">
-            <span><strong>Ref. Cliente:</strong> ${highlightMatch(r.refCliente || '—', q)}</span>
             <span><strong>Embalagem:</strong> ${highlightMatch(r.embalagem, q)}</span>
             <span><strong>Planta:</strong> ${highlightMatch(r.planta, q)}</span>
             <span><strong>Enviar para:</strong> ${highlightMatch(r.enviarPara, q)}</span>
-            <span><strong>CNPJ Filial:</strong> ${highlightMatch(r.cnpj || '—', q)}</span>
-            ${r.ie ? `<span><strong>IE:</strong> ${highlightMatch(r.ie, q)}</span>` : ''}
-            ${r.precoTon ? `<span><strong>Preço/Ton:</strong> R$ ${r.precoTon}</span>` : ''}
             <span><strong>Vigência:</strong> ${r.dataInicio} → ${r.dataFim}</span>
           </div>
         </div>
@@ -5497,48 +3723,9 @@ elBuscaSel.addEventListener("click", () => {
 /* ===================================================================
    Workspace table — input + action wiring (event delegation)
    =================================================================== */
-function maskVolumeDecimal(input) {
-  let v = (input.value || "").replace(/[^\d,]/g, "");
-  const parts = v.split(",");
-  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
-  const segs = v.split(",");
-  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
-  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
-  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  input.value = segs.join(",");
-}
-
-/* Enter avanca pro proximo campo da MESMA linha (todas as telas).
-   Tab funciona naturalmente. Permite preenchimento rapido. */
-function focusNextFieldInRow(currentEl) {
-  if (!currentEl) return;
-  const tr = currentEl.closest("tr[data-row], [data-row]");
-  if (!tr) return;
-  const focusables = Array.from(tr.querySelectorAll(
-    "input[data-field]:not([readonly]):not([disabled]), select[data-field]:not([disabled]), button[data-action='open-coop']:not(:disabled), button[data-action='open-roteiro']:not(:disabled)"
-  ));
-  const idx = focusables.indexOf(currentEl);
-  if (idx === -1 || idx >= focusables.length - 1) return;
-  const next = focusables[idx + 1];
-  if (next) {
-    next.focus();
-    if (next.scrollIntoView) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }
-}
-elBody.addEventListener("keydown", e => {
-  if (e.key !== "Enter") return;
-  const t = e.target;
-  if (!t.matches || !t.matches("[data-field]")) return;
-  if (t.tagName === "TEXTAREA") return; /* deixa nova linha */
-  e.preventDefault();
-  focusNextFieldInRow(t);
-});
-
 elBody.addEventListener("input", e => {
   const t = e.target;
   if (!t.matches('[data-field]')) return;
-  /* Volume mask: format on input (pt-BR decimal) */
-  if (t.dataset.field === "volume") maskVolumeDecimal(t);
   const idx = parseInt(t.dataset.row, 10);
   const field = t.dataset.field;
   if (!state.rows[idx]) return;
@@ -5550,53 +3737,12 @@ elBody.addEventListener("input", e => {
    element (would lose focus/cursor). Only update siblings that don't
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
-  refreshSemanaValidation();
-  refreshVolumeValidation();
   elAgendar.disabled = !canAgendar();
   updateSummary();
 
-  const r = state.rows[idx];
-  if (!r) return;
-
-  /* Table-view path: update <tr> class and cell is-missing */
-  const tr = sourceEl.closest("tr[data-row]");
-  if (tr) {
-    const newStatus = rowStatus(r);
-    tr.classList.remove("is-incomplete", "is-progress", "is-complete");
-    tr.classList.add(`is-${newStatus}`);
-
-    /* Update the status dot in the first cell */
-    const dot = tr.querySelector(".v3-status-dot");
-    if (dot) {
-      dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
-    }
-
-    /* Update missing-state on the source cell */
-    const td = sourceEl.closest("td");
-    if (td) {
-      const fieldName = sourceEl.dataset.field;
-      const isCIF = r.frete === "CIF";
-      const missing = (fieldName === "volume" && !r.volume) ||
-                      (fieldName === "semana" && !r.semana) ||
-                      (fieldName === "roteiro" && isCIF && !r.roteiro);
-      td.classList.toggle("is-missing", !!missing);
-    }
-    /* Toggle is-empty on the date wrap so it switches between icon-only and
-       value-displayed visual states */
-    if (sourceEl.dataset.field === "semana") {
-      const wrap = sourceEl.closest(".v3-cell-date-wrap");
-      if (wrap) wrap.classList.toggle("is-empty", !r.semana);
-    }
-    /* Mark roteiro cell with has-text class for non-italic styling */
-    if (sourceEl.dataset.field === "roteiro") {
-      sourceEl.classList.toggle("has-text", !!r.roteiro);
-    }
-    return;
-  }
-
-  /* Card-view path */
   const card = sourceEl.closest(".contract-card");
   if (!card) return;
+  const r = state.rows[idx];
 
   // Update the field wrapper's missing class (visual only — kicks in only
   // once the user has tried to submit, gated by .show-validation on parent)
@@ -5668,169 +3814,6 @@ function autoAdvanceFromCard(completedIdx) {
   }
 }
 
-/* ===================================================================
-   V3 — View dispatcher + table renderer
-   =================================================================== */
-function renderTable() {
-  /* Pick the right view based on state.viewMode */
-  if (state.viewMode === "table") {
-    renderTableView();
-  } else {
-    renderCardsView();
-  }
-  /* Update the toggle UI */
-  document.querySelectorAll("#viewToggle button").forEach(b => {
-    const active = b.dataset.view === state.viewMode;
-    b.classList.toggle("is-active", active);
-    b.setAttribute("aria-selected", active ? "true" : "false");
-  });
-}
-
-function renderTableView() {
-  elBody.innerHTML = "";
-
-  if (state.rows.length === 0) {
-    elBody.innerHTML = `
-      <div class="cards-empty">
-        <strong>Nenhum contrato selecionado</strong>
-        Use o botão "Selecionar contratos" para adicionar itens ao agendamento.
-      </div>`;
-    elAgendar.disabled = true;
-    updateSummary();
-    refreshHintV2();
-    return;
-  }
-
-  const wrap = document.createElement("div");
-  wrap.className = "v3-table-wrap";
-  if (elBody.classList.contains("show-validation")) wrap.classList.add("show-validation");
-
-  wrap.innerHTML = `
-    <table class="v3-table" id="v3Table">
-      <thead>
-        <tr>
-          <th class="v3-status-cell" aria-label="Status"></th>
-          <th>Contrato / Ref. / Vigência</th>
-          <th>Produto / Embalagem / Origem</th>
-          <th>Destino / CNPJ Filial</th>
-          <th class="th-saldo">Saldo</th>
-          <th>Volume <span class="req">*</span></th>
-          <th>Semana <span class="req">*</span></th>
-          <th>Roteiro <span class="opt-tag">opc.</span></th>
-          <th aria-label="Ações"></th>
-        </tr>
-      </thead>
-      <tbody id="v3TableBody"></tbody>
-    </table>
-  `;
-  elBody.appendChild(wrap);
-
-  const tbody = wrap.querySelector("#v3TableBody");
-  const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
-  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
-  const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
-  const ICON_DOT = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>`;
-  const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
-  const ICON_EXP = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
-
-  state.rows.forEach((r, idx) => {
-    const status = rowStatus(r);
-    const isCIF = r.frete === "CIF";
-    const missVolume = !r.volume;
-    const missSemana = !r.semana;
-    const roteiroPreview = r.roteiro ? (r.roteiro.length > 28 ? r.roteiro.substring(0, 28) + '…' : r.roteiro) : '';
-
-    let dot;
-    if (status === "complete") dot = `<span class="v3-status-dot v3-status-dot--complete" title="Pronto">${ICON_CHK}</span>`;
-    else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress" title="Em progresso">${ICON_BANG}</span>`;
-    else dot = `<span class="v3-status-dot v3-status-dot--incomplete" title="Aguardando">${ICON_DOT}</span>`;
-
-    const startShort = r.dataInicio ? r.dataInicio.slice(0, 5) : "";
-    const endLong = r.dataFim || "";
-
-    const tr = document.createElement("tr");
-    tr.className = `is-${status}`;
-    tr.setAttribute("data-row", idx);
-    tr.innerHTML = `
-      <td class="v3-status-cell">${dot}</td>
-
-      <!-- Contract: Contrato + Ref + Vigência (grouped together) -->
-      <td class="cell-stack">
-        <div class="stack-primary">
-          <span class="cell-strong">${r.contrato}</span>
-          <span class="v3-frete-badge v3-frete-badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-        </div>
-        <div class="stack-secondary">Ref. ${r.refCliente} · Item ${r.item}</div>
-        <div class="stack-tertiary">${startShort} → ${endLong}</div>
-      </td>
-
-      <!-- Item: Produto / Embalagem / Origem -->
-      <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.produto}</div>
-        <div class="stack-secondary">${r.embalagem}</div>
-        <div class="stack-tertiary"><span class="v3-meta-label">De</span> ${r.planta}</div>
-      </td>
-
-      <!-- Destino / CNPJ Filial -->
-      <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.enviarPara}</div>
-        <div class="stack-secondary"><span class="v3-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
-      </td>
-
-      <!-- Saldo, emphasized -->
-      <td class="cell-saldo-emphasis">
-        <div class="saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
-      </td>
-
-      <!-- Volume input -->
-      <td class="${missVolume ? 'is-missing' : ''}">
-        <div class="v3-cell-volume-wrap">
-          <input type="text" inputmode="decimal" class="v3-cell-input v3-cell-num"
-                 value="${r.volume ?? ''}"
-                 placeholder="0,00"
-                 data-row="${idx}" data-field="volume" />
-          <span class="suffix">t</span>
-        </div>
-      </td>
-
-      <!-- Semana date -->
-      <td class="${missSemana ? 'is-missing' : ''}">
-        <div class="v3-cell-date-wrap ${r.semana ? '' : 'is-empty'}" data-row="${idx}">
-          <input type="text" class="v3-cell-input v3-cell-date-input"
-                 value="${r.semana || ''}"
-                 placeholder="DD/MM/AAAA"
-                 data-row="${idx}" data-field="semana"
-                 readonly />
-          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CAL}</button>
-        </div>
-      </td>
-
-      <!-- Roteiro toggle button -->
-      <td>
-        <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''} v5-table-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}" title="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
-          <span class="roteiro-toggle-text">${roteiroPreview || 'Adicionar'}</span>
-          ${ICON_EXP}
-        </button>
-      </td>
-
-      <!-- Actions -->
-      <td>
-        <span class="v3-row-actions">
-          <button data-action="duplicate" data-row="${idx}" title="Duplicar">${ICON_DUP}</button>
-          <button data-action="remove" data-row="${idx}" class="danger" title="Remover">${ICON_DEL}</button>
-        </span>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  updateSummary();
-  refreshHintV2();
-  elAgendar.disabled = !canAgendar();
-  refreshSemanaValidation();
-}
-
 function updateCardStatusFooter(card, r) {
   const statusFooter = card.querySelector(".card-status");
   if (!statusFooter) return;
@@ -5883,43 +3866,8 @@ elBody.addEventListener("click", e => {
 
   const actBtn = e.target.closest("[data-action]");
   if (!actBtn) return;
-  const action = actBtn.dataset.action;
-
-  /* V5 — remove-contract: delete all rows of a given contract */
-  if (action === "remove-contract") {
-    const contrato = actBtn.dataset.contract;
-    state.rows = state.rows.filter(r => r.contrato !== contrato);
-    /* Re-index collapsed set */
-    state.collapsed.clear();
-    renderTable();
-    return;
-  }
-
-  /* V5 — open the add-item popover for a contract */
-  if (action === "open-add-item") {
-    e.stopPropagation();
-    const contrato = actBtn.dataset.contract;
-    /* Close any other open popover */
-    document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
-    const popId = `addItemPop-${contrato.replace(/[^a-zA-Z0-9]/g, '')}`;
-    const pop = document.getElementById(popId);
-    if (pop) pop.classList.add("is-open");
-    return;
-  }
-
-  /* V5 — add a specific item from a contract to state.rows */
-  if (action === "add-item") {
-    const contrato = actBtn.dataset.contract;
-    const item = actBtn.dataset.item;
-    const r = SEARCH_RESULTS.find(s => s.contrato === contrato && s.item === item);
-    if (!r) return;
-    if (state.rows.some(row => row.contrato === r.contrato && row.item === r.item)) return;
-    state.rows.push({ ...r, volume: "", semana: "", roteiro: "" });
-    renderTable();
-    return;
-  }
-
   const idx = parseInt(actBtn.dataset.row, 10);
+  const action = actBtn.dataset.action;
 
   if (action === "toggle") {
     if (state.collapsed.has(idx)) state.collapsed.delete(idx);
@@ -5927,9 +3875,8 @@ elBody.addEventListener("click", e => {
     const card = actBtn.closest(".contract-card");
     if (card) card.classList.toggle("is-collapsed");
   } else if (action === "open-dp") {
-    const wrap = actBtn.closest(".card-date-wrap, .v3-cell-date-wrap");
-    if (!wrap) return;
-    const input = wrap.querySelector(".card-date-input, .v3-cell-date-input");
+    const wrap = actBtn.closest(".card-date-wrap");
+    const input = wrap.querySelector(".card-date-input");
     openDatePicker(input, wrap);
   } else if (action === "remove") {
     state.rows.splice(idx, 1);
@@ -5943,9 +3890,7 @@ elBody.addEventListener("click", e => {
     renderTable();
   } else if (action === "duplicate") {
     const r = state.rows[idx];
-    /* Preserve all values when duplicating — user wanted the duplicate to
-       come pre-filled with the same volume/data/roteiro. */
-    const dup = { ...r };
+    const dup = { ...r, volume: "", semana: "", roteiro: "" };
     state.rows.splice(idx + 1, 0, dup);
     /* Shift collapsed indices that come after the inserted one */
     const next = new Set();
@@ -5959,9 +3904,9 @@ elBody.addEventListener("click", e => {
 
 /* Click on the date input itself opens the picker too */
 elBody.addEventListener("click", e => {
-  const input = e.target.closest(".card-date-input, .v3-cell-date-input");
+  const input = e.target.closest(".card-date-input");
   if (!input) return;
-  const wrap = input.closest(".card-date-wrap, .v3-cell-date-wrap");
+  const wrap = input.closest(".card-date-wrap");
   openDatePicker(input, wrap);
 });
 
@@ -5992,13 +3937,9 @@ document.getElementById("cancelConfirm").addEventListener("click", () => {
 document.getElementById("agendarBtn").addEventListener("click", () => {
   // Always turn on validation visuals when user attempts to submit
   elBody.classList.add("show-validation");
-  const wrap = elBody.querySelector(".v3-table-wrap");
-  if (wrap) wrap.classList.add("show-validation");
   // Re-run state checks to be safe
   if (!canAgendar()) {
-    const firstIncomplete = elBody.querySelector(
-      ".contract-card.is-incomplete, .contract-card.is-progress, .v3-table tr.is-incomplete, .v3-table tr.is-progress"
-    );
+    const firstIncomplete = elBody.querySelector(".contract-card.is-incomplete, .contract-card.is-progress");
     if (firstIncomplete) firstIncomplete.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
@@ -6022,8 +3963,6 @@ document.getElementById("agendarBtn").addEventListener("click", () => {
 elBody.addEventListener("input", () => {
   if (elBody.classList.contains("show-validation") && canAgendar()) {
     elBody.classList.remove("show-validation");
-    const wrap = elBody.querySelector(".v3-table-wrap");
-    if (wrap) wrap.classList.remove("show-validation");
   }
 });
 document.getElementById("submitConfirm").addEventListener("click", () => {
@@ -6032,36 +3971,7 @@ document.getElementById("submitConfirm").addEventListener("click", () => {
 });
 document.getElementById("successReport").addEventListener("click", () => {
   closeModal("successModal");
-  
-/* ===================================================================
-   V3.3 — Keyboard accessibility on date inputs
-   Pressing Enter or Space opens the datepicker; arrow keys also.
-   =================================================================== */
-elBody.addEventListener("keydown", e => {
-  const dateInput = e.target.closest(".card-date-input, .v3-cell-date-input");
-  if (!dateInput) return;
-  if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
-    e.preventDefault();
-    const wrap = dateInput.closest(".card-date-wrap, .v3-cell-date-wrap");
-    openDatePicker(dateInput, wrap);
-  }
-});
-
-
-/* V5 — close add-item popovers when clicking outside */
-document.addEventListener("click", e => {
-  const pop = e.target.closest(".v5-add-item-popover");
-  const trigger = e.target.closest('[data-action="open-add-item"]');
-  if (pop || trigger) return;
-  document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
-});
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
-  }
-});
-
-goTo("empty");
+  goTo("empty");
 });
 document.getElementById("successNew").addEventListener("click", () => {
   closeModal("successModal");
@@ -6161,52 +4071,20 @@ function openDatePicker(input, wrap) {
     dpViewMonth = t.getMonth();
   }
 
-  // Make popup visible (off-screen first to measure size)
+  // Position
+  const rect = (wrap || input).getBoundingClientRect();
+  dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
+  dpPopup.style.left = (window.scrollX + rect.left) + "px";
   dpPopup.classList.add("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   if (wrap) wrap.classList.add("is-open");
 
-  // Render contents first so we can measure
   renderDP();
-
-  // Smart positioning — measure available space and flip up if needed
-  const rect = (wrap || input).getBoundingClientRect();
-  const popupRect = dpPopup.getBoundingClientRect();
-  const popupHeight = popupRect.height || 360;  /* fallback when not yet rendered */
-  const popupWidth = popupRect.width || 296;
-  const viewportH = window.innerHeight;
-  const viewportW = window.innerWidth;
-  const spaceBelow = viewportH - rect.bottom;
-  const spaceAbove = rect.top;
-  const offset = 6;
-
-  let top, left;
-  if (spaceBelow < popupHeight + offset && spaceAbove > popupHeight + offset) {
-    /* Open upwards */
-    top = window.scrollY + rect.top - popupHeight - offset;
-    dpPopup.dataset.position = "top";
-  } else {
-    /* Open downwards */
-    top = window.scrollY + rect.bottom + offset;
-    dpPopup.dataset.position = "bottom";
-  }
-
-  /* Horizontal: prefer aligning left edge, but flip to right if it would
-     overflow the viewport */
-  left = window.scrollX + rect.left;
-  const rightEdge = rect.left + popupWidth;
-  if (rightEdge > viewportW - 8) {
-    left = window.scrollX + rect.right - popupWidth;
-    if (left < window.scrollX + 8) left = window.scrollX + 8;
-  }
-
-  dpPopup.style.top = top + "px";
-  dpPopup.style.left = left + "px";
 }
 
 function closeDatePicker() {
   if (dpPopup) dpPopup.classList.remove("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   dpCurrentInput = null;
 }
 
@@ -6242,8 +4120,6 @@ function renderDP() {
   }
 
   const grid = dpPopup.querySelector(".dp-grid");
-  const dataField = dpCurrentInput && dpCurrentInput.dataset ? dpCurrentInput.dataset.field : "";
-  const blockPast = dataField === "semana";
   grid.innerHTML = cells.map(({ d, isOther }) => {
     const sameDay = (a, b) => a && b &&
       a.getFullYear() === b.getFullYear() &&
@@ -6253,12 +4129,7 @@ function renderDP() {
     if (isOther) classes.push("is-other");
     if (sameDay(d, today)) classes.push("is-today");
     if (sameDay(d, dpSelected)) classes.push("is-selected");
-    let titleAttr = "";
-    if (blockPast && d < today) {
-      classes.push("is-disabled");
-      titleAttr = ' title="Não pode data anterior à atual"';
-    }
-    return `<button type="button" class="${classes.join(" ")}"${titleAttr} data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
+    return `<button type="button" class="${classes.join(" ")}" data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
   }).join("");
 }
 
@@ -6298,7 +4169,7 @@ function clearDPDate() {
 // Click outside closes
 document.addEventListener("click", e => {
   if (!dpPopup || !dpPopup.classList.contains("is-open")) return;
-  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap, .v3-cell-date-wrap")) return;
+  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap")) return;
   closeDatePicker();
 });
 // Escape closes
@@ -6308,7 +4179,7 @@ document.addEventListener("keydown", e => {
 // Reposition on scroll
 window.addEventListener("scroll", () => {
   if (dpPopup && dpPopup.classList.contains("is-open") && dpCurrentInput) {
-    const wrap = dpCurrentInput.closest(".card-date-wrap, .v3-cell-date-wrap");
+    const wrap = dpCurrentInput.closest(".card-date-wrap");
     const rect = (wrap || dpCurrentInput).getBoundingClientRect();
     dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
     dpPopup.style.left = (window.scrollX + rect.left) + "px";
@@ -6333,110 +4204,7 @@ function goTo(stateName) {
   }
 }
 
-
-/* ===================================================================
-   V3.2 — Roteiro side drawer (expanded editor)
-   =================================================================== */
-const elRoteiroDrawer = document.getElementById("roteiroDrawer");
-const elRoteiroBackdrop = document.getElementById("roteiroDrawerBackdrop");
-const elRoteiroText = document.getElementById("roteiroDrawerText");
-const elRoteiroSubtitle = document.getElementById("roteiroDrawerSubtitle");
-const elRoteiroLabel = document.getElementById("roteiroDrawerLabel");
-let roteiroDrawerCurrentIdx = null;
-let roteiroDrawerOriginalSourceEl = null;
-
-function openRoteiroDrawer(idx, sourceEl) {
-  const r = state.rows[idx];
-  if (!r) return;
-  roteiroDrawerCurrentIdx = idx;
-  roteiroDrawerOriginalSourceEl = sourceEl;
-  const isCIF = r.frete === "CIF";
-
-  elRoteiroSubtitle.innerHTML = `<strong>${r.contrato}</strong> · Item ${r.item} · ${r.frete}`;
-  elRoteiroLabel.innerHTML = `Descrição ${ isCIF ? '<span class="req">*</span>' : '<span class="opt-tag">Opcional</span>' }`;
-  elRoteiroText.value = r.roteiro || "";
-  elRoteiroText.placeholder = isCIF
-    ? "Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."
-    : "Adicione observações de entrega se necessário (opcional para FOB).";
-
-  elRoteiroDrawer.classList.add("is-open");
-  elRoteiroDrawer.setAttribute("aria-hidden", "false");
-  elRoteiroBackdrop.classList.add("is-open");
-  setTimeout(() => elRoteiroText.focus(), 320);
-}
-function closeRoteiroDrawer() {
-  elRoteiroDrawer.classList.remove("is-open");
-  elRoteiroDrawer.setAttribute("aria-hidden", "true");
-  elRoteiroBackdrop.classList.remove("is-open");
-}
-function saveRoteiroDrawer() {
-  if (roteiroDrawerCurrentIdx == null) { closeRoteiroDrawer(); return; }
-  const idx = roteiroDrawerCurrentIdx;
-  const r = state.rows[idx];
-  if (!r) { closeRoteiroDrawer(); return; }
-  r.roteiro = elRoteiroText.value;
-  /* Push value into any existing input/textarea (legacy field), if present */
-  document
-    .querySelectorAll(`[data-row="${idx}"][data-field="roteiro"]`)
-    .forEach(el => {
-      el.value = r.roteiro;
-      if (el.tagName === "INPUT") el.classList.toggle("has-text", !!r.roteiro);
-      afterFieldChange(idx, el);
-    });
-  closeRoteiroDrawer();
-  /* Re-render so roteiro-toggle-btn picks up the new preview text + has-value */
-  renderTable();
-}
-
-document.getElementById("roteiroDrawerClose").addEventListener("click", closeRoteiroDrawer);
-document.getElementById("roteiroDrawerCancel").addEventListener("click", closeRoteiroDrawer);
-document.getElementById("roteiroDrawerSave").addEventListener("click", saveRoteiroDrawer);
-elRoteiroBackdrop.addEventListener("click", closeRoteiroDrawer);
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && elRoteiroDrawer.classList.contains("is-open")) closeRoteiroDrawer();
-});
-
-/* Click delegation: any "expand-roteiro-btn" inside elBody opens the drawer.
-   In cards LIST mode, the expand button is hidden via CSS, so this still
-   only fires from grid mode and from the table view. */
-elBody.addEventListener("click", e => {
-  const btn = e.target.closest(".expand-roteiro-btn");
-  if (!btn) return;
-  e.preventDefault();
-  e.stopPropagation();
-  const idx = parseInt(btn.dataset.row, 10);
-  if (isNaN(idx)) return;
-  const wrap = btn.closest(".roteiro-with-expand");
-  const sourceEl = wrap ? wrap.querySelector("input, textarea") : null;
-  openRoteiroDrawer(idx, sourceEl);
-});
-
-
-/* V5 Final — roteiro toggle button → opens existing roteiroDrawer */
-document.addEventListener("click", e => {
-  const btn = e.target.closest(".roteiro-toggle-btn");
-  if (!btn) return;
-  e.preventDefault();
-  const idx = parseInt(btn.dataset.row, 10);
-  if (isNaN(idx)) return;
-  /* Find any existing roteiro source element for this row, or create a hidden proxy */
-  let sourceEl = document.querySelector(`[data-row="${idx}"][data-field="roteiro"]`);
-  if (!sourceEl) {
-    /* Hidden proxy so openRoteiroDrawer has something to anchor to */
-    sourceEl = document.createElement("textarea");
-    sourceEl.style.display = "none";
-    sourceEl.dataset.row = idx;
-    sourceEl.dataset.field = "roteiro";
-    sourceEl.value = state.rows[idx]?.roteiro || "";
-    btn.parentElement.appendChild(sourceEl);
-  }
-  if (typeof openRoteiroDrawer === "function") {
-    openRoteiroDrawer(idx, sourceEl);
-  }
-});
-
 goTo("empty");
 </script>
-<script src="review-overlay.js" defer></script>
 </body>
 </html>

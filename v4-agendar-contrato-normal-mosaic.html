@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo</title>
+<title>v4 · Agendar Contrato Normal — padrão visual Mosaic real (funcional 100%)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -13,12 +13,13 @@
      Calibrated to match the existing Mosaic Direct portal style
      ================================================================ */
   :root {
-    /* Brand */
-    --mosaic-green-900: #003e2a;          /* deepest header green */
-    --mosaic-green-800: #00583d;          /* primary brand green */
-    --mosaic-green-700: #006a4d;          /* link / pill border */
-    --mosaic-green-600: #0a7a5a;
-    --mosaic-green-500: #16a37a;
+    /* Brand — VALORES REAIS extraidos do portal Mosaic em producao
+       (sandbox QA2, via inspecao DOM nos shadowRoots dos LWC) */
+    --mosaic-green-900: #093532;          /* texto titulos / link forte */
+    --mosaic-green-800: #1D625C;          /* botao primario (SLDS brand) */
+    --mosaic-green-700: #436462;          /* texto body / breadcrumb */
+    --mosaic-green-600: #1D625C;
+    --mosaic-green-500: #1D625C;
 
     /* Mosaic logo accent colors */
     --mosaic-yellow:  #f0c020;
@@ -44,13 +45,21 @@
     --border:         #cdcdcd;
     --border-strong:  #9c9c9c;
 
-    /* Text */
-    --text-1:         #15201b;
-    --text-2:         #3b4642;
-    --text-3:         #6b7570;
+    /* Text — atualizado pra paleta real Mosaic */
+    --text-1:         #093532;
+    --text-2:         #436462;
+    --text-3:         #76716B;
     --text-disabled:  #a8aeab;
     --text-on-green:  #ffffff;
-    --link-green:     #006a4d;
+    --link-green:     #1D625C;
+    /* Tokens novos pegos do portal real */
+    --md-header-bg:   #E9EFEE;            /* bg do thead (header da tabela) */
+    --md-header-fg:   #444444;            /* cor do texto no thead */
+    --md-card-head-bg:#F0F0F0;            /* bg do header de cards (Filtros, etc) */
+    --md-border-input:#BFD0CE;            /* border dos inputs */
+    --md-shadow-input:0 2px 5px rgba(110,132,130,0.15);
+    --md-shadow-card: 0 0 15px rgba(0,0,0,0.10);
+    --md-red-required:#C23934;            /* asterisco required SLDS */
 
     /* Type */
     --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -468,14 +477,12 @@
   }
   .big-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 14px 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
     vertical-align: middle;
   }
@@ -805,16 +812,13 @@
     font-size: 12.5px;
   }
   .results-table thead th {
-    background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
+    background: #fff;
   }
   .results-table tbody td {
     padding: 14px 12px;
@@ -1476,23 +1480,12 @@
     background: #fff;
     border-top: 1px solid var(--border);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
-    padding: 16px 56px;
+    padding: 0;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
+    justify-content: center;
     z-index: 50;
   }
-  /* Inner wrapper centra/limita o footer ao max-width da page */
-  .summary-footer > .summary-stats,
-  .summary-footer > .summary-actions {
-    /* nada — fallback */
-  }
-  .summary-footer.summary-footer--centered {
-    padding: 0;
-    justify-content: center;
-  }
-  .summary-footer--centered .summary-footer-inner {
+  .summary-footer-inner {
     width: 100%;
     max-width: 1320px;
     padding: 16px 56px;
@@ -2081,23 +2074,19 @@
   }
   .drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(820px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
     z-index: 101;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
     padding: 22px 28px 18px;
@@ -2268,62 +2257,10 @@
   }
   .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
   .drawer-item.is-disabled {
+    /* opacity removida — feito agora individualmente nos elementos
+       de conteudo (linha 4311+) pra a status-tag escapar do cascade */
     pointer-events: none;
     cursor: not-allowed;
-  }
-  /* Dimming individual (evita opacity cascade que apaga a tag) */
-  .drawer-item.is-disabled .checkbox,
-  .drawer-item.is-disabled .drawer-item-contract,
-  .drawer-item.is-disabled .drawer-item-item,
-  .drawer-item.is-disabled .drawer-item-frete,
-  .drawer-item.is-disabled .drawer-item-product,
-  .drawer-item.is-disabled .drawer-item-meta,
-  .drawer-item.is-disabled .drawer-item-saldo {
-    opacity: 0.45;
-  }
-  /* Status tag: fundo solido vermelho/laranja vivo */
-  .status-tag {
-    display: inline-flex;
-    align-items: center;
-    font-size: 9px;
-    font-weight: 800;
-    padding: 2px 7px;
-    border: 1.5px solid;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    line-height: 1.2;
-  }
-  .status-tag--amendment {
-    color: var(--status-orange, #c76814);
-    border-color: var(--status-orange, #c76814);
-    background: var(--status-orange-bg, rgba(199,104,20,0.08));
-  }
-  .status-tag--unsigned {
-    color: var(--mosaic-red);
-    border-color: var(--mosaic-red);
-    background: rgba(185,32,42,0.06);
-  }
-  .status-tag--canceled {
-    color: var(--text-3);
-    border-color: var(--text-3);
-    background: var(--bg-section);
-  }
-  .drawer-item.is-disabled .status-tag {
-    opacity: 1;
-    font-weight: 800;
-    color: #fff !important;
-  }
-  .drawer-item.is-disabled .status-tag--unsigned {
-    background: var(--mosaic-red) !important;
-    border-color: var(--mosaic-red) !important;
-  }
-  .drawer-item.is-disabled .status-tag--amendment {
-    background: var(--status-orange, #c76814) !important;
-    border-color: var(--status-orange, #c76814) !important;
-  }
-  .drawer-item.is-disabled .status-tag--canceled {
-    background: var(--text-2) !important;
-    border-color: var(--text-2) !important;
   }
 
   .checkbox {
@@ -2529,28 +2466,6 @@
     transition: color 200ms;
   }
   /* Reset the strong red styling: only apply when validation has been triggered */
-  /* Inputs invalidos (regras de consistencia NF/Data/Preco/Semana) */
-  .is-invalid input,
-  .is-invalid select,
-  input.is-invalid,
-  select.is-invalid,
-  .v5-money-wrap.is-invalid input,
-  .v5-date-wrap.is-invalid input,
-  .input-with-suffix.is-invalid input,
-  .proto-money-wrap.is-invalid input,
-  .proto-date-wrap.is-invalid input,
-  .card-date-wrap.is-invalid input {
-    border-color: var(--mosaic-red) !important;
-    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
-  }
-  .field-error {
-    display: block;
-    font-size: 10.5px;
-    color: var(--mosaic-red);
-    font-weight: 700;
-    margin-top: 2px;
-    line-height: 1.3;
-  }
   .cards-container:not(.show-validation) .field-block.is-missing label .req { color: var(--text-3); }
   .cards-container:not(.show-validation) .field-block.is-missing .input-with-suffix input,
   .cards-container:not(.show-validation) .field-block.is-missing .card-date-wrap input,
@@ -2903,14 +2818,14 @@
   }
   .v3-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 14px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
     white-space: nowrap;
     vertical-align: middle;
     position: sticky;
@@ -3419,23 +3334,19 @@
   }
   .roteiro-drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(640px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(540px, 100%);
     background: #fff;
     z-index: 111;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .roteiro-drawer.is-open { transform: translateX(0); }
 
   .roteiro-drawer-header {
     background: var(--bg-section);
@@ -3707,40 +3618,17 @@
   /* Make the LIST mode cards super compact horizontally — single row layout */
   .cards-list.layout-list .contract-card {
     display: grid;
-    /* Tighter left: just enough for the contract id, item, ref, frete, and
-       row actions. Product+meta gets the middle. Inputs take the rest. */
-    grid-template-columns: 150px minmax(220px, 1.4fr) minmax(380px, 2fr) auto;
+    grid-template-columns: minmax(180px, 1.2fr) minmax(180px, 1.6fr) minmax(280px, 2fr) auto;
     align-items: stretch;
   }
   .cards-list.layout-list .contract-card .card-head {
     border-bottom: none;
     border-right: 1px solid var(--border-soft);
-    padding: 8px 10px;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2px;
-  }
-  .cards-list.layout-list .contract-card .card-head .card-contract { font-size: 13px; }
-  .cards-list.layout-list .contract-card .card-head .card-item { font-size: 10.5px; }
-  .cards-list.layout-list .contract-card .card-head-right {
-    margin-top: 4px;
-    flex-direction: row;
-    flex-wrap: wrap;
     gap: 4px;
-  }
-  .cards-list.layout-list .contract-card .card-head-right .badge {
-    font-size: 8.5px;
-    padding: 1px 5px;
-    letter-spacing: 0.06em;
-  }
-  .cards-list.layout-list .contract-card .card-action-icons button {
-    width: 22px;
-    height: 22px;
-  }
-  .cards-list.layout-list .contract-card .card-action-icons button svg {
-    width: 12px;
-    height: 12px;
   }
   .cards-list.layout-list .contract-card .card-id {
     flex-direction: column;
@@ -3771,7 +3659,7 @@
   /* Product zone — compact, takes the second column */
   .cards-list.layout-list .contract-card .card-product {
     border-right: 1px solid var(--border-soft);
-    padding: 8px 12px;
+    padding: 10px 14px;
     margin: 0;
     background: var(--bg-section);
   }
@@ -3904,541 +3792,8 @@
   }
 
   /* ================================================================
-     V3.5 — Roteiro-as-button (list mode) — compact, click to open drawer
-     ================================================================ */
-  .roteiro-open-btn {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 6px;
-    width: 100%;
-    height: 32px;
-    padding: 0 10px;
-    border: 1.5px dashed var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 11.5px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    overflow: hidden;
-  }
-  .roteiro-open-btn:hover {
-    border-color: var(--mosaic-green-700);
-    border-style: solid;
-    color: var(--mosaic-green-800);
-    background: rgba(0, 106, 77, 0.03);
-  }
-  .roteiro-open-btn .roteiro-btn-icon {
-    flex-shrink: 0;
-    color: currentColor;
-  }
-  .roteiro-open-btn .roteiro-btn-text {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  /* When there's a value, show solid border, less faded */
-  .roteiro-open-btn.has-value {
-    border-style: solid;
-    color: var(--text-1);
-    font-weight: 600;
-    border-color: var(--border);
-  }
-  .roteiro-open-btn.has-value:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-  }
-  .roteiro-open-btn.is-required {
-    border-color: rgba(199, 104, 20, 0.4);
-    color: var(--status-orange);
-  }
-  .show-validation .roteiro-open-btn.is-required:not(.has-value) {
-    border-color: rgba(185, 32, 42, 0.55);
-    background: rgba(185, 32, 42, 0.025);
-    color: var(--mosaic-red);
-  }
-  /* In list mode, hide the inline textarea/expand-btn entirely; the button
-     sits in its place */
-  .cards-list.layout-list .field-block--roteiro .roteiro-with-expand {
-    display: none;
-  }
-  .cards-list.layout-list .field-block--roteiro .roteiro-open-btn {
-    display: flex;
-  }
-  /* In other layouts, hide the button (textarea is shown instead) */
-  .roteiro-open-btn { display: none; }
-
-
-  /* Criar Protocolo — extras */
-  .action-row--protocol {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 16px;
-    align-items: center;
-  }
-  /* Secundário com contraste correto — vence a regra .btn-secondary duplicada
-     via especificidade (button.classe). Default: fundo branco + verde;
-     hover: preenche verde + branco. */
-  button.btn-cadastrar-coop {
-    background: #fff;
-    color: var(--mosaic-green-800);
-    border: 1.5px solid var(--mosaic-green-800);
-  }
-  button.btn-cadastrar-coop:hover {
-    background: var(--mosaic-green-800);
-    border-color: var(--mosaic-green-800);
-    color: #fff;
-  }
-  button.btn-cadastrar-coop svg { color: var(--mosaic-green-800); stroke: var(--mosaic-green-800); }
-  button.btn-cadastrar-coop:hover svg { color: #fff; stroke: #fff; }
-  .proto-table-wrap {
-    border: 1px solid var(--border-soft);
-    background: #fff;
-    overflow-x: auto;
-    margin-bottom: 16px;
-  }
-  .proto-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    min-width: 1700px;
-  }
-  .proto-table thead th {
-    background: var(--bg-section);
-    text-align: left;
-    padding: 12px 12px;
-    font-weight: 800;
-    color: var(--text-1);
-    font-size: 10.5px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    border-bottom: 2px solid var(--border);
-    white-space: nowrap;
-    vertical-align: middle;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-  }
-  .proto-table thead th .req { color: var(--mosaic-red); margin-left: 2px; }
-  .proto-table thead th .opt-tag {
-    font-size: 9px;
-    color: var(--text-3);
-    font-weight: 700;
-    margin-left: 4px;
-    text-transform: uppercase;
-  }
-  .proto-table thead th.col-optional { color: var(--text-2); }
-  .proto-table tbody td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border-soft);
-    color: var(--text-1);
-    font-weight: 500;
-    vertical-align: middle;
-    white-space: nowrap;
-  }
-  .proto-table tbody tr {
-    transition: background-color 120ms;
-    border-left: 4px solid transparent;
-  }
-  .proto-table tbody tr:hover td { background: var(--bg-row-alt); }
-  .proto-table tbody tr.is-incomplete { border-left-color: var(--border-strong); }
-  .proto-table tbody tr.is-progress {
-    border-left-color: var(--mosaic-yellow);
-    background: linear-gradient(to right, rgba(240,192,32,0.04), transparent 30%);
-  }
-  .proto-table tbody tr.is-complete {
-    border-left-color: var(--mosaic-green-700);
-    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
-  }
-  .proto-table-wrap.show-validation tr.is-incomplete,
-  .proto-table-wrap.show-validation tr.is-progress {
-    border-left-color: var(--mosaic-red);
-    background: linear-gradient(to right, rgba(185,32,42,0.04), transparent 30%);
-  }
-  .proto-table .col-saldo .saldo-primary {
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.15;
-  }
-  .proto-table .col-saldo .saldo-unit {
-    font-size: 11px;
-    color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-  }
-  .proto-table .col-saldo .saldo-secondary {
-    font-size: 10.5px;
-    color: var(--text-3);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-  .col-status-cell { width: 36px; text-align: center; }
-  .col-actions { width: 70px; }
-  .col-volume { min-width: 100px; }
-  .col-date { min-width: 130px; }
-  .col-emb { min-width: 150px; }
-  .col-money { min-width: 130px; }
-  .col-nf-num { min-width: 110px; }
-  .col-roteiro { min-width: 180px; }
-  .col-saldo { min-width: 110px; }
-  .col-coop { min-width: 200px; }
-
-  /* Sticky-left columns na proto-table (Status + Contrato/Item + Produto/Embalagem/Origem)
-     pra usuario manter contexto ao scrollar horizontalmente */
-  .proto-table { border-collapse: separate; border-spacing: 0; }
-  .proto-table thead th { background: var(--bg-section); }
-  .proto-table tbody td { background: #fff; }
-  .proto-table tbody tr:nth-child(even) td { background: #f5f5f2; }
-  .proto-table tbody tr:hover td { background: #eef4f1; } /* solido, sem transparencia (col sticky precisa de bg opaco) */
-
-  .proto-table thead th:nth-child(1),
-  .proto-table tbody td:nth-child(1),
-  .proto-table thead th:nth-child(2),
-  .proto-table tbody td:nth-child(2),
-  .proto-table thead th:nth-child(3),
-  .proto-table tbody td:nth-child(3) {
-    position: sticky;
-    z-index: 1;
-  }
-  .proto-table thead th:nth-child(1) { left: 0; width: 36px; z-index: 3; }
-  .proto-table tbody td:nth-child(1) { left: 0; }
-  .proto-table thead th:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; z-index: 3; }
-  .proto-table tbody td:nth-child(2) { left: 36px; min-width: 150px; max-width: 150px; }
-  .proto-table thead th:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; z-index: 3; }
-  .proto-table tbody td:nth-child(3) { left: 186px; min-width: 220px; max-width: 220px; box-shadow: 1px 0 0 var(--border-soft); }
-  .proto-table thead th:nth-child(3) { box-shadow: 1px 0 0 var(--border-soft); }
-  .coop-pick-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12.5px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    overflow: hidden;
-  }
-  .coop-pick-btn .coop-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .coop-pick-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-  }
-  .coop-pick-btn.has-value { color: var(--text-1); }
-  .proto-cell-input {
-    width: 100%;
-    height: 34px;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms, box-shadow 120ms;
-  }
-  .proto-cell-input:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .proto-cell-input.is-num { text-align: right; font-variant-numeric: tabular-nums; }
-  .proto-volume-wrap, .proto-date-wrap, .proto-money-wrap, .proto-roteiro-wrap {
-    position: relative;
-    width: 100%;
-  }
-  .proto-volume-wrap .suffix, .proto-money-wrap .prefix {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--text-3);
-    pointer-events: none;
-  }
-  .proto-volume-wrap .suffix { right: 10px; }
-  .proto-volume-wrap input { padding-right: 24px; }
-  .proto-money-wrap .prefix { left: 10px; }
-  .proto-money-wrap input { padding-left: 30px; }
-  .proto-date-wrap input { padding-right: 32px; cursor: pointer; }
-  .proto-date-wrap .cal-trigger {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26px;
-    height: 26px;
-    border: none;
-    background: transparent;
-    color: var(--text-2);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .proto-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
-  .proto-roteiro-wrap .proto-cell-input { padding-right: 30px; }
-  .proto-roteiro-wrap .roteiro-expand {
-    position: absolute;
-    right: 4px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: transparent;
-    color: var(--text-3);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .proto-roteiro-wrap .roteiro-expand:hover { color: var(--mosaic-green-800); }
-  .proto-emb-select {
-    width: 100%;
-    height: 34px;
-    padding: 0 28px 0 10px;
-    border: 1.5px solid var(--border);
-    background-color: #fff;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    appearance: none;
-    -webkit-appearance: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-1);
-    outline: none;
-    cursor: pointer;
-  }
-  .proto-emb-select:focus { border-color: var(--mosaic-green-700); }
-  td.is-missing .proto-cell-input,
-  td.is-missing .coop-pick-btn,
-  td.is-missing .proto-emb-select {
-    border-color: var(--border);
-  }
-  .proto-table-wrap.show-validation td.is-missing .proto-cell-input,
-  .proto-table-wrap.show-validation td.is-missing .coop-pick-btn,
-  .proto-table-wrap.show-validation td.is-missing .proto-emb-select {
-    border-color: rgba(185, 32, 42, 0.55);
-    background: rgba(185, 32, 42, 0.025);
-  }
-  .coop-drawer-list .drawer-item-coop {
-    display: grid;
-    grid-template-columns: 24px minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr);
-    gap: 10px;
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-soft);
-    cursor: pointer;
-    align-items: center;
-    transition: background-color 120ms;
-  }
-  .coop-drawer-list .drawer-item-coop:hover { background: rgba(0,106,77,0.04); }
-  .coop-drawer-list .drawer-item-coop.is-selected { background: rgba(0,106,77,0.08); }
-  .coop-drawer-list .drawer-item-coop.is-pending {
-    opacity: 0.6;
-    cursor: not-allowed;
-    background: rgba(199,104,20,0.04);
-  }
-  .coop-drawer-list .drawer-item-coop.is-pending:hover {
-    background: rgba(199,104,20,0.04);
-  }
-  .coop-pending-tag {
-    display: inline-block;
-    background: var(--status-orange-bg);
-    color: var(--status-orange);
-    border: 1.5px solid var(--status-orange);
-    padding: 1px 6px;
-    font-size: 9px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
-  .coop-drawer-list .coop-radio {
-    width: 18px; height: 18px;
-    border: 1.5px solid var(--border-strong);
-    border-radius: 50%;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .coop-drawer-list .drawer-item-coop.is-selected .coop-radio {
-    border-color: var(--mosaic-green-700);
-    background: var(--mosaic-green-700);
-  }
-  .coop-drawer-list .drawer-item-coop.is-selected .coop-radio::after {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    background: #fff;
-    border-radius: 50%;
-  }
-  .coop-name { font-size: 13px; font-weight: 800; color: var(--text-1); }
-  .coop-fazenda { font-size: 11px; color: var(--text-3); font-weight: 600; margin-top: 2px; }
-  .coop-doc, .coop-loc { font-size: 11px; color: var(--text-2); font-weight: 600; }
-  .coop-doc strong, .coop-loc strong {
-    display: block;
-    color: var(--text-3);
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 800;
-    margin-bottom: 1px;
-  }
-  /* Cadastrar Cooperado — centered modal (Adicionar novo cliente) */
-  .modal-cad-coop {
-    max-width: 920px;
-    background: #fff;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
-  }
-  .modal-cad-coop .cad-coop-header {
-    background: var(--bg-section);
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border-soft);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .modal-cad-coop .cad-coop-header h3 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text-1);
-    letter-spacing: -0.005em;
-  }
-  .modal-cad-coop .cad-coop-close {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: var(--text-2);
-    width: 28px; height: 28px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 4px;
-  }
-  .modal-cad-coop .cad-coop-close:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
-  .modal-cad-coop .cad-coop-body {
-    padding: 24px;
-  }
-  .modal-cad-coop .cad-coop-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px 18px;
-    margin-bottom: 24px;
-  }
-  .modal-cad-coop .cad-coop-field { min-width: 0; }
-  .modal-cad-coop .cad-coop-field.full { grid-column: 1 / -1; }
-  .modal-cad-coop .cad-coop-field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-1);
-    margin-bottom: 6px;
-  }
-  .modal-cad-coop .cad-coop-field label .req { color: var(--mosaic-red); margin-right: 2px; }
-  .modal-cad-coop .cad-coop-input {
-    position: relative;
-  }
-  .modal-cad-coop input,
-  .modal-cad-coop select,
-  .modal-cad-coop textarea {
-    width: 100%;
-    height: 38px;
-    padding: 0 12px;
-    border: 1px solid var(--border);
-    background: #fff;
-    font-size: 13px;
-    font-family: inherit;
-    font-weight: 500;
-    color: var(--text-1);
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .modal-cad-coop textarea {
-    height: auto;
-    min-height: 60px;
-    padding: 10px 12px;
-    resize: vertical;
-  }
-  .modal-cad-coop input:focus,
-  .modal-cad-coop select:focus,
-  .modal-cad-coop textarea:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
-  }
-  .modal-cad-coop input::placeholder,
-  .modal-cad-coop textarea::placeholder {
-    color: var(--text-3);
-    font-weight: 500;
-  }
-  .modal-cad-coop select {
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-color: #fff;
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 32px;
-    cursor: pointer;
-    color: var(--text-3);
-    font-weight: 500;
-  }
-  .modal-cad-coop select.has-value { color: var(--text-1); font-weight: 600; }
-  /* Validation state (red border + icon + message) */
-  .modal-cad-coop .cad-coop-field.is-error input,
-  .modal-cad-coop .cad-coop-field.is-error select,
-  .modal-cad-coop .cad-coop-field.is-error textarea {
-    border-color: var(--mosaic-red);
-    padding-left: 36px;
-  }
-  .modal-cad-coop .cad-coop-field.is-error .cad-coop-input::before {
-    content: "";
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 14px; height: 14px;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23b9202a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='12' cy='12' r='10'/><line x1='4.93' y1='4.93' x2='19.07' y2='19.07'/></svg>");
-    background-repeat: no-repeat;
-    background-size: contain;
-    pointer-events: none;
-    z-index: 1;
-  }
-  .modal-cad-coop .cad-coop-err {
-    display: none;
-    font-size: 11.5px;
-    color: var(--mosaic-red);
-    font-weight: 500;
-    margin-top: 4px;
-  }
-  .modal-cad-coop .cad-coop-field.is-error .cad-coop-err { display: block; }
-  /* .cad-coop-submit usa .btn .btn-primary do design system (44px verde) */
-  .modal-cad-coop .cad-coop-submit { padding: 0 28px; }
-  @media (max-width: 720px) {
-    .modal-cad-coop .cad-coop-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ================================================================
-     V2 — V5-style grouped cards (ported from agendar-contrato-normal-v5)
+     V5 / Final — Grouped contract cards (multi-item per contract)
+     Compact horizontal layout — one row for header, one for item info
      ================================================================ */
   .v5-card {
     display: flex !important;
@@ -4446,6 +3801,7 @@
     grid-template-columns: none !important;
   }
 
+  /* Visual tag indicating the level */
   .v5-level-tag {
     display: inline-flex;
     align-items: center;
@@ -4459,8 +3815,11 @@
     line-height: 1;
     flex-shrink: 0;
   }
-  .v5-level-tag--item { background: var(--mosaic-green-700); }
+  .v5-level-tag--item {
+    background: var(--mosaic-green-700);
+  }
 
+  /* CONTRACT-LEVEL HEADER — single horizontal compact line */
   .v5-card-head {
     display: flex !important;
     flex-direction: row !important;
@@ -4494,10 +3853,15 @@
     font-weight: 600;
     white-space: nowrap;
   }
-  .v5-head-inline strong { color: var(--text-1); font-weight: 800; }
-  .v5-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
-  .v5-card-head .v5-meta-label,
-  .v5-meta-label {
+  .v5-head-inline strong {
+    color: var(--text-1);
+    font-weight: 800;
+  }
+  .v5-head-inline .arrow {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+  }
+  .v5-card-head .v5-meta-label {
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
@@ -4511,25 +3875,33 @@
     letter-spacing: 0.06em;
     font-weight: 800;
     color: var(--text-3);
-    background: var(--bg-section-2, var(--bg-section));
+    background: var(--bg-section-2);
     padding: 3px 8px;
     margin-left: auto;
     flex-shrink: 0;
   }
-  .v5-head-remove { flex-shrink: 0; }
+  .v5-head-remove {
+    flex-shrink: 0;
+  }
 
-  .v5-items-list { display: flex; flex-direction: column; }
+  /* ITEM ROWS — compact horizontal */
+  .v5-items-list {
+    display: flex;
+    flex-direction: column;
+  }
   .v5-item-row {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
     gap: 14px;
-    padding: 12px 16px;
+    padding: 10px 16px;
     align-items: center;
     border-bottom: 1px solid var(--border-soft);
     border-left: 3px solid transparent;
     transition: background-color 120ms, border-left-color 200ms;
   }
-  .v5-item-row.is-incomplete { border-left-color: var(--border-strong); }
+  .v5-item-row.is-incomplete {
+    border-left-color: var(--border-strong);
+  }
   .v5-item-row.is-progress {
     border-left-color: var(--mosaic-yellow);
     background: linear-gradient(to right, rgba(240,192,32,0.03), transparent 25%);
@@ -4543,88 +3915,41 @@
     border-left-color: var(--mosaic-red);
     background: linear-gradient(to right, rgba(185,32,42,0.03), transparent 25%);
   }
-  .v5-item-row:last-of-type { border-bottom: none; }
+  .v5-item-row:last-of-type {
+    border-bottom: none;
+  }
 
-  .v5-item-info { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
-  .v5-item-cell-stacks {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 16px;
-    padding: 4px 0;
-  }
-  .v5-item-cell-stacks .v5-cell-tags {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
-    flex-wrap: wrap;
-  }
-  /* Card stack--produto: tags em coluna a esquerda + corpo (produto/embalagem/origem) */
-  .v5-item-cell-stacks .cell-stack--produto {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    align-items: start;
-  }
-  .v5-item-cell-stacks .v5-cell-tags-col {
+  .v5-item-info {
+    min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    align-items: flex-start;
+    gap: 4px;
   }
-  .v5-item-cell-stacks .v5-cell-tags-col .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-cell-stacks .v5-cell-produto-body { min-width: 0; }
-  .v5-item-cell-stacks .v5-cell-tags .badge { font-size: 9px; padding: 2px 7px; }
-  .v5-item-cell-stacks .v5-cell-saldo {
-    margin-bottom: 6px;
-    font-size: 15px;
-    font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
+  .v5-item-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
   }
-  .v5-item-cell-stacks .v5-cell-saldo .unit {
-    font-size: 10px;
+  .v5-item-line--top {
+    gap: 8px;
+  }
+  .v5-item-line--bottom {
+    gap: 8px;
     color: var(--text-2);
-    font-weight: 700;
-    margin-left: 2px;
-    letter-spacing: 0.04em;
-  }
-  .v5-item-cell-stacks .cell-stack { min-width: 0; }
-  .v5-item-cell-stacks .stack-tertiary,
-  .proto-table .cell-stack .stack-tertiary {
-    font-size: 11px;
-    color: var(--text-3);
+    font-size: 11.5px;
     font-weight: 600;
-    margin-top: 1px;
   }
-  .proto-table .cell-stack .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .v5-item-cell-stacks .v5-meta-label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-    font-weight: 800;
-    margin-right: 2px;
-  }
-  .v5-item-saldo-inline {
-    margin-left: auto;
+  .v5-item-id {
     font-size: 14px;
     font-weight: 800;
-    color: var(--mosaic-green-800);
-    font-variant-numeric: tabular-nums;
+    color: var(--text-1);
   }
-  .v5-item-saldo-inline .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
-  .v5-item-line { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
-  .v5-item-line--bottom { gap: 8px; color: var(--text-2); font-size: 11.5px; font-weight: 600; }
-  .v5-item-id { font-size: 14px; font-weight: 800; color: var(--text-1); }
-  .v5-item-line .badge { font-size: 9px; padding: 2px 7px; }
+  .v5-item-line .badge {
+    font-size: 9px;
+    padding: 2px 7px;
+  }
   .v5-item-product {
     font-size: 13px;
     font-weight: 800;
@@ -4636,10 +3961,33 @@
     min-width: 0;
     flex: 1;
   }
-  .v5-item-meta-piece { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
-  .v5-item-meta-piece strong { color: var(--text-1); font-weight: 800; }
-  .v5-meta-sep { color: var(--border); font-weight: 800; }
-  .v5-item-line--bottom .arrow { color: var(--mosaic-green-700); font-weight: 800; margin: 0 1px; }
+  .v5-item-meta-piece {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .v5-item-meta-piece strong {
+    color: var(--text-1);
+    font-weight: 800;
+  }
+  .v5-meta-sep {
+    color: var(--border);
+    font-weight: 800;
+  }
+  .v5-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 1px;
+  }
+  .v5-item-line--bottom .arrow {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    margin: 0 1px;
+  }
   .v5-item-saldo {
     font-size: 14px;
     font-weight: 800;
@@ -4647,17 +3995,22 @@
     font-variant-numeric: tabular-nums;
     line-height: 1.15;
   }
-  .v5-item-saldo .unit { font-size: 10px; color: var(--text-2); font-weight: 700; margin-left: 2px; letter-spacing: 0.04em; }
+  .v5-item-saldo .unit {
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+  }
 
-  /* Item form fields — V5 layout adaptado pro criar-protocolo
-     (mais campos: cooperado + volume + embalagem + roteiro) */
+  /* V5 / Final — Item form fields: horizontal, same height */
   .v5-item-fields {
     display: grid;
-    grid-template-columns: minmax(180px, 220px) 110px 130px minmax(180px, 220px);
+    grid-template-columns: 100px 130px minmax(180px, 240px);
     gap: 8px;
     align-items: end;
   }
-  .v5-item-fields .field-block { gap: 2px; min-width: 0; }
+  .v5-item-fields .field-block { gap: 2px; }
   .v5-item-fields .field-block label {
     font-size: 9px;
     text-transform: uppercase;
@@ -4670,20 +4023,15 @@
     align-items: center;
     gap: 4px;
   }
-  .v5-item-fields .field-block label .req { color: var(--mosaic-red); }
-  .v5-item-fields .field-block label .opt-tag { font-size: 8px; }
+  /* Force all three input types to identical 32px height */
   .v5-item-fields .input-with-suffix,
   .v5-item-fields .card-date-wrap,
-  .v5-item-fields .roteiro-toggle-btn,
-  .v5-item-fields .v5-coop-pick-btn,
-  .v5-item-fields select.proto-emb-select,
-  .v5-item-fields .v5-money-wrap {
+  .v5-item-fields .roteiro-toggle-btn {
     height: 32px !important;
     box-sizing: border-box;
   }
   .v5-item-fields .input-with-suffix input,
-  .v5-item-fields .card-date-wrap input,
-  .v5-item-fields select.proto-emb-select {
+  .v5-item-fields .card-date-wrap input {
     height: 32px !important;
     line-height: 32px;
     font-size: 12.5px;
@@ -4691,87 +4039,12 @@
     padding-bottom: 0;
     box-sizing: border-box;
   }
-  .v5-item-fields .input-with-suffix {
-    position: relative;
-    display: block;
-  }
-  .v5-item-fields .input-with-suffix input {
-    width: 100%;
-    padding: 0 22px 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .v5-item-fields .input-with-suffix input:focus { border-color: var(--mosaic-green-700); }
-  .v5-item-fields .input-with-suffix .suffix {
-    position: absolute;
-    right: 8px;
+  .v5-item-fields .card-date-wrap .cal-trigger {
     top: 50%;
     transform: translateY(-50%);
-    font-size: 11px;
-    color: var(--text-3);
-    font-weight: 700;
-    pointer-events: none;
   }
-  .v5-item-fields select.proto-emb-select {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    padding: 0 28px 0 10px;
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    cursor: pointer;
-  }
-  .v5-item-fields select.proto-emb-select:focus { border-color: var(--mosaic-green-700); outline: none; }
 
-  /* Cooperado picker button */
-  .v5-coop-pick-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    width: 100%;
-    padding: 0 10px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-3);
-    font-family: inherit;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: left;
-    cursor: pointer;
-    transition: all 120ms;
-    line-height: 32px;
-  }
-  .v5-coop-pick-btn:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-800);
-  }
-  .v5-coop-pick-btn.has-value {
-    color: var(--text-1);
-    font-weight: 700;
-    border-color: var(--mosaic-green-700);
-  }
-  .v5-coop-pick-btn .coop-text {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  .v5-coop-pick-btn svg { color: var(--text-3); flex-shrink: 0; }
-  .v5-coop-pick-btn:hover svg { color: var(--mosaic-green-700); }
-
-  /* Roteiro toggle button */
+  /* Roteiro toggle button (replaces textarea) */
   .roteiro-toggle-btn {
     display: inline-flex;
     align-items: center;
@@ -4802,7 +4075,9 @@
     color: var(--text-1);
     background: #fff;
   }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-icon {
+    color: var(--mosaic-green-700);
+  }
   .roteiro-toggle-text {
     flex: 1;
     overflow: hidden;
@@ -4810,14 +4085,28 @@
     white-space: nowrap;
     font-weight: 600;
   }
-  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
-  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
-  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-text {
+    font-weight: 700;
+  }
+  .roteiro-toggle-icon {
+    flex-shrink: 0;
+    color: var(--text-3);
+  }
+  .roteiro-toggle-btn:hover .roteiro-toggle-icon {
+    color: var(--mosaic-green-700);
+  }
 
-  .v5-item-actions { display: flex; gap: 4px; align-items: center; }
+  .v5-item-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
 
-  /* Add-item bar */
-  .v5-add-item { position: relative; border-top: 1px solid var(--border-soft); }
+  /* Add-item button + popover */
+  .v5-add-item {
+    position: relative;
+    border-top: 1px solid var(--border-soft);
+  }
   .v5-add-item-btn {
     display: flex;
     align-items: center;
@@ -4836,7 +4125,10 @@
     transition: background-color 120ms, color 120ms;
     letter-spacing: 0.01em;
   }
-  .v5-add-item-btn:hover { background: rgba(0, 106, 77, 0.06); color: var(--mosaic-green-900); }
+  .v5-add-item-btn:hover {
+    background: rgba(0, 106, 77, 0.06);
+    color: var(--mosaic-green-900);
+  }
   .v5-add-item-count {
     margin-left: auto;
     font-size: 10px;
@@ -4845,77 +4137,156 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
+  .v5-add-item-popover {
+    position: absolute;
+    left: 16px;
+    top: 100%;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.06);
+    min-width: 280px;
+    max-width: 380px;
+    z-index: 60;
+    display: none;
+    padding: 6px;
+  }
+  .v5-add-item-popover.is-open {
+    display: block;
+    animation: v5-pop-fade 140ms ease-out;
+  }
+  @keyframes v5-pop-fade {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .v5-popover-header {
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 4px;
+  }
+  .v5-popover-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 120ms;
+  }
+  .v5-popover-item:hover {
+    background: rgba(0, 106, 77, 0.06);
+  }
+  .v5-popover-item-id {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-1);
+    flex: 1;
+  }
+  .v5-popover-item-saldo {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+  }
+  .v5-popover-item-frete {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+
+  /* Override list-mode 4-column horizontal layout */
+  .cards-list.layout-list .v5-card .card-head,
+  .cards-list.layout-list .v5-card .card-product,
+  .cards-list.layout-list .v5-card .card-action-zone {
+    grid-column: unset;
+    border-right: none;
+  }
+
+  /* Grid layout: cards can be wider since content is now compact horizontal */
+  .cards-list.layout-grid {
+    grid-template-columns: repeat(auto-fill, minmax(640px, 1fr));
+  }
 
   .v5-card .card-status {
     border-top: 1px solid var(--border-soft);
     padding: 8px 16px;
   }
 
-  /* V2 — force list-only mode (Lista/Grid toggle removed) */
+  
+
+  /* V5 / Final — force list-only mode (Lista/Grid toggle removed) */
   #cardsLayoutToggle { display: none !important; }
 
-  /* Optional fields row (NF / Preço / Semana) — second row inside card */
-  .v5-item-extra {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(120px, 1fr) minmax(140px, 1fr) minmax(130px, 1fr) minmax(140px, 1fr);
-    gap: 8px;
-    align-items: end;
-    padding-top: 10px;
-    margin-top: 10px;
-    border-top: 1px dashed var(--border-soft);
+
+  .v5-table-roteiro {
+    height: 30px !important;
+    line-height: 30px !important;
+    padding: 0 8px !important;
+    font-size: 11.5px;
+    min-width: 130px;
   }
-  .v5-item-extra .field-block { gap: 2px; min-width: 0; }
-  .v5-item-extra .field-block label {
+
+
+  /* V5 Final round 5 — table contract cell tertiary line (Vigência) + saldo polish */
+  .v3-table .cell-stack .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 2px;
+    letter-spacing: 0.01em;
+  }
+  .v3-table .cell-saldo-emphasis,
+  .v3-table thead th.th-saldo {
+    text-align: left;
+    white-space: nowrap;
+  }
+  /* Stack tertiary (Origem under Produto/Embalagem) */
+  .v3-table .cell-stack .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .v3-table .v3-meta-label {
     font-size: 9px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-3);
-    font-weight: 700;
-    margin-bottom: 0;
-    height: 14px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
+    font-weight: 800;
+    margin-right: 2px;
   }
-  .v5-item-extra input,
-  .v5-item-extra .v5-money-wrap,
-  .v5-item-extra .card-date-wrap {
-    height: 32px !important;
-    box-sizing: border-box;
+  .v3-table .cell-saldo-emphasis .saldo-primary {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
   }
-  .v5-item-extra input {
-    width: 100%;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    color: var(--text-1);
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 12.5px;
-    padding: 0 10px;
-    line-height: 32px;
-    outline: none;
-    transition: border-color 120ms;
-  }
-  .v5-item-extra input:focus { border-color: var(--mosaic-green-700); }
-  .v5-money-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
-  }
-  .v5-money-wrap .prefix {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+  .v3-table .cell-saldo-emphasis .saldo-unit {
     font-size: 11px;
-    color: var(--text-3);
+    color: var(--text-2);
     font-weight: 700;
-    pointer-events: none;
+    margin-left: 2px;
   }
-  .v5-money-wrap input {
-    padding-left: 28px;
+
+  /* Validation: Semana passada */
+  input.is-invalid,
+  .card-date-wrap.is-invalid input,
+  .v3-date-wrap.is-invalid input,
+  .v3-cell-volume-wrap.is-invalid input {
+    border-color: var(--mosaic-red) !important;
+    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
   }
+
+  /* Zebra striping sutil em todas as tabelas (cor do hover, mais clara) */
+  .v3-table tbody tr:nth-child(even) td { background: var(--bg-row-alt, #fafaf8); }
 
 
   /* Banner hero removido — layout limpo (so top-nav). */
@@ -4923,6 +4294,66 @@
     display: none !important;
   }
 
+  /* Status tags no drawer (contratos bloqueados / com aditivo / nao assinados) */
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border: 1.5px solid;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .status-tag--amendment {
+    color: var(--status-orange);
+    border-color: var(--status-orange);
+    background: var(--status-orange-bg, rgba(199,104,20,0.08));
+  }
+  .status-tag--unsigned {
+    color: var(--mosaic-red);
+    border-color: var(--mosaic-red);
+    background: rgba(185,32,42,0.06);
+  }
+  .status-tag--canceled {
+    color: var(--text-3);
+    border-color: var(--text-3);
+    background: var(--bg-section);
+  }
+  .drawer-item.is-disabled {
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+  /* Diminuir conteudo da row dimming individual (nao usa opacity no
+     parent porque opacity cascade evita filho visivel). */
+  .drawer-item.is-disabled .checkbox,
+  .drawer-item.is-disabled .drawer-item-contract,
+  .drawer-item.is-disabled .drawer-item-item,
+  .drawer-item.is-disabled .drawer-item-frete,
+  .drawer-item.is-disabled .drawer-item-product,
+  .drawer-item.is-disabled .drawer-item-meta,
+  .drawer-item.is-disabled .drawer-item-saldo {
+    opacity: 0.5;
+  }
+  /* Tag de bloqueio: fundo solido vermelho/laranja, sempre vivida */
+  .drawer-item.is-disabled .status-tag {
+    opacity: 1;
+    font-weight: 800;
+    color: #fff !important;
+  }
+  .drawer-item.is-disabled .status-tag--unsigned {
+    background: var(--mosaic-red) !important;
+    border-color: var(--mosaic-red) !important;
+  }
+  .drawer-item.is-disabled .status-tag--amendment {
+    background: var(--status-orange) !important;
+    border-color: var(--status-orange) !important;
+  }
+  .drawer-item.is-disabled .status-tag--canceled {
+    background: var(--text-2) !important;
+    border-color: var(--text-2) !important;
+  }
 
 </style>
 
@@ -4931,8 +4362,150 @@
 
 <link rel="stylesheet" href="tokens.css" />
 <link rel="stylesheet" href="base.css" />
+
+<!-- ============================================================
+     v4 MOSAIC REAL OVERRIDES — só estilo, sem mexer em estrutura/JS
+     Sobrescreve tokens visuais com os valores capturados do portal de
+     produção (sandbox QA2). Mantém todas as colunas, todos os filtros,
+     todo o fluxo do agendar-contrato-normal.html original.
+     ============================================================ -->
+<style>
+  /* Header da tabela: bg cinza-esverdeado #E9EFEE, texto #444 fw700 16px,
+     padding 14.5px 8px, height 51px, NÃO uppercase (como no portal real). */
+  .wide-table thead th,
+  table.wide-table thead th,
+  .results-table thead th,
+  thead th {
+    background: var(--md-header-bg) !important;
+    color: var(--md-header-fg) !important;
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 16px !important;
+    letter-spacing: normal !important;
+    text-transform: none !important;
+    padding: 14.5px 8px !important;
+    height: 51px !important;
+    border: none !important;
+  }
+  .wide-table thead th:first-child,
+  thead th:first-child { padding-left: 16px !important; }
+  .wide-table thead th:last-child,
+  thead th:last-child { padding-right: 16px !important; }
+
+  /* Linhas da tabela com hover esverdeado sutil */
+  .wide-table tbody td,
+  table.wide-table tbody td,
+  .results-table tbody td,
+  tbody td {
+    font-family: "Barlow", sans-serif !important;
+    font-size: 15px !important;
+    color: var(--mosaic-green-900);
+  }
+  .wide-table tbody tr:hover td { background: rgba(233,239,238,0.50) !important; }
+
+  /* Botão primário: verde Mosaic real #1D625C, height 45px, radius 8px,
+     Barlow SemiBold 14px com letter-spacing 0.4px */
+  .btn-primary,
+  button.btn-primary,
+  .action-primary,
+  .v5-footer-actions .btn-primary,
+  .footer-actions .btn-primary,
+  .agendar-btn-primary {
+    background: var(--mosaic-green-800) !important;
+    border: 1px solid var(--mosaic-green-800) !important;
+    color: #fff !important;
+    height: 45px !important;
+    padding: 0 24px !important;
+    border-radius: 8px !important;
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    letter-spacing: 0.4px !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.04) !important;
+    transition: filter .15s, box-shadow .15s, transform .05s;
+  }
+  .btn-primary:hover,
+  button.btn-primary:hover {
+    filter: brightness(1.08) !important;
+    box-shadow: 0 2px 8px rgba(29,98,92,0.25) !important;
+  }
+  .btn-primary:focus-visible {
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(29,98,92,0.30) !important;
+  }
+
+  /* Inputs: 44px, border #BFD0CE, radius 5px, shadow sutil, fonte Barlow */
+  input[type="text"], input[type="search"], input[type="number"],
+  input[type="date"], input[type="email"], select, textarea {
+    font-family: "Barlow", sans-serif !important;
+  }
+  .global-search input,
+  .filter-input,
+  input.search-input {
+    border: 1px solid var(--md-border-input) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--md-shadow-input) !important;
+  }
+
+  /* Asterisco required em vermelho SLDS #C23934 */
+  .req-asterisk, .required-mark, .field-required, label .req {
+    color: var(--md-red-required) !important;
+  }
+
+  /* Page title: Barlow Bold 26px line-height 1, color verde escuro (igual portal) */
+  .page-title {
+    font-family: "Barlow", sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 30px !important;
+    line-height: 1.1 !important;
+    color: var(--mosaic-green-900) !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  /* Demo banner sutil no topo (não vai pra produção) */
+  .v4-banner {
+    background: var(--mosaic-green-900);
+    color: #fff;
+    font-family: "Barlow", sans-serif;
+    font-size: 13px;
+    padding: 10px 32px;
+    display: flex; gap: 12px; align-items: center;
+  }
+  .v4-banner .tag {
+    background: #fff; color: var(--mosaic-green-900);
+    font-weight: 700; padding: 2px 8px; border-radius: 10px; font-size: 11px;
+  }
+  .v4-banner code {
+    background: rgba(255,255,255,0.15);
+    padding: 1px 6px; border-radius: 3px; font-size: 12px;
+  }
+
+  /* Logo Mosaic — substitui o SVG inline pelo PNG real via CSS background
+     em cima do .mosaic-logo (mantém o link, só troca o visual) */
+  .mosaic-logo {
+    background: url('mosaic-logo-real.png') no-repeat left center !important;
+    background-size: contain !important;
+    width: 170px !important; height: 56px !important;
+    text-indent: -9999px; overflow: hidden;
+  }
+  .mosaic-logo svg, .mosaic-logo img, .mosaic-logo .logo-text,
+  .mosaic-logo .logo-shapes { display: none !important; }
+
+  /* No footer do site (que tem outro logo no rodapé), também aplicar PNG */
+  footer .mosaic-logo, .mosaic-footer .mosaic-logo {
+    background: url('mosaic-logo-real.png') no-repeat left center !important;
+    background-size: contain !important;
+    width: 150px !important; height: 50px !important;
+  }
+</style>
+
 </head>
 <body>
+
+<div class="v4-banner">
+  <span class="tag">v4 · MOSAIC REAL</span>
+  <span><strong>Agendar Contrato Normal</strong> — versão funcional 100%: todas as colunas, todos os filtros do drawer, todo o fluxo do original preservados. Só o <strong>estilo visual</strong> foi atualizado pro padrão capturado do portal de produção (Barlow + cores reais + classes SLDS + logo PNG original).</span>
+</div>
 
 
 
@@ -4971,17 +4544,17 @@
       <a href="index.html" class="nav-item">Home</a>
       <a href="#" class="nav-item">Produtos</a>
       <a href="#" class="nav-item">Cotações</a>
-      <span class="nav-item is-active" tabindex="0">
+      <span class="nav-item" tabindex="0">
         Contratos<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
-          <a href="criar-protocolo.html" class="is-active">Criar Protocolo</a>
+          <a href="criar-protocolo.html">Criar Protocolo</a>
           <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
         </div>
       </span>
-      <span class="nav-item" tabindex="0">
+      <span class="nav-item is-active" tabindex="0">
         Agendamento<span class="chev" aria-hidden="true"></span>
         <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-contrato-normal.html" class="is-active">Agendar Contratos Normais</a>
           <a href="agendar-protocolo.html">Agendar Protocolo</a>
           <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
         </div>
@@ -5002,14 +4575,14 @@
   <div class="breadcrumbs">
     <a href="#">Home</a>
     <span class="sep">›</span>
-    <a href="#">Contratos</a>
+    <a href="#">Agendamento</a>
     <span class="sep">›</span>
-    <span class="current">Criar Protocolo</span>
+    <span class="current">Agendar Contratos Normais</span>
   </div>
 
   <div class="title-row">
-    <h1 class="page-title">Criar Protocolo(s)</h1>
-    <div>
+    <h1 class="page-title">Agendar Contratos Normais</h1>
+    <div style="display:flex;align-items:center;gap:0;">
       <div class="view-toggle" id="viewToggle" role="tablist" aria-label="Visualização">
         <button data-view="cards" type="button" class="is-active" role="tab" aria-selected="true">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -5020,7 +4593,7 @@
           Tabela
         </button>
       </div>
-      <div class="cards-layout-toggle" id="cardsLayoutToggle" role="tablist" aria-label="Disposição dos cards" hidden style="display:none !important;">
+      <div class="cards-layout-toggle" id="cardsLayoutToggle" role="tablist" aria-label="Disposição dos cards">
         <button data-layout="list" type="button" class="is-active" role="tab" aria-selected="true" title="Cards em lista">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
           Lista
@@ -5033,18 +4606,14 @@
     </div>
   </div>
 
-  <div class="action-row action-row--protocol">
+  <div class="action-row">
     <div>
       <div class="action-label">Selecionar contrato(s)</div>
-      <div class="action-help">Pesquise pelos contratos e itens para criação de protocolos.</div>
+      <div class="action-help">Clique no botão ao lado para escolher contratos para agendar.</div>
     </div>
     <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       Selecionar contratos
-    </button>
-    <button class="btn btn-secondary btn-with-icon btn-cadastrar-coop" id="openCadastrarCoopBtn" type="button">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
-      Cadastrar Cooperado
     </button>
   </div>
 
@@ -5053,8 +4622,8 @@
     <!-- Rendered by JS -->
   </div>
 
-  <!-- Sticky summary footer (inner wrapper acompanha max-width da page) -->
-  <div class="summary-footer summary-footer--centered" id="summaryFooter">
+  <!-- Sticky summary footer (inner wrap acompanha max-width da page) -->
+  <div class="summary-footer" id="summaryFooter">
     <div class="summary-footer-inner">
       <div class="summary-stats">
         <div class="summary-stat">
@@ -5066,13 +4635,13 @@
           <span class="value" id="statVolume">0<span class="unit">t</span></span>
         </div>
         <div class="summary-stat">
-          <span class="label">Prontos para Criar</span>
+          <span class="label">Prontos para Agendar</span>
           <span class="value" id="statReady">0/0</span>
         </div>
       </div>
       <div class="summary-actions">
         <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
-        <button class="btn btn-primary" id="agendarBtn" disabled>Criar Protocolo(s)</button>
+        <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
       </div>
     </div>
   </div>
@@ -5091,7 +4660,7 @@
     </span>
     <div class="titles">
       <h3 id="drawerTitle">Selecionar contratos</h3>
-      <div class="subtitle">Escolha um ou mais contratos para adicionar à criação de protocolos.</div>
+      <div class="subtitle">Escolha um ou mais contratos para adicionar ao agendamento.</div>
     </div>
     <button class="close-x" data-close-drawer aria-label="Fechar">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -5226,7 +4795,7 @@
 <div class="modal-backdrop" id="cancelModal">
   <div class="modal modal-confirm-v2 modal-confirm-v2--warn" role="dialog" aria-modal="true" aria-labelledby="cancelTitle">
     <div class="confirm-v2-header">
-      <h3 id="cancelTitle">Cancelar criação de protocolos</h3>
+      <h3 id="cancelTitle">Cancelar agendamentos</h3>
       <button class="confirm-v2-close" data-close="cancelModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5239,7 +4808,7 @@
           <circle cx="12" cy="17.5" r="0.5" fill="currentColor"/>
         </svg>
       </div>
-      <p class="confirm-v2-text">Você está prestes a <strong>cancelar a criação de todos os protocolos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
+      <p class="confirm-v2-text">Você está prestes a <strong>cancelar todos os agendamentos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
       <div class="confirm-v2-actions">
         <button class="btn btn-secondary" data-close="cancelModal" type="button">Voltar</button>
         <button class="btn btn-danger" id="cancelConfirm" type="button">Sim, cancelar agendamentos</button>
@@ -5255,7 +4824,7 @@
 <div class="modal-backdrop" id="submitModal">
   <div class="modal modal-confirm-v2" role="dialog" aria-modal="true" aria-labelledby="submitTitle">
     <div class="confirm-v2-header">
-      <h3 id="submitTitle">Confirmar criação de protocolos</h3>
+      <h3 id="submitTitle">Confirmar agendamento</h3>
       <button class="confirm-v2-close" data-close="submitModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5267,11 +4836,11 @@
           <path d="m9 12 2 2 4-4"/>
         </svg>
       </div>
-      <p class="confirm-v2-text">Você está prestes a criar todos os seus protocolos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <p class="confirm-v2-text">Você está prestes a enviar todos os seus agendamentos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
       <div class="confirm-v2-summary" id="submitSummary"></div>
       <div class="confirm-v2-actions">
         <button class="btn btn-secondary" data-close="submitModal" type="button">Voltar</button>
-        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar criação</button>
+        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar e enviar</button>
       </div>
     </div>
   </div>
@@ -5284,7 +4853,7 @@
 <div class="modal-backdrop" id="successModal">
   <div class="modal modal-confirm-v2" role="dialog" aria-modal="true" aria-labelledby="successTitle">
     <div class="confirm-v2-header">
-      <h3 id="successTitle">Protocolos criados</h3>
+      <h3 id="successTitle">Agendamentos enviados</h3>
       <button class="confirm-v2-close" data-close="successModal" aria-label="Fechar">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -5296,10 +4865,10 @@
           <polyline points="8 12.5 11 15.5 16 9.5"/>
         </svg>
       </div>
-      <p class="confirm-v2-text"><strong>Seus protocolos foram criados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Protocolos.</p>
+      <p class="confirm-v2-text"><strong>Seus agendamentos foram enviados com sucesso.</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
       <div class="confirm-v2-actions confirm-v2-actions--stack">
-        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Protocolos</button>
-        <button class="btn btn-secondary" id="successNew" type="button">Agendar Protocolos</button>
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar novos contratos</button>
       </div>
     </div>
   </div>
@@ -5332,180 +4901,6 @@
 </aside>
 
 
-
-<!-- COOP DRAWER -->
-<div class="drawer-backdrop" id="coopDrawerBackdrop"></div>
-<aside class="drawer" id="coopDrawer" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="drawer-header">
-    <span class="modal-icon" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
-    </span>
-    <div class="titles">
-      <h3>Selecionar cooperado</h3>
-      <div class="subtitle">Escolha o cooperado para este protocolo.</div>
-    </div>
-    <button class="close-x" data-close-coop-drawer type="button" aria-label="Fechar">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    </button>
-  </div>
-  <div class="drawer-search">
-    <div class="drawer-search-wrap">
-      <span class="icon-left" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      </span>
-      <input type="text" id="coopDrawerSearch" placeholder="Buscar por nome, CPF/CNPJ ou fazenda…" autocomplete="off" />
-    </div>
-    <button class="btn btn-secondary btn-with-icon" id="coopDrawerCadastrarBtn" type="button" style="margin-top:10px; width:100%; justify-content:center;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      Cadastrar novo cooperado
-    </button>
-  </div>
-  <div class="drawer-body coop-drawer-list" id="coopDrawerList"></div>
-  <div class="drawer-footer">
-    <button class="btn btn-secondary" data-close-coop-drawer type="button">Cancelar</button>
-    <button class="btn btn-primary" id="coopDrawerSelect" type="button" disabled>Selecionar</button>
-  </div>
-</aside>
-
-
-<!-- CAD COOP MODAL -->
-<!-- CAD COOP DRAWER (side-drawer, V5-style) -->
-<div class="modal-backdrop" id="cadCoopBackdrop">
-  <div class="modal modal-cad-coop" id="cadCoopDrawer" role="dialog" aria-modal="true" aria-labelledby="cadCoopTitle" aria-hidden="true">
-    <div class="cad-coop-header">
-      <h3 id="cadCoopTitle">Adicionar novo cliente</h3>
-      <button class="cad-coop-close" data-close-cad-coop-drawer aria-label="Fechar" type="button">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      </button>
-    </div>
-
-    <div class="cad-coop-body">
-      <div class="cad-coop-grid">
-        <!-- Row 1 -->
-        <div class="cad-coop-field" data-field="tipo">
-          <label><span class="req">*</span>Tipo de cliente</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopTipo">
-              <option value="">Tipo de cliente</option>
-              <option value="PF">Pessoa Física</option>
-              <option value="PJ">Pessoa Jurídica</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">Tipo de cliente é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="nome">
-          <label><span class="req">*</span>Nome do agricultor</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopNome" placeholder="Nome do agricultor" />
-          </div>
-          <div class="cad-coop-err">Nome do agricultor é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="telefone">
-          <label>Telefone de contato</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopTelefone" placeholder="Telefone de contato" />
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div class="cad-coop-field" data-field="email">
-          <label>E-mail de contato</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEmail" placeholder="E-mail de contato" />
-          </div>
-        </div>
-        <div class="cad-coop-field" data-field="rua">
-          <label><span class="req">*</span>Rua</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEndereco" placeholder="Rua" />
-          </div>
-          <div class="cad-coop-err">Rua é necessário</div>
-        </div>
-        <div class="cad-coop-field"><!-- spacer --></div>
-
-        <!-- Row 3 -->
-        <div class="cad-coop-field" data-field="cep">
-          <label><span class="req">*</span>Código Postal</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopCEP" inputmode="numeric" maxlength="9" placeholder="Código Postal" />
-          </div>
-          <div class="cad-coop-err">Código Postal é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="end2">
-          <label>Linha de endereço 2 (opcional)</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopEnd2" placeholder="Linha de endereço 2 (opcional)" />
-          </div>
-        </div>
-        <div class="cad-coop-field" data-field="cidade">
-          <label><span class="req">*</span>Cidade</label>
-          <div class="cad-coop-input">
-            <input type="text" id="cadCoopCidade" placeholder="Cidade" />
-          </div>
-          <div class="cad-coop-err">Cidade é necessário</div>
-        </div>
-
-        <!-- Row 4 -->
-        <div class="cad-coop-field" data-field="pais">
-          <label><span class="req">*</span>País</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopPais">
-              <option value="">País</option>
-              <option value="Brasil">Brasil</option>
-              <option value="Argentina">Argentina</option>
-              <option value="Paraguai">Paraguai</option>
-              <option value="Uruguai">Uruguai</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">País é necessário</div>
-        </div>
-        <div class="cad-coop-field" data-field="estado">
-          <label><span class="req">*</span>Estado/Província</label>
-          <div class="cad-coop-input">
-            <select id="cadCoopEstado">
-              <option value="">Estado/Província</option>
-              <option>SP</option><option>MG</option><option>RJ</option><option>PR</option><option>RS</option>
-              <option>SC</option><option>BA</option><option>GO</option><option>MT</option><option>MS</option>
-              <option>DF</option><option>ES</option><option>PA</option><option>AM</option><option>CE</option>
-            </select>
-          </div>
-          <div class="cad-coop-err">Estado/Província é necessário</div>
-        </div>
-        <div class="cad-coop-field"><!-- spacer --></div>
-
-        <!-- Row 5 -->
-        <div class="cad-coop-field full" data-field="roteiro">
-          <label>Instruções de entrega (opcional)</label>
-          <div class="cad-coop-input">
-            <textarea id="cadCoopRoteiro" placeholder=""></textarea>
-          </div>
-        </div>
-      </div>
-
-      <button class="btn btn-primary cad-coop-submit" id="cadCoopSalvar" type="button">Adicionar novo cliente</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- CAD COOP SUCCESS -->
-<div class="modal-backdrop" id="cadCoopSuccessModal">
-  <div class="modal modal-confirm-v2" style="max-width: 380px;">
-    <div class="confirm-v2-body" style="padding-top:32px; text-align:center;">
-      <div class="confirm-v2-icon confirm-v2-icon--success" style="margin: 0 auto 18px;" aria-hidden="true">
-        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
-          <polyline points="8 12.5 11 15.5 16 9.5"/>
-        </svg>
-      </div>
-      <p class="confirm-v2-text" style="text-align:center;"><strong>Cadastro realizado com sucesso!</strong></p>
-      <div class="confirm-v2-actions" style="justify-content:center;">
-        <button class="btn btn-primary" data-close="cadCoopSuccessModal" type="button" style="min-width: 140px;">Fechar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ===================================================================
    DATA: contracts in the advanced-search results
@@ -5533,23 +4928,6 @@ const ROTEIRO_SHORT = "Lorem Impsum Lorem Impsum Lorem Impsum";
 /* ===================================================================
    STATE
    =================================================================== */
-const COOPERADOS = [
-  { id: "C001", nome: "AGUINADO GOMES",  ie: "785.208.958.045", doc: "618.281.300-87",     fazenda: "FAZENDA 132",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C002", nome: "BETO DOS SANTOS", ie: "265.346.809.516", doc: "922.915.570-50",     fazenda: "FAZENDA 846",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C003", nome: "CARLOS ALVES",    ie: "877.714.770.605", doc: "488.722.440-05",     fazenda: "FAZENDA 0487", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C004", nome: "JORGE DOS ANJOS", ie: "712.865.870.640", doc: "61.906.309/0001-30", fazenda: "FAZENDA 493",  rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C005", nome: "RENATO CESAR",    ie: "118.299.922.567", doc: "40.908.039/0001-26", fazenda: "FAZENDA 0387", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-  { id: "C006", nome: "TEREZA AKEMI",    ie: "032.475.991.210", doc: "91.459.226/0001-00", fazenda: "FAZENDA 3284", rua: "ESTRADA MUNICIPAL SLT 170 SN", cidade: "LIMEIRA", uf: "SP", cep: "18440-000" },
-];
-
-const EMBALAGENS = [
-  "BagOneWay Liner 1,40",
-  "BagOneWay Liner 1,20",
-  "Saco PE 50kg",
-  "Granel",
-  "BigBag 1.000kg",
-];
-
 const state = {
   view: "empty",
   rows: [],
@@ -5559,7 +4937,7 @@ const state = {
   viewMode: "table",  // toggle Cards/Tabela removido — sempre tabela
   cardsLayout: (function() {
     try {
-      const saved = localStorage.getItem("mosaicCardsLayout");
+      const saved = "list" /* forced */;
       return saved === "grid" || saved === "list" ? saved : "list";
     } catch (_) { return "list"; }
   })(),
@@ -5601,16 +4979,10 @@ const ICON_DOT = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentC
 const ICON_WARN = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>`;
 
 function rowStatus(r) {
-  return protoRowStatus(r);
-}
-
-function protoRowStatus(r) {
-  const requiredFilled =
-    !!(r.cooperado && r.volumeDesejado && r.embalagemSelected && r.roteiro);
+  /* Roteiro is OPTIONAL — only volume + semana are required in V5 final */
+  const requiredFilled = !!(r.volume && r.semana);
   if (requiredFilled) return "complete";
-  const anyTouched = !!(r.cooperado || r.volumeDesejado || r.embalagemSelected ||
-                        r.roteiro || r.nfVendaNum || r.nfVendaData || r.precoVenda ||
-                        r.semana);
+  const anyTouched = !!(r.volume || r.semana || r.roteiro);
   return anyTouched ? "progress" : "incomplete";
 }
 
@@ -5619,10 +4991,8 @@ const ICON_CALENDAR = `<svg width="18" height="18" viewBox="0 0 24 24" fill="non
 
 function pendingFields(r) {
   const out = [];
-  if (!r.cooperado) out.push("Cooperado");
-  if (!r.volumeDesejado) out.push("Volume");
-  if (!r.embalagemSelected) out.push("Embalagem");
-  if (!r.roteiro) out.push("Roteiro");
+  if (!r.volume) out.push("Volume");
+  if (!r.semana) out.push("Semana");
   return out;
 }
 
@@ -5645,14 +5015,13 @@ function refreshHintV2() {
 }
 
 function renderCardsView() {
-  /* V2 — V5-style grouped cards for criar-protocolo */
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
     elBody.innerHTML = `
       <div class="cards-empty">
         <strong>Nenhum contrato selecionado</strong>
-        Use o botão "Selecionar contratos" para começar a criação dos protocolos.
+        Use o campo de busca acima para adicionar contratos ao agendamento.
       </div>`;
     elAgendar.disabled = true;
     updateSummary();
@@ -5661,7 +5030,7 @@ function renderCardsView() {
   }
 
   /* Group rows by contract code, preserving insertion order */
-  const groups = [];
+  const groups = []; // [{ contrato, items: [{idx, row}] }, ...]
   const groupIndex = new Map();
   state.rows.forEach((r, idx) => {
     let g = groupIndex.get(r.contrato);
@@ -5673,159 +5042,145 @@ function renderCardsView() {
     g.items.push({ idx, row: r });
   });
 
-  const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
-  const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
-  const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
-  const ICON_SEARCH = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`;
-  const ICON_EXPAND = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
-  const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-  const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
-
   const list = document.createElement("div");
-  list.className = "cards-list layout-list";
+  list.className = `cards-list layout-list`;
 
-  groups.forEach(group => {
+  groups.forEach((group, gIdx) => {
+    /* Use the first item to derive contract-level info */
     const first = group.items[0].row;
-    const allComplete = group.items.every(i => protoRowStatus(i.row) === "complete");
-    const anyTouched = group.items.some(i => i.row.cooperado || i.row.volumeDesejado || i.row.embalagemSelected || i.row.roteiro);
+    /* Determine if all items share the same frete (for header badge) */
+    const allSameFrete = group.items.every(i => i.row.frete === first.frete);
+
+    /* Card group status — rolls up from items */
+    const allComplete = group.items.every(i => rowStatus(i.row) === "complete");
+    const anyTouched = group.items.some(i => i.row.volume || i.row.semana || i.row.roteiro);
     const groupStatus = allComplete ? "complete" : (anyTouched ? "progress" : "incomplete");
+
+    /* Find available items for this contract (not yet in state.rows) */
+    const availableItems = SEARCH_RESULTS.filter(s =>
+      s.contrato === group.contrato &&
+      !state.rows.some(r => r.contrato === s.contrato && r.item === s.item)
+    );
 
     const card = document.createElement("article");
     card.className = `contract-card v5-card is-${groupStatus}`;
     card.setAttribute("data-contract", group.contrato);
 
+    /* Header: contract identifier + shared info + delete contract action */
     const headerHTML = `
       <header class="card-head v5-card-head">
         <span class="v5-level-tag">Contrato</span>
-        <span class="card-contract">${first.contrato}</span>
+        <span class="card-contract">${group.contrato}</span>
         <span class="v5-head-divider"></span>
         <span class="v5-head-inline"><span class="v5-meta-label">Ref.</span><strong>${first.refCliente}</strong></span>
         <span class="v5-head-divider"></span>
         <span class="v5-head-inline"><span class="v5-meta-label">Vigência</span><strong>${first.dataInicio}</strong><span class="arrow">→</span><strong>${first.dataFim}</strong></span>
         <span class="v5-item-count">${group.items.length} ${group.items.length === 1 ? 'item' : 'itens'}</span>
+        <button class="card-action-icon danger v5-head-remove" data-action="remove-contract" data-contract="${group.contrato}" title="Remover contrato inteiro" aria-label="Remover contrato">${ICON_TRASH}</button>
       </header>`;
 
+    /* For each item: a row with item info + inputs + per-item actions */
     const itemsHTML = group.items.map(({ idx, row: r }) => {
-      const status = protoRowStatus(r);
+      const status = rowStatus(r);
       const isCIF = r.frete === "CIF";
-      const missCoop = !r.cooperado;
-      const missVolume = !r.volumeDesejado;
-      const missEmb = !r.embalagemSelected;
-      const missRoteiro = !r.roteiro;
-      const coopName = r.cooperado ? r.cooperado.nome : "";
-      const coopPendingBadge = r.cooperado && isCoopPending(r.cooperado)
-        ? '<span class="coop-pending-tag" title="Cadastro aguardando aprovação">Pendente</span>'
-        : '';
-      const maxVol = parseFloat((r.saldo || '0').toString().replace(/\./g,'').replace(',','.'));
+      const missVolume = !r.volume;
+      const missSemana = !r.semana;
+      const missRoteiro = isCIF && !r.roteiro;
 
       return `
         <div class="v5-item-row is-${status}" data-row="${idx}">
           <div class="v5-item-info">
-            <div class="v5-item-cell-stacks">
-              <div class="cell-stack cell-stack--produto">
-                <div class="v5-cell-tags-col">
-                  <span class="v5-level-tag v5-level-tag--item">Item ${r.item}</span>
-                  <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
-                </div>
-                <div class="v5-cell-produto-body">
-                  <div class="stack-primary cell-strong">${r.produto}</div>
-                  <div class="stack-secondary">${r.embalagem}</div>
-                  <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
-                </div>
-              </div>
-              <div class="cell-stack">
-                <div class="v5-cell-saldo">${r.saldo}<span class="unit">t</span></div>
-                <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
-                <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
-              </div>
+            <div class="v5-item-line v5-item-line--top">
+              <span class="v5-level-tag v5-level-tag--item">Item</span>
+              <span class="v5-item-id">${r.item}</span>
+              <span class="badge badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
+              <span class="v5-item-product" title="${r.produto}">${r.produto}</span>
+            </div>
+            <div class="v5-item-line v5-item-line--bottom">
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Embalagem</span><strong>${r.embalagem}</strong></span>
+              <span class="v5-meta-sep">·</span>
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Rota</span><strong>${r.planta}</strong><span class="arrow">→</span>${r.enviarPara}</span>
+              <span class="v5-meta-sep">·</span>
+              <span class="v5-item-meta-piece"><span class="v5-meta-label">Saldo</span><span class="v5-item-saldo">${r.saldo}<span class="unit">t</span></span></span>
             </div>
           </div>
 
           <div class="v5-item-fields">
-            <div class="field-block ${missCoop ? 'is-missing' : ''}">
-              <label>Cooperado <span class="req">*</span></label>
-              <button class="v5-coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
-                <span class="coop-text">${coopName || 'Selecionar'}${coopPendingBadge}</span>
-                ${ICON_SEARCH}
-              </button>
-            </div>
             <div class="field-block ${missVolume ? 'is-missing' : ''}">
               <label>Volume <span class="req">*</span></label>
               <div class="input-with-suffix">
                 <input type="text" inputmode="decimal"
-                       value="${r.volumeDesejado ?? ''}"
+                       value="${r.volume ?? ''}"
                        placeholder="0,00"
-                       data-row="${idx}" data-field="volumeDesejado" />
+                       data-row="${idx}" data-field="volume" />
                 <span class="suffix">t</span>
               </div>
             </div>
-            <div class="field-block ${missEmb ? 'is-missing' : ''}">
-              <label>Embalagem <span class="req">*</span></label>
-              <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-                <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-                ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-              </select>
+            <div class="field-block ${missSemana ? 'is-missing' : ''}">
+              <label>Semana <span class="req">*</span></label>
+              <div class="card-date-wrap" data-row="${idx}">
+                <input type="text"
+                       class="card-date-input"
+                       value="${r.semana || ''}"
+                       placeholder="DD/MM/AAAA"
+                       data-row="${idx}" data-field="semana"
+                       readonly />
+                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CALENDAR}</button>
+              </div>
             </div>
-            <div class="field-block field-block--roteiro-btn ${missRoteiro ? 'is-missing' : ''}">
-              <label>Roteiro <span class="req">*</span></label>
-              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-action="open-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
-                <span class="roteiro-toggle-text">${r.roteiro ? r.roteiro.substring(0, 36) + (r.roteiro.length > 36 ? '…' : '') : 'Adicionar roteiro'}</span>
+            <div class="field-block field-block--roteiro-btn">
+              <label>Roteiro <span class="opt-tag">Opc.</span></label>
+              <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''}" data-row="${idx}" type="button" aria-label="Adicionar roteiro" title="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
+                <span class="roteiro-toggle-text">${r.roteiro ? r.roteiro.substring(0, 40) + (r.roteiro.length > 40 ? '…' : '') : 'Adicionar roteiro'}</span>
                 <svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>
               </button>
             </div>
           </div>
 
           <div class="v5-item-actions">
-            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar item" type="button">${ICON_DUP}</button>
-            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover item" type="button">${ICON_DEL}</button>
-          </div>
-
-          <div class="v5-item-extra">
-            <div class="field-block">
-              <label>Nº NF Venda <span class="opt-tag">opc.</span></label>
-              <input type="text" inputmode="numeric"
-                     value="${r.nfVendaNum ?? ''}"
-                     placeholder="—"
-                     data-row="${idx}" data-field="nfVendaNum" />
-            </div>
-            <div class="field-block">
-              <label>Data NF Venda <span class="opt-tag">opc.</span></label>
-              <div class="card-date-wrap" data-row="${idx}">
-                <input type="text" class="card-date-input"
-                       value="${r.nfVendaData || ''}"
-                       placeholder="DD/MM/AAAA"
-                       data-row="${idx}" data-field="nfVendaData" readonly />
-                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-              </div>
-            </div>
-            <div class="field-block">
-              <label>Preço/Ton <span class="opt-tag">opc.</span></label>
-              <div class="v5-money-wrap">
-                <span class="prefix">R$</span>
-                <input type="text" inputmode="decimal"
-                       value="${r.precoVenda ?? ''}"
-                       placeholder="0,00"
-                       data-row="${idx}" data-field="precoVenda" />
-              </div>
-            </div>
-            <div class="field-block">
-              <label>Semana desejada</label>
-              <div class="card-date-wrap" data-row="${idx}">
-                <input type="text" class="card-date-input"
-                       value="${r.semana || ''}"
-                       placeholder="DD/MM/AAAA"
-                       data-row="${idx}" data-field="semana" readonly />
-                <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-              </div>
-            </div>
+            <button class="card-action-icon" data-action="duplicate" data-row="${idx}" title="Duplicar item">${ICON_DUPLICATE}</button>
+            <button class="card-action-icon danger" data-action="remove" data-row="${idx}" title="Remover item">${ICON_TRASH}</button>
           </div>
         </div>
       `;
     }).join("");
 
-    /* Footer "Todos os itens prontos" removido (sem valor visual, ocupava espaco).
-       Status do grupo ja transparece via border-left colorida do card. */
-    card.innerHTML = headerHTML + `<div class="v5-items-list">${itemsHTML}</div>`;
+    /* "+ Adicionar item" picker for the same contract */
+    const addItemHTML = availableItems.length > 0
+      ? `
+        <div class="v5-add-item">
+          <button class="v5-add-item-btn" data-action="open-add-item" data-contract="${group.contrato}" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar outro item de ${group.contrato}
+            <span class="v5-add-item-count">${availableItems.length} disponível${availableItems.length > 1 ? 'eis' : ''}</span>
+          </button>
+          <div class="v5-add-item-popover" id="addItemPop-${group.contrato.replace(/[^a-zA-Z0-9]/g, '')}" data-contract="${group.contrato}">
+            <div class="v5-popover-header">Itens disponíveis em ${group.contrato}</div>
+            ${availableItems.map(av => `
+              <button class="v5-popover-item" data-action="add-item" data-contract="${av.contrato}" data-item="${av.item}" type="button">
+                <span class="v5-popover-item-id">Item ${av.item}</span>
+                <span class="v5-popover-item-saldo">${av.saldo} t</span>
+                <span class="v5-popover-item-frete badge badge--${av.frete === 'CIF' ? 'cif' : 'fob'}">${av.frete}</span>
+              </button>
+            `).join("")}
+          </div>
+        </div>`
+      : '';
+
+    /* Group status footer */
+    const pending = group.items.reduce((sum, i) => sum + pendingFields(i.row).length, 0);
+    const groupFooterHTML = groupStatus === "complete"
+      ? `<div class="card-status card-status--complete">${ICON_CHECK} Todos os itens prontos para agendar</div>`
+      : `<div class="card-status card-status--incomplete">${ICON_WARN} ${pending} ${pending === 1 ? 'pendência' : 'pendências'} neste contrato</div>`;
+
+    card.innerHTML = headerHTML + `
+      <div class="v5-items-list">
+        ${itemsHTML}
+      </div>
+      ${addItemHTML}
+      ${groupFooterHTML}
+    `;
+
     list.appendChild(card);
   });
 
@@ -5833,97 +5188,82 @@ function renderCardsView() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
-  refreshAllValidations();
+  refreshSemanaValidation();
 }
 
 /* No longer needed in v2 — kept as no-op for compatibility */
 function upgradeTableForInputs() {}
 
-function canAgendar() {
-  if (state.rows.length === 0) return false;
-  return state.rows.every(r => rowStatus(r) === "complete" && !rowHasInvalid(r));
-}
-
-function parseBRNumber(s) {
-  if (s == null || s === "") return 0;
-  const n = parseFloat(String(s).replace(/\./g, "").replace(",", "."));
-  return isNaN(n) ? 0 : n;
-}
-
-function sumVolumeDesejado() {
-  return state.rows.reduce((sum, r) => sum + parseBRNumber(r.volumeDesejado), 0);
-}
-
-/* DD/MM/YYYY -> Date (00:00 local). Retorna null se invalido. */
-function brDateToDate(br) {
+/* Validation: Semana nao pode ser passada */
+function brDateToDateV5(br) {
   if (!br) return null;
   const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
   if (!m) return null;
   return new Date(+m[3], +m[2] - 1, +m[1]);
 }
-function todayStart() {
-  const t = new Date();
-  t.setHours(0, 0, 0, 0);
-  return t;
+function todayStartV5() {
+  const t = new Date(); t.setHours(0, 0, 0, 0); return t;
 }
-
-/* Validations:
-   - Grupo NF (nfVendaNum, nfVendaData, precoVenda): se um preenchido, os outros tres viram obrigatorios
-   - nfVendaData: nao pode ser futura
-   - precoVenda: deve ser > 0 quando preenchido
-   - semana: nao pode ser passada
-   Retorna { field: msg } pra cada problema. */
-function rowValidationErrors(r) {
-  const errs = {};
-  const numFilled   = !!(r.nfVendaNum && String(r.nfVendaNum).trim());
-  const dataFilled  = !!(r.nfVendaData && String(r.nfVendaData).trim());
-  const precoVal    = parseBRNumber(r.precoVenda);
-  const precoFilled = precoVal > 0 || (r.precoVenda && String(r.precoVenda).trim() !== "");
-  const anyFilled   = numFilled || dataFilled || precoFilled;
-  if (anyFilled) {
-    if (!numFilled)   errs.nfVendaNum  = "Preencha o Nº NF Venda";
-    if (!dataFilled)  errs.nfVendaData = "Preencha a Data NF Venda";
-    if (precoVal <= 0) errs.precoVenda = "Preço deve ser maior que 0";
-  }
-  if (dataFilled) {
-    const d = brDateToDate(r.nfVendaData);
-    if (d && d > todayStart()) errs.nfVendaData = "Data da NF não pode ser futura";
-  }
-  if (r.semana && String(r.semana).trim()) {
-    const d = brDateToDate(r.semana);
-    if (d && d < todayStart()) errs.semana = "Semana desejada não pode ser passada";
-  }
-  return errs;
+function rowInvalidSemana(r) {
+  if (!r.semana) return false;
+  const d = brDateToDateV5(r.semana);
+  return d && d < todayStartV5();
 }
-
-function rowHasInvalid(r) {
-  return Object.keys(rowValidationErrors(r)).length > 0;
-}
-
-/* Aplica classe .is-invalid nos inputs conforme rowValidationErrors */
-function refreshRowValidation(idx) {
-  const r = state.rows[idx];
-  if (!r) return;
-  const errs = rowValidationErrors(r);
-  ["nfVendaNum", "nfVendaData", "precoVenda", "semana"].forEach(field => {
-    document.querySelectorAll(`[data-row="${idx}"][data-field="${field}"]`).forEach(el => {
-      const wrap = el.closest('.v5-money-wrap, .v5-date-wrap, .input-with-suffix, .proto-money-wrap, .proto-date-wrap, .card-date-wrap') || el;
-      const bad = !!errs[field];
+function refreshSemanaValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll(`[data-row="${idx}"][data-field="semana"]`).forEach(el => {
+      const wrap = el.closest('.card-date-wrap, .v3-date-wrap, .v3-cell-volume-wrap') || el;
+      const bad = rowInvalidSemana(r);
       wrap.classList.toggle('is-invalid', bad);
       el.classList.toggle('is-invalid', bad);
-      el.title = errs[field] || "";
+      el.title = bad ? "Semana desejada não pode ser uma data passada" : "";
     });
   });
 }
-function refreshAllValidations() {
-  state.rows.forEach((_, idx) => refreshRowValidation(idx));
+
+/* Volume <= Saldo individual (US "Individual Row Balance") + soma por contrato (US "Aggregated Balance") */
+function parseBR(s) { if (!s) return 0; const n = parseFloat(String(s).replace(/\./g,'').replace(',','.')); return isNaN(n) ? 0 : n; }
+function rowVolumeExceeds(r) {
+  const vol = parseBR(r.volume);
+  const saldo = parseBR(r.saldo);
+  return vol > 0 && vol > saldo;
+}
+function contractAggregateExceeds(contrato) {
+  const rowsOfContrato = state.rows.filter(r => r.contrato === contrato);
+  if (rowsOfContrato.length === 0) return false;
+  const totalVol = rowsOfContrato.reduce((s, r) => s + parseBR(r.volume), 0);
+  const saldoMax = parseBR(rowsOfContrato[0].saldo);
+  return totalVol > saldoMax;
+}
+function rowInvalidVolume(r) { return rowVolumeExceeds(r) || contractAggregateExceeds(r.contrato); }
+function refreshVolumeValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll(`[data-row="${idx}"][data-field="volume"]`).forEach(el => {
+      const wrap = el.closest('.input-with-suffix, .v3-cell-volume-wrap') || el;
+      const indiv = rowVolumeExceeds(r);
+      const agg = contractAggregateExceeds(r.contrato);
+      const bad = indiv || agg;
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = indiv ? `Volume excede o saldo (${r.saldo} t)` :
+                 agg   ? `Soma de volumes do contrato ${r.contrato} excede o saldo` : "";
+    });
+  });
+}
+
+function canAgendar() {
+  if (state.rows.length === 0) return false;
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r) && !rowInvalidVolume(r));
 }
 
 function updateSummary() {
-  const totalVolume = sumVolumeDesejado();
+  const totalVolume = state.rows.reduce((sum, r) => {
+    const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
+    return sum + (isNaN(v) ? 0 : v);
+  }, 0);
   const ready = state.rows.filter(r => rowStatus(r) === "complete").length;
   document.getElementById("statContracts").textContent = state.rows.length;
-  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})}<span class="unit">t</span>`;
+  document.getElementById("statVolume").innerHTML = `${totalVolume.toLocaleString('pt-BR')}<span class="unit">t</span>`;
   document.getElementById("statReady").textContent = `${ready}/${state.rows.length || 0}`;
   document.getElementById("statReady").classList.toggle("muted", ready < state.rows.length);
 }
@@ -5988,10 +5328,9 @@ document.getElementById("cardsLayoutToggle").addEventListener("click", e => {
 });
 
 function refreshLayoutToggleVisibility() {
-  /* V2: Lista/Grid toggle removido — sempre escondido. */
   const tog = document.getElementById("cardsLayoutToggle");
   if (!tog) return;
-  tog.style.display = "none";
+  tog.style.display = state.viewMode === "cards" ? "inline-flex" : "none";
 }
 refreshLayoutToggleVisibility();
 /* Reflect persisted layout button state on load */
@@ -6039,7 +5378,7 @@ function renderDrawerList() {
   const q = (elDrawerSearch.value || "").trim().toLowerCase();
   elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
 
-  /* Ordenacao por End Date (dataFim) asc — alinha com V5 / US SMDP-131 */
+  /* US SMDP-131 Sorting: por End Date (dataFim) do mais antigo pro novo */
   const filtered = SEARCH_RESULTS
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => {
@@ -6177,24 +5516,20 @@ elDrawerSelectAll.addEventListener("click", () => {
 
 elDrawerAddBtn.addEventListener("click", () => {
   const indices = [...state.selectedInModal].sort((a, b) => a - b);
+  const wasEmpty = state.rows.length === 0;
   indices.forEach(i => {
     const r = SEARCH_RESULTS[i];
     if (!isAlreadyAdded(r)) {
-      state.rows.push({
-        ...r,
-        cooperado: null,
-        volumeDesejado: "",
-        embalagemSelected: r.embalagem || "",
-        roteiro: "",
-        nfVendaNum: "",
-        nfVendaData: "",
-        precoVenda: "",
-        semana: "",
-      });
+      state.rows.push({ ...r, volume: "", semana: "", roteiro: "" });
     }
   });
   state.selectedInModal.clear();
   closeDrawer();
+
+  /* Auto-collapse rule: only the first incomplete card is open;
+     everything else starts collapsed. */
+  collapseAllExceptFirstIncomplete();
+
   renderTable();
 });
 
@@ -6305,7 +5640,19 @@ elBuscaSel.addEventListener("click", () => {
 /* ===================================================================
    Workspace table — input + action wiring (event delegation)
    =================================================================== */
-/* Enter avanca pro proximo campo (preenchimento rapido). */
+function maskVolumeDecimal(input) {
+  let v = (input.value || "").replace(/[^\d,]/g, "");
+  const parts = v.split(",");
+  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
+  const segs = v.split(",");
+  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
+  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
+  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = segs.join(",");
+}
+
+/* Enter avanca pro proximo campo da MESMA linha (todas as telas).
+   Tab funciona naturalmente. Permite preenchimento rapido. */
 function focusNextFieldInRow(currentEl) {
   if (!currentEl) return;
   const tr = currentEl.closest("tr[data-row], [data-row]");
@@ -6325,7 +5672,7 @@ elBody.addEventListener("keydown", e => {
   if (e.key !== "Enter") return;
   const t = e.target;
   if (!t.matches || !t.matches("[data-field]")) return;
-  if (t.tagName === "TEXTAREA") return;
+  if (t.tagName === "TEXTAREA") return; /* deixa nova linha */
   e.preventDefault();
   focusNextFieldInRow(t);
 });
@@ -6333,6 +5680,8 @@ elBody.addEventListener("keydown", e => {
 elBody.addEventListener("input", e => {
   const t = e.target;
   if (!t.matches('[data-field]')) return;
+  /* Volume mask: format on input (pt-BR decimal) */
+  if (t.dataset.field === "volume") maskVolumeDecimal(t);
   const idx = parseInt(t.dataset.row, 10);
   const field = t.dataset.field;
   if (!state.rows[idx]) return;
@@ -6340,48 +5689,100 @@ elBody.addEventListener("input", e => {
   afterFieldChange(idx, t);
 });
 
-/* Auto-scroll horizontal: ao terminar de preencher um campo (change/blur),
-   scrolla o proximo campo da mesma linha pra dentro da viewport. */
-function scrollNextFieldIntoView(sourceEl) {
-  if (!sourceEl || !sourceEl.value) return;
-  const tr = sourceEl.closest("tr[data-row]");
-  if (!tr) return;
-  const fields = Array.from(tr.querySelectorAll("input[data-field], select[data-field], button[data-action='open-coop'], button[data-action='open-roteiro']"));
-  const i = fields.indexOf(sourceEl);
-  if (i === -1 || i >= fields.length - 1) return;
-  const next = fields[i + 1];
-  if (next) next.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-}
-elBody.addEventListener("change", e => {
-  const t = e.target;
-  if (!t.matches('[data-field]')) return;
-  setTimeout(() => scrollNextFieldIntoView(t), 30);
-});
-
 /* Lightweight update on each keystroke — never re-render the source
    element (would lose focus/cursor). Only update siblings that don't
    contain the active element. */
 function afterFieldChange(idx, sourceEl) {
-  refreshRowValidation(idx);
+  refreshSemanaValidation();
+  refreshVolumeValidation();
   elAgendar.disabled = !canAgendar();
   updateSummary();
+
   const r = state.rows[idx];
   if (!r) return;
+
+  /* Table-view path: update <tr> class and cell is-missing */
   const tr = sourceEl.closest("tr[data-row]");
-  if (!tr) return;
-  const newStatus = protoRowStatus(r);
-  tr.classList.remove("is-incomplete", "is-progress", "is-complete");
-  tr.classList.add(`is-${newStatus}`);
-  const dot = tr.querySelector(".v3-status-dot");
-  if (dot) dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
-  const td = sourceEl.closest("td");
-  if (td) {
-    const f = sourceEl.dataset.field;
-    const missing =
-      (f === "volumeDesejado" && !r.volumeDesejado) ||
-      (f === "embalagemSelected" && !r.embalagemSelected) ||
-      (f === "roteiro" && !r.roteiro);
-    td.classList.toggle("is-missing", !!missing);
+  if (tr) {
+    const newStatus = rowStatus(r);
+    tr.classList.remove("is-incomplete", "is-progress", "is-complete");
+    tr.classList.add(`is-${newStatus}`);
+
+    /* Update the status dot in the first cell */
+    const dot = tr.querySelector(".v3-status-dot");
+    if (dot) {
+      dot.className = `v3-status-dot v3-status-dot--${newStatus}`;
+    }
+
+    /* Update missing-state on the source cell */
+    const td = sourceEl.closest("td");
+    if (td) {
+      const fieldName = sourceEl.dataset.field;
+      const isCIF = r.frete === "CIF";
+      const missing = (fieldName === "volume" && !r.volume) ||
+                      (fieldName === "semana" && !r.semana) ||
+                      (fieldName === "roteiro" && isCIF && !r.roteiro);
+      td.classList.toggle("is-missing", !!missing);
+    }
+    /* Toggle is-empty on the date wrap so it switches between icon-only and
+       value-displayed visual states */
+    if (sourceEl.dataset.field === "semana") {
+      const wrap = sourceEl.closest(".v3-cell-date-wrap");
+      if (wrap) wrap.classList.toggle("is-empty", !r.semana);
+    }
+    /* Mark roteiro cell with has-text class for non-italic styling */
+    if (sourceEl.dataset.field === "roteiro") {
+      sourceEl.classList.toggle("has-text", !!r.roteiro);
+    }
+    return;
+  }
+
+  /* Card-view path */
+  const card = sourceEl.closest(".contract-card");
+  if (!card) return;
+
+  // Update the field wrapper's missing class (visual only — kicks in only
+  // once the user has tried to submit, gated by .show-validation on parent)
+  const fieldWrap = sourceEl.closest(".field-block");
+  if (fieldWrap) {
+    const fieldName = sourceEl.dataset.field;
+    const isCIF = r.frete === "CIF";
+    const missing = (fieldName === "volume" && !r.volume) ||
+                    (fieldName === "semana" && !r.semana) ||
+                    (fieldName === "roteiro" && isCIF && !r.roteiro);
+    fieldWrap.classList.toggle("is-missing", !!missing);
+  }
+
+  // Update card border state — 3 states: incomplete / progress / complete
+  const prevStatus = card.classList.contains("is-complete") ? "complete"
+                   : card.classList.contains("is-progress") ? "progress"
+                   : "incomplete";
+  const newStatus = rowStatus(r);
+  card.classList.remove("is-incomplete", "is-progress", "is-complete");
+  card.classList.add(`is-${newStatus}`);
+
+  // Status footer & collapsed summary live OUTSIDE the action zone, so we
+  // can safely update them without touching the active input.
+  updateCardStatusFooter(card, r);
+  updateCardCollapsedSummary(card, r);
+
+  /* Auto-collapse on completion → auto-expand the next incomplete card */
+  if (prevStatus !== "complete" && newStatus === "complete") {
+    setTimeout(() => {
+      // Sometimes the user is still typing in the field; only auto-collapse
+      // if they're not currently focused on it
+      if (document.activeElement === sourceEl) return;
+      autoAdvanceFromCard(idx);
+    }, 250);
+    /* Also listen for blur — if they tab/click away and it's still complete,
+       advance immediately */
+    sourceEl.addEventListener("blur", function onBlur() {
+      sourceEl.removeEventListener("blur", onBlur);
+      const r2 = state.rows[idx];
+      if (r2 && rowStatus(r2) === "complete") {
+        autoAdvanceFromCard(idx);
+      }
+    }, { once: true });
   }
 }
 
@@ -6429,17 +5830,13 @@ function renderTable() {
 }
 
 function renderTableView() {
-  renderProtocolTable();
-}
-
-function renderProtocolTable() {
   elBody.innerHTML = "";
 
   if (state.rows.length === 0) {
     elBody.innerHTML = `
       <div class="cards-empty">
         <strong>Nenhum contrato selecionado</strong>
-        Use o botão "Selecionar contratos" para começar a criação dos protocolos.
+        Use o botão "Selecionar contratos" para adicionar itens ao agendamento.
       </div>`;
     elAgendar.disabled = true;
     updateSummary();
@@ -6448,151 +5845,120 @@ function renderProtocolTable() {
   }
 
   const wrap = document.createElement("div");
-  wrap.className = "proto-table-wrap";
+  wrap.className = "v3-table-wrap";
   if (elBody.classList.contains("show-validation")) wrap.classList.add("show-validation");
 
   wrap.innerHTML = `
-    <table class="proto-table">
+    <table class="v3-table" id="v3Table">
       <thead>
         <tr>
-          <th class="col-status-cell" aria-label="Status"></th>
-          <th>Contrato / Item</th>
+          <th class="v3-status-cell" aria-label="Status"></th>
+          <th>Contrato / Ref. / Vigência</th>
           <th>Produto / Embalagem / Origem</th>
           <th>Destino / CNPJ Filial</th>
-          <th class="col-saldo">Saldo / Vigência</th>
-          <th class="col-coop">Cooperado <span class="req">*</span></th>
-          <th class="col-volume">Volume desejado <span class="req">*</span></th>
-          <th class="col-emb">Embalagem <span class="req">*</span></th>
-          <th class="col-roteiro">Roteiro <span class="req">*</span></th>
-          <th class="col-nf-num col-optional">Nº NF Venda <span class="opt-tag">opc.</span></th>
-          <th class="col-date col-optional">Data NF Venda <span class="opt-tag">opc.</span></th>
-          <th class="col-money col-optional">Preço/Ton <span class="opt-tag">opc.</span></th>
-          <th class="col-date">Semana desejada</th>
-          <th class="col-actions" aria-label="Ações"></th>
+          <th class="th-saldo">Saldo</th>
+          <th>Volume <span class="req">*</span></th>
+          <th>Semana <span class="req">*</span></th>
+          <th>Roteiro <span class="opt-tag">opc.</span></th>
+          <th aria-label="Ações"></th>
         </tr>
       </thead>
-      <tbody id="protoTbody"></tbody>
+      <tbody id="v3TableBody"></tbody>
     </table>
   `;
   elBody.appendChild(wrap);
 
-  const tbody = wrap.querySelector("#protoTbody");
+  const tbody = wrap.querySelector("#v3TableBody");
   const ICON_DUP = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>`;
   const ICON_DEL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>`;
   const ICON_CAL = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`;
   const ICON_DOT = `<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>`;
   const ICON_CHK = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
   const ICON_BANG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>`;
-  const ICON_SEARCH = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>`;
-  const ICON_EXPAND = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
+  const ICON_EXP = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>`;
 
   state.rows.forEach((r, idx) => {
-    const status = protoRowStatus(r);
-    const missCoop = !r.cooperado;
-    const missVolume = !r.volumeDesejado;
-    const missEmb = !r.embalagemSelected;
-    const missRoteiro = !r.roteiro;
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const missVolume = !r.volume;
+    const missSemana = !r.semana;
+    const roteiroPreview = r.roteiro ? (r.roteiro.length > 28 ? r.roteiro.substring(0, 28) + '…' : r.roteiro) : '';
 
     let dot;
-    if (status === "complete") dot = `<span class="v3-status-dot v3-status-dot--complete">${ICON_CHK}</span>`;
-    else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress">${ICON_BANG}</span>`;
-    else dot = `<span class="v3-status-dot v3-status-dot--incomplete">${ICON_DOT}</span>`;
+    if (status === "complete") dot = `<span class="v3-status-dot v3-status-dot--complete" title="Pronto">${ICON_CHK}</span>`;
+    else if (status === "progress") dot = `<span class="v3-status-dot v3-status-dot--progress" title="Em progresso">${ICON_BANG}</span>`;
+    else dot = `<span class="v3-status-dot v3-status-dot--incomplete" title="Aguardando">${ICON_DOT}</span>`;
 
     const startShort = r.dataInicio ? r.dataInicio.slice(0, 5) : "";
     const endLong = r.dataFim || "";
-    const coopName = r.cooperado ? r.cooperado.nome : "";
-    const coopPendingBadge = r.cooperado && isCoopPending(r.cooperado)
-      ? '<span class="coop-pending-tag" title="Cadastro aguardando aprovação">Pendente</span>'
-      : '';
 
     const tr = document.createElement("tr");
     tr.className = `is-${status}`;
     tr.setAttribute("data-row", idx);
     tr.innerHTML = `
-      <td class="col-status-cell">${dot}</td>
+      <td class="v3-status-cell">${dot}</td>
+
+      <!-- Contract: Contrato + Ref + Vigência (grouped together) -->
       <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.contrato}</div>
-        <div class="stack-secondary">Item <strong>${r.item}</strong> · Ref. ${r.refCliente}</div>
+        <div class="stack-primary">
+          <span class="cell-strong">${r.contrato}</span>
+          <span class="v3-frete-badge v3-frete-badge--${isCIF ? 'cif' : 'fob'}">${r.frete}</span>
+        </div>
+        <div class="stack-secondary">Ref. ${r.refCliente} · Item ${r.item}</div>
+        <div class="stack-tertiary">${startShort} → ${endLong}</div>
       </td>
+
+      <!-- Item: Produto / Embalagem / Origem -->
       <td class="cell-stack">
         <div class="stack-primary cell-strong">${r.produto}</div>
         <div class="stack-secondary">${r.embalagem}</div>
-        <div class="stack-tertiary"><span class="v5-meta-label">De</span> ${r.planta}</div>
+        <div class="stack-tertiary"><span class="v3-meta-label">De</span> ${r.planta}</div>
       </td>
+
+      <!-- Destino / CNPJ Filial -->
       <td class="cell-stack">
-        <div class="stack-primary cell-strong">${r.enviarPara || '—'}</div>
-        <div class="stack-secondary"><span class="v5-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
+        <div class="stack-primary cell-strong">${r.enviarPara}</div>
+        <div class="stack-secondary"><span class="v3-meta-label">CNPJ</span> ${r.cnpj || '—'}</div>
       </td>
-      <td class="cell-stack col-saldo">
+
+      <!-- Saldo, emphasized -->
+      <td class="cell-saldo-emphasis">
         <div class="saldo-primary">${r.saldo} <span class="saldo-unit">t</span></div>
-        <div class="saldo-secondary">${startShort} → ${endLong}</div>
       </td>
-      <td class="${missCoop ? 'is-missing' : ''}">
-        <button class="coop-pick-btn ${r.cooperado ? 'has-value' : ''}" data-action="open-coop" data-row="${idx}" type="button">
-          <span class="coop-text">${coopName || 'Selecionar cooperado'}${coopPendingBadge}</span>
-          ${ICON_SEARCH}
-        </button>
-      </td>
+
+      <!-- Volume input -->
       <td class="${missVolume ? 'is-missing' : ''}">
-        <div class="proto-volume-wrap">
-          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
-                 value="${r.volumeDesejado ?? ''}"
+        <div class="v3-cell-volume-wrap">
+          <input type="text" inputmode="decimal" class="v3-cell-input v3-cell-num"
+                 value="${r.volume ?? ''}"
                  placeholder="0,00"
-                 data-row="${idx}" data-field="volumeDesejado" />
+                 data-row="${idx}" data-field="volume" />
           <span class="suffix">t</span>
         </div>
       </td>
-      <td class="${missEmb ? 'is-missing' : ''}">
-        <select class="proto-emb-select" data-row="${idx}" data-field="embalagemSelected">
-          <option value="" ${!r.embalagemSelected ? 'selected' : ''}>—</option>
-          ${EMBALAGENS.map(e => `<option value="${e}" ${r.embalagemSelected === e ? 'selected' : ''}>${e}</option>`).join("")}
-        </select>
-      </td>
-      <td class="${missRoteiro ? 'is-missing' : ''}">
-        <div class="proto-roteiro-wrap">
-          <input type="text" class="proto-cell-input"
-                 value="${r.roteiro ?? ''}"
-                 placeholder="Obrigatório"
-                 data-row="${idx}" data-field="roteiro" />
-          <button class="roteiro-expand" data-row="${idx}" type="button" aria-label="Expandir roteiro">${ICON_EXPAND}</button>
-        </div>
-      </td>
-      <td>
-        <input type="text" inputmode="numeric" class="proto-cell-input"
-               value="${r.nfVendaNum ?? ''}"
-               placeholder="—"
-               data-row="${idx}" data-field="nfVendaNum" />
-      </td>
-      <td>
-        <div class="proto-date-wrap card-date-wrap" data-row="${idx}">
-          <input type="text" class="proto-cell-input card-date-input"
-                 value="${r.nfVendaData || ''}"
-                 placeholder="DD/MM/AAAA"
-                 data-row="${idx}" data-field="nfVendaData"
-                 readonly />
-          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
-        </div>
-      </td>
-      <td>
-        <div class="proto-money-wrap">
-          <span class="prefix">R$</span>
-          <input type="text" inputmode="decimal" class="proto-cell-input is-num"
-                 value="${r.precoVenda ?? ''}"
-                 placeholder="0,00"
-                 data-row="${idx}" data-field="precoVenda" />
-        </div>
-      </td>
-      <td>
-        <div class="proto-date-wrap card-date-wrap" data-row="${idx}">
-          <input type="text" class="proto-cell-input card-date-input"
+
+      <!-- Semana date -->
+      <td class="${missSemana ? 'is-missing' : ''}">
+        <div class="v3-cell-date-wrap ${r.semana ? '' : 'is-empty'}" data-row="${idx}">
+          <input type="text" class="v3-cell-input v3-cell-date-input"
                  value="${r.semana || ''}"
                  placeholder="DD/MM/AAAA"
                  data-row="${idx}" data-field="semana"
                  readonly />
-          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button">${ICON_CAL}</button>
+          <button class="cal-trigger" data-action="open-dp" data-row="${idx}" type="button" aria-label="Abrir calendário">${ICON_CAL}</button>
         </div>
       </td>
-      <td class="col-actions">
+
+      <!-- Roteiro toggle button -->
+      <td>
+        <button class="roteiro-toggle-btn ${r.roteiro ? 'has-value' : ''} v5-table-roteiro" data-row="${idx}" type="button" aria-label="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}" title="${r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro'}">
+          <span class="roteiro-toggle-text">${roteiroPreview || 'Adicionar'}</span>
+          ${ICON_EXP}
+        </button>
+      </td>
+
+      <!-- Actions -->
+      <td>
         <span class="v3-row-actions">
           <button data-action="duplicate" data-row="${idx}" title="Duplicar">${ICON_DUP}</button>
           <button data-action="remove" data-row="${idx}" class="danger" title="Remover">${ICON_DEL}</button>
@@ -6605,7 +5971,7 @@ function renderProtocolTable() {
   updateSummary();
   refreshHintV2();
   elAgendar.disabled = !canAgendar();
-  refreshAllValidations();
+  refreshSemanaValidation();
 }
 
 function updateCardStatusFooter(card, r) {
@@ -6660,24 +6026,53 @@ elBody.addEventListener("click", e => {
 
   const actBtn = e.target.closest("[data-action]");
   if (!actBtn) return;
-  const idx = parseInt(actBtn.dataset.row, 10);
   const action = actBtn.dataset.action;
 
-  if (action === "open-roteiro") {
-    /* Reuse the existing roteiro drawer via the open-button path */
-    const wrap = actBtn.closest(".field-block--roteiro");
-    const sourceEl = wrap ? wrap.querySelector("textarea[data-field='roteiro']") : null;
-    openRoteiroDrawer(idx, sourceEl);
+  /* V5 — remove-contract: delete all rows of a given contract */
+  if (action === "remove-contract") {
+    const contrato = actBtn.dataset.contract;
+    state.rows = state.rows.filter(r => r.contrato !== contrato);
+    /* Re-index collapsed set */
+    state.collapsed.clear();
+    renderTable();
     return;
   }
+
+  /* V5 — open the add-item popover for a contract */
+  if (action === "open-add-item") {
+    e.stopPropagation();
+    const contrato = actBtn.dataset.contract;
+    /* Close any other open popover */
+    document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
+    const popId = `addItemPop-${contrato.replace(/[^a-zA-Z0-9]/g, '')}`;
+    const pop = document.getElementById(popId);
+    if (pop) pop.classList.add("is-open");
+    return;
+  }
+
+  /* V5 — add a specific item from a contract to state.rows */
+  if (action === "add-item") {
+    const contrato = actBtn.dataset.contract;
+    const item = actBtn.dataset.item;
+    const r = SEARCH_RESULTS.find(s => s.contrato === contrato && s.item === item);
+    if (!r) return;
+    if (state.rows.some(row => row.contrato === r.contrato && row.item === r.item)) return;
+    state.rows.push({ ...r, volume: "", semana: "", roteiro: "" });
+    renderTable();
+    return;
+  }
+
+  const idx = parseInt(actBtn.dataset.row, 10);
+
   if (action === "toggle") {
     if (state.collapsed.has(idx)) state.collapsed.delete(idx);
     else state.collapsed.add(idx);
     const card = actBtn.closest(".contract-card");
     if (card) card.classList.toggle("is-collapsed");
   } else if (action === "open-dp") {
-    const wrap = actBtn.closest(".card-date-wrap");
-    const input = wrap.querySelector(".card-date-input");
+    const wrap = actBtn.closest(".card-date-wrap, .v3-cell-date-wrap");
+    if (!wrap) return;
+    const input = wrap.querySelector(".card-date-input, .v3-cell-date-input");
     openDatePicker(input, wrap);
   } else if (action === "remove") {
     state.rows.splice(idx, 1);
@@ -6707,9 +6102,9 @@ elBody.addEventListener("click", e => {
 
 /* Click on the date input itself opens the picker too */
 elBody.addEventListener("click", e => {
-  const input = e.target.closest(".card-date-input");
+  const input = e.target.closest(".card-date-input, .v3-cell-date-input");
   if (!input) return;
-  const wrap = input.closest(".card-date-wrap");
+  const wrap = input.closest(".card-date-wrap, .v3-cell-date-wrap");
   openDatePicker(input, wrap);
 });
 
@@ -6753,10 +6148,13 @@ document.getElementById("agendarBtn").addEventListener("click", () => {
   // Populate the submit-modal summary
   const summaryEl = document.getElementById("submitSummary");
   if (summaryEl) {
-    const totalVolume = sumVolumeDesejado();
+    const totalVolume = state.rows.reduce((sum, r) => {
+      const v = parseFloat((r.volume || "0").toString().replace(/\./g,"").replace(",","."));
+      return sum + (isNaN(v) ? 0 : v);
+    }, 0);
     summaryEl.innerHTML = `
-      <div class="row"><span>Protocolos a criar</span><strong>${state.rows.length}</strong></div>
-      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR", {minimumFractionDigits: 2, maximumFractionDigits: 2})} t</strong></div>
+      <div class="row"><span>Contratos a agendar</span><strong>${state.rows.length}</strong></div>
+      <div class="row"><span>Volume total</span><strong>${totalVolume.toLocaleString("pt-BR")} t</strong></div>
     `;
   }
   openModal("submitModal");
@@ -6783,12 +6181,26 @@ document.getElementById("successReport").addEventListener("click", () => {
    Pressing Enter or Space opens the datepicker; arrow keys also.
    =================================================================== */
 elBody.addEventListener("keydown", e => {
-  const dateInput = e.target.closest(".card-date-input");
+  const dateInput = e.target.closest(".card-date-input, .v3-cell-date-input");
   if (!dateInput) return;
   if (e.key === "Enter" || e.key === " " || e.key === "ArrowDown") {
     e.preventDefault();
-    const wrap = dateInput.closest(".card-date-wrap");
+    const wrap = dateInput.closest(".card-date-wrap, .v3-cell-date-wrap");
     openDatePicker(dateInput, wrap);
+  }
+});
+
+
+/* V5 — close add-item popovers when clicking outside */
+document.addEventListener("click", e => {
+  const pop = e.target.closest(".v5-add-item-popover");
+  const trigger = e.target.closest('[data-action="open-add-item"]');
+  if (pop || trigger) return;
+  document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    document.querySelectorAll(".v5-add-item-popover.is-open").forEach(p => p.classList.remove("is-open"));
   }
 });
 
@@ -6894,7 +6306,7 @@ function openDatePicker(input, wrap) {
 
   // Make popup visible (off-screen first to measure size)
   dpPopup.classList.add("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   if (wrap) wrap.classList.add("is-open");
 
   // Render contents first so we can measure
@@ -6937,7 +6349,7 @@ function openDatePicker(input, wrap) {
 
 function closeDatePicker() {
   if (dpPopup) dpPopup.classList.remove("is-open");
-  document.querySelectorAll(".card-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
   dpCurrentInput = null;
 }
 
@@ -6974,8 +6386,7 @@ function renderDP() {
 
   const grid = dpPopup.querySelector(".dp-grid");
   const dataField = dpCurrentInput && dpCurrentInput.dataset ? dpCurrentInput.dataset.field : "";
-  const blockPast   = dataField === "semana";        /* Semana: nao pode passada */
-  const blockFuture = dataField === "nfVendaData";   /* Data NF: nao pode futura */
+  const blockPast = dataField === "semana";
   grid.innerHTML = cells.map(({ d, isOther }) => {
     const sameDay = (a, b) => a && b &&
       a.getFullYear() === b.getFullYear() &&
@@ -6985,11 +6396,11 @@ function renderDP() {
     if (isOther) classes.push("is-other");
     if (sameDay(d, today)) classes.push("is-today");
     if (sameDay(d, dpSelected)) classes.push("is-selected");
-    let disabledReason = "";
-    if (blockPast && d < today) disabledReason = "Não pode data anterior à atual";
-    if (blockFuture && d > today) disabledReason = "Data NF não pode ser futura";
-    if (disabledReason) classes.push("is-disabled");
-    const titleAttr = disabledReason ? ` title="${disabledReason}"` : "";
+    let titleAttr = "";
+    if (blockPast && d < today) {
+      classes.push("is-disabled");
+      titleAttr = ' title="Não pode data anterior à atual"';
+    }
     return `<button type="button" class="${classes.join(" ")}"${titleAttr} data-y="${d.getFullYear()}" data-m="${d.getMonth()}" data-d="${d.getDate()}">${d.getDate()}</button>`;
   }).join("");
 }
@@ -7030,7 +6441,7 @@ function clearDPDate() {
 // Click outside closes
 document.addEventListener("click", e => {
   if (!dpPopup || !dpPopup.classList.contains("is-open")) return;
-  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap")) return;
+  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap, .v3-cell-date-wrap")) return;
   closeDatePicker();
 });
 // Escape closes
@@ -7040,7 +6451,7 @@ document.addEventListener("keydown", e => {
 // Reposition on scroll
 window.addEventListener("scroll", () => {
   if (dpPopup && dpPopup.classList.contains("is-open") && dpCurrentInput) {
-    const wrap = dpCurrentInput.closest(".card-date-wrap");
+    const wrap = dpCurrentInput.closest(".card-date-wrap, .v3-cell-date-wrap");
     const rect = (wrap || dpCurrentInput).getBoundingClientRect();
     dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
     dpPopup.style.left = (window.scrollX + rect.left) + "px";
@@ -7107,38 +6518,17 @@ function saveRoteiroDrawer() {
   const r = state.rows[idx];
   if (!r) { closeRoteiroDrawer(); return; }
   r.roteiro = elRoteiroText.value;
-  /* Push the value back into whichever input/textarea is in the active view */
+  /* Push value into any existing input/textarea (legacy field), if present */
   document
     .querySelectorAll(`[data-row="${idx}"][data-field="roteiro"]`)
     .forEach(el => {
       el.value = r.roteiro;
       if (el.tagName === "INPUT") el.classList.toggle("has-text", !!r.roteiro);
-      /* Trigger downstream updates */
       afterFieldChange(idx, el);
     });
-  /* Refresh the roteiro-open-btn visual */
-  document.querySelectorAll(`.roteiro-open-btn[data-row="${idx}"]`).forEach(btn => {
-    const isCIF = r.frete === "CIF";
-    btn.classList.toggle("has-value", !!r.roteiro);
-    const txt = btn.querySelector(".roteiro-btn-text");
-    if (txt) {
-      txt.textContent = r.roteiro
-        ? r.roteiro
-        : (isCIF ? "Adicionar roteiro (obrigatório)" : "Adicionar roteiro de entrega");
-    }
-    const ic = btn.querySelector(".roteiro-btn-icon");
-    if (ic) {
-      ic.innerHTML = r.roteiro
-        ? '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'
-        : '<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>';
-    }
-  });
-  /* If we couldn't find any element (e.g. between renders), still update state */
-  if (typeof updateSummary === "function") updateSummary();
-  if (typeof refreshHintV2 === "function") refreshHintV2();
-  /* V2: re-render so V5 cards (.roteiro-toggle-btn) reflect the new value */
-  if (typeof renderTable === "function") renderTable();
   closeRoteiroDrawer();
+  /* Re-render so roteiro-toggle-btn picks up the new preview text + has-value */
+  renderTable();
 }
 
 document.getElementById("roteiroDrawerClose").addEventListener("click", closeRoteiroDrawer);
@@ -7165,348 +6555,28 @@ elBody.addEventListener("click", e => {
 });
 
 
-/* Cooperado picker + Cadastrar Cooperado */
-const elCoopDrawer = document.getElementById("coopDrawer");
-const elCoopBackdrop = document.getElementById("coopDrawerBackdrop");
-const elCoopList = document.getElementById("coopDrawerList");
-const elCoopSearch = document.getElementById("coopDrawerSearch");
-const elCoopSelectBtn = document.getElementById("coopDrawerSelect");
-let coopPickContext = { rowIdx: null, tempSelected: null };
-
-function openCoopDrawer(rowIdx) {
-  coopPickContext.rowIdx = rowIdx;
-  coopPickContext.tempSelected = state.rows[rowIdx]?.cooperado || null;
-  elCoopSearch.value = "";
-  renderCoopDrawerList();
-  elCoopDrawer.classList.add("is-open");
-  elCoopDrawer.setAttribute("aria-hidden", "false");
-  elCoopBackdrop.classList.add("is-open");
-  setTimeout(() => elCoopSearch.focus(), 320);
-}
-function closeCoopDrawer() {
-  elCoopDrawer.classList.remove("is-open");
-  elCoopDrawer.setAttribute("aria-hidden", "true");
-  elCoopBackdrop.classList.remove("is-open");
-  coopPickContext = { rowIdx: null, tempSelected: null };
-}
-function renderCoopDrawerList() {
-  const q = (elCoopSearch.value || "").trim().toLowerCase();
-  const filtered = COOPERADOS.filter(c => {
-    if (!q) return true;
-    return [c.nome, c.doc, c.ie, c.fazenda, c.cidade].some(v => v.toLowerCase().includes(q));
-  });
-  if (filtered.length === 0) {
-    elCoopList.innerHTML = `<div style="padding:32px 16px; text-align:center; color: var(--text-3);">Nenhum cooperado encontrado.</div>`;
-    elCoopSelectBtn.disabled = true;
-    return;
-  }
-  elCoopList.innerHTML = filtered.map(c => {
-    const isPending = isCoopPending(c);
-    const sel = coopPickContext.tempSelected && coopPickContext.tempSelected.id === c.id;
-    const pendingBadge = isPending
-      ? `<span class="coop-pending-tag" title="Aguardando aprovação cadastral">Pendente</span>`
-      : "";
-    return `
-      <div class="drawer-item-coop ${sel ? 'is-selected' : ''} ${isPending ? 'is-pending' : ''}" data-coop-id="${c.id}" ${isPending ? 'aria-disabled="true"' : ''}>
-        <div class="coop-radio"></div>
-        <div>
-          <div class="coop-name">${c.nome} ${pendingBadge}</div>
-          <div class="coop-fazenda">${c.fazenda}${isPending ? ' · <em style="color:var(--status-orange)">aguardando aprovação</em>' : ''}</div>
-        </div>
-        <div class="coop-doc">
-          <strong>CPF/CNPJ</strong>
-          ${c.doc}
-        </div>
-        <div class="coop-loc">
-          <strong>Cidade</strong>
-          ${c.cidade}/${c.uf}
-        </div>
-      </div>
-    `;
-  }).join("");
-  elCoopSelectBtn.disabled = !coopPickContext.tempSelected || isCoopPending(coopPickContext.tempSelected);
-}
-
-elCoopSearch.addEventListener("input", renderCoopDrawerList);
-elCoopList.addEventListener("click", e => {
-  const item = e.target.closest(".drawer-item-coop");
-  if (!item) return;
-  if (item.classList.contains("is-pending")) return;
-  const id = item.dataset.coopId;
-  coopPickContext.tempSelected = COOPERADOS.find(c => c.id === id);
-  renderCoopDrawerList();
-});
-elCoopSelectBtn.addEventListener("click", () => {
-  if (coopPickContext.rowIdx == null || !coopPickContext.tempSelected) return;
-  const r = state.rows[coopPickContext.rowIdx];
-  if (!r) return;
-  r.cooperado = coopPickContext.tempSelected;
-  closeCoopDrawer();
-  renderTable();
-});
-document.querySelectorAll("[data-close-coop-drawer]").forEach(b =>
-  b.addEventListener("click", closeCoopDrawer));
-elCoopBackdrop.addEventListener("click", closeCoopDrawer);
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && elCoopDrawer.classList.contains("is-open")) closeCoopDrawer();
-});
-
-/* CadCoop side-drawer open/close */
-const elCadCoopDrawer = document.getElementById("cadCoopDrawer");
-const elCadCoopBackdrop = document.getElementById("cadCoopBackdrop");
-/* Lembrar se o cad-coop foi aberto a partir do coopDrawer pra reabrir
-   automaticamente depois do Salvar */
-let cadCoopOpenedFromCoopDrawer = false;
-function openCadCoopDrawer() {
-  if (!elCadCoopDrawer) return;
-  elCadCoopDrawer.classList.add("is-open");
-  elCadCoopDrawer.setAttribute("aria-hidden", "false");
-  elCadCoopBackdrop.classList.add("is-open");
-}
-function closeCadCoopDrawer() {
-  if (!elCadCoopDrawer) return;
-  elCadCoopDrawer.classList.remove("is-open");
-  elCadCoopDrawer.setAttribute("aria-hidden", "true");
-  elCadCoopBackdrop.classList.remove("is-open");
-}
-document.querySelectorAll("[data-close-cad-coop-drawer]").forEach(b =>
-  b.addEventListener("click", () => { cadCoopOpenedFromCoopDrawer = false; closeCadCoopDrawer(); }));
-elCadCoopBackdrop.addEventListener("click", () => { cadCoopOpenedFromCoopDrawer = false; closeCadCoopDrawer(); });
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && elCadCoopDrawer.classList.contains("is-open")) {
-    cadCoopOpenedFromCoopDrawer = false;
-    closeCadCoopDrawer();
-  }
-});
-
-document.getElementById("openCadastrarCoopBtn").addEventListener("click", () => {
-  ["cadCoopTipo","cadCoopNome","cadCoopTelefone","cadCoopEmail",
-   "cadCoopCEP","cadCoopEndereco","cadCoopEnd2","cadCoopEstado","cadCoopCidade",
-   "cadCoopRoteiro"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = "";
-  });
-  document.getElementById("cadCoopPais").value = "";
-  /* Limpa estados de erro */
-  document.querySelectorAll("#cadCoopDrawer .cad-coop-field.is-error")
-    .forEach(f => f.classList.remove("is-error"));
-  /* Resetar visual do select (sem cor) */
-  document.querySelectorAll("#cadCoopDrawer select").forEach(s => s.classList.remove("has-value"));
-  openCadCoopDrawer();
-});
-
-/* Atualiza visual do select (cinza placeholder vs preto preenchido) */
-document.querySelectorAll("#cadCoopDrawer select").forEach(s => {
-  s.addEventListener("change", () => {
-    s.classList.toggle("has-value", !!s.value);
-    /* Limpa erro ao começar a digitar/escolher */
-    const f = s.closest(".cad-coop-field");
-    if (f) f.classList.remove("is-error");
-  });
-});
-/* Limpa erro ao digitar em inputs/textarea */
-document.querySelectorAll("#cadCoopDrawer input, #cadCoopDrawer textarea").forEach(el => {
-  el.addEventListener("input", () => {
-    const f = el.closest(".cad-coop-field");
-    if (f) f.classList.remove("is-error");
-  });
-});
-
-document.getElementById("cadCoopSalvar").addEventListener("click", () => {
-  const tipo = document.getElementById("cadCoopTipo").value;
-  const nome = document.getElementById("cadCoopNome").value.trim();
-  const cep  = document.getElementById("cadCoopCEP").value.trim();
-  const end  = document.getElementById("cadCoopEndereco").value.trim();
-  const pais = document.getElementById("cadCoopPais").value;
-  const uf   = document.getElementById("cadCoopEstado").value.trim();
-  const cidade = document.getElementById("cadCoopCidade").value.trim();
-
-  /* Required: tipo, nome, rua, cep, cidade, pais, estado */
-  const required = {
-    tipo:    !!tipo,
-    nome:    !!nome,
-    rua:     !!end,
-    cep:     !!cep,
-    cidade:  !!cidade,
-    pais:    !!pais,
-    estado:  !!uf,
-  };
-  let hasError = false;
-  Object.entries(required).forEach(([key, ok]) => {
-    const field = document.querySelector(`#cadCoopDrawer .cad-coop-field[data-field="${key}"]`);
-    if (!field) return;
-    if (ok) {
-      field.classList.remove("is-error");
-    } else {
-      field.classList.add("is-error");
-      hasError = true;
-    }
-  });
-  if (hasError) return;
-
-  const end2 = document.getElementById("cadCoopEnd2").value.trim();
-  const newCoop = {
-    id: "C" + String(COOPERADOS.length + 1).padStart(3, "0"),
-    nome: nome.toUpperCase(),
-    ie: "—", doc: "—",
-    fazenda: "—",
-    rua: end + (end2 ? ", " + end2 : ""),
-    cidade: cidade.toUpperCase(),
-    uf: uf, cep: cep,
-    pending: true,           /* lock for ~10 min (approval pending) */
-    pendingUntil: Date.now() + 10 * 60 * 1000,
-  };
-  COOPERADOS.push(newCoop);
-  closeCadCoopDrawer();
-  /* Se veio do drawer de Selecionar cooperado, reabre ele com o novo
-     destacado (em vez de mostrar o modal de sucesso). */
-  if (cadCoopOpenedFromCoopDrawer && typeof openCoopDrawer === "function" && coopPickContext.rowIdx != null) {
-    cadCoopOpenedFromCoopDrawer = false;
-    openCoopDrawer(coopPickContext.rowIdx);
-    if (typeof elCoopSearch !== "undefined" && elCoopSearch) {
-      elCoopSearch.value = newCoop.nome;
-      if (typeof renderCoopDrawerList === "function") renderCoopDrawerList();
-    }
-  } else {
-    openModal("cadCoopSuccessModal");
-  }
-});
-
-/* Coop pendente: fica travado por 10 min apos cadastro */
-function isCoopPending(c) {
-  if (!c || !c.pending) return false;
-  if (c.pendingUntil && Date.now() > c.pendingUntil) {
-    c.pending = false;
-    return false;
-  }
-  return true;
-}
-
-elBody.addEventListener("click", e => {
-  const btn = e.target.closest('[data-action="open-coop"]');
-  if (!btn) return;
-  e.preventDefault();
-  const idx = parseInt(btn.dataset.row, 10);
-  if (!isNaN(idx)) openCoopDrawer(idx);
-});
-
-elBody.addEventListener("click", e => {
-  const btn = e.target.closest(".roteiro-expand");
+/* V5 Final — roteiro toggle button → opens existing roteiroDrawer */
+document.addEventListener("click", e => {
+  const btn = e.target.closest(".roteiro-toggle-btn");
   if (!btn) return;
   e.preventDefault();
   const idx = parseInt(btn.dataset.row, 10);
   if (isNaN(idx)) return;
-  const sourceEl = btn.parentElement.querySelector("input[data-field='roteiro']");
-  if (typeof openRoteiroDrawer === "function") openRoteiroDrawer(idx, sourceEl);
-});
-
-/* ===================================================================
-   V2 — Inline "Cadastrar novo cooperado" trigger inside coop drawer
-   =================================================================== */
-(function wireCoopCadastrarInline() {
-  const btn = document.getElementById("coopDrawerCadastrarBtn");
-  if (!btn) return;
-  btn.addEventListener("click", () => {
-    cadCoopOpenedFromCoopDrawer = true;
-    if (typeof closeCoopDrawer === "function") closeCoopDrawer();
-    const triggerBtn = document.getElementById("openCadastrarCoopBtn");
-    if (triggerBtn) triggerBtn.click();
-  });
-})();
-
-/* ===================================================================
-   V2 — Input masks (volume, currency, CPF/CNPJ, CEP, IE, numeric)
-   =================================================================== */
-function maskVolumeDecimal(input) {
-  let v = (input.value || "").replace(/[^\d,]/g, "");
-  const parts = v.split(",");
-  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
-  const segs = v.split(",");
-  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
-  if (segs.length === 2) segs[1] = segs[1].slice(0, 2);
-  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  input.value = segs.join(",");
-}
-
-function maskCurrencyBRL(input) {
-  const raw = (input.value || "").replace(/\D/g, "");
-  if (!raw) { input.value = ""; return; }
-  const padded = raw.padStart(3, "0");
-  const cents = padded.slice(-2);
-  let intPart = padded.slice(0, -2).replace(/^0+(\d)/, "$1");
-  intPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  input.value = intPart + "," + cents;
-}
-
-function maskOnlyDigits(input) {
-  input.value = (input.value || "").replace(/\D/g, "");
-}
-
-function maskCEP(input) {
-  let v = (input.value || "").replace(/\D/g, "").slice(0, 8);
-  if (v.length > 5) v = v.slice(0, 5) + "-" + v.slice(5);
-  input.value = v;
-}
-
-function maskCPFCNPJ(input) {
-  let v = (input.value || "").replace(/\D/g, "");
-  if (v.length <= 11) {
-    v = v.slice(0, 11);
-    if (v.length > 9)      v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6,9) + "-" + v.slice(9);
-    else if (v.length > 6) v = v.slice(0,3) + "." + v.slice(3,6) + "." + v.slice(6);
-    else if (v.length > 3) v = v.slice(0,3) + "." + v.slice(3);
-  } else {
-    v = v.slice(0, 14);
-    v = v.slice(0,2) + "." + v.slice(2,5) + "." + v.slice(5,8) + "/" + v.slice(8,12) + "-" + v.slice(12,14);
+  /* Find any existing roteiro source element for this row, or create a hidden proxy */
+  let sourceEl = document.querySelector(`[data-row="${idx}"][data-field="roteiro"]`);
+  if (!sourceEl) {
+    /* Hidden proxy so openRoteiroDrawer has something to anchor to */
+    sourceEl = document.createElement("textarea");
+    sourceEl.style.display = "none";
+    sourceEl.dataset.row = idx;
+    sourceEl.dataset.field = "roteiro";
+    sourceEl.value = state.rows[idx]?.roteiro || "";
+    btn.parentElement.appendChild(sourceEl);
   }
-  input.value = v;
-}
-
-/* Wire static cad-coop modal fields */
-(function wireCadCoopMasks() {
-  const doc = document.getElementById("cadCoopDoc");
-  const ie  = document.getElementById("cadCoopIE");
-  const cep = document.getElementById("cadCoopCEP");
-  const num = document.getElementById("cadCoopNumero");
-  if (doc) doc.addEventListener("input", e => maskCPFCNPJ(e.target));
-  if (ie)  ie.addEventListener("input",  e => maskOnlyDigits(e.target));
-  if (cep) cep.addEventListener("input", e => {
-    maskCEP(e.target);
-    /* Quando CEP atinge 8 digitos, busca ViaCEP e preenche endereco */
-    const digits = (e.target.value || "").replace(/\D/g, "");
-    if (digits.length === 8) lookupCEP(digits);
-  });
-  if (num) num.addEventListener("input", e => maskOnlyDigits(e.target));
-})();
-
-/* Busca CEP via ViaCEP e preenche Endereco, Bairro, Cidade, Estado */
-function lookupCEP(cep) {
-  fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (!data || data.erro) return;
-      const setIf = (id, val) => {
-        const el = document.getElementById(id);
-        if (el && !el.value) el.value = val || "";
-      };
-      setIf("cadCoopEndereco", data.logradouro);
-      setIf("cadCoopBairro",   data.bairro);
-      setIf("cadCoopCidade",   data.localidade);
-      const uf = document.getElementById("cadCoopEstado");
-      if (uf && !uf.value && data.uf) uf.value = data.uf;
-    })
-    .catch(() => { /* silent */ });
-}
-
-/* Delegated mask wiring for dynamic per-row inputs (re-rendered) */
-document.body.addEventListener("input", e => {
-  const t = e.target;
-  if (!(t.matches && t.matches("[data-field]"))) return;
-  const f = t.dataset.field;
-  if (f === "volumeDesejado") maskVolumeDecimal(t);
-  else if (f === "precoVenda") maskCurrencyBRL(t);
-  else if (f === "nfVendaNum") maskOnlyDigits(t);
-}, true);
+  if (typeof openRoteiroDrawer === "function") {
+    openRoteiroDrawer(idx, sourceEl);
+  }
+});
 
 goTo("empty");
 </script>

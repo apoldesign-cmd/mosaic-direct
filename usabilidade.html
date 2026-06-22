@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pontos de Usabilidade — Mosaic Direct 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ============================================================
+     RESET — body limpo (sem header/footer Mosaic)
+     ============================================================ */
+  body {
+    display: block !important;
+    background: #fafaf8;
+  }
+
+  /* ============================================================
+     UX TOP BAR — minimal (substitui o header Mosaic)
+     ============================================================ */
+  .ux-topbar {
+    background: #15201b;
+    color: #fff;
+    padding: 12px 0;
+    border-bottom: 1px solid #003e2a;
+  }
+  .ux-topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .ux-topbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.85);
+  }
+  .ux-topbar-brand-tag {
+    background: #7ad9b5;
+    color: #003e2a;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .ux-topbar-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all var(--ease-fast);
+  }
+  .ux-topbar-back:hover {
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    border-color: rgba(255,255,255,0.35);
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     UX FOOTER — minimal
+     ============================================================ */
+  .ux-footer {
+    background: #15201b;
+    color: rgba(255,255,255,0.65);
+    padding: 28px 0;
+    border-top: 1px solid #003e2a;
+    margin-top: 0;
+  }
+  .ux-footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .ux-footer-brand {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.55);
+    letter-spacing: 0.04em;
+  }
+  .ux-footer-brand strong {
+    color: #fff;
+    font-weight: 800;
+  }
+  .ux-footer-links {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+  }
+  .ux-footer-links a {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color var(--ease-fast);
+  }
+  .ux-footer-links a:hover { color: #fff; text-decoration: none; }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .ux-hero {
+    background: linear-gradient(135deg, var(--mosaic-green-900) 0%, var(--mosaic-green-700) 100%);
+    color: #fff;
+    padding: 56px 0 64px;
+    margin-top: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .ux-hero::before {
+    content: "";
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ux-hero::after {
+    content: "";
+    position: absolute;
+    bottom: -160px; left: -100px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(240,192,32,0.10) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .ux-hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 880px;
+  }
+  .ux-hero-eyebrow {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #7ad9b5;
+    margin-bottom: 14px;
+  }
+  .ux-hero-title {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0 0 16px;
+    color: #fff;
+  }
+  .ux-hero-lede {
+    font-size: 17px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.85);
+    max-width: 680px;
+    margin: 0 0 28px;
+  }
+  .ux-hero-meta {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+  }
+  .ux-hero-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ux-hero-meta-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #7ad9b5;
+  }
+
+  /* ============================================================
+     NAVIGATION TOC (sticky)
+     ============================================================ */
+  .ux-toc {
+    background: #fff;
+    border-bottom: 1px solid var(--border-soft);
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .ux-toc-inner {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scrollbar-width: thin;
+  }
+  .ux-toc-link {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-2);
+    border-radius: 999px;
+    background: transparent;
+    transition: all var(--ease-fast);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .ux-toc-link:hover {
+    background: var(--bg-section);
+    color: var(--mosaic-green-800);
+    text-decoration: none;
+  }
+  .ux-toc-num {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    margin-right: 4px;
+  }
+
+  /* ============================================================
+     ITEM CARDS
+     ============================================================ */
+  .ux-grid {
+    display: grid;
+    gap: 28px;
+    padding: 40px 0 60px;
+  }
+
+  .ux-item {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    box-shadow: var(--shadow-soft);
+    scroll-margin-top: 80px;
+  }
+  @media (max-width: 880px) {
+    .ux-item { grid-template-columns: 1fr; }
+  }
+
+  .ux-item-body {
+    padding: 32px 32px 28px;
+  }
+  .ux-item-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0,88,61,0.25);
+  }
+  .ux-item-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    margin: 0 0 6px;
+  }
+  .ux-item-component {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--mosaic-green-700);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    background: rgba(0,106,77,0.06);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 18px;
+  }
+  .ux-item-section {
+    margin-bottom: 14px;
+  }
+  .ux-item-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .ux-item-section-text {
+    font-size: 13.5px;
+    color: var(--text-2);
+    line-height: 1.55;
+  }
+  .ux-item-gain {
+    background: linear-gradient(135deg, rgba(0,106,77,0.04) 0%, rgba(122,217,181,0.06) 100%);
+    border-left: 3px solid var(--mosaic-green-700);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 14px;
+  }
+  .ux-item-gain .ux-item-section-label { color: var(--mosaic-green-800); }
+  .ux-item-gain .ux-item-section-text { color: var(--text-1); font-weight: 500; }
+  .ux-gain-list {
+    list-style: none;
+    margin: 6px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ux-gain-list li {
+    position: relative;
+    padding-left: 18px;
+    line-height: 1.5;
+    font-size: 13px;
+    color: var(--text-1);
+  }
+  .ux-gain-list li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 8px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+  }
+  .ux-gain-list strong {
+    color: var(--mosaic-green-800);
+    font-weight: 700;
+  }
+  .ux-item-refs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border-soft);
+  }
+  .ux-ref-chip {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-3);
+    background: var(--bg-section);
+    padding: 4px 9px;
+    border-radius: 4px;
+  }
+  .ux-item-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--mosaic-green-700);
+    text-decoration: none;
+    border: 1.5px solid var(--mosaic-green-700);
+    padding: 7px 14px;
+    border-radius: 999px;
+    transition: all var(--ease-fast);
+  }
+  .ux-item-link:hover {
+    background: var(--mosaic-green-700);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* ============================================================
+     DEMO PANEL (right column)
+     ============================================================ */
+  .ux-demo {
+    background: linear-gradient(160deg, #f7faf8 0%, #ecf3ef 100%);
+    border-left: 1px solid var(--border-soft);
+    padding: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 360px;
+  }
+  @media (max-width: 880px) {
+    .ux-demo { border-left: none; border-top: 1px solid var(--border-soft); }
+  }
+  .ux-demo-frame {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .ux-demo-label {
+    position: absolute;
+    top: 12px; right: 14px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    background: rgba(255,255,255,0.7);
+    padding: 3px 7px;
+    border-radius: 4px;
+  }
+
+  /* ============================================================
+     DEMO #1 — DRAWER
+     ============================================================ */
+  .demo-drawer-wrap {
+    position: relative;
+    background: #f4f4f2;
+    border-radius: 8px;
+    padding: 20px 16px;
+    overflow: hidden;
+  }
+  .demo-page-bg {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 12px;
+    height: 280px;
+    position: relative;
+    overflow: hidden;
+  }
+  .demo-page-bg-line {
+    height: 8px;
+    background: var(--bg-section);
+    border-radius: 3px;
+    margin-bottom: 8px;
+  }
+  .demo-page-bg-line.w-60 { width: 60%; }
+  .demo-page-bg-line.w-80 { width: 80%; }
+  .demo-page-bg-line.w-40 { width: 40%; }
+  .demo-drawer {
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 60%;
+    background: #fff;
+    box-shadow: -6px 0 20px rgba(0,0,0,0.12);
+    border-left: 1px solid var(--border-soft);
+    border-radius: 0 8px 8px 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .demo-drawer-head {
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .demo-drawer-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .demo-drawer-x {
+    font-size: 14px;
+    color: var(--text-3);
+    line-height: 1;
+  }
+  .demo-drawer-body {
+    flex: 1;
+    padding: 12px 14px;
+  }
+  .demo-drawer-row {
+    height: 18px;
+    background: var(--bg-section);
+    border-radius: 4px;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  .demo-drawer-row.active {
+    background: rgba(0,106,77,0.10);
+    border: 1px solid var(--mosaic-green-700);
+  }
+  .demo-drawer-foot {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+  .demo-btn {
+    height: 22px;
+    padding: 0 10px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+  }
+  .demo-btn-primary { background: var(--mosaic-green-800); color: #fff; }
+  .demo-btn-ghost { background: transparent; color: var(--text-2); border: 1px solid var(--border); }
+
+  /* ============================================================
+     DEMO #2 — STRIPED TABLE
+     ============================================================ */
+  .demo-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+  }
+  .demo-table th {
+    background: #fff;
+    color: var(--mosaic-green-800);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1.5px solid var(--mosaic-green-800);
+  }
+  .demo-table td {
+    padding: 8px 10px;
+    color: var(--text-2);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .demo-table tbody tr:nth-child(even) td {
+    background: #f7f9f8;
+  }
+  .demo-table-wrap {
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+  }
+
+  /* ============================================================
+     DEMO #3 — STICKY COLUMN
+     ============================================================ */
+  .demo-sticky-wrap {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid var(--border-soft);
+  }
+  .demo-sticky-scroll {
+    overflow-x: auto;
+    background: #fff;
+  }
+  .demo-sticky-table {
+    border-collapse: collapse;
+    font-size: 10.5px;
+    min-width: 600px;
+  }
+  .demo-sticky-table th, .demo-sticky-table td {
+    padding: 7px 10px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .demo-sticky-table th {
+    background: #f7f9f8;
+    color: var(--mosaic-green-800);
+    font-weight: 600;
+  }
+  .demo-sticky-table .sticky-col {
+    position: sticky;
+    left: 0;
+    background: #fff;
+    z-index: 2;
+    border-right: 2px solid var(--mosaic-green-700);
+    box-shadow: 3px 0 6px -2px rgba(0,0,0,0.10);
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .demo-sticky-table thead .sticky-col {
+    background: #f0f5f2;
+  }
+  .demo-sticky-hint {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-3);
+    padding: 6px;
+    background: var(--bg-section);
+    border-top: 1px solid var(--border-soft);
+  }
+
+  /* ============================================================
+     DEMO #4 — CELL STACKING
+     ============================================================ */
+  .demo-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .demo-compare-box {
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid var(--border-soft);
+    overflow: hidden;
+  }
+  .demo-compare-head {
+    padding: 6px 10px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    border-bottom: 1px solid var(--border-soft);
+    background: var(--bg-section);
+  }
+  .demo-compare-head.bad { background: rgba(185,32,42,0.06); color: #8a1820; }
+  .demo-compare-head.good { background: rgba(0,106,77,0.08); color: var(--mosaic-green-800); }
+  .demo-mini-table {
+    width: 100%;
+    font-size: 10px;
+    border-collapse: collapse;
+  }
+  .demo-mini-table th, .demo-mini-table td {
+    padding: 5px 8px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .demo-mini-table th {
+    color: var(--mosaic-green-800);
+    font-weight: 600;
+    font-size: 9.5px;
+  }
+  .demo-mini-table td .stack-primary {
+    font-weight: 700;
+    color: var(--text-1);
+    line-height: 1.2;
+  }
+  .demo-mini-table td .stack-secondary {
+    font-size: 9px;
+    color: var(--text-3);
+    line-height: 1.2;
+  }
+
+  /* ============================================================
+     DEMO #5 — STICKY ACTION BAR
+     ============================================================ */
+  .demo-actionbar-wrap {
+    position: relative;
+    background: #f4f4f2;
+    border-radius: 8px;
+    padding: 20px 16px 0;
+    height: 280px;
+    overflow: hidden;
+  }
+  .demo-actionbar-page {
+    background: #fff;
+    border-radius: 6px 6px 0 0;
+    padding: 10px;
+    height: 100%;
+    border: 1px solid var(--border-soft);
+    border-bottom: none;
+  }
+  .demo-actionbar-bar {
+    position: absolute;
+    bottom: 0; left: 16px; right: 16px;
+    background: #fff;
+    border-top: 2px solid var(--mosaic-green-800);
+    border-left: 1px solid var(--border-soft);
+    border-right: 1px solid var(--border-soft);
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -6px 16px rgba(0,0,0,0.06);
+    border-radius: 0 0 6px 6px;
+  }
+  .demo-actionbar-stats {
+    font-size: 11px;
+    color: var(--text-2);
+  }
+  .demo-actionbar-stats strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+  }
+
+  /* ============================================================
+     DEMO #6 — HINT PULSE
+     ============================================================ */
+  .demo-hint-wrap {
+    text-align: center;
+    padding: 30px 0;
+  }
+  .demo-hint-empty {
+    color: var(--text-3);
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+  .demo-pulse-btn {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    animation: hintPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes hintPulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(0,88,61,0.45);
+    }
+    50% {
+      transform: scale(1.04);
+      box-shadow: 0 0 0 14px rgba(0,88,61,0);
+    }
+  }
+
+  /* ============================================================
+     DEMO #7 — STATUS BORDER
+     ============================================================ */
+  .demo-status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .demo-status-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-left-width: 4px;
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+  }
+  .demo-status-card.incomplete { border-left-color: #c8c8c6; }
+  .demo-status-card.progress   { border-left-color: #f0c020; }
+  .demo-status-card.complete   { border-left-color: var(--mosaic-green-700); }
+  .demo-status-card.error      { border-left-color: var(--mosaic-red); }
+  .demo-status-name { font-weight: 700; color: var(--text-1); }
+  .demo-status-tag {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+  .demo-status-tag.incomplete { background: #ececea; color: #555; }
+  .demo-status-tag.progress   { background: #fdf3d2; color: #8a6500; }
+  .demo-status-tag.complete   { background: #e0f0e8; color: var(--mosaic-green-800); }
+  .demo-status-tag.error      { background: #fadcde; color: #8a1820; }
+
+  /* ============================================================
+     DEMO #8 — COLLAPSIBLE FILTERS
+     ============================================================ */
+  .demo-filter-bar {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .demo-filter-head {
+    padding: 10px 14px;
+    background: var(--bg-section);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+  }
+  .demo-filter-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-1);
+  }
+  .demo-filter-chev {
+    font-size: 11px;
+    color: var(--mosaic-green-700);
+    transition: transform var(--ease-base);
+  }
+  .demo-filter-bar.open .demo-filter-chev { transform: rotate(180deg); }
+  .demo-filter-body {
+    padding: 0 14px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--ease-base), padding var(--ease-base);
+  }
+  .demo-filter-bar.open .demo-filter-body {
+    padding: 12px 14px 14px;
+    max-height: 200px;
+  }
+  .demo-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .demo-filter-select {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 10.5px;
+    color: var(--text-2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* ============================================================
+     DEMO #9 — AUTOCOMPLETE
+     ============================================================ */
+  .demo-autocomplete {
+    position: relative;
+  }
+  .demo-autocomplete-input {
+    width: 100%;
+    border: 1.5px solid var(--mosaic-green-700);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--text-1);
+    font-family: inherit;
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+    outline: none;
+  }
+  .demo-autocomplete-list {
+    margin-top: 6px;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    overflow: hidden;
+  }
+  .demo-autocomplete-item {
+    padding: 8px 14px;
+    font-size: 11.5px;
+    color: var(--text-1);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .demo-autocomplete-item:last-child { border-bottom: none; }
+  .demo-autocomplete-item:hover, .demo-autocomplete-item.active {
+    background: rgba(0,106,77,0.06);
+  }
+  .demo-autocomplete-item mark {
+    background: rgba(240,192,32,0.35);
+    color: inherit;
+    padding: 0 1px;
+    border-radius: 2px;
+  }
+  .demo-autocomplete-item-meta { color: var(--text-3); font-size: 10px; }
+
+  /* ============================================================
+     DEMO #10 — MIXED CASE
+     ============================================================ */
+  .demo-mc-table-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .demo-mc-table {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .demo-mc-table th, .demo-mc-table td {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 11px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .demo-mc-table tbody tr:last-child td { border-bottom: none; }
+  .demo-mc-table.before th {
+    color: var(--text-2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--bg-section);
+  }
+  .demo-mc-table.after th {
+    color: var(--mosaic-green-800);
+    font-size: 12px;
+    font-weight: 600;
+    background: #fff;
+    border-bottom: 1.5px solid var(--mosaic-green-800);
+  }
+  .demo-mc-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .demo-mc-label.bad { color: #8a1820; }
+  .demo-mc-label.good { color: var(--mosaic-green-800); }
+
+  /* ============================================================
+     DEMO #11 — BREADCRUMB
+     ============================================================ */
+  .demo-breadcrumb {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .demo-breadcrumb a {
+    color: var(--mosaic-green-700);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .demo-breadcrumb a:hover { text-decoration: underline; }
+  .demo-breadcrumb-sep {
+    color: var(--text-3);
+    font-size: 14px;
+  }
+  .demo-breadcrumb-current {
+    font-weight: 700;
+    color: var(--text-1);
+  }
+
+  /* ============================================================
+     DEMO #12 — CHEVRON
+     ============================================================ */
+  .demo-nav-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--border-soft);
+  }
+  .demo-nav-row-label {
+    width: 100%;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .demo-nav-row-label.bad { color: #8a1820; }
+  .demo-nav-row-label.good { color: var(--mosaic-green-800); }
+  .demo-nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    background: var(--bg-section);
+    border-radius: 999px;
+  }
+  .demo-nav-item.has-menu { background: rgba(0,106,77,0.08); color: var(--mosaic-green-800); }
+  .demo-nav-chev::after {
+    content: "▾";
+    font-size: 9px;
+    margin-left: 2px;
+  }
+
+  /* ============================================================
+     FOOTER LINKS SECTION
+     ============================================================ */
+  .ux-links-section {
+    background: linear-gradient(180deg, #fff 0%, #f7faf8 100%);
+    border-top: 1px solid var(--border-soft);
+    padding: 56px 0;
+  }
+  .ux-links-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    margin: 0 0 6px;
+  }
+  .ux-links-lede {
+    font-size: 14px;
+    color: var(--text-2);
+    margin-bottom: 28px;
+  }
+  .ux-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 12px;
+  }
+  .ux-link-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-decoration: none;
+    transition: all var(--ease-base);
+    display: block;
+  }
+  .ux-link-card:hover {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-hover);
+    text-decoration: none;
+    transform: translateY(-2px);
+  }
+  .ux-link-card-tag {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--mosaic-green-700);
+    margin-bottom: 6px;
+  }
+  .ux-link-card-title {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+  }
+  .ux-link-card-arrow {
+    font-size: 11px;
+    color: var(--mosaic-green-700);
+    font-weight: 700;
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+</style>
+</head>
+<body>
+
+<!-- UX TOP BAR (minimal — esta é uma página de UX, não do portal) -->
+<div class="ux-topbar">
+  <div class="container container-main">
+    <div class="ux-topbar-inner">
+      <span class="ux-topbar-brand">
+        <span class="ux-topbar-brand-tag">UX</span>
+        Mosaic Direct 2.0 · Documentação de usabilidade
+      </span>
+      <a href="index.html" class="ux-topbar-back">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Voltar ao Hub
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="ux-hero">
+  <div class="container container-main">
+    <div class="ux-hero-inner">
+      <div class="ux-hero-eyebrow">Mosaic Direct 2.0 · Usabilidade</div>
+      <h1 class="ux-hero-title">9 pontos de usabilidade<br/>implementados nos protótipos</h1>
+      <p class="ux-hero-lede">
+        Componentes e decisões de UX aplicados no portal Mosaic Direct 2.0,
+        com a defesa de ganho de cada um e referência onde aparece nas telas.
+      </p>
+      <div class="ux-hero-meta">
+        <span class="ux-hero-meta-item"><span class="ux-hero-meta-dot"></span> Versão 2.0</span>
+        <span class="ux-hero-meta-item"><span class="ux-hero-meta-dot"></span> Maio 2026</span>
+        <span class="ux-hero-meta-item"><span class="ux-hero-meta-dot"></span> KRON · Mosaic</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOC -->
+<div class="ux-toc">
+  <div class="container container-main">
+    <div class="ux-toc-inner">
+      <a class="ux-toc-link" href="#item-1"><span class="ux-toc-num">01</span>Drawer</a>
+      <a class="ux-toc-link" href="#item-2"><span class="ux-toc-num">02</span>Tabela zebrada</a>
+      <a class="ux-toc-link" href="#item-3"><span class="ux-toc-num">03</span>Coluna fixa</a>
+      <a class="ux-toc-link" href="#item-4"><span class="ux-toc-num">04</span>Cell stacking</a>
+      <a class="ux-toc-link" href="#item-5"><span class="ux-toc-num">05</span>Barra fixa</a>
+      <a class="ux-toc-link" href="#item-6"><span class="ux-toc-num">06</span>Hint pulse</a>
+      <a class="ux-toc-link" href="#item-7"><span class="ux-toc-num">07</span>Status borda</a>
+      <a class="ux-toc-link" href="#item-8"><span class="ux-toc-num">08</span>Filtros</a>
+      <a class="ux-toc-link" href="#item-9"><span class="ux-toc-num">09</span>Autocomplete</a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main>
+  <div class="container container-main">
+
+    <div class="ux-grid">
+
+      <!-- ITEM 1 — DRAWER -->
+      <article class="ux-item" id="item-1">
+        <div class="ux-item-body">
+          <div class="ux-item-number">01</div>
+          <h2 class="ux-item-title">Drawer lateral em vez de modal centralizado</h2>
+          <span class="ux-item-component">Side Drawer · 560px · slide-in da direita</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Modais centralizados bloqueiam o contexto da página e forçam o usuário a decorar o que estava vendo.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">
+              <ul class="ux-gain-list">
+                <li><strong>Contexto preservado</strong> — o operador continua vendo a tela de fundo enquanto interage com o drawer. Sem precisar decorar.</li>
+                <li><strong>Ações sempre fixas no rodapé</strong> — botões primário/secundário ficam ancorados na barra inferior mesmo com scroll vertical interno. Ideal para drawers com conteúdo longo, onde o usuário não precisa rolar até o fim para confirmar.</li>
+                <li><strong>Organização hierárquica do conteúdo</strong> — header (título + close), body (conteúdo rolável) e footer (ações) são camadas visualmente separadas, criando ritmo de leitura previsível.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">Gmail compose</span>
+            <span class="ux-ref-chip">Salesforce</span>
+            <span class="ux-ref-chip">Figma</span>
+          </div>
+          <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-drawer-wrap" style="width:100%; max-width:360px;">
+            <div class="demo-page-bg">
+              <div class="demo-page-bg-line w-80"></div>
+              <div class="demo-page-bg-line w-60"></div>
+              <div class="demo-page-bg-line w-40"></div>
+              <div class="demo-page-bg-line w-80"></div>
+              <div class="demo-drawer">
+                <div class="demo-drawer-head">
+                  <span class="demo-drawer-title">Selecionar contrato</span>
+                  <span class="demo-drawer-x">✕</span>
+                </div>
+                <div class="demo-drawer-body">
+                  <div class="demo-drawer-row"></div>
+                  <div class="demo-drawer-row active"></div>
+                  <div class="demo-drawer-row"></div>
+                  <div class="demo-drawer-row"></div>
+                  <div class="demo-drawer-row"></div>
+                </div>
+                <div class="demo-drawer-foot">
+                  <button class="demo-btn demo-btn-ghost">Cancelar</button>
+                  <button class="demo-btn demo-btn-primary">Selecionar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 2 — STRIPED -->
+      <article class="ux-item" id="item-2">
+        <div class="ux-item-body">
+          <div class="ux-item-number">02</div>
+          <h2 class="ux-item-title">Tabela zebrada (striped rows)</h2>
+          <span class="ux-item-component">nth-child(even) { background: #f7f9f8 }</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Em tabelas com muitas colunas, o olho perde a linha ao deslocar horizontalmente.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Faixas de cor ancoram o olhar e reduzem erros de leitura em tabelas densas. Diferença perceptual sem poluição visual.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">WCAG 1.4.8</span>
+            <span class="ux-ref-chip">Material Design</span>
+          </div>
+          <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-table-wrap" style="width:100%; max-width:380px;">
+            <table class="demo-table">
+              <thead><tr><th>Protocolo</th><th>Contrato</th><th>Volume</th></tr></thead>
+              <tbody>
+                <tr><td>PRT-001</td><td>SAP-4521</td><td>120 t</td></tr>
+                <tr><td>PRT-002</td><td>SAP-4523</td><td>80 t</td></tr>
+                <tr><td>PRT-003</td><td>SAP-4528</td><td>200 t</td></tr>
+                <tr><td>PRT-004</td><td>SAP-4530</td><td>60 t</td></tr>
+                <tr><td>PRT-005</td><td>SAP-4532</td><td>140 t</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 3 — STICKY COLUMN -->
+      <article class="ux-item" id="item-3">
+        <div class="ux-item-body">
+          <div class="ux-item-number">03</div>
+          <h2 class="ux-item-title">Congelamento de coluna (sticky column)</h2>
+          <span class="ux-item-component">position: sticky; left: 0</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Com 24 colunas, o número do protocolo desaparecia no scroll. O usuário perdia a referência de qual linha estava lendo.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">O identificador permanece visível em qualquer posição do scroll. Zero confusão de linha. Mesmo padrão de Google Sheets e Excel.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">Google Sheets</span>
+            <span class="ux-ref-chip">Excel</span>
+            <span class="ux-ref-chip">Airtable</span>
+          </div>
+          <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-sticky-wrap" style="width:100%; max-width:380px;">
+            <div class="demo-sticky-scroll">
+              <table class="demo-sticky-table">
+                <thead>
+                  <tr>
+                    <th class="sticky-col">Protocolo</th>
+                    <th>Status</th><th>Contrato SAP</th><th>Cliente</th><th>Cidade</th><th>UF</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td class="sticky-col">PRT-001</td><td>Liberado</td><td>SAP-4521</td><td>Cooperativa A</td><td>Cuiabá</td><td>MT</td></tr>
+                  <tr><td class="sticky-col">PRT-002</td><td>Novo</td><td>SAP-4523</td><td>Cooperativa B</td><td>Sorriso</td><td>MT</td></tr>
+                  <tr><td class="sticky-col">PRT-003</td><td>Concluído</td><td>SAP-4528</td><td>Cooperativa C</td><td>Lucas</td><td>MT</td></tr>
+                  <tr><td class="sticky-col">PRT-004</td><td>Em agend.</td><td>SAP-4530</td><td>Cooperativa D</td><td>Sinop</td><td>MT</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="demo-sticky-hint">← arraste a tabela para o lado →</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 4 — CELL STACKING -->
+      <article class="ux-item" id="item-4">
+        <div class="ux-item-body">
+          <div class="ux-item-number">04</div>
+          <h2 class="ux-item-title">Agrupamento na linha (cell stacking)</h2>
+          <span class="ux-item-component">.cell-stack { flex-direction: column }</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Pares de campos relacionados ocupavam 2 colunas separadas, dobrando a largura da tabela.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">~40% menos colunas visíveis. Informações relacionadas ficam juntas (proximidade). Leitura mais rápida em pares.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">NN/g · Information density</span>
+          </div>
+          <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div style="width:100%; max-width:420px;">
+            <div class="demo-mc-label bad">Antes — 4 colunas</div>
+            <div class="demo-compare-box" style="margin-bottom:14px;">
+              <table class="demo-mini-table">
+                <thead><tr><th>Produto</th><th>Embalagem</th><th>Cliente</th><th>CNPJ</th></tr></thead>
+                <tbody>
+                  <tr><td>Soja</td><td>Saca 60kg</td><td>Coop A</td><td>12.345/0001</td></tr>
+                  <tr><td>Milho</td><td>Granel</td><td>Coop B</td><td>23.456/0001</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="demo-mc-label good">Depois — 2 colunas (stack)</div>
+            <div class="demo-compare-box">
+              <table class="demo-mini-table">
+                <thead><tr><th>Produto</th><th>Cliente</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><div class="stack-primary">Soja</div><div class="stack-secondary">Saca 60kg</div></td>
+                    <td><div class="stack-primary">Coop A</div><div class="stack-secondary">12.345/0001</div></td>
+                  </tr>
+                  <tr>
+                    <td><div class="stack-primary">Milho</div><div class="stack-secondary">Granel</div></td>
+                    <td><div class="stack-primary">Coop B</div><div class="stack-secondary">23.456/0001</div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 5 — STICKY ACTION BAR -->
+      <article class="ux-item" id="item-5">
+        <div class="ux-item-body">
+          <div class="ux-item-number">05</div>
+          <h2 class="ux-item-title">Barra inferior fixa (sticky action bar)</h2>
+          <span class="ux-item-component">.summary-footer { position: fixed; bottom: 0 }</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">O botão de ação principal ficava no rodapé — invisível sem scroll até o fim.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Botão primário sempre acessível. Contador de itens / volume total sempre visível.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">iOS bottom bar</span>
+            <span class="ux-ref-chip">Shopify Admin</span>
+          </div>
+          <a href="agendar-protocolo.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-actionbar-wrap" style="width:100%; max-width:360px;">
+            <div class="demo-actionbar-page">
+              <div class="demo-page-bg-line w-80"></div>
+              <div class="demo-page-bg-line w-60"></div>
+              <div class="demo-page-bg-line w-80"></div>
+              <div class="demo-page-bg-line w-40"></div>
+              <div class="demo-page-bg-line w-60"></div>
+              <div class="demo-page-bg-line w-80"></div>
+              <div class="demo-page-bg-line w-40"></div>
+            </div>
+            <div class="demo-actionbar-bar">
+              <div class="demo-actionbar-stats">
+                <strong>3</strong> protocolos · <strong>340 t</strong> selecionadas
+              </div>
+              <button class="demo-btn demo-btn-primary" style="height:28px; padding:0 14px; font-size:11px;">Agendar</button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 6 — HINT PULSE -->
+      <article class="ux-item" id="item-6">
+        <div class="ux-item-body">
+          <div class="ux-item-number">06</div>
+          <h2 class="ux-item-title">Animação de atenção no estado vazio (hint pulse)</h2>
+          <span class="ux-item-component">@keyframes hintPulse</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Operadores novos não sabiam por onde começar. Tela em branco não comunicava o próximo passo.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Direcionamento visual imediato sem tooltip. A animação para no primeiro item adicionado — não irrita experientes.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">Don Norman · signifiers</span>
+            <span class="ux-ref-chip">Duolingo</span>
+          </div>
+          <a href="agendar-contrato-normal.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-hint-wrap">
+            <div class="demo-hint-empty">Comece selecionando um contrato</div>
+            <button class="demo-pulse-btn">+ Adicionar contrato</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 7 — STATUS BORDER -->
+      <article class="ux-item" id="item-7">
+        <div class="ux-item-body">
+          <div class="ux-item-number">07</div>
+          <h2 class="ux-item-title">Indicador de status na borda esquerda</h2>
+          <span class="ux-item-component">border-left: 4px solid &lt;cor-status&gt;</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Com múltiplos cards na tela, era difícil identificar quais itens ainda precisavam de atenção.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Scanning visual rápido — o operador varre a borda e identifica o status. Não depende de leitura de texto.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">Trello</span>
+            <span class="ux-ref-chip">Linear</span>
+          </div>
+          <a href="criar-protocolo.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-status-list" style="width:100%; max-width:340px;">
+            <div class="demo-status-card incomplete">
+              <span class="demo-status-name">Contrato 4521</span>
+              <span class="demo-status-tag incomplete">Incompleto</span>
+            </div>
+            <div class="demo-status-card progress">
+              <span class="demo-status-name">Contrato 4523</span>
+              <span class="demo-status-tag progress">Em progresso</span>
+            </div>
+            <div class="demo-status-card complete">
+              <span class="demo-status-name">Contrato 4528</span>
+              <span class="demo-status-tag complete">Completo</span>
+            </div>
+            <div class="demo-status-card error">
+              <span class="demo-status-name">Contrato 4530</span>
+              <span class="demo-status-tag error">Erro</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 8 — COLLAPSIBLE FILTERS -->
+      <article class="ux-item" id="item-8">
+        <div class="ux-item-body">
+          <div class="ux-item-number">08</div>
+          <h2 class="ux-item-title">Filtros avançados colapsáveis</h2>
+          <span class="ux-item-component">Progressive disclosure · toggle ▼/▲</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Filtros visíveis o tempo todo sobrecarregavam a interface e intimidavam usuários ocasionais.</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Casual vê interface limpa. Avançado expande quando precisa. Complexidade disponível mas não imposta.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">NN/g · Progressive disclosure</span>
+            <span class="ux-ref-chip">Amazon filters</span>
+          </div>
+          <a href="relatorio-protocolos.html" class="ux-item-link">Ver no Relatório →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-filter-bar" id="demoFilterBar" style="width:100%; max-width:340px;">
+            <div class="demo-filter-head" onclick="document.getElementById('demoFilterBar').classList.toggle('open')">
+              <span class="demo-filter-title">Filtros avançados</span>
+              <span class="demo-filter-chev">▾</span>
+            </div>
+            <div class="demo-filter-body">
+              <div class="demo-filter-grid">
+                <div class="demo-filter-select">Status <span>▾</span></div>
+                <div class="demo-filter-select">Cliente <span>▾</span></div>
+                <div class="demo-filter-select">Cidade <span>▾</span></div>
+                <div class="demo-filter-select">Período <span>▾</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ITEM 9 — AUTOCOMPLETE -->
+      <article class="ux-item" id="item-9">
+        <div class="ux-item-body">
+          <div class="ux-item-number">09</div>
+          <h2 class="ux-item-title">Campo de busca com autocomplete</h2>
+          <span class="ux-item-component">debounce 250ms · max 6 resultados</span>
+          <div class="ux-item-section">
+            <div class="ux-item-section-label">Problema</div>
+            <div class="ux-item-section-text">Operadores digitavam códigos longos (SAP, CNPJ) de memória. Erros de digitação retornavam "sem resultados".</div>
+          </div>
+          <div class="ux-item-gain">
+            <div class="ux-item-section-label">Ganho de UX</div>
+            <div class="ux-item-section-text">Recognition over recall (Nielsen #6). O sistema apresenta opções — o operador reconhece em vez de lembrar.</div>
+          </div>
+          <div class="ux-item-refs">
+            <span class="ux-ref-chip">Nielsen Heuristic #6</span>
+            <span class="ux-ref-chip">Google Search</span>
+          </div>
+          <a href="criar-protocolo.html" class="ux-item-link">Ver na tela →</a>
+        </div>
+        <div class="ux-demo">
+          <div class="demo-autocomplete" style="width:100%; max-width:340px;">
+            <input class="demo-autocomplete-input" value="coop" readonly />
+            <div class="demo-autocomplete-list">
+              <div class="demo-autocomplete-item active">
+                <span><mark>Coop</mark>erativa Agrícola Sorriso</span>
+                <span class="demo-autocomplete-item-meta">14.521</span>
+              </div>
+              <div class="demo-autocomplete-item">
+                <span><mark>Coop</mark>erativa Mista Lucas</span>
+                <span class="demo-autocomplete-item-meta">14.523</span>
+              </div>
+              <div class="demo-autocomplete-item">
+                <span><mark>Coop</mark>er Cuiabá</span>
+                <span class="demo-autocomplete-item-meta">14.528</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</main>
+
+<!-- LINKS SECTION -->
+<section class="ux-links-section">
+  <div class="container container-main">
+    <h2 class="ux-links-title">Onde ver na prática</h2>
+    <p class="ux-links-lede">Telas do protótipo onde estes componentes estão implementados:</p>
+
+    <div class="ux-links-grid">
+      <a href="agendar-contrato-normal.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Agendamento</div>
+        <div class="ux-link-card-title">Agendar Contrato Normal</div>
+        <div class="ux-link-card-arrow">Abrir tela →</div>
+      </a>
+      <a href="criar-protocolo.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Contratos</div>
+        <div class="ux-link-card-title">Criar Protocolo</div>
+        <div class="ux-link-card-arrow">Abrir tela →</div>
+      </a>
+      <a href="agendar-protocolo.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Agendamento</div>
+        <div class="ux-link-card-title">Agendar Protocolo</div>
+        <div class="ux-link-card-arrow">Abrir tela →</div>
+      </a>
+      <a href="relatorio-status-agendamento.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Relatório</div>
+        <div class="ux-link-card-title">Status de Agendamento</div>
+        <div class="ux-link-card-arrow">Abrir tela →</div>
+      </a>
+      <a href="relatorio-protocolos.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Relatório</div>
+        <div class="ux-link-card-title">Relatório de Protocolos</div>
+        <div class="ux-link-card-arrow">Abrir tela →</div>
+      </a>
+      <a href="index.html" class="ux-link-card">
+        <div class="ux-link-card-tag">Hub</div>
+        <div class="ux-link-card-title">Todas as telas</div>
+        <div class="ux-link-card-arrow">Abrir hub →</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- UX FOOTER (minimal) -->
+<footer class="ux-footer">
+  <div class="container container-main">
+    <div class="ux-footer-inner">
+      <div class="ux-footer-brand">
+        <strong>Mosaic Direct 2.0</strong> · Documentação de usabilidade · KRON · 2026
+      </div>
+      <div class="ux-footer-links">
+        <a href="index.html">Hub de telas</a>
+        <a href="#top">Topo da página ↑</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>

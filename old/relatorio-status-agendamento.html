@@ -6,7 +6,7 @@
 <title>Mosaic Direct — Relatório de Status de Agendamento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 <style>
   /* ================================================================
      Design tokens (V5 parity)
@@ -45,7 +45,7 @@
     --text-on-green:  #ffffff;
     --link-green:     #006a4d;
 
-    --font-sans: "Barlow", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
     --shadow-card:   0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06);
     --shadow-modal:  0 18px 60px rgba(0,0,0,0.22), 0 6px 18px rgba(0,0,0,0.12);
@@ -90,7 +90,7 @@
     line-height: 1;
   }
   .logo .wordmark {
-    font-family: "Barlow", sans-serif;
+    font-family: "Manrope", sans-serif;
     font-style: italic;
     font-weight: 800;
     font-size: 36px;
@@ -797,14 +797,14 @@
   }
   .proto-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 12px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--border-soft);
     white-space: nowrap;
     vertical-align: middle;
   }
@@ -880,23 +880,19 @@
   }
   .drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(820px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(560px, 100%);
     background: #fff;
     z-index: 101;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    box-shadow: -16px 0 40px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 320ms cubic-bezier(0.2, 0.8, 0.3, 1);
   }
-  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer.is-open { transform: translateX(0); }
 
   .drawer-header {
     padding: 22px 28px 18px;
@@ -1297,23 +1293,19 @@
   }
   .roteiro-drawer {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    width: min(640px, 96vw);
-    max-height: calc(100vh - 56px);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(480px, 100%);
     background: #fff;
     z-index: 111;
-    transform: translate(-50%, -48%) scale(0.98);
-    opacity: 0;
-    pointer-events: none;
-    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+    transform: translateX(100%);
+    transition: transform 280ms cubic-bezier(0.2, 0.8, 0.3, 1);
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    box-shadow: -8px 0 32px rgba(0,0,0,0.18);
   }
-  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .roteiro-drawer.is-open { transform: translateX(0); }
   .roteiro-drawer-header {
     padding: 22px 26px 14px;
     border-bottom: 1px solid var(--border-soft);
@@ -2120,23 +2112,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .filter-block--actions { align-self: end; }
-  /* Range filter (Semana de → até) */
-  .filter-block--range { min-width: 0; }
-  .semana-range {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .semana-range select {
-    flex: 1;
-    min-width: 0;
-  }
-  .semana-range-sep {
-    color: var(--mosaic-green-700);
-    font-weight: 800;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
   .btn-clear-filters {
     height: 36px;
     padding: 0 14px;
@@ -2165,14 +2140,14 @@
   }
   .report-table thead th {
     background: var(--bg-section);
-    color: var(--mosaic-green-800);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: none;
-    letter-spacing: 0;
-    padding: 13px 14px;
-    border-bottom: 1px solid var(--border-soft);
     text-align: left;
+    padding: 12px 12px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--border);
     white-space: nowrap;
     position: sticky;
     top: 0;
@@ -2195,522 +2170,49 @@
   .report-table .stack-primary { font-weight: 700; color: var(--text-1); }
   .report-table .stack-secondary { font-size: 11px; color: var(--text-3); font-weight: 600; }
 
-  /* ================================================================
-     PARIDADE VISUAL com Relatório de Protocolos (.wide-table)
-     Overrides com !important pra vencer o base.css compartilhado.
-     ================================================================ */
-  /* 1) Remove as setas de ordenação herdadas do base.css */
-  .report-table thead th::after { content: none !important; }
-  /* 2) Header igual ao protocolos: verde-800 / 600 / 13px / padding 13x14 */
-  .report-table thead th {
-    padding: 13px 14px !important;
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    color: var(--mosaic-green-800) !important;
-  }
-  /* 3) Altura de linha igual ao protocolos (padding 14px) */
-  .report-table tbody td { padding: 14px 14px !important; }
-
   .tipo-tag {
     display: inline-flex; align-items: center;
     font-size: 9px; font-weight: 800;
     padding: 2px 7px; border: 1.5px solid;
     letter-spacing: 0.06em; text-transform: uppercase;
-    border-radius: var(--radius-pill);
   }
   .tipo-tag--plan    { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
   .tipo-tag--replan  { color: var(--mosaic-orange); border-color: var(--mosaic-orange); background: var(--status-orange-bg, rgba(199,104,20,0.08)); }
   .tipo-tag--adicao  { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
 
-  /* Status badge IDÊNTICO ao protocolos: pill arredondada + bolinha + bg suave */
   .status-pill {
     display: inline-flex; align-items: center;
-    gap: 5px;
-    font-size: 11.5px; font-weight: 700;
-    padding: 3px 10px;
-    border-radius: var(--radius-pill);
-    border: none;
-    letter-spacing: 0;
+    font-size: 11px; font-weight: 700;
+    padding: 3px 8px; border-radius: 0;
+    border: 1.5px solid; letter-spacing: 0.02em;
     white-space: nowrap;
-    line-height: 1.4;
   }
-  .status-pill::before {
-    content: ''; width: 6px; height: 6px; border-radius: 50%;
-    background: currentColor; flex-shrink: 0;
-  }
-  /* 6 status mapeados pros mesmos tokens do protocolos */
-  .status-pill--em_analise      { background: var(--status-analise-bg) !important;    color: var(--status-analise-fg) !important;    }
-  .status-pill--aprovado        { background: var(--status-aprovado-bg) !important;   color: var(--status-aprovado-fg) !important;   }
-  .status-pill--em_carregamento { background: var(--status-carregando-bg) !important; color: var(--status-carregando-fg) !important; }
-  .status-pill--faturado        { background: var(--status-faturado-bg) !important;   color: var(--status-faturado-fg) !important;   }
-  .status-pill--rejeitado       { background: var(--status-cancelado-bg) !important;  color: var(--status-cancelado-fg) !important;  }
-  .status-pill--cancelado       { background: #f4f4f2 !important; color: var(--text-3) !important; border: 1px solid var(--border) !important; }
+  /* 6 status valores (cliente) — BR Rel Status Agendamento */
+  .status-pill--em_analise      { color: var(--text-1); border-color: var(--mosaic-yellow); background: var(--mosaic-yellow); }
+  .status-pill--rejeitado       { color: #fff; border-color: var(--mosaic-red); background: var(--mosaic-red); }
+  .status-pill--aprovado        { color: var(--mosaic-green-700); border-color: var(--mosaic-green-700); background: rgba(0,106,77,0.06); }
+  .status-pill--em_carregamento { color: var(--mosaic-teal); border-color: var(--mosaic-teal); background: rgba(44,139,120,0.08); }
+  .status-pill--faturado        { color: #fff; border-color: var(--mosaic-green-800); background: var(--mosaic-green-800); }
+  .status-pill--cancelado       { color: var(--text-3); border-color: var(--border); background: var(--bg-section); }
 
   /* Daily breakdown diff coloring */
   .report-table .vol-cell--pos  { color: var(--mosaic-green-700); }
   .report-table .vol-cell--neg  { color: var(--mosaic-red); }
   .report-table .vol-cell--zero { color: var(--text-3); }
   .report-table .vol-cell--muted { color: var(--text-3); font-weight: 600; }
-  /* Sticky action column (cluster de Editar/Salvar/Cancelar) */
-  .report-table th.col-action,
-  .report-table td.col-action {
-    position: sticky; left: 0;
-    width: 88px; min-width: 88px; max-width: 88px;
-    padding: 8px 8px !important;
-    text-align: center;
-    background: #fff;
-    z-index: 2;
-  }
-  .report-table thead th.col-action { background: var(--bg-section); z-index: 3; }
-  .report-table tbody tr:nth-child(even) td.col-action { background: #fafaf8; }
-  .report-table tbody tr:hover td.col-action,
-  .report-table tbody tr:nth-child(even):hover td.col-action { background: #ecf3ef; }
-
-  /* Sticky first column (Solicitação) — agora é a 1ª coluna (chevron embutido) */
+  /* Sticky first column for wide table */
   .report-table th.col-sticky,
   .report-table td.col-sticky {
     position: sticky; left: 0;
     background: #fff;
     z-index: 2;
-    box-shadow: 4px 0 8px -4px rgba(0,0,0,0.10);
-    padding: 8px 14px !important;
+    box-shadow: 1px 0 0 var(--border-soft);
   }
   .report-table thead th.col-sticky { background: var(--bg-section); z-index: 3; }
   .report-table tbody tr:nth-child(even) td.col-sticky { background: #fafaf8; }
   /* Hover precisa ser OPACO para nao deixar vazar o conteudo das colunas atras */
   .report-table tbody tr:hover td.col-sticky,
   .report-table tbody tr:nth-child(even):hover td.col-sticky { background: #ecf3ef; }
-
-  /* Cluster + chevron IDÊNTICOS ao protocolos (caixinha arredondada ao lado do ID) */
-  .proto-cell { display: inline-flex; align-items: center; gap: 6px; }
-  .action-cluster {
-    display: inline-flex;
-    align-items: center;
-    gap: 2px;
-    padding: 2px 4px;
-    border-radius: 6px;
-    background: rgba(0,0,0,0.025);
-    margin-left: 8px;
-    position: relative;
-  }
-  .report-table tbody tr:hover .action-cluster { background: rgba(0,106,77,0.06); }
-  .cell-action.action-menu {
-    color: var(--text-2);
-    width: 26px;
-    height: 22px;
-    border-radius: 5px;
-    border: none !important;
-    background: transparent !important;
-  }
-  .cell-action.action-menu:hover {
-    color: var(--mosaic-green-800);
-    background: rgba(0,106,77,0.14) !important;
-    border: none !important;
-  }
-
-  /* Dropdown de acoes da linha — vive no <body> com position:fixed
-     (igual ao padrao da tela Relatorio de Protocolos). */
-  .action-menu-pop {
-    position: fixed;
-    min-width: 220px;
-    background: #fff;
-    border: 1px solid var(--border-soft);
-    border-radius: var(--radius-md, 8px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.08);
-    padding: 4px;
-    z-index: 9999;
-  }
-  .action-menu-item {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    font-size: 13px;
-    color: var(--text-1);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    text-align: left;
-    font-family: inherit;
-    transition: background var(--ease-fast);
-  }
-  .action-menu-item:hover { background: rgba(0,106,77,0.08); }
-  .action-menu-item svg { color: var(--text-3); flex-shrink: 0; }
-  .action-menu-item:hover svg { color: var(--mosaic-green-700); }
-  .action-menu-item.is-danger { color: var(--mosaic-red); }
-  .action-menu-item.is-danger svg { color: var(--mosaic-red); }
-  .action-menu-item.is-danger:hover { background: rgba(185,32,42,0.08); }
-  .action-menu-sep {
-    height: 1px;
-    background: var(--border-soft);
-    margin: 4px 0;
-  }
-
-  /* Modal Editar Solicitacao — versao simples (so qty editavel) */
-  .rsa-modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(15,32,27,0.55);
-    z-index: 1000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-  .rsa-modal-backdrop.is-open { display: flex; }
-  .rsa-modal {
-    background: #fff;
-    width: 100%;
-    max-width: 460px;
-    border-radius: var(--radius-md, 8px);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.25);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-  .rsa-modal-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    background: var(--bg-section, #f4f4f4);
-    border-bottom: 1px solid var(--border-soft);
-  }
-  .rsa-modal-head h2 {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: var(--text-1);
-  }
-  .rsa-modal-head .sub {
-    font-size: 11.5px;
-    color: var(--text-3);
-    margin-top: 2px;
-    font-weight: 600;
-  }
-  .rsa-modal-x {
-    background: transparent;
-    border: none;
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-3);
-    cursor: pointer;
-  }
-  .rsa-modal-x:hover { background: rgba(0,0,0,0.06); color: var(--text-1); }
-  .rsa-modal-body { padding: 20px; }
-  .rsa-modal-field { display: flex; flex-direction: column; gap: 6px; }
-  .rsa-modal-field label {
-    font-size: 10.5px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--text-3);
-  }
-  .rsa-modal-field input {
-    width: 100%;
-    height: 40px;
-    padding: 0 12px;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    font-family: inherit;
-    color: var(--text-1);
-    background: #fff;
-  }
-  .rsa-modal-field input:focus {
-    outline: none;
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 3px rgba(0,106,77,0.15);
-  }
-  .rsa-modal-field .helper {
-    font-size: 11px;
-    color: var(--text-3);
-    margin-top: 2px;
-  }
-  .rsa-modal-info {
-    background: var(--bg-section, #f4f4f4);
-    border-radius: 6px;
-    padding: 10px 12px;
-    margin-bottom: 14px;
-    font-size: 11.5px;
-    color: var(--text-2);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6px 14px;
-  }
-  .rsa-modal-info b { color: var(--text-1); font-weight: 700; }
-  .rsa-modal-foot {
-    padding: 14px 20px;
-    background: var(--bg-section, #f4f4f4);
-    border-top: 1px solid var(--border-soft);
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-  .rsa-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    height: 36px;
-    padding: 0 16px;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 700;
-    border: 1px solid transparent;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .rsa-btn-secondary {
-    background: #fff;
-    color: var(--text-1);
-    border-color: var(--border);
-  }
-  .rsa-btn-secondary:hover { background: var(--bg-section, #f4f4f4); }
-  .rsa-btn-primary {
-    background: var(--mosaic-green-800);
-    color: #fff;
-  }
-  .rsa-btn-primary:hover { background: var(--mosaic-green-900, #003e2a); }
-
-  /* Mantem o legado abaixo para compat — agora nao usado, mas evita
-     que renderizacoes antigas / cache quebrem visualmente.            */
-  .cell-action {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px; height: 28px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    color: var(--text-3);
-    cursor: pointer;
-    background: #fff;
-    transition: border-color var(--ease-fast), color var(--ease-fast), background var(--ease-fast);
-    text-decoration: none;
-    padding: 0;
-    font-family: inherit;
-  }
-  .cell-action:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
-  }
-  .cell-action.action-edit {
-    border-color: var(--border);
-    color: var(--text-2);
-  }
-  .cell-action.action-edit:hover {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
-  }
-  .cell-action.action-save {
-    border-color: var(--mosaic-green-700);
-    color: var(--mosaic-green-700);
-    background: rgba(0,106,77,0.06);
-  }
-  .cell-action.action-save:hover {
-    background: var(--mosaic-green-700);
-    color: #fff;
-    border-color: var(--mosaic-green-700);
-  }
-  .cell-action.action-cancel {
-    border-color: var(--border);
-    color: var(--mosaic-red);
-  }
-  .cell-action.action-cancel:hover {
-    background: var(--mosaic-red);
-    color: #fff;
-    border-color: var(--mosaic-red);
-  }
-
-  /* Linha em modo edicao — fundo amarelo sutil */
-  .report-table tbody tr.is-editing td {
-    background: #fffbed !important;
-  }
-  .report-table tbody tr.is-editing td.col-action { background: #fffbed !important; }
-  .report-table tbody tr.is-editing td.col-sticky {
-    background: #fffbed !important;
-    box-shadow: 1px 0 0 rgba(240,192,32,0.40);
-  }
-  /* Celula em modo edicao: caixa de input grande */
-  .report-table td.cell-row-edit {
-    padding: 0 !important;
-    background: #fff !important;
-    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
-  }
-  .row-qty-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    padding: 14px 12px;
-    text-align: right;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: inherit;
-    font-variant-numeric: tabular-nums;
-    color: var(--text-1);
-    background: transparent;
-  }
-  /* Celula editavel (click-to-edit no modo normal) */
-  .report-table td.editable-qty {
-    position: relative;
-    cursor: pointer;
-    padding-right: 22px !important;
-  }
-  .report-table td.editable-qty:hover {
-    background: #fffbed;
-    box-shadow: inset 0 0 0 1px #f0c020;
-  }
-  .qty-pencil {
-    position: absolute;
-    right: 6px; top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-3);
-    opacity: 0;
-    transition: opacity var(--ease-fast);
-    pointer-events: none;
-    display: inline-flex;
-  }
-  .report-table td.editable-qty:hover .qty-pencil { opacity: 1; color: var(--mosaic-green-700); }
-  .report-table td.editable-qty.cell-editing {
-    padding: 0 !important;
-    background: #fff !important;
-    box-shadow: inset 0 0 0 2px var(--mosaic-green-700);
-  }
-  .qty-inline-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    padding: 14px 12px;
-    text-align: right;
-    font-size: 13px;
-    font-weight: 700;
-    font-family: inherit;
-    font-variant-numeric: tabular-nums;
-    color: var(--text-1);
-    background: transparent;
-  }
-
-  /* Inputs inline */
-  .inline-edit {
-    width: 100%;
-    min-width: 90px;
-    padding: 5px 8px;
-    font-size: 12.5px;
-    font-family: inherit;
-    color: var(--text-1);
-    background: #fff;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    outline: none;
-    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
-  }
-  .inline-edit:hover { border-color: var(--border-strong); }
-  .inline-edit:focus {
-    border-color: var(--mosaic-green-700);
-    box-shadow: 0 0 0 2px rgba(0,106,77,0.15);
-  }
-  .inline-edit.num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-    font-weight: 600;
-  }
-  select.inline-edit {
-    padding-right: 24px;
-    -webkit-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
-    background-repeat: no-repeat;
-    background-position: right 6px center;
-  }
-
-  /* Confirmation modal (descartar alteracoes) */
-  .confirm-modal-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 270;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    opacity: 0;
-    transition: opacity var(--ease-base);
-  }
-  .confirm-modal-backdrop.is-open { display: flex; opacity: 1; }
-  .confirm-modal {
-    background: #fff;
-    border-radius: var(--radius-md);
-    width: 100%;
-    max-width: 420px;
-    padding: 24px 24px 18px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.30);
-    transform: scale(0.96);
-    transition: transform var(--ease-base);
-  }
-  .confirm-modal-backdrop.is-open .confirm-modal { transform: scale(1); }
-  .confirm-modal-head {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-  }
-  .confirm-modal-icon {
-    width: 40px; height: 40px; border-radius: 50%;
-    background: rgba(213,107,26,0.12);
-    color: var(--mosaic-orange);
-    display: inline-flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .confirm-modal h3 {
-    font-size: 17px; font-weight: 800; margin: 0;
-    color: var(--text-1); line-height: 1.2;
-  }
-  .confirm-modal-text {
-    font-size: 13px; color: var(--text-2);
-    margin-bottom: 18px; line-height: 1.5;
-  }
-  .confirm-modal-text strong {
-    color: var(--text-1); font-weight: 700;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-  }
-  .confirm-modal-actions {
-    display: flex; gap: 10px; justify-content: flex-end;
-  }
-  .confirm-btn {
-    height: 36px; padding: 0 16px;
-    border-radius: var(--radius-md);
-    font-size: 12.5px; font-weight: 700;
-    cursor: pointer; border: none; font-family: inherit;
-    display: inline-flex; align-items: center; gap: 6px;
-    transition: background var(--ease-fast), border-color var(--ease-fast);
-  }
-  .confirm-btn-secondary {
-    background: #fff; color: var(--text-1); border: 1px solid var(--border);
-  }
-  .confirm-btn-secondary:hover { background: var(--bg-section); }
-  .confirm-btn-danger { background: var(--mosaic-red); color: #fff; }
-  .confirm-btn-danger:hover { background: #8a1820; }
-
-  /* Toast verde */
-  .inline-toast {
-    position: fixed;
-    bottom: 28px; left: 50%;
-    transform: translateX(-50%) translateY(120px);
-    background: var(--mosaic-green-800);
-    color: #fff;
-    padding: 14px 22px;
-    border-radius: var(--radius-md);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
-    display: inline-flex; align-items: center; gap: 10px;
-    font-size: 13px; font-weight: 700;
-    z-index: 300;
-    transition: transform var(--ease-base);
-    pointer-events: none;
-  }
-  .inline-toast.is-visible { transform: translateX(-50%) translateY(0); }
   /* Subtle day-group separator: thin line at start of each day group */
   .report-table th.day-sep,
   .report-table td.day-sep { border-left: 1px solid var(--border-soft); }
@@ -2848,130 +2350,96 @@
   .report-empty strong { color: var(--text-1); display: block; margin-bottom: 6px; }
   .report-empty.is-hidden { display: none; }
 
-  /* ================================================================
-     Barra de scroll horizontal flutuante — sempre visível no rodapé
-     da viewport enquanto a tabela transborda e está em tela.
-     A barra nativa do wrap é escondida para não duplicar.
-     ================================================================ */
-  /* Mata a barra nativa dos wraps — inclusive a verde do base.css, que
-     pode carregar DEPOIS deste <style> (daí o prefixo html + !important).
-     Sem isso aparecem DUAS barras: a nativa no rodapé da tabela e a
-     flutuante no rodapé da viewport. */
-  html .wide-table-wrap, html .report-table-wrap {
-    scrollbar-width: none !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-  }
-  html .wide-table-wrap::-webkit-scrollbar,
-  html .report-table-wrap::-webkit-scrollbar {
-    display: none !important;
-    height: 0 !important;
-    width: 0 !important;
-  }
-
-  /* html-prefixo + !important: o base.css também define .sticky-h-scroll
-     (16px, branca, display:none) e pode carregar depois deste style. */
-  html .sticky-h-scroll {
-    position: fixed;
-    bottom: 0 !important;
-    left: 0;
-    right: auto !important;
-    z-index: 200;
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: block !important;
-    height: 22px !important;
-    background: #eef2f0 !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 160ms ease-out;
-    scrollbar-width: auto;
-    scrollbar-color: var(--mosaic-green-800) #eef2f0;
-  }
-  html .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
-  html .sticky-h-scroll-inner { height: 1px; }
-  html .sticky-h-scroll::-webkit-scrollbar { height: 22px; }
-  html .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb {
-    background: var(--mosaic-green-800);
-    border-radius: 999px;
-    border: 4px solid #eef2f0;
-    min-width: 80px;
-  }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
-
 </style>
+<!-- Google Analytics 4 (gtag.js) — substituir GA_MEASUREMENT_ID -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'GA_MEASUREMENT_ID');
+</script>
 
+<!-- Hotjar Tracking Code — substituir HOTJAR_SITE_ID -->
+<script>
+  (function(h,o,t,j,a,r){
+    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+    h._hjSettings={hjid:HOTJAR_SITE_ID,hjsv:6};
+    a=o.getElementsByTagName('head')[0];
+    r=o.createElement('script');r.async=1;
+    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+    a.appendChild(r);
+  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
 
-
-
-<link rel="stylesheet" href="tokens.css" />
-<link rel="stylesheet" href="base.css" />
 </head>
 <body>
 
 <!-- Top header ==================================================== -->
-<header class="mosaic-header">
-  <div class="mosaic-header-top">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="mosaic-search">
-      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
-      <span class="search-icon" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </span>
+<header class="topbar">
+  <div class="logo" aria-label="Mosaic">
+    <span class="wordmark">Mosaic<sup>®</sup></span>
+    <img class="shapes" src="data:image/png;base64,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" alt="" />
+  </div>
+  <div class="global-search">
+    <input type="text" placeholder="Pesquisar..." aria-label="Pesquisar" />
+    <span class="icon-search" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+  </div>
+  <div class="user-cluster">
+    <div class="lang-select">
+      EN
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
     </div>
-    <div class="mosaic-user-cluster">
-      <button class="lang-switch" type="button">
-        PT
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="mosaic-user-info">
-        <span class="user-name">Alyssa Harris</span>
-        <span class="user-org">MAR JAC POULT...</span>
-      </div>
-      <button class="icon-btn" aria-label="Trocar empresa" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
-      </button>
-      <button class="icon-btn" aria-label="Carrinho" type="button">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </button>
+    <div class="user-info">
+      <div class="name">Alyssa Harris</div>
+      <div class="org">MAR JAC POULT...</div>
+    </div>
+    <div class="icon-pill" aria-label="Calendário">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
     </div>
   </div>
-  <nav class="mosaic-nav" aria-label="Principal">
-    <div class="mosaic-nav-inner">
-      <a href="index.html" class="nav-item">Home</a>
-      <a href="#" class="nav-item">Produtos</a>
-      <a href="#" class="nav-item">Cotações</a>
-      <span class="nav-item" tabindex="0">
-        Contratos<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="criar-protocolo.html">Criar Protocolo</a>
-          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
-        </div>
-      </span>
-      <span class="nav-item is-active" tabindex="0">
-        Agendamento<span class="chev" aria-hidden="true"></span>
-        <div class="nav-submenu">
-          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
-          <a href="agendar-protocolo.html">Agendar Protocolo</a>
-          <a href="relatorio-status-agendamento.html" class="is-active">Relatório de Status de Agendamento</a>
-        </div>
-      </span>
-      <a href="#" class="nav-item">Faturamento</a>
-      <a href="#" class="nav-item">Documentos</a>
-      <a href="#" class="nav-item">Financeiro</a>
-      <a href="#" class="nav-item">Suporte</a>
-    </div>
-  </nav>
 </header>
 
+<!-- Main nav ====================================================== -->
+<nav class="mainnav">
+  <div class="mainnav-inner">
+    <a href="#" class="navitem">Home</a>
+    <a href="#" class="navitem has-dropdown">Produtos</a>
+    <a href="#" class="navitem has-dropdown">Cotações</a>
+    <span class="navitem has-dropdown" id="navContratos">
+      Contratos
+      <div class="submenu">
+        <a href="#">Meus contratos</a>
+        <a href="criar-protocolo.html">Criar Protocolo</a>
+      </div>
+    </span>
+    <span class="navitem has-dropdown" id="navAgendamento">
+      Agendamento
+      <div class="submenu">
+        <a href="agendar-contrato-normal-v5.html">Agendar Contrato Normal</a>
+        <a href="agendar-protocolo.html">Agendar Protocolo</a>
+        <a href="relatorio-status-agendamento.html" class="current">Relatório de Status Agendamento</a>
+        <a href="relatorio-status-agendamento-v2.html">Relatório de Status Agendamento · V2</a>
+        <a href="relatorio-status-agendamento-v3.html">Relatório de Status Agendamento · V3</a>
+        <a href="#">Relatório de Embarques</a>
+      </div>
+    </span>
+    <a href="#" class="navitem has-dropdown">Faturamento</a>
+    <a href="#" class="navitem">Documentos</a>
+    <a href="#" class="navitem has-dropdown">Financeiro</a>
+    <a href="#" class="navitem has-dropdown">Suporte</a>
+  </div>
+</nav>
 
+<!-- Hero ========================================================== -->
+<div class="hero">
+  <div class="mosaic-overlay">
+    <div class="logo logo--hero" aria-hidden="true">
+      <span class="wordmark">Mosaic<sup>®</sup></span>
+    </div>
+  </div>
 </div>
 
 <!-- Page ========================================================== -->
@@ -2987,7 +2455,7 @@
 
   <div class="info-banner">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/></svg>
-    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use o filtro de <strong>semana de → até</strong> para abranger um período maior.</span>
+    <span>Esta tela carrega por padrão a <strong>semana vigente</strong>. Use os filtros para ajustar o período ou refinar por recebedor, produto, planta ou status. Tela <strong>read-only</strong> — não permite edição.</span>
   </div>
 
   <!-- Search bar + advanced-filter trigger + export -->
@@ -3012,7 +2480,7 @@
       <svg width="28" height="34" viewBox="0 0 28 34" aria-hidden="true">
         <path d="M3 0h14l8 8v23a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3a3 3 0 0 1 3-3z" fill="#1f6e44"/>
         <path d="M17 0v6a2 2 0 0 0 2 2h6" fill="#155a35"/>
-        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Barlow, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
+        <text x="14" y="24" text-anchor="middle" fill="#ffffff" font-family="Manrope, sans-serif" font-weight="800" font-size="9" letter-spacing="0.5">XLS</text>
       </svg>
     </button>
   </div>
@@ -3032,17 +2500,13 @@
           <option value="cancelado">Cancelado</option>
         </select>
       </div>
-      <div class="filter-block filter-block--range">
+      <div class="filter-block">
         <label>Semana (Seg → Dom)</label>
-        <div class="semana-range">
-          <select id="filterSemanaDe" aria-label="Semana inicial">
-            <!-- options populated by JS -->
-          </select>
-          <span class="semana-range-sep" aria-hidden="true">→</span>
-          <select id="filterSemanaAte" aria-label="Semana final">
-            <!-- options populated by JS -->
-          </select>
+        <div class="filter-locked" id="filterSemanaDisplay" title="Período fixado na semana vigente conforme regra do relatório (SMDP-137 AC #1).">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+          <span id="filterSemanaText">Semana vigente</span>
         </div>
+        <select id="filterSemana" hidden></select>
       </div>
       <div class="filter-block">
         <label>CPF/CNPJ do Emissor</label>
@@ -3231,8 +2695,6 @@ const DAY_LABELS = ["Total", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 
 /* Build thead */
 function buildThead() {
-  // Chevron de ações agora vive na própria célula Solicitação (igual protocolos)
-  let html = "";
   const main = [
     { l: "Solicitação", c: "col-sticky" },
     { l: "Protocolo" },
@@ -3254,9 +2716,12 @@ function buildThead() {
     { l: "IE Recebedor" },
     { l: "Cidade" },
     { l: "UF" },
+    { l: "Qtd Solicitada (t)", a: "right" },
+    { l: "Qtd Confirmada OV (t)", a: "right" },
+    { l: "Qtd Faturada (t)", a: "right" },
   ];
 
-  html += main.map(h =>
+  let html = main.map(h =>
     `<th class="${h.c || ""}" style="text-align:${h.a || "left"}">${h.l}</th>`
   ).join("");
 
@@ -3312,8 +2777,7 @@ const elBody          = document.getElementById("reportTableBody");
 const elEmpty         = document.getElementById("reportEmpty");
 const elSearch        = document.getElementById("filterSearch");
 const elStatus        = document.getElementById("filterStatus");
-const elSemanaDe      = document.getElementById("filterSemanaDe");
-const elSemanaAte     = document.getElementById("filterSemanaAte");
+const elSemana        = document.getElementById("filterSemana");
 const elCnpjEmissor   = document.getElementById("filterCnpjEmissor");
 const elRecebedorNome = document.getElementById("filterRecebedorNome");
 const elRecebedorCnpj = document.getElementById("filterRecebedorCnpj");
@@ -3329,18 +2793,7 @@ function filteredRequests() {
       if (!hay.includes(q)) return false;
     }
     if (elStatus.value        && r.status        !== elStatus.value)        return false;
-    // Filtro de semana é intervalo (De → Até). Tenta extrair as datas pra comparar.
-    if (elSemanaDe.value || elSemanaAte.value) {
-      const semanaInicio = (r.semana || "").split(" — ")[0]; // dd/mm/aaaa
-      const de  = elSemanaDe.value  ? elSemanaDe.value.split(" — ")[0]  : null;
-      const ate = elSemanaAte.value ? elSemanaAte.value.split(" — ")[0] : null;
-      const toIso = s => { const [d, m, y] = s.split("/"); return `${y}-${m}-${d}`; };
-      const rIso  = toIso(semanaInicio);
-      const deIso  = de  ? toIso(de)  : null;
-      const ateIso = ate ? toIso(ate) : null;
-      if (deIso  && rIso < deIso)  return false;
-      if (ateIso && rIso > ateIso) return false;
-    }
+    if (elSemana.value        && r.semana        !== elSemana.value)        return false;
     if (elCnpjEmissor.value   && r.recebedorCnpj !== elCnpjEmissor.value)   return false;
     if (elRecebedorNome.value && r.recebedorNome !== elRecebedorNome.value) return false;
     if (elRecebedorCnpj.value && r.recebedorCnpj !== elRecebedorCnpj.value) return false;
@@ -3395,226 +2848,53 @@ function buildWeeklyBreakdown(r) {
   `;
 }
 
-/* ---- Edição inline — estado + helpers ---- */
-let editingSol = null;        // sol+semana únicos identificam a linha
-let editingSnapshot = null;   // shallow copy para restaurar no cancelar
-
-const SVG_EDIT       = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-const SVG_EDIT_SMALL = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`;
-const SVG_CHECK      = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
-const SVG_X          = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-
-function rowKey(r) { return `${r.sol}|${r.semana}`; }
-
-const SVG_CHEV = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
-
-function actionCellHTML(r) {
-  // Padrao chevron + dropdown (igual ao Relatorio de Protocolos).
-  // O dropdown abre como popup fixed via openActionMenu().
-  return `
-    <div class="action-cluster">
-      <button class="cell-action action-menu" data-act="menu" data-key="${rowKey(r)}" type="button" title="Ações da solicitação" aria-label="Abrir menu de ações" aria-haspopup="true">
-        ${SVG_CHEV}
-      </button>
-    </div>`;
-}
-
-/* ============== Dropdown chevron + modal Editar Solicitacao ============== */
-function openActionMenu(cluster, key) {
-  const r = findRequest(key);
-  if (!r) return;
-  const pop = document.createElement("div");
-  pop.className = "action-menu-pop";
-  pop.dataset.clusterKey = key;
-  const btn = cluster.querySelector("[data-act='menu']");
-  if (btn) {
-    const rect = btn.getBoundingClientRect();
-    pop.style.top  = `${rect.bottom + 4}px`;
-    pop.style.left = `${rect.left}px`;
-  }
-  pop.innerHTML = `
-    <button class="action-menu-item" data-menu-act="edit" data-key="${key}" type="button">
-      ${SVG_EDIT_SMALL}
-      <span>Editar Solicitação</span>
-    </button>
-  `;
-  pop.addEventListener("click", (e) => {
-    const item = e.target.closest(".action-menu-item");
-    if (!item) return;
-    const itemKey = item.dataset.key;
-    const itemAct = item.dataset.menuAct;
-    closeAllActionMenus();
-    if (itemAct === "edit") openRsaEditModal(itemKey);
-  });
-  document.body.appendChild(pop);
-  cluster.classList.add("is-open");
-}
-
-function closeAllActionMenus() {
-  document.querySelectorAll(".action-cluster.is-open").forEach(c => c.classList.remove("is-open"));
-  document.querySelectorAll(".action-menu-pop").forEach(pop => pop.remove());
-}
-
-document.addEventListener("click", (e) => {
-  if (!e.target.closest(".action-cluster") && !e.target.closest(".action-menu-pop")) {
-    closeAllActionMenus();
-  }
-});
-window.addEventListener("scroll", closeAllActionMenus, true);
-window.addEventListener("resize", closeAllActionMenus);
-
-/* Modal Editar Solicitacao — versao simplificada (so qty editavel) */
-let rsaEditingKey = null;
-
-function openRsaEditModal(key) {
-  const r = findRequest(key);
-  if (!r) return;
-  rsaEditingKey = key;
-  document.getElementById("rsaEditSol").textContent    = r.sol;
-  document.getElementById("rsaEditProto").textContent  = r.protocolo;
-  document.getElementById("rsaEditSemana").textContent = r.semana;
-  document.getElementById("rsaEditStatus").textContent = STATUS_LABELS[r.status] || r.status;
-  document.getElementById("rsaEditTipo").textContent   = TIPO_LABELS[r.tipo]    || r.tipo;
-  const qtyInput = document.getElementById("rsaEditQty");
-  qtyInput.value = r.planned[0] != null ? r.planned[0] : "";
-  document.getElementById("rsaEditModal").classList.add("is-open");
-  setTimeout(() => qtyInput.focus(), 50);
-}
-
-function closeRsaEditModal() {
-  document.getElementById("rsaEditModal").classList.remove("is-open");
-  rsaEditingKey = null;
-}
-
-function saveRsaEditModal() {
-  if (!rsaEditingKey) return;
-  const r = findRequest(rsaEditingKey);
-  if (!r) { closeRsaEditModal(); return; }
-  const raw = document.getElementById("rsaEditQty").value;
-  const v = raw === "" ? 0 : Number(raw);
-  if (Number.isNaN(v) || v < 0) {
-    showInlineToast("Quantidade inválida");
-    return;
-  }
-  r.planned[0] = v;
-  // Recalcula diff se houver realizado
-  if (typeof r.realized?.[0] === "number") {
-    r.diff = r.diff || [0];
-    r.diff[0] = (r.realized[0] || 0) - v;
-  }
-  const sol = r.sol;
-  closeRsaEditModal();
-  render();
-  showInlineToast(`Solicitação ${sol} atualizada`);
-}
-
-/* Bind handlers do modal logo apos DOM montar */
-(function bindRsaEditModal() {
-  document.addEventListener("DOMContentLoaded", () => {
-    const m = document.getElementById("rsaEditModal");
-    if (!m) return;
-    document.getElementById("rsaEditClose").addEventListener("click", closeRsaEditModal);
-    document.getElementById("rsaEditCancel").addEventListener("click", closeRsaEditModal);
-    document.getElementById("rsaEditSave").addEventListener("click", saveRsaEditModal);
-    m.addEventListener("click", (e) => { if (e.target === m) closeRsaEditModal(); });
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && m.classList.contains("is-open")) closeRsaEditModal();
-      if (e.key === "Enter"  && m.classList.contains("is-open")) {
-        const focused = document.activeElement;
-        if (focused && focused.id === "rsaEditQty") saveRsaEditModal();
-      }
-    });
-  });
-})();
-
-function selOptsObj(map, current) {
-  return Object.entries(map).map(([k, v]) =>
-    `<option value="${k}"${k===current?' selected':''}>${v}</option>`
-  ).join("");
-}
-function selOptsList(list, current) {
-  return list.map(o => `<option value="${o}"${o===current?' selected':''}>${o}</option>`).join("");
-}
-function escAttr(v) { return String(v ?? "").replace(/"/g, "&quot;"); }
-
-const UF_OPTIONS    = ["SP","MT","MS","PR","RS","GO","MG","BA","SC","RJ","DF"];
-const FRETE_OPTIONS = ["CIF","FOB"];
-
 function render() {
   const list = filteredRequests();
   elEmpty.classList.toggle("is-hidden", list.length > 0);
 
-  /* 20 main + 3 totals + 1 toggle = 24 cols (colspan da linha de detalhe).
-     Chevron de ações agora vive embutido na célula Solicitação. */
-  const COLSPAN = 24;
+  /* 23 main + 3 totals + 1 toggle = 27 cols (colspan da linha de detalhe) */
+  const COLSPAN = 27;
 
   elBody.innerHTML = list.map((r, idx) => {
-    const editing = editingSol === rowKey(r);
     let tds = "";
+    tds += `<td class="col-sticky cell-sol">${r.sol}</td>`;
+    tds += `<td class="cell-mono">${r.protocolo}</td>`;
+    tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
+    tds += `<td class="cell-mono">${r.semana}</td>`;
+    tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
+    tds += `<td class="cell-mono">${r.cotacao}</td>`;
+    tds += `<td class="cell-mono">${r.contrato}</td>`;
+    tds += `<td class="cell-mono">${r.itemContrato}</td>`;
+    tds += `<td class="cell-mono">${r.ov}</td>`;
+    tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
+    tds += `<td class="cell-mono">${r.codProduto}</td>`;
+    tds += `<td>${r.descProduto}</td>`;
+    tds += `<td>${r.embalagem}</td>`;
+    tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
+    tds += `<td>${r.planta}</td>`;
+    tds += `<td>${r.recebedorNome}</td>`;
+    tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
+    tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
+    tds += `<td>${r.cidade}</td>`;
+    tds += `<td>${r.uf}</td>`;
+    tds += `<td class="vol-cell">${fmt(r.qtdSolicitada)}</td>`;
+    tds += `<td class="vol-cell vol-cell--conf">${fmt(r.qtdConfirmadaOV)}</td>`;
+    tds += `<td class="vol-cell vol-cell--fat">${fmt(r.qtdFaturada)}</td>`;
 
-    if (editing) {
-      // Modo edição: apenas a Qtd. Solicitada vira input editável.
-      // Todos os outros campos ficam read-only (igual ao modo normal),
-      // pois Confirmada OV e Faturada vêm do SAP e os demais campos
-      // sao imutaveis (Cooperado/Contrato/etc.).
-      tds += `<td class="col-sticky cell-sol"><span class="proto-cell"><span>${r.sol}</span>${actionCellHTML(r)}</span></td>`;
-      tds += `<td class="cell-mono">${r.protocolo}</td>`;
-      tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
-      tds += `<td class="cell-mono">${r.semana}</td>`;
-      tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
-      tds += `<td class="cell-mono">${r.cotacao}</td>`;
-      tds += `<td class="cell-mono">${r.contrato}</td>`;
-      tds += `<td class="cell-mono">${r.itemContrato}</td>`;
-      tds += `<td class="cell-mono">${r.ov}</td>`;
-      tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
-      tds += `<td class="cell-mono">${r.codProduto}</td>`;
-      tds += `<td>${r.descProduto}</td>`;
-      tds += `<td>${r.embalagem}</td>`;
-      tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
-      tds += `<td>${r.planta}</td>`;
-      tds += `<td>${r.recebedorNome}</td>`;
-      tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
-      tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
-      tds += `<td>${r.cidade}</td>`;
-      tds += `<td>${r.uf}</td>`;
-      // Totais
-      tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.planned[0])}</td>`;
-      tds += `<td class="vol-cell col-total vol-cell--muted">${fmt(r.realized[0])}</td>`;
-      tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
-      tds += `<td class="col-toggle"></td>`;
-    } else {
-      tds += `<td class="col-sticky cell-sol"><span class="proto-cell"><span>${r.sol}</span>${actionCellHTML(r)}</span></td>`;
-      tds += `<td class="cell-mono">${r.protocolo}</td>`;
-      tds += `<td><span class="tipo-tag tipo-tag--${r.tipo}">${TIPO_LABELS[r.tipo]}</span></td>`;
-      tds += `<td class="cell-mono">${r.semana}</td>`;
-      tds += `<td><span class="status-pill status-pill--${r.status}">${STATUS_LABELS[r.status]}</span></td>`;
-      tds += `<td class="cell-mono">${r.cotacao}</td>`;
-      tds += `<td class="cell-mono">${r.contrato}</td>`;
-      tds += `<td class="cell-mono">${r.itemContrato}</td>`;
-      tds += `<td class="cell-mono">${r.ov}</td>`;
-      tds += `<td class="cell-mono">${r.pedidoCliente}</td>`;
-      tds += `<td class="cell-mono">${r.codProduto}</td>`;
-      tds += `<td>${r.descProduto}</td>`;
-      tds += `<td>${r.embalagem}</td>`;
-      tds += `<td><span class="pill-frete ${r.frete.toLowerCase()}">${r.frete}</span></td>`;
-      tds += `<td>${r.planta}</td>`;
-      tds += `<td>${r.recebedorNome}</td>`;
-      tds += `<td class="cell-mono">${r.recebedorCnpj}</td>`;
-      tds += `<td class="cell-mono">${r.recebedorIe}</td>`;
-      tds += `<td>${r.cidade}</td>`;
-      tds += `<td>${r.uf}</td>`;
-      tds += `<td class="vol-cell col-total">${fmt(r.planned[0])}</td>`;
-      tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
-      tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
-      tds += `<td class="col-toggle">
-        <button type="button" class="row-toggle-btn" data-idx="${idx}" aria-label="Expandir breakdown semanal" aria-expanded="false">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </td>`;
-    }
+    /* Total summary (semana): Plan / Real / Δ */
+    tds += `<td class="vol-cell col-total">${fmt(r.planned[0])}</td>`;
+    tds += `<td class="vol-cell col-total">${fmt(r.realized[0])}</td>`;
+    tds += `<td class="vol-cell col-total ${diffCls(r.diff[0])}">${fmtDiff(r.diff[0])}</td>`;
+
+    /* Toggle */
+    tds += `<td class="col-toggle">
+      <button type="button" class="row-toggle-btn" data-idx="${idx}" aria-label="Expandir breakdown semanal" aria-expanded="false">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </td>`;
 
     return `
-      <tr class="${editing ? 'is-editing' : ''}" data-row-key="${rowKey(r)}">${tds}</tr>
+      <tr>${tds}</tr>
       <tr class="detail-row" data-detail-idx="${idx}">
         <td colspan="${COLSPAN}">${buildWeeklyBreakdown(r)}</td>
       </tr>
@@ -3630,175 +2910,6 @@ function render() {
       btn.setAttribute("aria-expanded", open ? "true" : "false");
       detail.classList.toggle("is-open", open);
     });
-  });
-
-  /* Chevron → abre dropdown (padrao igual ao Relatorio de Protocolos) */
-  elBody.querySelectorAll("[data-act='menu']").forEach(btn => {
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const cluster = btn.closest(".action-cluster");
-      const wasOpen = cluster.classList.contains("is-open");
-      closeAllActionMenus();
-      if (!wasOpen) openActionMenu(cluster, btn.dataset.key);
-    });
-  });
-
-  /* Click-to-edit nas celulas de Qtd Solicitada (so quando NAO em row-edit) */
-  elBody.querySelectorAll("td.editable-qty").forEach(td => {
-    td.addEventListener("click", () => {
-      if (editingSol) return; // se ja tem linha em edicao, ignora
-      startCellEdit(td);
-    });
-  });
-}
-
-/* ============== Click-to-edit cell (Qtd Solicitada) ============== */
-let editingCellEl = null;
-
-function startCellEdit(td) {
-  if (editingCellEl) commitCellEdit();
-  const key = td.dataset.key;
-  const field = td.dataset.f;
-  const r = findRequest(key);
-  if (!r) return;
-  editingCellEl = td;
-  td.classList.add("cell-editing");
-  td.innerHTML = `<input type="number" class="qty-inline-input" min="0" value="${r[field]}" />`;
-  const input = td.querySelector("input");
-  input.focus(); input.select();
-  input.addEventListener("blur", commitCellEdit);
-  input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter")  { e.preventDefault(); e.target.blur(); }
-    if (e.key === "Escape") { e.preventDefault(); cancelCellEdit(); }
-  });
-}
-
-function commitCellEdit() {
-  if (!editingCellEl) return;
-  const td = editingCellEl;
-  const key = td.dataset.key;
-  const field = td.dataset.f;
-  const input = td.querySelector("input");
-  if (!input) { editingCellEl = null; return; }
-  const newVal = input.value === "" ? 0 : Number(input.value);
-  const r = findRequest(key);
-  editingCellEl = null;
-  if (!r) return;
-  if (newVal !== r[field]) {
-    r[field] = newVal;
-    render();
-    showInlineToast(`Linha ${r.sol} · ${field} atualizado para ${newVal.toLocaleString("pt-BR")} t`);
-  } else {
-    render();
-  }
-}
-
-function cancelCellEdit() {
-  if (!editingCellEl) return;
-  editingCellEl = null;
-  render();
-}
-
-/* ---- Inline edit — operações ---- */
-function findRequest(key) { return REQUESTS.find(x => rowKey(x) === key); }
-
-function startEdit(key) {
-  if (editingSol && editingSol !== key) {
-    const cur = findRequest(editingSol);
-    if (cur && editingSnapshot) Object.assign(cur, editingSnapshot);
-  }
-  const r = findRequest(key);
-  if (!r) return;
-  editingSol = key;
-  editingSnapshot = { ...r };
-  render();
-  const firstInput = document.querySelector(`tr[data-row-key="${CSS.escape(key)}"] .inline-edit`);
-  if (firstInput) firstInput.focus();
-}
-
-function readEditedValues(key) {
-  const tr = document.querySelector(`tr[data-row-key="${CSS.escape(key)}"]`);
-  if (!tr) return null;
-  const updates = {};
-  tr.querySelectorAll(".inline-edit").forEach(el => {
-    const f = el.dataset.f;
-    if (!f) return;
-    let v = el.value;
-    if (el.type === "number") v = v === "" ? 0 : Number(v);
-    if (typeof v === "string" && v.trim() === "" && (f === "ov" || f === "codProduto")) v = "—";
-    updates[f] = v;
-  });
-  return updates;
-}
-
-function saveEdit(key) {
-  const r = findRequest(key);
-  if (!r) return;
-  const updates = readEditedValues(key);
-  if (!updates) return;
-  Object.assign(r, updates);
-  editingSol = null;
-  editingSnapshot = null;
-  render();
-  showInlineToast(`Linha ${r.sol} atualizada`);
-}
-
-function showInlineToast(msg) {
-  const t = document.getElementById("inlineToast");
-  document.getElementById("inlineToastText").textContent = msg;
-  t.classList.add("is-visible");
-  setTimeout(() => t.classList.remove("is-visible"), 3000);
-}
-
-function requestCancelEdit(key) {
-  if (!editingSol) return;
-  const updates = readEditedValues(key);
-  const snap = editingSnapshot || {};
-  let dirty = false;
-  for (const k in updates) {
-    if (String(updates[k]) !== String(snap[k] ?? "")) { dirty = true; break; }
-  }
-  if (!dirty) {
-    discardEdit(key);
-    return;
-  }
-  const modal = document.getElementById("confirmDiscardModal");
-  const r = findRequest(key);
-  document.getElementById("confirmDiscardSol").textContent = r ? r.sol : key;
-  modal.dataset.rowKey = key;
-  modal.classList.add("is-open");
-}
-
-function discardEdit(key) {
-  const r = findRequest(key);
-  if (r && editingSnapshot) Object.assign(r, editingSnapshot);
-  editingSol = null;
-  editingSnapshot = null;
-  render();
-}
-
-/* Modal de confirmação handlers — adicionar após DOM montar */
-function bindConfirmModal() {
-  const modal = document.getElementById("confirmDiscardModal");
-  const yes   = document.getElementById("confirmDiscardYes");
-  const no    = document.getElementById("confirmDiscardNo");
-  yes.addEventListener("click", () => {
-    const key = modal.dataset.rowKey;
-    modal.classList.remove("is-open");
-    discardEdit(key);
-  });
-  no.addEventListener("click", () => modal.classList.remove("is-open"));
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) modal.classList.remove("is-open");
-  });
-  document.addEventListener("keydown", (e) => {
-    if (e.key !== "Escape") return;
-    if (modal.classList.contains("is-open")) {
-      modal.classList.remove("is-open");
-      return;
-    }
-    if (editingCellEl) { cancelCellEdit(); return; }
-    if (editingSol) requestCancelEdit(editingSol);
   });
 }
 
@@ -3819,51 +2930,13 @@ function currentWeekRange() {
   const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
   return `${fmt(monday)} — ${fmt(sunday)}`;
 }
-/* Gera 4 semanas anteriores + vigente + 4 próximas (rolling 9-week window) */
-function buildWeekRanges() {
-  const today = new Date();
-  const day = today.getDay();
-  const diffToMonday = day === 0 ? -6 : 1 - day;
-  const baseMonday = new Date(today);
-  baseMonday.setDate(today.getDate() + diffToMonday);
-  baseMonday.setHours(0, 0, 0, 0);
+const SEMANA_VIGENTE = currentWeekRange();
+elSemana.innerHTML = `<option value="${SEMANA_VIGENTE}" selected>${SEMANA_VIGENTE}</option>`;
+elSemana.value = SEMANA_VIGENTE;
+const elSemanaText = document.getElementById("filterSemanaText");
+if (elSemanaText) elSemanaText.textContent = `Semana vigente · ${SEMANA_VIGENTE}`;
 
-  const pad = (n) => String(n).padStart(2, "0");
-  const fmt = (d) => `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
-
-  const ranges = [];
-  for (let offset = -4; offset <= 4; offset++) {
-    const monday = new Date(baseMonday);
-    monday.setDate(baseMonday.getDate() + offset * 7);
-    const sunday = new Date(monday);
-    sunday.setDate(monday.getDate() + 6);
-    const label = `${fmt(monday)} — ${fmt(sunday)}`;
-    let prefix = "";
-    if (offset === 0) prefix = "Semana vigente · ";
-    else if (offset === -1) prefix = "Semana anterior · ";
-    else if (offset === 1) prefix = "Próxima semana · ";
-    ranges.push({ value: label, label: prefix + label, current: offset === 0 });
-  }
-  return ranges;
-}
-
-const SEMANA_RANGES = buildWeekRanges();
-const SEMANA_VIGENTE = SEMANA_RANGES.find(r => r.current).value;
-
-// Popula os 2 selects (De → Até) com as mesmas opções
-const semanaOpts = `
-  <option value="">—</option>
-  ${SEMANA_RANGES.map(r => `<option value="${r.value}">${r.label}</option>`).join("")}
-`;
-elSemanaDe.innerHTML  = semanaOpts;
-elSemanaAte.innerHTML = semanaOpts;
-// Default: sem filtro de semana (mostra tudo). Mock data tem dates fixas
-// que envelhecem em relação ao "hoje"; filtrar por semana vigente
-// esconde tudo. Em produção, manteríamos elSemanaDe = SEMANA_VIGENTE.
-elSemanaDe.value  = "";
-elSemanaAte.value = "";
-
-[elStatus, elSemanaDe, elSemanaAte, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
+[elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
   el.addEventListener("change", render);
 });
 
@@ -3879,8 +2952,7 @@ const elSearchSuggest  = document.getElementById("searchSuggestions");
 
 function activeFilterCount() {
   let n = 0;
-  /* Conta range de semana só se houver valor selecionado */
-  if (elSemanaDe.value || elSemanaAte.value) n++;
+  /* Semana e fixa nesta tela, nao conta */
   [elStatus, elCnpjEmissor, elRecebedorNome, elRecebedorCnpj, elProduto, elPlanta].forEach(el => {
     if (el && el.value) n++;
   });
@@ -4064,121 +3136,7 @@ document.getElementById("btnExport").addEventListener("click", () => {
 
 updateActiveFilterCount();
 render();
-// bindConfirmModal depende do markup do modal, que vem depois deste <script>.
-// Adiar para o DOMContentLoaded evita o erro de null que abortava o init abaixo.
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindConfirmModal);
-else bindConfirmModal();
-
-/* Sticky horizontal scrollbar — espelha scrollLeft do wrap numa barra fixa */
-(function initStickyHScroll() {
-  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
-    const sticky = document.createElement("div");
-    sticky.className = "sticky-h-scroll";
-    const inner = document.createElement("div");
-    inner.className = "sticky-h-scroll-inner";
-    sticky.appendChild(inner);
-    document.body.appendChild(sticky);
-    let syncing = false;
-    const update = () => {
-      inner.style.width = wrap.scrollWidth + "px";
-      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
-      const r = wrap.getBoundingClientRect();
-      // visível sempre que a tabela transborda e qualquer parte dela está em tela
-      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
-      sticky.style.left = r.left + "px";
-      sticky.style.width = r.width + "px";
-      sticky.classList.toggle("is-visible", overflows && inView);
-      if (overflows && inView) sticky.scrollLeft = wrap.scrollLeft;
-    };
-    wrap.addEventListener("scroll", () => { if (syncing) return; syncing = true; sticky.scrollLeft = wrap.scrollLeft; requestAnimationFrame(() => { syncing = false; }); });
-    sticky.addEventListener("scroll", () => { if (syncing) return; syncing = true; wrap.scrollLeft = sticky.scrollLeft; requestAnimationFrame(() => { syncing = false; }); });
-    window.addEventListener("scroll", update);
-    window.addEventListener("resize", update);
-    if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
-    update();
-  });
-})();
 </script>
 
-<!-- CONFIRM DISCARD MODAL -->
-<div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
-  <div class="confirm-modal">
-    <div class="confirm-modal-head">
-      <span class="confirm-modal-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-      </span>
-      <h3>Descartar alterações?</h3>
-    </div>
-    <p class="confirm-modal-text">
-      Você está prestes a descartar as alterações feitas na solicitação
-      <strong id="confirmDiscardSol">—</strong>. Essa ação não pode ser desfeita.
-    </p>
-    <div class="confirm-modal-actions">
-      <button class="confirm-btn confirm-btn-secondary" id="confirmDiscardNo" type="button">Voltar a editar</button>
-      <button class="confirm-btn confirm-btn-danger" id="confirmDiscardYes" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        Descartar
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EDITAR SOLICITACAO (chevron → menu → Editar) -->
-<div class="rsa-modal-backdrop" id="rsaEditModal" role="dialog" aria-modal="true" aria-labelledby="rsaEditTitle">
-  <div class="rsa-modal">
-    <div class="rsa-modal-head">
-      <div>
-        <h2 id="rsaEditTitle">Editar Solicitação</h2>
-        <div class="sub">Solicitação <strong id="rsaEditSol">—</strong></div>
-      </div>
-      <button class="rsa-modal-x" id="rsaEditClose" type="button" aria-label="Fechar">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="rsa-modal-body">
-      <div class="rsa-modal-info">
-        <div>Protocolo<br><b id="rsaEditProto">—</b></div>
-        <div>Semana<br><b id="rsaEditSemana">—</b></div>
-        <div>Status<br><b id="rsaEditStatus">—</b></div>
-        <div>Tipo<br><b id="rsaEditTipo">—</b></div>
-      </div>
-      <div class="rsa-modal-field">
-        <label for="rsaEditQty">Qtd. Solicitada (t)</label>
-        <input type="number" id="rsaEditQty" min="0" step="0.1" />
-        <div class="helper">Único campo editável nesta tela — demais informações vêm do SAP e são read-only.</div>
-      </div>
-    </div>
-    <div class="rsa-modal-foot">
-      <button class="rsa-btn rsa-btn-secondary" id="rsaEditCancel" type="button">Cancelar</button>
-      <button class="rsa-btn rsa-btn-primary" id="rsaEditSave" type="button">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        Salvar
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-<div class="inline-toast" id="inlineToast">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-  <span id="inlineToastText">Atualizado</span>
-</div>
-
-<footer class="mosaic-footer">
-  <div class="mosaic-footer-inner">
-    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
-      <span class="logo-text">Mosaic<sup>®</sup></span>
-      <img class="logo-shapes" src="logo-shapes.png" alt="" />
-    </a>
-    <div class="footer-links">
-      <a href="#">Política de Privacidade</a>
-      <a href="#">Termos e Condições</a>
-      <a href="#">Sobre nós</a>
-      <a href="#">Entre em contato conosco</a>
-    </div>
-    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
-  </div>
-</footer>
-<script src="review-overlay.js" defer></script>
 </body>
 </html>

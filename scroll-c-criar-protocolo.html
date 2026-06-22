@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=1440" />
-<title>Mosaic Direct — Criar Protocolo</title>
+<title>Mosaic Direct — Criar Protocolo — Solução C (demo)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -4924,6 +4924,61 @@
   }
 
 
+  /* ================================================================
+     Solução C — barra grande única SEMPRE visível, fixa na base
+     da viewport (acima do .summary-footer). Barra nativa 100% morta.
+     ================================================================ */
+  /* Mata a barra nativa verde do base.css (carrega DEPOIS deste style) */
+  html .wide-table-wrap, html .report-table-wrap,
+  html .proto-table-wrap, html .results-table-wrap {
+    scrollbar-width: none !important;
+  }
+  html .wide-table-wrap::-webkit-scrollbar, html .report-table-wrap::-webkit-scrollbar,
+  html .proto-table-wrap::-webkit-scrollbar, html .results-table-wrap::-webkit-scrollbar {
+    display: none !important; height: 0 !important; width: 0 !important;
+  }
+  /* base.css força overflow-x: scroll !important — sobrescreve aqui */
+  html .proto-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+  }
+  /* Seção de busca legada: mantém scroll vertical interno (max-height 420px),
+     só a barra nativa some (regras acima). */
+  html .results-table-wrap {
+    overflow-x: auto !important;
+    overflow-y: auto !important;
+  }
+
+  /* Barra de scroll horizontal CUSTOMIZADA (thumb desenhado em DIV).
+     Não depende do scrollbar nativo do SO (que no macOS some/overlay),
+     então o thumb verde escuro fica SEMPRE visível e grande. */
+  .hbar {
+    position: fixed;
+    z-index: 120;
+    height: 20px;
+    background: #e3eae8;
+    border: 1px solid var(--border-soft);
+    border-radius: 999px;
+    box-shadow: 0 5px 16px rgba(0,0,0,.18);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease-out;
+  }
+  .hbar.is-visible { opacity: 1; pointer-events: auto; }
+  .hbar-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 16px;
+    min-width: 64px;
+    border-radius: 999px;
+    background: var(--mosaic-green-800);
+    cursor: grab;
+    transition: background .12s;
+  }
+  .hbar-thumb:hover { background: var(--mosaic-green-900); }
+  .hbar-thumb:active { cursor: grabbing; background: var(--mosaic-green-900); }
+
 </style>
 
 
@@ -4934,7 +4989,8 @@
 </head>
 <body>
 
-
+<!-- Badge identificador da demo (Solução C) -->
+<div style="position:fixed; bottom:110px; left:50%; transform:translateX(-50%); z-index:400; background:#003e2a; color:#fff; font:600 12px/1 Barlow,sans-serif; padding:9px 16px; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.25); pointer-events:none; opacity:.93;">Demo · Solução C — barra grande sempre visível no rodapé da tela</div>
 
 <!-- Top header ==================================================== -->
 <header class="mosaic-header">
@@ -7509,6 +7565,113 @@ document.body.addEventListener("input", e => {
 }, true);
 
 goTo("empty");
+
+/* ============================================================================
+   Solução C — barra grande única SEMPRE visível, fixa na base da viewport,
+   acima do .summary-footer. O .proto-table-wrap nasce dinamicamente (re-render
+   a cada mudança), então um MutationObserver anexa a barra a cada wrap novo.
+   Barra nativa morta no CSS. Visível sempre que a tabela transborda e qualquer
+   parte dela está em tela.
+   ============================================================================ */
+(function initCustomHScroll() {
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.hscroll === "1") return;
+    wrap.dataset.hscroll = "1";
+
+    const bar = document.createElement("div");
+    bar.className = "hbar";
+    const thumb = document.createElement("div");
+    thumb.className = "hbar-thumb";
+    bar.appendChild(thumb);
+    document.body.appendChild(bar);
+
+    let ro = null;
+    const detach = () => {
+      window.removeEventListener("scroll", layout);
+      window.removeEventListener("resize", layout);
+      if (ro) ro.disconnect();
+      bar.remove();
+    };
+
+    const footerH = () => {
+      const f = document.querySelector(".summary-footer");
+      return (f && getComputedStyle(f).display !== "none") ? f.offsetHeight : 0;
+    };
+
+    const layout = () => {
+      // o wrap é recriado a cada render — remove a barra órfã do wrap antigo
+      if (!wrap.isConnected) { detach(); return; }
+      const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
+      const r = wrap.getBoundingClientRect();
+      const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
+      bar.classList.toggle("is-visible", overflows && inView);
+      if (!overflows || !inView) return;
+      const barH = bar.offsetHeight || 20;
+      const gap = 18;
+      const maxTop = window.innerHeight - footerH() - gap - barH; // acima do footer + folga
+      const top = Math.min(r.bottom - barH - 6, maxTop);
+      bar.style.left = r.left + "px";
+      bar.style.width = r.width + "px";
+      bar.style.top = top + "px";
+      const trackW = bar.clientWidth;
+      const ratio = wrap.clientWidth / wrap.scrollWidth;
+      const thumbW = Math.max(64, Math.round(trackW * ratio));
+      const maxThumbX = trackW - thumbW;
+      const maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const x = maxScroll > 0 ? Math.round((wrap.scrollLeft / maxScroll) * maxThumbX) : 0;
+      thumb.style.width = thumbW + "px";
+      thumb.style.left = x + "px";
+    };
+
+    let dragging = false, startX = 0, startScroll = 0;
+    thumb.addEventListener("pointerdown", (e) => {
+      dragging = true; startX = e.clientX; startScroll = wrap.scrollLeft;
+      try { thumb.setPointerCapture(e.pointerId); } catch (_) {}
+      e.preventDefault();
+    });
+    thumb.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const dx = e.clientX - startX;
+      wrap.scrollLeft = startScroll + (maxThumbX > 0 ? (dx / maxThumbX) * maxScroll : 0);
+      layout();
+    });
+    const endDrag = (e) => { dragging = false; try { thumb.releasePointerCapture(e.pointerId); } catch (_) {} };
+    thumb.addEventListener("pointerup", endDrag);
+    thumb.addEventListener("pointercancel", endDrag);
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.target === thumb) return;
+      const rect = bar.getBoundingClientRect();
+      const trackW = bar.clientWidth, thumbW = thumb.offsetWidth;
+      const maxThumbX = trackW - thumbW, maxScroll = wrap.scrollWidth - wrap.clientWidth;
+      const targetX = Math.max(0, Math.min(maxThumbX, (e.clientX - rect.left) - thumbW / 2));
+      wrap.scrollLeft = maxThumbX > 0 ? (targetX / maxThumbX) * maxScroll : 0;
+      layout();
+    });
+
+    wrap.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("scroll", layout, { passive: true });
+    window.addEventListener("resize", layout);
+    if (typeof ResizeObserver !== "undefined") { ro = new ResizeObserver(layout); ro.observe(wrap); }
+    layout();
+  }
+
+  // Wraps já presentes no carregamento
+  document.querySelectorAll(".proto-table-wrap").forEach(attach);
+
+  // Wraps criados dinamicamente (renderProtocolTable recria a cada render)
+  const mo = new MutationObserver(muts => {
+    muts.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        if (node.classList && node.classList.contains("proto-table-wrap")) attach(node);
+        if (node.querySelectorAll) node.querySelectorAll(".proto-table-wrap").forEach(attach);
+      });
+    });
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+})();
 </script>
 <script src="review-overlay.js" defer></script>
 </body>

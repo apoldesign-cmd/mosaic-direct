@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Editar Protocolo — Mosaic Direct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ============================================================
+     STATUS BADGES (mesma família do relatório)
+     ============================================================ */
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+  .status-badge .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-novo        { background: var(--status-aprovado-bg);   color: var(--status-aprovado-fg);   }
+  .status-novo .dot   { background: var(--status-aprovado-fg); }
+  .status-liberado    { background: var(--status-carregando-bg); color: var(--status-carregando-fg); }
+  .status-liberado .dot { background: var(--status-carregando-fg); }
+  .status-agendamento { background: var(--status-analise-bg);    color: var(--status-analise-fg);    }
+  .status-agendamento .dot { background: var(--status-analise-fg); }
+  .status-concluido   { background: var(--status-faturado-bg);   color: var(--status-faturado-fg);   }
+  .status-concluido .dot { background: var(--status-faturado-fg); }
+  .status-cancelado   { background: var(--status-cancelado-bg);  color: var(--status-cancelado-fg);  }
+  .status-cancelado .dot { background: var(--status-cancelado-fg); }
+
+  /* ============================================================
+     HEADER CONTEXT BAR
+     ============================================================ */
+  .edit-context {
+    background: linear-gradient(135deg, rgba(0,88,61,0.04) 0%, rgba(122,217,181,0.06) 100%);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .edit-context-id {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-right: 18px;
+    border-right: 1px solid var(--border-soft);
+  }
+  .edit-context-id-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  .edit-context-id-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .edit-context-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    flex: 1;
+  }
+  .edit-context-meta-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .edit-context-meta-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-3);
+  }
+  .edit-context-meta-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-1);
+  }
+
+  /* ============================================================
+     FORM SECTIONS
+     ============================================================ */
+  .form-section {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-md);
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .form-section-head {
+    padding: 14px 22px;
+    background: var(--bg-section);
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .form-section-head h2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin: 0;
+    letter-spacing: 0;
+  }
+  .form-section-head .form-section-icon {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .form-section-head .form-section-hint {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 500;
+  }
+  .form-section-body {
+    padding: 22px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px 22px;
+  }
+  .form-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .form-row + .form-row { margin-top: 18px; }
+  @media (max-width: 900px) {
+    .form-row, .form-row.cols-3, .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .form-row, .form-row.cols-3, .form-row.cols-2 { grid-template-columns: 1fr; }
+  }
+  .field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .field.span-2 { grid-column: span 2; }
+  .field.span-full { grid-column: 1 / -1; }
+  .field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .field-label .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .field-input,
+  .field-select {
+    height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    transition: border-color var(--ease-fast), box-shadow var(--ease-fast);
+    width: 100%;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input:hover,
+  .field-select:hover { border-color: var(--border-strong); }
+  .field-input:focus,
+  .field-select:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .field-input[readonly],
+  .field-input.is-locked {
+    background: #f7f9f8;
+    color: var(--text-2);
+    cursor: not-allowed;
+  }
+  .field-input[readonly]:hover,
+  .field-input.is-locked:hover { border-color: var(--border); }
+  .field-textarea {
+    min-height: 80px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text-1);
+    resize: vertical;
+    outline: none;
+    width: 100%;
+  }
+  .field-textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: var(--shadow-focus);
+  }
+  .field-select {
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7570' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+  }
+  .field-help {
+    font-size: 11px;
+    color: var(--text-3);
+    line-height: 1.4;
+  }
+  .field-input-with-suffix {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .field-input-with-suffix input { padding-right: 40px; }
+  .field-input-with-suffix .suffix {
+    position: absolute;
+    right: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    pointer-events: none;
+  }
+
+  /* Locked field (não editável) — banner pequeno */
+  .field-locked-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .field-locked-note svg { color: var(--text-3); }
+
+  /* Volumes summary card */
+  .volumes-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(0,106,77,0.04) 0%, rgba(122,217,181,0.05) 100%);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(0,106,77,0.10);
+    margin-top: 14px;
+  }
+  .vol-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-soft);
+  }
+  .vol-card-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    margin-bottom: 4px;
+  }
+  .vol-card-value {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .vol-card-value .unit {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-3);
+    margin-left: 3px;
+  }
+  .vol-card.saldo .vol-card-value { color: var(--mosaic-green-800); }
+  .vol-card.faturar .vol-card-value { color: var(--mosaic-orange); }
+  @media (max-width: 720px) {
+    .volumes-summary { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* History timeline */
+  .history-timeline {
+    position: relative;
+    padding-left: 30px;
+  }
+  .history-timeline::before {
+    content: "";
+    position: absolute;
+    left: 9px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: var(--border-soft);
+  }
+  .history-item {
+    position: relative;
+    padding-bottom: 18px;
+  }
+  .history-item:last-child { padding-bottom: 0; }
+  .history-item::before {
+    content: "";
+    position: absolute;
+    left: -27px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--mosaic-green-700);
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--mosaic-green-700);
+  }
+  .history-item.is-future::before {
+    background: var(--bg-section);
+    box-shadow: 0 0 0 2px var(--border);
+  }
+  .history-time {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+  }
+  .history-action {
+    font-size: 13px;
+    color: var(--text-1);
+    font-weight: 600;
+    margin: 2px 0;
+  }
+  .history-actor {
+    font-size: 11px;
+    color: var(--text-2);
+  }
+
+  /* ============================================================
+     STICKY FOOTER
+     ============================================================ */
+  .edit-footer {
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-top: 1px solid var(--border-soft);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin: 32px -32px 0;
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.04);
+    z-index: 20;
+  }
+  .edit-footer-info {
+    font-size: 12px;
+    color: var(--text-3);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .edit-footer-info .dirty-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--mosaic-orange);
+    display: none;
+  }
+  .edit-footer.is-dirty .dirty-dot { display: inline-block; }
+  .edit-footer-actions { display: flex; gap: 10px; }
+  .btn {
+    height: 40px;
+    padding: 0 18px;
+    border-radius: var(--radius-md);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background var(--ease-fast), color var(--ease-fast), border-color var(--ease-fast);
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--mosaic-green-700); }
+  .btn-primary:disabled {
+    background: var(--bg-section);
+    color: var(--text-3);
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { background: var(--bg-section); border-color: var(--border-strong); }
+  .btn-danger-ghost {
+    background: #fff;
+    color: var(--mosaic-red);
+    border: 1px solid var(--mosaic-red);
+  }
+  .btn-danger-ghost:hover { background: #fadcde; }
+
+  /* Action row na sub-header */
+  .edit-actions-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+
+  /* ============================================================
+     SUCCESS MODAL
+     ============================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 250;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-backdrop.is-open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 28px 24px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .modal-icon {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--status-aprovado-bg);
+    color: var(--status-aprovado-fg);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    margin-bottom: 6px;
+  }
+  .modal-text {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER ========================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item is-active" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html" class="is-active">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
+    </div>
+  </nav>
+</header>
+
+<!-- MAIN =========================================================== -->
+<main class="container container-main">
+
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <a href="#">Contratos</a>
+    <span class="sep">›</span>
+    <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+    <span class="sep">›</span>
+    <span class="current">Editar protocolo</span>
+  </div>
+
+  <h1 class="page-title">Editar protocolo</h1>
+
+  <div class="edit-actions-top">
+    <a href="relatorio-protocolos.html" class="btn btn-secondary" style="text-decoration:none">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Voltar ao Relatório
+    </a>
+  </div>
+
+  <!-- CONTEXT (id, status, contrato) -->
+  <div class="edit-context">
+    <div class="edit-context-id">
+      <div class="edit-context-id-label">Protocolo</div>
+      <div class="edit-context-id-value" id="ctxProtocolo">M9W38746</div>
+    </div>
+    <div class="edit-context-meta">
+      <div class="edit-context-meta-block">
+        <div class="edit-context-meta-label">Status atual</div>
+        <div><span class="status-badge status-novo" id="ctxStatusBadge"><span class="dot"></span>Novo</span></div>
+      </div>
+      <div class="edit-context-meta-block">
+        <div class="edit-context-meta-label">Contrato SAP</div>
+        <div class="edit-context-meta-value" id="ctxContrato">C-001-2024</div>
+      </div>
+      <div class="edit-context-meta-block">
+        <div class="edit-context-meta-label">Cotação</div>
+        <div class="edit-context-meta-value" id="ctxCotacao">Q-12345</div>
+      </div>
+      <div class="edit-context-meta-block">
+        <div class="edit-context-meta-label">Criado em</div>
+        <div class="edit-context-meta-value" id="ctxCreated">05/05/2026 · 14:32</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO: Identificação ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/></svg>
+      </span>
+      <h2>Identificação · Cliente</h2>
+      <span class="form-section-hint">Dados do recebedor da carga</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row">
+        <div class="field span-2">
+          <label class="field-label" for="filial">Filial do Cliente <span class="req">*</span></label>
+          <input class="field-input" id="filial" value="Filial São Paulo" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="cnpjFilial">CPF/CNPJ da Filial <span class="req">*</span></label>
+          <input class="field-input" id="cnpjFilial" value="12.345.678/0001-90" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="uf">UF <span class="req">*</span></label>
+          <select class="field-select" id="uf">
+            <option>SP</option><option>MT</option><option>MS</option><option>PR</option>
+            <option>RS</option><option>GO</option><option>MG</option><option>BA</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="field">
+          <label class="field-label" for="cidade">Cidade <span class="req">*</span></label>
+          <input class="field-input" id="cidade" value="São Paulo" />
+        </div>
+        <div class="field span-2">
+          <label class="field-label" for="endereco">Endereço de entrega</label>
+          <input class="field-input" id="endereco" placeholder="Rua, número, bairro" value="Av. Brigadeiro Faria Lima, 4500" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Cooperado ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </span>
+      <h2>Cooperado · Origem da carga</h2>
+      <span class="form-section-hint">Vendedor responsável pelo embarque</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row">
+        <div class="field span-2">
+          <label class="field-label" for="cooperado">Nome do Cooperado <span class="req">*</span></label>
+          <input class="field-input" id="cooperado" value="CARLOS ALVES" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="cnpjCoop">CPF/CNPJ do Cooperado <span class="req">*</span></label>
+          <input class="field-input" id="cnpjCoop" value="123.456.789-00" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="ie">Inscrição Estadual</label>
+          <input class="field-input" id="ie" value="123456789" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Produto & Logística ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73L11 21.73a2 2 0 0 0 2 0L20 17.73A2 2 0 0 0 21 16Z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+      </span>
+      <h2>Produto · Logística</h2>
+      <span class="form-section-hint">SKU, embalagem, planta e frete</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row">
+        <div class="field">
+          <label class="field-label" for="produto">Código do Produto <span class="req">*</span></label>
+          <input class="field-input is-locked" id="produto" value="123245" readonly />
+          <span class="field-locked-note">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 1 1 8 0v4"/></svg>
+            Vem do contrato
+          </span>
+        </div>
+        <div class="field span-2">
+          <label class="field-label" for="descProduto">Descrição do Produto</label>
+          <input class="field-input is-locked" id="descProduto" value="FFALM 10 20 30" readonly />
+        </div>
+        <div class="field">
+          <label class="field-label" for="embalagem">Embalagem <span class="req">*</span></label>
+          <select class="field-select" id="embalagem">
+            <option>Saco 50kg</option>
+            <option>Saco 25kg</option>
+            <option>Big Bag 1000kg</option>
+            <option>Granel</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row cols-3">
+        <div class="field">
+          <label class="field-label" for="planta">Planta de Origem <span class="req">*</span></label>
+          <select class="field-select" id="planta">
+            <option>Limeira</option><option>Paranaguá</option><option>Cubatão</option>
+            <option>Rondonópolis</option><option>Uberaba</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="frete">Tipo de Frete <span class="req">*</span></label>
+          <select class="field-select" id="frete">
+            <option value="CIF">CIF · Por conta da Mosaic</option>
+            <option value="FOB">FOB · Por conta do cliente</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="preco">Preço NF (unit.) <span class="req">*</span></label>
+          <div class="field-input-with-suffix">
+            <input class="field-input is-locked" id="preco" value="1.450,00" readonly />
+            <span class="suffix">R$/t</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Volumes ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 4 4 5-5"/></svg>
+      </span>
+      <h2>Volumes</h2>
+      <span class="form-section-hint">Quantidades em toneladas</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row cols-2">
+        <div class="field">
+          <label class="field-label" for="qtdProtocolo">Quantidade do Protocolo <span class="req">*</span></label>
+          <div class="field-input-with-suffix">
+            <input class="field-input" id="qtdProtocolo" type="number" value="300" />
+            <span class="suffix">t</span>
+          </div>
+          <span class="field-help">Volume total contratado neste protocolo.</span>
+        </div>
+        <div class="field">
+          <label class="field-label">Vigência do protocolo <span class="req">*</span></label>
+          <div class="form-row cols-2" style="margin:0; gap:8px;">
+            <input class="field-input" type="text" id="vigIni" value="01/05/2026" placeholder="dd/mm/aaaa" />
+            <input class="field-input" type="text" id="vigFim" value="31/07/2026" placeholder="dd/mm/aaaa" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Volumes summary -->
+      <div class="volumes-summary">
+        <div class="vol-card">
+          <div class="vol-card-label">Qtd. Agendada</div>
+          <div class="vol-card-value">250<span class="unit">t</span></div>
+        </div>
+        <div class="vol-card saldo">
+          <div class="vol-card-label">Saldo a Agendar</div>
+          <div class="vol-card-value">50<span class="unit">t</span></div>
+        </div>
+        <div class="vol-card">
+          <div class="vol-card-label">Qtd. Faturada</div>
+          <div class="vol-card-value">50<span class="unit">t</span></div>
+        </div>
+        <div class="vol-card faturar">
+          <div class="vol-card-label">Qtd. a Faturar</div>
+          <div class="vol-card-value">250<span class="unit">t</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Nota Fiscal ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/></svg>
+      </span>
+      <h2>Nota Fiscal</h2>
+      <span class="form-section-hint">Documento fiscal do protocolo</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row cols-3">
+        <div class="field">
+          <label class="field-label" for="nfNumero">Número da NF</label>
+          <input class="field-input" id="nfNumero" placeholder="Ainda não emitida" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="nfData">Data da NF</label>
+          <input class="field-input" id="nfData" placeholder="dd/mm/aaaa" />
+        </div>
+        <div class="field">
+          <label class="field-label" for="nfChave">Chave de Acesso</label>
+          <input class="field-input" id="nfChave" placeholder="44 dígitos" maxlength="44" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Observações ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </span>
+      <h2>Observações</h2>
+      <span class="form-section-hint">Notas internas (não vão para NF)</span>
+    </div>
+    <div class="form-section-body">
+      <div class="form-row">
+        <div class="field span-full">
+          <label class="field-label" for="obs">Observações livres</label>
+          <textarea class="field-textarea" id="obs" placeholder="Instruções de entrega, restrições de horário, contatos no local, etc."></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO: Histórico ============================================ -->
+  <section class="form-section">
+    <div class="form-section-head">
+      <span class="form-section-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </span>
+      <h2>Histórico</h2>
+      <span class="form-section-hint">Eventos deste protocolo</span>
+    </div>
+    <div class="form-section-body">
+      <div class="history-timeline">
+        <div class="history-item">
+          <div class="history-time">12/05/2026 · 09:14</div>
+          <div class="history-action">Agendamento parcial — 250 t reservadas para semana 18/05—24/05</div>
+          <div class="history-actor">Alyssa Harris</div>
+        </div>
+        <div class="history-item">
+          <div class="history-time">08/05/2026 · 16:42</div>
+          <div class="history-action">Status alterado para "Liberado para agendar"</div>
+          <div class="history-actor">Sistema · Mosaic</div>
+        </div>
+        <div class="history-item">
+          <div class="history-time">05/05/2026 · 14:32</div>
+          <div class="history-action">Protocolo criado a partir do contrato C-001-2024</div>
+          <div class="history-actor">Alyssa Harris</div>
+        </div>
+        <div class="history-item is-future">
+          <div class="history-time">—</div>
+          <div class="history-action">Aguardando emissão de NF</div>
+          <div class="history-actor">—</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STICKY FOOTER -->
+  <div class="edit-footer" id="editFooter">
+    <div class="edit-footer-info">
+      <span class="dirty-dot"></span>
+      <span id="footerStatus">Sem alterações pendentes</span>
+    </div>
+    <div class="edit-footer-actions">
+      <a href="relatorio-protocolos.html" class="btn btn-secondary" style="text-decoration:none">Cancelar</a>
+      <button class="btn btn-primary" id="btnSalvar" disabled>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Salvar alterações
+      </button>
+    </div>
+  </div>
+
+</main>
+
+<!-- SUCCESS MODAL ===================================================== -->
+<div class="modal-backdrop" id="successModal">
+  <div class="modal">
+    <div class="modal-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="modal-title">Protocolo atualizado!</div>
+    <div class="modal-text">As alterações foram salvas no protocolo <strong id="modalProto">M9W38746</strong>.</div>
+    <div class="modal-actions">
+      <a href="relatorio-protocolos.html" class="btn btn-primary" style="text-decoration:none">Voltar ao Relatório</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER ========================================================== -->
+<footer class="mosaic-footer">
+  <div class="mosaic-footer-inner">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="footer-links">
+      <a href="#">Política de Privacidade</a>
+      <a href="#">Termos e Condições</a>
+      <a href="#">Sobre nós</a>
+      <a href="#">Entre em contato conosco</a>
+    </div>
+    <div class="footer-copyright">Copyright © 2026 Mosaic</div>
+  </div>
+</footer>
+
+<!-- SCRIPT ========================================================== -->
+<script>
+/* ================================================================
+   Dados mock (em produção viriam da API por ?protocolo=ID)
+   ================================================================ */
+const PROTOCOLS = {
+  "M9W38746": {
+    id: "M9W38746", status: "Novo", statusClass: "status-novo",
+    contrato: "C-001-2024", cotacao: "Q-12345", created: "05/05/2026 · 14:32",
+    filial: "Filial São Paulo", cnpjFilial: "12.345.678/0001-90", uf: "SP",
+    cidade: "São Paulo", endereco: "Av. Brigadeiro Faria Lima, 4500",
+    cooperado: "CARLOS ALVES", cnpjCoop: "123.456.789-00", ie: "123456789",
+    produto: "123245", descProduto: "FFALM 10 20 30", embalagem: "Saco 50kg",
+    planta: "Limeira", frete: "CIF", preco: "1.450,00",
+    qtdProtocolo: 300, qtdAgendada: 250, saldo: 50, qtdFaturada: 50, qtdFaturar: 250,
+    vigIni: "01/05/2026", vigFim: "31/07/2026",
+    nfNumero: "", nfData: "", nfChave: "",
+  },
+  "M9W47291": {
+    id: "M9W47291", status: "Em agendamento", statusClass: "status-agendamento",
+    contrato: "C-002-2024", cotacao: "Q-23456", created: "02/05/2026 · 10:18",
+    filial: "Filial Curitiba", cnpjFilial: "23.456.789/0001-01", uf: "PR",
+    cidade: "Curitiba", endereco: "Av. Cândido de Abreu, 200",
+    cooperado: "BETO DOS SANTOS", cnpjCoop: "234.567.890-11", ie: "234567890",
+    produto: "456789", descProduto: "DAP 18 46 00", embalagem: "Granel",
+    planta: "Paranaguá", frete: "FOB", preco: "2.100,00",
+    qtdProtocolo: 500, qtdAgendada: 200, saldo: 300, qtdFaturada: 0, qtdFaturar: 500,
+    vigIni: "01/05/2026", vigFim: "30/06/2026",
+    nfNumero: "", nfData: "", nfChave: "",
+  },
+};
+
+/* Get ?protocolo= */
+const params = new URLSearchParams(window.location.search);
+const protoId = params.get("protocolo") || "M9W38746";
+const p = PROTOCOLS[protoId] || PROTOCOLS["M9W38746"];
+
+/* Preenche campos */
+document.getElementById("ctxProtocolo").textContent = p.id;
+document.getElementById("modalProto").textContent = p.id;
+document.getElementById("ctxContrato").textContent = p.contrato;
+document.getElementById("ctxCotacao").textContent = p.cotacao;
+document.getElementById("ctxCreated").textContent = p.created;
+const ctxBadge = document.getElementById("ctxStatusBadge");
+ctxBadge.className = "status-badge " + p.statusClass;
+ctxBadge.innerHTML = '<span class="dot"></span>' + p.status;
+
+/* Form values */
+const setVal = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+setVal("filial",       p.filial);
+setVal("cnpjFilial",   p.cnpjFilial);
+setVal("uf",           p.uf);
+setVal("cidade",       p.cidade);
+setVal("endereco",     p.endereco);
+setVal("cooperado",    p.cooperado);
+setVal("cnpjCoop",     p.cnpjCoop);
+setVal("ie",           p.ie);
+setVal("produto",      p.produto);
+setVal("descProduto",  p.descProduto);
+setVal("embalagem",    p.embalagem);
+setVal("planta",       p.planta);
+setVal("frete",        p.frete);
+setVal("preco",        p.preco);
+setVal("qtdProtocolo", p.qtdProtocolo);
+setVal("vigIni",       p.vigIni);
+setVal("vigFim",       p.vigFim);
+setVal("nfNumero",     p.nfNumero);
+setVal("nfData",       p.nfData);
+setVal("nfChave",      p.nfChave);
+
+/* Atualiza summary de volumes */
+function updateVolSummary() {
+  const total = Number(document.getElementById("qtdProtocolo").value) || 0;
+  const agendada = p.qtdAgendada;
+  const faturada = p.qtdFaturada;
+  const saldoCalc = Math.max(0, total - agendada);
+  const faturarCalc = Math.max(0, total - faturada);
+
+  document.querySelectorAll(".vol-card").forEach((card, i) => {
+    const val = [agendada, saldoCalc, faturada, faturarCalc][i];
+    card.querySelector(".vol-card-value").innerHTML =
+      val.toLocaleString("pt-BR") + '<span class="unit">t</span>';
+  });
+}
+updateVolSummary();
+
+/* Dirty tracking */
+const inputs = document.querySelectorAll(".field-input:not([readonly]), .field-select, .field-textarea");
+const footer = document.getElementById("editFooter");
+const btnSalvar = document.getElementById("btnSalvar");
+const footerStatus = document.getElementById("footerStatus");
+
+function markDirty() {
+  footer.classList.add("is-dirty");
+  btnSalvar.disabled = false;
+  footerStatus.textContent = "Alterações pendentes — clique em Salvar";
+}
+inputs.forEach(el => {
+  el.addEventListener("input", () => {
+    markDirty();
+    if (el.id === "qtdProtocolo") updateVolSummary();
+  });
+  el.addEventListener("change", markDirty);
+});
+
+/* Save */
+btnSalvar.addEventListener("click", () => {
+  document.getElementById("successModal").classList.add("is-open");
+});
+
+/* Close modal on backdrop */
+document.getElementById("successModal").addEventListener("click", (e) => {
+  if (e.target.id === "successModal") {
+    e.target.classList.remove("is-open");
+  }
+});
+
+/* Beforeunload protection */
+window.addEventListener("beforeunload", (e) => {
+  if (footer.classList.contains("is-dirty")) {
+    e.preventDefault();
+    e.returnValue = "";
+  }
+});
+</script>
+
+<script src="review-overlay.js" defer></script>
+</body>
+</html>
