@@ -1980,10 +1980,13 @@
      pode carregar DEPOIS deste <style> (daí o prefixo html + !important).
      Sem isso aparecem DUAS barras: a nativa no rodapé da tabela e a
      flutuante no rodapé da viewport. */
+  /* DECISÃO: tabela contida (altura fixa) + cabeçalho fixo + 1ª coluna
+     congelada (já existente) + botões de bloco para o scroll horizontal.
+     A página NÃO trava — só a área da tabela rola por dentro. */
   html .wide-table-wrap, html .report-table-wrap {
     scrollbar-width: none !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
+    overflow: auto !important;
+    max-height: 62vh !important;
   }
   html .wide-table-wrap::-webkit-scrollbar,
   html .report-table-wrap::-webkit-scrollbar {
@@ -1991,40 +1994,38 @@
     height: 0 !important;
     width: 0 !important;
   }
+  /* Cabeçalho fixo no topo durante o scroll vertical (todas as colunas).
+     A col-proto mantém z-index maior por ser o canto (top+left). */
+  html .wide-table { border-collapse: separate !important; border-spacing: 0 !important; }
+  html .wide-table thead th { position: sticky !important; top: 0; z-index: 4; }
+  html .wide-table thead th.col-proto { z-index: 5; }
 
   /* html-prefixo + !important: o base.css também define .sticky-h-scroll
      (16px, branca, display:none) e pode carregar depois deste style. */
-  html .sticky-h-scroll {
+  /* Botões de bloco ‹ › — affordance de scroll horizontal nas bordas da
+     área contida da tabela. */
+  .col-pager-btn {
     position: fixed;
-    bottom: 0 !important;
-    left: 0;
-    right: auto !important;
-    z-index: 200;
-    overflow-x: auto;
-    overflow-y: hidden;
-    display: block !important;
-    height: 22px !important;
-    background: #eef2f0 !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 999px !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14) !important;
+    z-index: 130;
+    width: 40px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(0,0,0,.22);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 160ms ease-out;
-    scrollbar-width: auto;
-    scrollbar-color: var(--mosaic-green-800) #eef2f0;
+    transition: opacity 160ms ease-out, background 120ms;
   }
-  html .sticky-h-scroll.is-visible { opacity: 1; pointer-events: auto; }
-  html .sticky-h-scroll-inner { height: 1px; }
-  html .sticky-h-scroll::-webkit-scrollbar { height: 22px; }
-  html .sticky-h-scroll::-webkit-scrollbar-track { background: transparent; }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb {
-    background: var(--mosaic-green-800);
-    border-radius: 999px;
-    border: 4px solid #eef2f0;
-    min-width: 80px;
-  }
-  html .sticky-h-scroll::-webkit-scrollbar-thumb:hover { background: var(--mosaic-green-900); }
+  .col-pager-btn.is-visible { opacity: .97; pointer-events: auto; }
+  .col-pager-btn:hover { background: var(--mosaic-green-900); }
+  .col-pager-btn.prev { border-radius: 0 12px 12px 0; }
+  .col-pager-btn.next { border-radius: 12px 0 0 12px; }
+  .col-pager-btn svg { width: 24px; height: 24px; }
 </style>
 </head>
 <body>
@@ -4068,45 +4069,49 @@ document.querySelectorAll("#mainTable thead th.sortable").forEach(th => {
 render();
 
 /* ============================================================================
-   Sticky horizontal scrollbar — espelha o scrollLeft do .wide-table-wrap
-   numa barra fixa na base do viewport. Aparece só quando a tabela transborda
-   e o rodapé natural da tabela está fora do viewport.
+   DECISÃO — botões de bloco (‹ ›): scroll horizontal por blocos de colunas,
+   interno à área contida da tabela. Acessível (botão real), consistente em
+   portal/CS/mobile. A rolagem nativa (trackpad/teclado) segue ativa por baixo.
    ============================================================================ */
-(function initStickyHScroll() {
-  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(wrap => {
-    const sticky = document.createElement("div");
-    sticky.className = "sticky-h-scroll";
-    const inner = document.createElement("div");
-    inner.className = "sticky-h-scroll-inner";
-    sticky.appendChild(inner);
-    document.body.appendChild(sticky);
-    let syncing = false;
+(function initColPager() {
+  const SVG_PREV = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+  const SVG_NEXT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+  function attach(wrap) {
+    if (!wrap || wrap.dataset.pager === "1") return;
+    wrap.dataset.pager = "1";
+    const prev = document.createElement("button");
+    prev.className = "col-pager-btn prev"; prev.type = "button";
+    prev.setAttribute("aria-label", "Bloco anterior de colunas"); prev.innerHTML = SVG_PREV;
+    const next = document.createElement("button");
+    next.className = "col-pager-btn next"; next.type = "button";
+    next.setAttribute("aria-label", "Próximo bloco de colunas"); next.innerHTML = SVG_NEXT;
+    document.body.appendChild(prev); document.body.appendChild(next);
     const update = () => {
-      inner.style.width = wrap.scrollWidth + "px";
+      if (!wrap.isConnected) { prev.remove(); next.remove(); return; }
       const overflows = wrap.scrollWidth > wrap.clientWidth + 1;
       const r = wrap.getBoundingClientRect();
-      // visível sempre que a tabela transborda e qualquer parte dela está em tela
       const inView = r.top < window.innerHeight - 24 && r.bottom > 120;
-      sticky.style.left = r.left + "px";
-      sticky.style.width = r.width + "px";
-      sticky.classList.toggle("is-visible", overflows && inView);
-      if (overflows && inView) sticky.scrollLeft = wrap.scrollLeft;
+      const top = Math.max(r.top, 80);
+      const bottom = Math.min(r.bottom, window.innerHeight);
+      const cy = (top + bottom) / 2 - 36;
+      prev.style.top = cy + "px"; next.style.top = cy + "px";
+      prev.style.left = r.left + "px"; next.style.left = (r.right - 40) + "px";
+      const atStart = wrap.scrollLeft <= 2;
+      const atEnd = wrap.scrollLeft >= wrap.scrollWidth - wrap.clientWidth - 2;
+      prev.classList.toggle("is-visible", overflows && inView && !atStart);
+      next.classList.toggle("is-visible", overflows && inView && !atEnd);
     };
-    wrap.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      sticky.scrollLeft = wrap.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    sticky.addEventListener("scroll", () => {
-      if (syncing) return; syncing = true;
-      wrap.scrollLeft = sticky.scrollLeft;
-      requestAnimationFrame(() => { syncing = false; });
-    });
-    window.addEventListener("scroll", update);
+    const step = () => Math.max(240, wrap.clientWidth * 0.85);
+    const page = (dir) => { wrap.scrollBy({ left: dir * step(), behavior: "smooth" }); [0, 200, 450].forEach(ms => setTimeout(update, ms)); };
+    prev.addEventListener("click", () => page(-1));
+    next.addEventListener("click", () => page(1));
+    wrap.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     if (typeof ResizeObserver !== "undefined") new ResizeObserver(update).observe(wrap);
     update();
-  });
+  }
+  document.querySelectorAll(".wide-table-wrap, .report-table-wrap, [data-h-scroll]").forEach(attach);
 })();
 </script>
 <script src="review-overlay.js" defer></script>
