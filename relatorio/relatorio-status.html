@@ -28,33 +28,52 @@
   </div>
 
   <h2 class="sec">Dados numéricos</h2>
-  <p class="sec-sub">Os números que descrevem esta tela.</p>
+  <p class="sec-sub">Destaques medidos desta tela.</p>
   <div class="metrics c4">
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M13.4 12.6 19 7M4 20a8 8 0 1 1 16 0"/></svg></div>
+        <div class="num">23<u>ms</u></div>
+        <div class="lbl">carregamento</div>
+        <div class="desc">evento load, melhor de 3.</div>
+      </div>
       <div class="card metric">
         <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-9-9V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
         <div class="num">3</div>
         <div class="lbl">tipos de tag</div>
-        <div class="desc">PLAN, REPLAN e ADIÇÃO em badge colorido.</div>
+        <div class="desc">PLAN, REPLAN e ADIÇÃO.</div>
       </div>
       <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/></svg></div>
-        <div class="num">2</div>
-        <div class="lbl">colunas-chave fixas</div>
-        <div class="desc">congeladas à esquerda no scroll.</div>
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></div>
+        <div class="num">42</div>
+        <div class="lbl">linhas renderizadas</div>
+        <div class="desc">no exemplo carregado.</div>
       </div>
       <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg></div>
-        <div class="num">1</div>
-        <div class="lbl">filtro por período</div>
-        <div class="desc">semana de → até, avançado.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <div class="num">6</div>
-        <div class="lbl">itens de melhoria</div>
-        <div class="desc">aplicados nesta tela.</div>
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.5 18 2.5-8 8-2.5z"/></svg></div>
+        <div class="num">3</div>
+        <div class="lbl">cliques no caminho feliz</div>
+        <div class="desc">filtro → período → aplicar.</div>
       </div>
   </div>
+
+  <h2 class="sec">Ficha técnica</h2>
+  <p class="sec-sub">Todos os números da tela, item a item.</p>
+  <div class="card ficha">
+      <div class="r"><div class="lab">Carregamento<span>melhor de 3 medições (evento load), protótipo local</span></div><div class="val">23<u>ms</u></div></div>
+      <div class="r"><div class="lab">Peso da página<span>HTML + CSS + JS inline, zero dependências externas</span></div><div class="val">140<u>KB</u></div></div>
+      <div class="r"><div class="lab">Cliques no caminho feliz<span>caminho mínimo da tarefa principal</span></div><div class="val">3</div></div>
+      <div class="r"><div class="lab">Colunas na tabela<span>tabela principal</span></div><div class="val">10</div></div>
+      <div class="r"><div class="lab">Linhas renderizadas<span>no exemplo carregado</span></div><div class="val">42</div></div>
+      <div class="r"><div class="lab">Colunas congeladas<span>referências fixas no scroll horizontal</span></div><div class="val">2</div></div>
+      <div class="r"><div class="lab">Tipos de tag<span>PLAN / REPLAN / ADIÇÃO</span></div><div class="val">3</div></div>
+      <div class="r"><div class="lab">Campos de formulário<span>inputs + selects + textareas</span></div><div class="val">12</div></div>
+      <div class="r"><div class="lab">Botões<span>ações e controles</span></div><div class="val">16</div></div>
+      <div class="r"><div class="lab">Elementos interativos<span>botões, campos, links e elementos tabuláveis</span></div><div class="val">46</div></div>
+      <div class="r"><div class="lab">Nós no DOM<span>após a renderização</span></div><div class="val">899</div></div>
+      <div class="r"><div class="lab">Ícones SVG<span>vetoriais, sem imagens externas</span></div><div class="val">24</div></div>
+      <div class="r"><div class="lab">Linhas de código<span>HTML + CSS + JS em arquivo único</span></div><div class="val">4203</div></div>
+  </div>
+  <p class="method"><b>Como medimos.</b> Carregamento é a melhor de 3 medições do evento <b>load</b> em localhost, com JS rodando. As contagens vêm do DOM renderizado e do arquivo. Cliques = caminho mínimo para <b>filtrar por período</b>. Números do protótipo, para dimensionamento — não de produção.</p>
 
   <h2 class="sec">Itens de melhoria</h2>
   <p class="sec-sub">O que foi trabalhado nesta tela.</p>

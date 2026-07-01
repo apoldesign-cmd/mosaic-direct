@@ -28,33 +28,49 @@
   </div>
 
   <h2 class="sec">Dados numéricos</h2>
-  <p class="sec-sub">Os números que descrevem esta tela.</p>
+  <p class="sec-sub">Destaques medidos desta tela.</p>
   <div class="metrics c4">
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M13.4 12.6 19 7M4 20a8 8 0 1 1 16 0"/></svg></div>
+        <div class="num">15<u>ms</u></div>
+        <div class="lbl">carregamento</div>
+        <div class="desc">evento load, melhor de 3.</div>
+      </div>
       <div class="card metric">
         <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div>
         <div class="num">2</div>
         <div class="lbl">modais centralizados</div>
-        <div class="desc">seleção de contratos e roteiro no foco.</div>
+        <div class="desc">seleção de contratos e roteiro.</div>
       </div>
       <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-        <div class="num">1</div>
-        <div class="lbl">calendário custom</div>
-        <div class="desc">semana de agendamento, reposiciona sozinho.</div>
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.5 18 2.5-8 8-2.5z"/></svg></div>
+        <div class="num">6</div>
+        <div class="lbl">cliques no caminho feliz</div>
+        <div class="desc">selecionar → data → agendar.</div>
       </div>
       <div class="card metric">
         <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></div>
-        <div class="num sm">32px</div>
+        <div class="num">32<u>px</u></div>
         <div class="lbl">altura de input</div>
-        <div class="desc">padrão único para volume, data e roteiro.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <div class="num">6</div>
-        <div class="lbl">itens de melhoria</div>
-        <div class="desc">aplicados nesta tela.</div>
+        <div class="desc">padrão único: volume, data, roteiro.</div>
       </div>
   </div>
+
+  <h2 class="sec">Ficha técnica</h2>
+  <p class="sec-sub">Todos os números da tela, item a item.</p>
+  <div class="card ficha">
+      <div class="r"><div class="lab">Carregamento<span>melhor de 3 medições (evento load), protótipo local</span></div><div class="val">15<u>ms</u></div></div>
+      <div class="r"><div class="lab">Peso da página<span>HTML + CSS + JS inline, zero dependências externas</span></div><div class="val">259<u>KB</u></div></div>
+      <div class="r"><div class="lab">Cliques no caminho feliz<span>caminho mínimo da tarefa principal</span></div><div class="val">6</div></div>
+      <div class="r"><div class="lab">Modais centralizados<span>seleções no foco da tela</span></div><div class="val">2</div></div>
+      <div class="r"><div class="lab">Campos de formulário<span>inputs + selects + textareas</span></div><div class="val">9</div></div>
+      <div class="r"><div class="lab">Botões<span>ações e controles</span></div><div class="val">47</div></div>
+      <div class="r"><div class="lab">Elementos interativos<span>botões, campos, links e elementos tabuláveis</span></div><div class="val">52</div></div>
+      <div class="r"><div class="lab">Nós no DOM<span>após a renderização</span></div><div class="val">296</div></div>
+      <div class="r"><div class="lab">Ícones SVG<span>vetoriais, sem imagens externas</span></div><div class="val">43</div></div>
+      <div class="r"><div class="lab">Linhas de código<span>HTML + CSS + JS em arquivo único</span></div><div class="val">6463</div></div>
+  </div>
+  <p class="method"><b>Como medimos.</b> Carregamento é a melhor de 3 medições do evento <b>load</b> em localhost, com JS rodando. As contagens vêm do DOM renderizado e do arquivo. Cliques = caminho mínimo para <b>agendar 1 contrato</b>. Números do protótipo, para dimensionamento — não de produção.</p>
 
   <h2 class="sec">Itens de melhoria</h2>
   <p class="sec-sub">O que foi trabalhado nesta tela.</p>
