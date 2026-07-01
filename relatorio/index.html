@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct 2.0 — Relatório tela a tela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="report.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back" href="../index.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Voltar ao portal</a>
+    <div class="logo"><span class="lt">Mosaic<sup>&reg;</sup></span><img src="../logo-shapes.png" alt="Mosaic"/></div>
+  </div>
+
+  <div class="card hero">
+    <span class="badge">Relatório de UX &amp; Performance</span>
+    <h1>Mosaic Direct 2.0</h1>
+    <p class="lead">Relatório tela a tela do Portal do Cliente. Cada página traz a captura atual, os dados numéricos e os itens de melhoria trabalhados. Comece pelo resumo abaixo e navegue por tela.</p>
+
+    <div class="metrics c4">
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg></div>
+        <div class="num">7</div>
+        <div class="lbl">telas documentadas</div>
+        <div class="desc">uma página de relatório para cada uma.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div>
+        <div class="num sm">100%</div>
+        <div class="lbl">modais centralizados</div>
+        <div class="desc">seleções no foco, não em painel lateral.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg></div>
+        <div class="num">38</div>
+        <div class="lbl">colunas geridas</div>
+        <div class="desc">organizadas em tabelas contidas.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 9 5-9 5-9-5 9-5z"/><path d="m3 12 9 5 9-5M3 17l9 5 9-5"/></svg></div>
+        <div class="num">0</div>
+        <div class="lbl">dependência de Theme Layout</div>
+        <div class="desc">scroll interno ao componente (LWC).</div>
+      </div>
+    </div>
+    <p class="stats-note">Não existe uma versão anterior do sistema para comparar — o &ldquo;antes&rdquo; era a planilha. Este relatório aponta os itens de melhoria do sistema atual.</p>
+  </div>
+
+  <h2 class="sec">Da planilha ao sistema</h2>
+  <p class="sec-sub">O que vivia em Excel — muitas colunas, scroll para todo lado, pouca hierarquia — virou tela consistente.</p>
+  <div class="metrics c3">
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg></div>
+        <div class="num">38</div>
+        <div class="lbl">colunas antes soltas</div>
+        <div class="desc">agora em grade com cabeçalho fixo.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/></svg></div>
+        <div class="num">6</div>
+        <div class="lbl">colunas congeladas</div>
+        <div class="desc">referências que nunca somem no scroll.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
+        <div class="num">2</div>
+        <div class="lbl">banners → ícone ⓘ</div>
+        <div class="desc">informativo fora do corpo, espaço recuperado.</div>
+      </div>
+  </div>
+
+  <h2 class="sec">Tela a tela</h2>
+  <p class="sec-sub">Clique em uma tela para abrir o relatório completo, com dados numéricos e detalhes técnicos.</p>
+  <div class="idx">
+    <a class="card idx-card" href="relatorio-protocolos.html">
+      <img src="../doc-assets/rel-ux-hero.png" alt="Relatório de Protocolos"/>
+      <div class="b">
+        <span class="num">Tela 1/7</span>
+        <div class="kick">Contratos · relatório</div>
+        <h3>Relatório de Protocolos</h3>
+        <p>Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</p>
+        <div class="chips"><span class="chip">24 colunas na tabela</span><span class="chip">1 coluna congelada</span><span class="chip">62vh altura contida</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="relatorio-status.html">
+      <img src="../doc-assets/rel-status-cur.png" alt="Relatório de Status de Agendamento"/>
+      <div class="b">
+        <span class="num">Tela 2/7</span>
+        <div class="kick">Agendamento · relatório</div>
+        <h3>Relatório de Status de Agendamento</h3>
+        <p>Acompanhamento das solicitações de agendamento por semana, tipo e status.</p>
+        <div class="chips"><span class="chip">3 tipos de tag</span><span class="chip">2 colunas-chave fixas</span><span class="chip">1 filtro por período</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="agendar-contrato.html">
+      <img src="../doc-assets/agendar-contrato.png" alt="Agendar Contrato Normal"/>
+      <div class="b">
+        <span class="num">Tela 3/7</span>
+        <div class="kick">Agendamento</div>
+        <h3>Agendar Contrato Normal</h3>
+        <p>Seleção de contratos e itens para criação de agendamentos (versão final, multi-item).</p>
+        <div class="chips"><span class="chip">2 modais centralizados</span><span class="chip">1 calendário custom</span><span class="chip">32px altura de input</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="agendar-protocolo.html">
+      <img src="../doc-assets/agendar-protocolo.png" alt="Agendar Protocolo"/>
+      <div class="b">
+        <span class="num">Tela 4/7</span>
+        <div class="kick">Agendamento</div>
+        <h3>Agendar Protocolo</h3>
+        <p>Seleção de protocolos para criação de agendamentos.</p>
+        <div class="chips"><span class="chip">2 modais centralizados</span><span class="chip">1 padrão reaproveitado</span><span class="chip">4 itens de melhoria</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="criar-protocolo.html">
+      <img src="../doc-assets/rel-criar-cur.png" alt="Criar Protocolo"/>
+      <div class="b">
+        <span class="num">Tela 5/7</span>
+        <div class="kick">Contratos · criação</div>
+        <h3>Criar Protocolo</h3>
+        <p>Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</p>
+        <div class="chips"><span class="chip">14 colunas na tabela</span><span class="chip">3 colunas congeladas</span><span class="chip">3 modais centralizados</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="editar-protocolo.html">
+      <img src="../doc-assets/editar-protocolo.png" alt="Editar Protocolo"/>
+      <div class="b">
+        <span class="num">Tela 6/7</span>
+        <div class="kick">Contratos · edição</div>
+        <h3>Editar Protocolo</h3>
+        <p>Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</p>
+        <div class="chips"><span class="chip">100% largura do roteiro</span><span class="chip">1 tela completa</span><span class="chip">4 itens de melhoria</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+    <a class="card idx-card" href="hub-portal.html">
+      <img src="../doc-assets/index.png" alt="Hub do Portal"/>
+      <div class="b">
+        <span class="num">Tela 7/7</span>
+        <div class="kick">Início</div>
+        <h3>Hub do Portal</h3>
+        <p>Página inicial que lista e dá acesso a todas as telas do portal.</p>
+        <div class="chips"><span class="chip">7 telas acessíveis</span><span class="chip">0 telas internas expostas</span><span class="chip">3 itens de melhoria</span></div>
+        <span class="go">Ver relatório da tela <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </div>
+    </a>
+  </div>
+
+  <div class="cta">
+    <h3>Quer ver no portal?</h3>
+    <p>Abra o Mosaic Direct e navegue pelas telas já organizadas.</p>
+    <a href="../index.html">Ir para o Mosaic Direct <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+</div>
+</body>
+</html>

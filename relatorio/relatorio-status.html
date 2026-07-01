@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Relatório de Status de Agendamento — Relatório Mosaic Direct 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="report.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <a class="back" href="index.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Resumo (hub)</a>
+    <div class="logo"><span class="lt">Mosaic<sup>&reg;</sup></span><img src="../logo-shapes.png" alt="Mosaic"/></div>
+  </div>
+
+  <div class="card screen-hero">
+    <img class="cap" src="../doc-assets/rel-status-cur.png" alt="Relatório de Status de Agendamento" />
+    <div class="sb">
+      <span class="stepper">Tela 2 de 7</span>
+      <div class="kick">Agendamento · relatório</div>
+      <h1>Relatório de Status de Agendamento</h1>
+      <p class="purp">Acompanhamento das solicitações de agendamento por semana, tipo e status.</p>
+    </div>
+  </div>
+
+  <h2 class="sec">Dados numéricos</h2>
+  <p class="sec-sub">Os números que descrevem esta tela.</p>
+  <div class="metrics c4">
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-9-9V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
+        <div class="num">3</div>
+        <div class="lbl">tipos de tag</div>
+        <div class="desc">PLAN, REPLAN e ADIÇÃO em badge colorido.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/></svg></div>
+        <div class="num">2</div>
+        <div class="lbl">colunas-chave fixas</div>
+        <div class="desc">congeladas à esquerda no scroll.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54z"/></svg></div>
+        <div class="num">1</div>
+        <div class="lbl">filtro por período</div>
+        <div class="desc">semana de → até, avançado.</div>
+      </div>
+      <div class="card metric">
+        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <div class="num">6</div>
+        <div class="lbl">itens de melhoria</div>
+        <div class="desc">aplicados nesta tela.</div>
+      </div>
+  </div>
+
+  <h2 class="sec">Itens de melhoria</h2>
+  <p class="sec-sub">O que foi trabalhado nesta tela.</p>
+  <div class="card" style="padding:22px 24px">
+    <p class="block-t">Aplicados</p>
+    <ul class="imp">
+        <li><b>Tags PLAN / REPLAN / ADIÇÃO</b><span>tipo do agendamento identificável de relance.</span></li>
+        <li><b>Status em badge colorido</b><span>estado do registro legível sem ler texto.</span></li>
+        <li><b>Tabela contida + colunas congeladas</b><span>mesmo padrão do Relatório de Protocolos.</span></li>
+        <li><b>Cabeçalho fixo + botões ‹ ›</b><span>navegação consistente entre relatórios.</span></li>
+        <li><b>Filtro avançado por período</b><span>recorte por semana de início e fim.</span></li>
+        <li><b>Banner → ícone ⓘ no título</b><span>espaço vertical recuperado.</span></li>
+    </ul>
+  </div>
+
+  <h2 class="sec">Detalhes de implementação</h2>
+  <p class="sec-sub">Decisões técnicas por trás da tela.</p>
+  <div class="card" style="padding:8px 24px 12px">
+    <ul class="tech-list">
+        <li>Reutiliza o mesmo motor de scroll do Relatório de Protocolos.</li>
+        <li>Badges com as cores institucionais (verde / amarelo / laranja).</li>
+        <li>Filtro de período em modal centralizado.</li>
+    </ul>
+  </div>
+
+  <div style="margin-top:22px">
+    <a class="open-real" href="../relatorio-status-agendamento.html" target="_blank" rel="noopener">Abrir a tela real <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </div>
+
+  <div class="pager">
+    <a class="card prev" href="relatorio-protocolos.html"><span class="dir">← Tela 1</span><span class="nm">Relatório de Protocolos</span></a>
+    <a class="card next" href="agendar-contrato.html"><span class="dir">Tela 3 →</span><span class="nm">Agendar Contrato Normal</span></a>
+  </div>
+</div>
+</body>
+</html>
