@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Relatório de Status de Agendamento — Relatório Mosaic Direct 2.0</title>
+<title>Relatório de Status de Agendamento — Benefícios · Mosaic Direct 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -27,65 +27,14 @@
     </div>
   </div>
 
-  <h2 class="sec">Dados numéricos</h2>
-  <p class="sec-sub">Destaques medidos desta tela.</p>
-  <div class="metrics c4">
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M13.4 12.6 19 7M4 20a8 8 0 1 1 16 0"/></svg></div>
-        <div class="num">23<u>ms</u></div>
-        <div class="lbl">carregamento</div>
-        <div class="desc">evento load, melhor de 3.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41 12 22l-9-9V3h10l7.59 7.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg></div>
-        <div class="num">3</div>
-        <div class="lbl">tipos de tag</div>
-        <div class="desc">PLAN, REPLAN e ADIÇÃO.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></div>
-        <div class="num">42</div>
-        <div class="lbl">linhas renderizadas</div>
-        <div class="desc">no exemplo carregado.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.5 18 2.5-8 8-2.5z"/></svg></div>
-        <div class="num">3</div>
-        <div class="lbl">cliques no caminho feliz</div>
-        <div class="desc">filtro → período → aplicar.</div>
-      </div>
-  </div>
-
-  <h2 class="sec">Ficha técnica</h2>
-  <p class="sec-sub">Todos os números da tela, item a item.</p>
-  <div class="card ficha">
-      <div class="r"><div class="lab">Carregamento<span>melhor de 3 medições (evento load), protótipo local</span></div><div class="val">23<u>ms</u></div></div>
-      <div class="r"><div class="lab">Peso da página<span>HTML + CSS + JS inline, zero dependências externas</span></div><div class="val">140<u>KB</u></div></div>
-      <div class="r"><div class="lab">Cliques no caminho feliz<span>caminho mínimo da tarefa principal</span></div><div class="val">3</div></div>
-      <div class="r"><div class="lab">Colunas na tabela<span>tabela principal</span></div><div class="val">10</div></div>
-      <div class="r"><div class="lab">Linhas renderizadas<span>no exemplo carregado</span></div><div class="val">42</div></div>
-      <div class="r"><div class="lab">Colunas congeladas<span>referências fixas no scroll horizontal</span></div><div class="val">2</div></div>
-      <div class="r"><div class="lab">Tipos de tag<span>PLAN / REPLAN / ADIÇÃO</span></div><div class="val">3</div></div>
-      <div class="r"><div class="lab">Campos de formulário<span>inputs + selects + textareas</span></div><div class="val">12</div></div>
-      <div class="r"><div class="lab">Botões<span>ações e controles</span></div><div class="val">16</div></div>
-      <div class="r"><div class="lab">Elementos interativos<span>botões, campos, links e elementos tabuláveis</span></div><div class="val">46</div></div>
-      <div class="r"><div class="lab">Nós no DOM<span>após a renderização</span></div><div class="val">899</div></div>
-      <div class="r"><div class="lab">Ícones SVG<span>vetoriais, sem imagens externas</span></div><div class="val">24</div></div>
-      <div class="r"><div class="lab">Linhas de código<span>HTML + CSS + JS em arquivo único</span></div><div class="val">4203</div></div>
-  </div>
-  <p class="method"><b>Como medimos.</b> Carregamento é a melhor de 3 medições do evento <b>load</b> em localhost, com JS rodando. As contagens vêm do DOM renderizado e do arquivo. Cliques = caminho mínimo para <b>filtrar por período</b>. Números do protótipo, para dimensionamento — não de produção.</p>
-
-  <h2 class="sec">Itens de melhoria</h2>
-  <p class="sec-sub">O que foi trabalhado nesta tela.</p>
-  <div class="card" style="padding:22px 24px">
-    <p class="block-t">Aplicados</p>
+  <h2 class="sec">Benefícios para o usuário</h2>
+  <p class="sec-sub">O que muda, na prática, nesta tela.</p>
+  <div class="card" style="padding:24px 26px">
     <ul class="imp">
-        <li><b>Tags PLAN / REPLAN / ADIÇÃO</b><span>tipo do agendamento identificável de relance.</span></li>
-        <li><b>Status em badge colorido</b><span>estado do registro legível sem ler texto.</span></li>
-        <li><b>Tabela contida + colunas congeladas</b><span>mesmo padrão do Relatório de Protocolos.</span></li>
-        <li><b>Cabeçalho fixo + botões ‹ ›</b><span>navegação consistente entre relatórios.</span></li>
-        <li><b>Filtro avançado por período</b><span>recorte por semana de início e fim.</span></li>
-        <li><b>Banner → ícone ⓘ no título</b><span>espaço vertical recuperado.</span></li>
+      <li><b>Identifica o tipo na hora</b><span>Tags PLAN / REPLAN / ADIÇÃO e status em cor, sem precisar ler.</span></li>
+      <li><b>Recorta por período</b><span>Filtro avançado por semana de início e fim.</span></li>
+      <li><b>Nada novo a aprender</b><span>Coluna congelada e botões ‹ › no mesmo padrão do Relatório de Protocolos.</span></li>
+      <li><b>Mais dados na tela</b><span>O banner virou ícone ⓘ, liberando linhas visíveis.</span></li>
     </ul>
   </div>
 
@@ -93,9 +42,8 @@
   <p class="sec-sub">Decisões técnicas por trás da tela.</p>
   <div class="card" style="padding:8px 24px 12px">
     <ul class="tech-list">
-        <li>Reutiliza o mesmo motor de scroll do Relatório de Protocolos.</li>
-        <li>Badges com as cores institucionais (verde / amarelo / laranja).</li>
-        <li>Filtro de período em modal centralizado.</li>
+      <li>Reutiliza o mesmo motor de scroll do Relatório de Protocolos.</li>
+      <li>Filtro de período em modal centralizado.</li>
     </ul>
   </div>
 

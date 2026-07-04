@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Agendar Contrato Normal — Relatório Mosaic Direct 2.0</title>
+<title>Agendar Contrato Normal — Benefícios · Mosaic Direct 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -23,66 +23,19 @@
       <span class="stepper">Tela 3 de 7</span>
       <div class="kick">Agendamento</div>
       <h1>Agendar Contrato Normal</h1>
-      <p class="purp">Seleção de contratos e itens para criação de agendamentos (versão final, multi-item).</p>
+      <p class="purp">Seleção de contratos e itens para criação de agendamentos.</p>
     </div>
   </div>
 
-  <h2 class="sec">Dados numéricos</h2>
-  <p class="sec-sub">Destaques medidos desta tela.</p>
-  <div class="metrics c4">
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M13.4 12.6 19 7M4 20a8 8 0 1 1 16 0"/></svg></div>
-        <div class="num">15<u>ms</u></div>
-        <div class="lbl">carregamento</div>
-        <div class="desc">evento load, melhor de 3.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div>
-        <div class="num">2</div>
-        <div class="lbl">modais centralizados</div>
-        <div class="desc">seleção de contratos e roteiro.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.5 18 2.5-8 8-2.5z"/></svg></div>
-        <div class="num">6</div>
-        <div class="lbl">cliques no caminho feliz</div>
-        <div class="desc">selecionar → data → agendar.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></div>
-        <div class="num">32<u>px</u></div>
-        <div class="lbl">altura de input</div>
-        <div class="desc">padrão único: volume, data, roteiro.</div>
-      </div>
-  </div>
-
-  <h2 class="sec">Ficha técnica</h2>
-  <p class="sec-sub">Todos os números da tela, item a item.</p>
-  <div class="card ficha">
-      <div class="r"><div class="lab">Carregamento<span>melhor de 3 medições (evento load), protótipo local</span></div><div class="val">15<u>ms</u></div></div>
-      <div class="r"><div class="lab">Peso da página<span>HTML + CSS + JS inline, zero dependências externas</span></div><div class="val">259<u>KB</u></div></div>
-      <div class="r"><div class="lab">Cliques no caminho feliz<span>caminho mínimo da tarefa principal</span></div><div class="val">6</div></div>
-      <div class="r"><div class="lab">Modais centralizados<span>seleções no foco da tela</span></div><div class="val">2</div></div>
-      <div class="r"><div class="lab">Campos de formulário<span>inputs + selects + textareas</span></div><div class="val">9</div></div>
-      <div class="r"><div class="lab">Botões<span>ações e controles</span></div><div class="val">47</div></div>
-      <div class="r"><div class="lab">Elementos interativos<span>botões, campos, links e elementos tabuláveis</span></div><div class="val">52</div></div>
-      <div class="r"><div class="lab">Nós no DOM<span>após a renderização</span></div><div class="val">296</div></div>
-      <div class="r"><div class="lab">Ícones SVG<span>vetoriais, sem imagens externas</span></div><div class="val">43</div></div>
-      <div class="r"><div class="lab">Linhas de código<span>HTML + CSS + JS em arquivo único</span></div><div class="val">6463</div></div>
-  </div>
-  <p class="method"><b>Como medimos.</b> Carregamento é a melhor de 3 medições do evento <b>load</b> em localhost, com JS rodando. As contagens vêm do DOM renderizado e do arquivo. Cliques = caminho mínimo para <b>agendar 1 contrato</b>. Números do protótipo, para dimensionamento — não de produção.</p>
-
-  <h2 class="sec">Itens de melhoria</h2>
-  <p class="sec-sub">O que foi trabalhado nesta tela.</p>
-  <div class="card" style="padding:22px 24px">
-    <p class="block-t">Aplicados</p>
+  <h2 class="sec">Benefícios para o usuário</h2>
+  <p class="sec-sub">O que muda, na prática, nesta tela.</p>
+  <div class="card" style="padding:24px 26px">
     <ul class="imp">
-        <li><b>Seleção de contratos em modal centralizado</b><span>no foco da tela, não em painel lateral.</span></li>
-        <li><b>Calendário para a semana</b><span>datepicker readonly + botão, sem digitação livre.</span></li>
-        <li><b>Pré-seleção dos já adicionados</b><span>reabrir mantém o que foi escolhido.</span></li>
-        <li><b>Roteiro opcional em modal</b><span>preview do texto e ícone quando preenchido.</span></li>
-        <li><b>Rodapé fixo com totais</b><span>ação principal sempre visível.</span></li>
-        <li><b>Inputs em linha padronizados</b><span>mesma altura para todos os campos.</span></li>
+      <li><b>Seleção sem perder o contexto</b><span>Contratos escolhidos em modal centralizado, com o fundo de referência.</span></li>
+      <li><b>Data por clique</b><span>Calendário para a semana — sem digitação livre e sem erro de formato.</span></li>
+      <li><b>Não recomeça do zero</b><span>Reabrir a seleção mantém o que já foi escolhido.</span></li>
+      <li><b>Ação sempre à mão</b><span>Rodapé fixo com total selecionado e botão principal.</span></li>
+      <li><b>Roteiro quando precisa</b><span>Opcional, em modal, com preview do texto preenchido.</span></li>
     </ul>
   </div>
 
@@ -90,9 +43,8 @@
   <p class="sec-sub">Decisões técnicas por trás da tela.</p>
   <div class="card" style="padding:8px 24px 12px">
     <ul class="tech-list">
-        <li>Layout horizontal compacto: header do contrato + linhas de item.</li>
-        <li>Roteiro pré-preenche com o valor salvo ao reabrir o modal.</li>
-        <li>Rodapé full-width com sticky de stats + ações.</li>
+      <li>Layout horizontal compacto: header do contrato + linhas de item.</li>
+      <li>Rodapé full-width com sticky de totais + ações.</li>
     </ul>
   </div>
 

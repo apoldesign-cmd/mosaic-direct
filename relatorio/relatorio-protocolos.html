@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Relatório de Protocolos — Relatório Mosaic Direct 2.0</title>
+<title>Relatório de Protocolos — Benefícios · Mosaic Direct 2.0</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -27,64 +27,15 @@
     </div>
   </div>
 
-  <h2 class="sec">Dados numéricos</h2>
-  <p class="sec-sub">Destaques medidos desta tela.</p>
-  <div class="metrics c4">
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/><path d="M13.4 12.6 19 7M4 20a8 8 0 1 1 16 0"/></svg></div>
-        <div class="num">24<u>ms</u></div>
-        <div class="lbl">carregamento</div>
-        <div class="desc">evento load, melhor de 3.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/></svg></div>
-        <div class="num">24</div>
-        <div class="lbl">colunas na tabela</div>
-        <div class="desc">toda a info do protocolo em grade.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M3 9h6"/></svg></div>
-        <div class="num">1</div>
-        <div class="lbl">coluna congelada</div>
-        <div class="desc">o nº do protocolo nunca some.</div>
-      </div>
-      <div class="card metric">
-        <div class="ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.5 18 2.5-8 8-2.5z"/></svg></div>
-        <div class="num">2</div>
-        <div class="lbl">cliques no caminho feliz</div>
-        <div class="desc">abrir filtros → aplicar.</div>
-      </div>
-  </div>
-
-  <h2 class="sec">Ficha técnica</h2>
-  <p class="sec-sub">Todos os números da tela, item a item.</p>
-  <div class="card ficha">
-      <div class="r"><div class="lab">Carregamento<span>melhor de 3 medições (evento load), protótipo local</span></div><div class="val">24<u>ms</u></div></div>
-      <div class="r"><div class="lab">Peso da página<span>HTML + CSS + JS inline, zero dependências externas</span></div><div class="val">158<u>KB</u></div></div>
-      <div class="r"><div class="lab">Cliques no caminho feliz<span>caminho mínimo da tarefa principal</span></div><div class="val">2</div></div>
-      <div class="r"><div class="lab">Colunas na tabela<span>tabela principal</span></div><div class="val">24</div></div>
-      <div class="r"><div class="lab">Linhas renderizadas<span>no exemplo carregado</span></div><div class="val">5</div></div>
-      <div class="r"><div class="lab">Colunas congeladas<span>referências fixas no scroll horizontal</span></div><div class="val">1</div></div>
-      <div class="r"><div class="lab">Campos de formulário<span>inputs + selects + textareas</span></div><div class="val">29</div></div>
-      <div class="r"><div class="lab">Botões<span>ações e controles</span></div><div class="val">36</div></div>
-      <div class="r"><div class="lab">Elementos interativos<span>botões, campos, links e elementos tabuláveis</span></div><div class="val">74</div></div>
-      <div class="r"><div class="lab">Nós no DOM<span>após a renderização</span></div><div class="val">777</div></div>
-      <div class="r"><div class="lab">Ícones SVG<span>vetoriais, sem imagens externas</span></div><div class="val">79</div></div>
-      <div class="r"><div class="lab">Linhas de código<span>HTML + CSS + JS em arquivo único</span></div><div class="val">4142</div></div>
-  </div>
-  <p class="method"><b>Como medimos.</b> Carregamento é a melhor de 3 medições do evento <b>load</b> em localhost, com JS rodando. As contagens vêm do DOM renderizado e do arquivo. Cliques = caminho mínimo para <b>aplicar um filtro e ler um protocolo</b>. Números do protótipo, para dimensionamento — não de produção.</p>
-
-  <h2 class="sec">Itens de melhoria</h2>
-  <p class="sec-sub">O que foi trabalhado nesta tela.</p>
-  <div class="card" style="padding:22px 24px">
-    <p class="block-t">Aplicados</p>
+  <h2 class="sec">Benefícios para o usuário</h2>
+  <p class="sec-sub">O que muda, na prática, nesta tela.</p>
+  <div class="card" style="padding:24px 26px">
     <ul class="imp">
-        <li><b>Tabela contida + cabeçalho fixo</b><span>a página não rola inteira; só a grade.</span></li>
-        <li><b>Coluna Protocolo congelada</b><span>referência sempre visível no scroll horizontal.</span></li>
-        <li><b>Botões de bloco ‹ ›</b><span>navegação por colunas sem depender da barra.</span></li>
-        <li><b>Saldo em destaque</b><span>número grande, status em badge, linha zebrada.</span></li>
-        <li><b>Edição pelo menu de ações</b><span>sem edição inline confusa na linha.</span></li>
-        <li><b>Banner virou ícone ⓘ</b><span>o informativo saiu do corpo e liberou vertical.</span></li>
+      <li><b>Nunca perde a linha</b><span>O número do protocolo fica congelado à esquerda enquanto você navega as demais colunas.</span></li>
+      <li><b>Saldo e status de relance</b><span>Saldo em destaque, status em badge colorido e linhas zebradas guiam o olho.</span></li>
+      <li><b>Navega colunas com um clique</b><span>Botões ‹ › avançam blocos de colunas — sem caçar a barra de scroll.</span></li>
+      <li><b>Tela mais limpa</b><span>Filtros colapsáveis e o aviso convertido em ícone ⓘ deixam mais espaço para os dados.</span></li>
+      <li><b>Menos erro de operação</b><span>Edição pelo menu de ações, sem edição acidental direto na linha.</span></li>
     </ul>
   </div>
 
@@ -92,9 +43,8 @@
   <p class="sec-sub">Decisões técnicas por trás da tela.</p>
   <div class="card" style="padding:8px 24px 12px">
     <ul class="tech-list">
-        <li>Scroll interno ao componente (LWC) — sem manipular Theme Layout nem LWS.</li>
-        <li>border-collapse:separate para o sticky do cabeçalho funcionar no Chrome.</li>
-        <li>1ª coluna com position:sticky; left:0 e sombra de profundidade.</li>
+      <li>Scroll interno ao componente (LWC) — sem manipular Theme Layout.</li>
+      <li>1ª coluna com position:sticky e cabeçalho fixo ao rolar.</li>
     </ul>
   </div>
 

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct 2.0 — Benefícios por Tela</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root{--g900:#003e2a;--g800:#00583d;--g700:#006a4d;--section:#eef3f1;--border:#e3e7e5;--t1:#15201b;--t2:#3b4642;--t3:#6b7570}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{font-family:"Barlow",-apple-system,system-ui,sans-serif;color:var(--t1);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4;margin:0}
+  .page{width:210mm;height:297mm;padding:20mm 18mm;position:relative;overflow:hidden;background:#fff;page-break-after:always}
+  .page:last-child{page-break-after:auto}
+
+  /* capa */
+  .cover{background:linear-gradient(150deg,#003e2a 0%,#00583d 60%,#006a4d 100%);color:#fff;padding:26mm 20mm}
+  .cover .eye{font-size:11pt;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#7ad9b5}
+  .cover h1{font-size:40pt;font-weight:900;letter-spacing:-.02em;line-height:1.02;margin:8mm 0 4mm}
+  .cover .sub{font-size:15pt;font-weight:700;color:rgba(255,255,255,.92)}
+  .cover .lede{font-size:11.5pt;line-height:1.6;color:rgba(255,255,255,.82);max-width:135mm;margin-top:7mm}
+  .cover .cfoot{position:absolute;left:20mm;right:20mm;bottom:22mm;display:flex;justify-content:space-between;align-items:center;font-size:10pt;color:rgba(255,255,255,.8);border-top:1px solid rgba(255,255,255,.25);padding-top:5mm}
+  .cover .cbrand{font-size:14pt;font-weight:900}
+  .cover .cbrand sup{font-size:7pt;opacity:.7}
+
+  /* páginas de conteúdo */
+  .pk{font-size:9.5pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g700)}
+  h2.pt{font-size:24pt;font-weight:900;letter-spacing:-.01em;color:var(--g900);margin:2mm 0 3mm}
+  .pp{font-size:11pt;color:var(--t2);margin:0 0 6mm;max-width:150mm}
+  .shot{width:100%;max-height:95mm;object-fit:contain;object-position:top;border:1px solid var(--border);border-radius:3mm;margin-bottom:7mm;background:#fbfcfb}
+  .bt{font-size:9.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin:0 0 4mm}
+  ul.pben{list-style:none;margin:0;padding:0}
+  ul.pben li{position:relative;padding-left:9mm;margin-bottom:4.5mm;line-height:1.5}
+  ul.pben li::before{content:"✓";position:absolute;left:0;top:.3mm;width:6mm;height:6mm;border-radius:50%;background:var(--g800);color:#fff;font-size:9pt;font-weight:800;display:flex;align-items:center;justify-content:center}
+  ul.pben li b{display:block;font-size:12pt;font-weight:800;color:var(--g900)}
+  ul.pben li span{font-size:10.5pt;color:var(--t2)}
+  .pnum{position:absolute;right:18mm;bottom:14mm;font-size:9pt;font-weight:700;color:var(--t3)}
+
+  /* resumo */
+  ol.slist{list-style:none;counter-reset:s;margin:0 0 7mm;padding:0}
+  ol.slist li{counter-increment:s;position:relative;padding-left:10mm;margin-bottom:3.5mm;line-height:1.45}
+  ol.slist li::before{content:counter(s);position:absolute;left:0;top:0;width:6.5mm;height:6.5mm;border-radius:50%;background:var(--section);color:var(--g800);font-size:9pt;font-weight:900;display:flex;align-items:center;justify-content:center}
+  ol.slist li b{font-size:11.5pt;font-weight:800;color:var(--g900)}
+  ol.slist li span{font-size:10pt;color:var(--t3)}
+  .intro-p{font-size:11pt;color:var(--t2);line-height:1.6;margin:0 0 7mm;max-width:155mm}
+  </style>
+</head>
+<body>
+<section class="page cover">
+    <div class="eye">Relatório de UX · Benefícios</div>
+    <h1>Benefícios<br/>por Tela</h1>
+    <div class="sub">Mosaic Direct 2.0 — Portal do Cliente</div>
+    <p class="lede">Documento com os benefícios de cada tela desenvolvida: o que muda, na prática, para quem opera o portal. Organização da informação, foco na tarefa e consistência entre telas.</p>
+    <div class="cfoot"><span><span class="cbrand">Mosaic<sup>&reg;</sup></span> Direct 2.0</span><span>KRON · Julho de 2026</span></div>
+  </section>
+<section class="page">
+    <div class="pk">Resumo</div>
+    <h2 class="pt">Da planilha ao sistema</h2>
+    <p class="intro-p">Antes, o trabalho vivia em <b>planilhas</b>: muitas colunas, scroll para todo lado e pouca hierarquia. O Mosaic Direct 2.0 organiza as mesmas informações em <b>telas consistentes</b> — com seleções em modais no foco, tabelas contidas, colunas congeladas e navegação por botões. Este documento apresenta os benefícios de cada uma das 7 telas.</p>
+    <div class="bt">As 7 telas</div>
+    <ol class="slist">
+      <li><b>Relatório de Protocolos</b> <span>— Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</span></li>
+      <li><b>Relatório de Status de Agendamento</b> <span>— Acompanhamento das solicitações de agendamento por semana, tipo e status.</span></li>
+      <li><b>Agendar Contrato Normal</b> <span>— Seleção de contratos e itens para criação de agendamentos.</span></li>
+      <li><b>Agendar Protocolo</b> <span>— Seleção de protocolos para criação de agendamentos.</span></li>
+      <li><b>Criar Protocolo</b> <span>— Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</span></li>
+      <li><b>Editar Protocolo</b> <span>— Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</span></li>
+      <li><b>Hub do Portal</b> <span>— Página inicial que lista e dá acesso a todas as telas do portal.</span></li>
+    </ol>
+    <div class="bt">Benefícios gerais</div>
+    <ul class="pben">
+      <li><b>Consistência</b><span>Os mesmos padrões em todas as telas reduzem a curva de aprendizado.</span></li>
+      <li><b>Foco na tarefa</b><span>Seleções em modais centralizados, no lugar de painéis laterais.</span></li>
+      <li><b>Menos erro</b><span>Datas por calendário, status visível e ações sempre à mão.</span></li>
+      <li><b>Informação organizada</b><span>O que era planilha vira tela legível, com hierarquia e destaque no que importa.</span></li>
+      <li><b>Acessibilidade</b><span>Botões reais (‹ ›) e modais funcionam por teclado e leitor de tela.</span></li>
+    </ul>
+    <div class="pnum">2</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 1 de 7 · Contratos · relatório</div>
+    <h2 class="pt">Relatório de Protocolos</h2>
+    <p class="pp">Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</p>
+    <img class="shot" src="../doc-assets/rel-ux-hero.png" alt="Relatório de Protocolos" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Nunca perde a linha</b><span>O número do protocolo fica congelado à esquerda enquanto você navega as demais colunas.</span></li>
+      <li><b>Saldo e status de relance</b><span>Saldo em destaque, status em badge colorido e linhas zebradas guiam o olho.</span></li>
+      <li><b>Navega colunas com um clique</b><span>Botões ‹ › avançam blocos de colunas — sem caçar a barra de scroll.</span></li>
+      <li><b>Tela mais limpa</b><span>Filtros colapsáveis e o aviso convertido em ícone ⓘ deixam mais espaço para os dados.</span></li>
+      <li><b>Menos erro de operação</b><span>Edição pelo menu de ações, sem edição acidental direto na linha.</span></li>
+    </ul>
+    <div class="pnum">3</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 2 de 7 · Agendamento · relatório</div>
+    <h2 class="pt">Relatório de Status de Agendamento</h2>
+    <p class="pp">Acompanhamento das solicitações de agendamento por semana, tipo e status.</p>
+    <img class="shot" src="../doc-assets/rel-status-cur.png" alt="Relatório de Status de Agendamento" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Identifica o tipo na hora</b><span>Tags PLAN / REPLAN / ADIÇÃO e status em cor, sem precisar ler.</span></li>
+      <li><b>Recorta por período</b><span>Filtro avançado por semana de início e fim.</span></li>
+      <li><b>Nada novo a aprender</b><span>Coluna congelada e botões ‹ › no mesmo padrão do Relatório de Protocolos.</span></li>
+      <li><b>Mais dados na tela</b><span>O banner virou ícone ⓘ, liberando linhas visíveis.</span></li>
+    </ul>
+    <div class="pnum">4</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 3 de 7 · Agendamento</div>
+    <h2 class="pt">Agendar Contrato Normal</h2>
+    <p class="pp">Seleção de contratos e itens para criação de agendamentos.</p>
+    <img class="shot" src="../doc-assets/agendar-contrato.png" alt="Agendar Contrato Normal" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Seleção sem perder o contexto</b><span>Contratos escolhidos em modal centralizado, com o fundo de referência.</span></li>
+      <li><b>Data por clique</b><span>Calendário para a semana — sem digitação livre e sem erro de formato.</span></li>
+      <li><b>Não recomeça do zero</b><span>Reabrir a seleção mantém o que já foi escolhido.</span></li>
+      <li><b>Ação sempre à mão</b><span>Rodapé fixo com total selecionado e botão principal.</span></li>
+      <li><b>Roteiro quando precisa</b><span>Opcional, em modal, com preview do texto preenchido.</span></li>
+    </ul>
+    <div class="pnum">5</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 4 de 7 · Agendamento</div>
+    <h2 class="pt">Agendar Protocolo</h2>
+    <p class="pp">Seleção de protocolos para criação de agendamentos.</p>
+    <img class="shot" src="../doc-assets/agendar-protocolo.png" alt="Agendar Protocolo" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Curva de aprendizado zero</b><span>Mesmo fluxo e padrão do Agendar Contrato.</span></li>
+      <li><b>Seleção no foco</b><span>Protocolo e roteiro em modal centralizado.</span></li>
+      <li><b>Total e ação sempre visíveis</b><span>Rodapé fixo com o resumo do que foi selecionado.</span></li>
+    </ul>
+    <div class="pnum">6</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 5 de 7 · Contratos · criação</div>
+    <h2 class="pt">Criar Protocolo</h2>
+    <p class="pp">Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</p>
+    <img class="shot" src="../doc-assets/rel-criar-cur.png" alt="Criar Protocolo" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Três seleções no foco</b><span>Contratos, cooperado e roteiro em modais centralizados.</span></li>
+      <li><b>Referências sempre visíveis</b><span>As primeiras colunas ficam congeladas e o cabeçalho acompanha o scroll.</span></li>
+      <li><b>Sabe o que ainda falta</b><span>Status por linha: incompleto → em progresso → completo.</span></li>
+      <li><b>Cadastra cooperado sem sair da tela</b><span>Modal com dados e endereço; botão com contraste corrigido.</span></li>
+      <li><b>Encontra rápido</b><span>Busca de cooperado com autocomplete.</span></li>
+    </ul>
+    <div class="pnum">7</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 6 de 7 · Contratos · edição</div>
+    <h2 class="pt">Editar Protocolo</h2>
+    <p class="pp">Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</p>
+    <img class="shot" src="../doc-assets/editar-protocolo.png" alt="Editar Protocolo" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Tudo num lugar só</b><span>Campos do protocolo organizados em blocos legíveis (padrão Salesforce).</span></li>
+      <li><b>Espaço para o roteiro</b><span>Campo em largura total.</span></li>
+      <li><b>Edição previsível</b><span>Salvar e cancelar no rodapé.</span></li>
+    </ul>
+    <div class="pnum">8</div>
+  </section>
+<section class="page">
+    <div class="pk">Tela 7 de 7 · Início</div>
+    <h2 class="pt">Hub do Portal</h2>
+    <p class="pp">Página inicial que lista e dá acesso a todas as telas do portal.</p>
+    <img class="shot" src="../doc-assets/index.png" alt="Hub do Portal" />
+    <div class="bt">Benefícios para o usuário</div>
+    <ul class="pben">
+      <li><b>Acha a tela rápido</b><span>Telas agrupadas por contexto de uso.</span></li>
+      <li><b>Só o que interessa ao cliente</b><span>Telas internas (Salesforce) ficam ocultas.</span></li>
+      <li><b>Um clique para cada fluxo</b><span>Acesso direto às telas principais.</span></li>
+    </ul>
+    <div class="pnum">9</div>
+  </section>
+</body>
+</html>
