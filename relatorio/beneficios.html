@@ -55,7 +55,17 @@
   .src{font-size:8.5pt;color:var(--t3);margin-top:4mm}
   .defrow{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:2mm}
   .defbox{border:1px solid var(--border);border-radius:3mm;padding:4mm 5mm}
-  .defbox b{color:var(--g900)}</style></head><body>
+  .defbox b{color:var(--g900)}
+  .shot{width:100%;max-height:60mm;object-fit:contain;object-position:top;border:1px solid var(--border);border-radius:2.5mm;background:#fbfcfb;margin:2.5mm 0}
+  .cross{background:var(--section);border-left:3px solid #006a4d;border-radius:0 2mm 2mm 0;padding:2.6mm 3.5mm;font-size:8.6pt;color:var(--t1);margin:0 0 3mm;line-height:1.4}
+  .cross b{color:var(--g900)}
+  .cg{display:grid;grid-template-columns:1fr 1fr;gap:3mm}
+  .cgi{border:1px solid var(--border);border-radius:2.5mm;padding:3mm 3.5mm}
+  .cgi .n{font-size:10pt;font-weight:800;color:var(--g900)}
+  .cgi .n b{color:#006a4d;font-weight:900;margin-right:2mm}
+  .cgi .g{font-size:8.6pt;color:var(--t2);margin-top:1mm;line-height:1.35}
+  .cgi .r{font-size:7.6pt;font-weight:800;color:#006a4d;margin-top:2mm;text-transform:uppercase;letter-spacing:.03em}
+  .cgi .r span{color:var(--t3);text-transform:none;font-weight:700}</style></head><body>
 <section class="page cover">
     <div class="eye">Relatório de UX &amp; Negócio</div>
     <h1>Benefícios das<br/>jornadas redesenhadas</h1>
@@ -115,92 +125,105 @@
 <section class="page">
     <div class="pk">Jornada 1 de 5 · Contratos · criação</div>
     <h2 class="pt">Criar Protocolo</h2>
-    <p class="pp">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
+    <p class="pp" style="margin-bottom:2mm">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
     <div class="jmeta"><span>Atual: ~20</span><span>Novo: ~10 (medição preliminar do protótipo)</span><span>Tempo atual: 3 a 4 min (estimado)</span></div>
+    <img class="shot" src="../doc-assets/rel-criar-cur.png" alt="Tela — Criar Protocolo" />
+    <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: ~20 interações e 3–4 min por protocolo · relaciona-se a 4.865 protocolos criados no período.</div>
     <div class="jflex">
-      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Busca manual de filial e de contrato</li><li>Uso de carrinho em jornada operacional</li><li>Alto número de etapas e preenchimento repetitivo</li><li>Informações dispersas / dependência de outros sistemas</li><li>Criação individual (um protocolo por vez)</li><li>Pouca escalabilidade para clientes de alto volume</li></ul>
-        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Consulta a outros sistemas</li><li>Cliente (ou equipe interna)</li></ul></div>
-      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Jornada estruturada: seleção de contratos, tabela de itens contida com colunas congeladas e cabeçalho fixo, cadastro de cooperado sem sair da tela, busca com autocomplete e status por linha (incompleto → em progresso → completo).</p>
-        <h4>O que muda</h4><ul class="pl"><li>Elimina a busca manual de filial</li><li>Elimina a busca manual de contrato</li><li>Elimina a etapa de carrinho</li><li>Itens adicionais reaproveitam a mesma jornada, sem repetir a busca</li></ul></div>
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Busca manual de filial e de contrato</li><li>Uso de carrinho em jornada operacional</li><li>Alto número de etapas e preenchimento repetitivo</li><li>Informações dispersas / dependência de outros sistemas</li><li>Criação individual (um protocolo por vez)</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9pt;margin-bottom:2mm">Jornada estruturada: seleção de contratos, tabela de itens contida com colunas congeladas e cabeçalho fixo, cadastro de cooperado sem sair da tela, busca com autocomplete e status por linha (incompleto → em progresso → completo).</p><h4>O que muda</h4><ul class="pl"><li>Elimina a busca manual de filial</li><li>Elimina a busca manual de contrato</li><li>Elimina a etapa de carrinho</li><li>Itens adicionais reaproveitam a mesma jornada, sem repetir a busca</li></ul></div>
     </div>
-    <h3 class="ph">Benefícios</h3>
-    <div class="jflex">
-      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Menos repetição e menos etapas</b></li><li><b>Referências sempre visíveis no scroll</b></li><li><b>Sabe o que ainda falta preencher</b></li></ul></div>
-      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Dados mais estruturados na entrada</b></li><li><b>Menor exposição a erro de preenchimento</b></li><li><b>Base para operações de maior volume</b></li></ul></div>
+    <div class="jflex" style="margin-top:1mm">
+      <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Menos repetição e menos etapas</li><li>Referências sempre visíveis no scroll</li><li>Sabe o que ainda falta preencher</li></ul></div>
+      <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Dados mais estruturados na entrada</li><li>Menor exposição a erro de preenchimento</li><li>Base para operações de maior volume</li></ul></div>
     </div>
     <div class="pnum">5</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 2 de 5 · Contratos · acompanhamento</div>
     <h2 class="pt">Consultar Protocolos</h2>
-    <p class="pp">Localizar e acompanhar solicitações, protocolos, saldos e status.</p>
+    <p class="pp" style="margin-bottom:2mm">Localizar e acompanhar solicitações, protocolos, saldos e status.</p>
     <div class="jmeta"><span>Atual: Variável (depende de contato externo)</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Não determinístico</span></div>
+    <img class="shot" src="../doc-assets/rel-ux-hero.png" alt="Tela — Consultar Protocolos" />
+    <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.865 protocolos e 2.328 contratos/cotações acompanhados sem visão centralizada.</div>
     <div class="jflex">
-      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Falta de rastreabilidade</li><li>Dependência do Customer Service</li><li>Dificuldade para localizar uma solicitação</li><li>Ausência de visão do ciclo completo (contrato → protocolo → agendamento)</li><li>Baixa transparência</li></ul>
-        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Contato externo (e-mail/telefone)</li><li>Cliente</li><li>Customer Service</li></ul></div>
-      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Ambiente único com número da solicitação e do protocolo, contrato e filial relacionados, quantidade e saldo, datas, status, histórico, pesquisa, filtros e ações disponíveis. Coluna congelada + botões de bloco ‹ › para as 24 colunas.</p>
-        <h4>O que muda</h4><ul class="pl"><li>Substitui o contato com o Customer Service por consulta no portal</li><li>Ciclo completo visível em uma tela</li></ul></div>
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Falta de rastreabilidade</li><li>Dependência do Customer Service</li><li>Dificuldade para localizar uma solicitação</li><li>Ausência de visão do ciclo completo (contrato → protocolo → agendamento)</li><li>Baixa transparência</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9pt;margin-bottom:2mm">Ambiente único com número da solicitação e do protocolo, contrato e filial relacionados, quantidade e saldo, datas, status, histórico, pesquisa, filtros e ações disponíveis. Coluna congelada + botões de bloco ‹ › para as 24 colunas.</p><h4>O que muda</h4><ul class="pl"><li>Substitui o contato com o Customer Service por consulta no portal</li><li>Ciclo completo visível em uma tela</li></ul></div>
     </div>
-    <h3 class="ph">Benefícios</h3>
-    <div class="jflex">
-      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Autonomia para consultar sem abrir chamado</b></li><li><b>Saldo e status de relance</b></li><li><b>Histórico e próximos passos claros</b></li></ul></div>
-      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos contatos de status para o Customer Service</b></li><li><b>Rastreabilidade padronizada</b></li></ul></div>
+    <div class="jflex" style="margin-top:1mm">
+      <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Autonomia para consultar sem abrir chamado</li><li>Saldo e status de relance</li><li>Histórico e próximos passos claros</li></ul></div>
+      <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos contatos de status para o Customer Service</li><li>Rastreabilidade padronizada</li></ul></div>
     </div>
     <div class="pnum">6</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 3 de 5 · Agendamento</div>
     <h2 class="pt">Agendar Contrato Normal</h2>
-    <p class="pp">Programar o recebimento de um contrato normal diretamente no portal.</p>
+    <p class="pp" style="margin-bottom:2mm">Programar o recebimento de um contrato normal diretamente no portal.</p>
     <div class="jmeta"><span>Atual: Fora do portal (e-mail + cadastro manual interno)</span><span>Novo: ~7 (medição preliminar do protótipo)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <img class="shot" src="../doc-assets/agendar-contrato.png" alt="Tela — Agendar Contrato Normal" />
+    <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.948 contratos normais sem autoagendamento — 67,5% dos 7.330 contratos do período.</div>
     <div class="jflex">
-      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Dependência de e-mail e de pessoas internas</li><li>Cadastro manual e retrabalho</li><li>Informação duplicada e exposição a erro de transcrição</li><li>Ausência de confirmação imediata</li><li>Baixa autonomia e visibilidade</li><li>Esforço operacional do Customer Service</li></ul>
-        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>E-mail</li><li>SAP</li><li>Scheduling</li><li>Cliente</li><li>Gerente de contas / Vendedor</li><li>Customer Service</li></ul></div>
-      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">O cliente visualiza seus contratos, seleciona, informa a quantidade, escolhe semana/data/período em calendário, confirma e acompanha o status — em modais centralizados, com rodapé fixo de totais e ação.</p>
-        <h4>O que muda</h4><ul class="pl"><li>Elimina o e-mail e o cadastro manual interno</li><li>Confirmação estruturada no próprio portal</li><li>Substitui espera por acompanhamento visível</li></ul></div>
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Dependência de e-mail e de pessoas internas</li><li>Cadastro manual e retrabalho</li><li>Informação duplicada e exposição a erro de transcrição</li><li>Ausência de confirmação imediata</li><li>Baixa autonomia e visibilidade</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9pt;margin-bottom:2mm">O cliente visualiza seus contratos, seleciona, informa a quantidade, escolhe semana/data/período em calendário, confirma e acompanha o status — em modais centralizados, com rodapé fixo de totais e ação.</p><h4>O que muda</h4><ul class="pl"><li>Elimina o e-mail e o cadastro manual interno</li><li>Confirmação estruturada no próprio portal</li><li>Substitui espera por acompanhamento visível</li></ul></div>
     </div>
-    <h3 class="ph">Benefícios</h3>
-    <div class="jflex">
-      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Autonomia para programar sem e-mail</b></li><li><b>Data por calendário, sem erro de formato</b></li><li><b>Confirmação e acompanhamento imediatos</b></li></ul></div>
-      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos e-mails e cadastro manual no Scheduling</b></li><li><b>Menor exposição a erro de transcrição</b></li><li><b>Libera o Customer Service para tarefas de maior valor</b></li></ul></div>
+    <div class="jflex" style="margin-top:1mm">
+      <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Autonomia para programar sem e-mail</li><li>Data por calendário, sem erro de formato</li><li>Confirmação e acompanhamento imediatos</li></ul></div>
+      <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos e-mails e cadastro manual no Scheduling</li><li>Menor exposição a erro de transcrição</li><li>Libera o Customer Service para tarefas de maior valor</li></ul></div>
     </div>
     <div class="pnum">7</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 4 de 5 · Agendamento</div>
     <h2 class="pt">Agendar Protocolo</h2>
-    <p class="pp">Dar continuidade após a criação do protocolo: consultar saldo, definir volumes e programar entregas.</p>
+    <p class="pp" style="margin-bottom:2mm">Dar continuidade após a criação do protocolo: consultar saldo, definir volumes e programar entregas.</p>
     <div class="jmeta"><span>Atual: Continuação manual no Scheduling</span><span>Novo: ~6 (medição preliminar do protótipo)</span><span>Tempo atual: Depende do time interno</span></div>
+    <img class="shot" src="../doc-assets/agendar-protocolo.png" alt="Tela — Agendar Protocolo" />
+    <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.865 protocolos seguem no Scheduling · média de 2,09 protocolos por contrato/cotação.</div>
     <div class="jflex">
-      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Ruptura entre Mosaic Direct e Scheduling</li><li>Etapas manuais do Customer Service</li><li>Saldo e planejamento pouco disponíveis ao cliente</li></ul>
-        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Scheduling</li><li>Cliente</li><li>Customer Service</li></ul></div>
-      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">O cliente seleciona protocolos, consulta saldos, define volumes, escolhe datas/semanas/roteiros, confirma o agendamento e acompanha a execução — mesmo padrão de modais e roteiro do Agendar Contrato.</p>
-        <h4>O que muda</h4><ul class="pl"><li>Reduz a ruptura entre portal e Scheduling</li><li>Continuidade da jornada no mesmo ambiente</li></ul></div>
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Ruptura entre Mosaic Direct e Scheduling</li><li>Etapas manuais do Customer Service</li><li>Saldo e planejamento pouco disponíveis ao cliente</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9pt;margin-bottom:2mm">O cliente seleciona protocolos, consulta saldos, define volumes, escolhe datas/semanas/roteiros, confirma o agendamento e acompanha a execução — mesmo padrão de modais e roteiro do Agendar Contrato.</p><h4>O que muda</h4><ul class="pl"><li>Reduz a ruptura entre portal e Scheduling</li><li>Continuidade da jornada no mesmo ambiente</li></ul></div>
     </div>
-    <h3 class="ph">Benefícios</h3>
-    <div class="jflex">
-      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Continua a jornada sem mudar de canal</b></li><li><b>Saldo e volumes visíveis ao definir a entrega</b></li></ul></div>
-      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos etapas manuais no Scheduling</b></li><li><b>Planejamento mais estruturado na origem</b></li></ul></div>
+    <div class="jflex" style="margin-top:1mm">
+      <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Continua a jornada sem mudar de canal</li><li>Saldo e volumes visíveis ao definir a entrega</li></ul></div>
+      <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos etapas manuais no Scheduling</li><li>Planejamento mais estruturado na origem</li></ul></div>
     </div>
     <div class="pnum">8</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 5 de 5 · Agendamento · acompanhamento</div>
     <h2 class="pt">Acompanhar Agendamentos</h2>
-    <p class="pp">Acompanhar datas, volumes, status e histórico dos agendamentos.</p>
+    <p class="pp" style="margin-bottom:2mm">Acompanhar datas, volumes, status e histórico dos agendamentos.</p>
     <div class="jmeta"><span>Atual: Trocas de e-mail com o time interno</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <img class="shot" src="../doc-assets/rel-status-cur.png" alt="Tela — Acompanhar Agendamentos" />
+    <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: agendamentos ligados a 4.865 protocolos acompanhados por e-mail, sem lista central.</div>
     <div class="jflex">
-      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Informações dispersas e acompanhamento por e-mail</li><li>Dependência do time interno</li><li>Ausência de visão centralizada de status/datas/volumes</li></ul>
-        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>E-mail</li><li>Scheduling</li><li>Cliente</li><li>Customer Service</li></ul></div>
-      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Lista centralizada com pesquisa e filtros, status, datas, volumes, contrato/protocolo relacionado, histórico, próximas ações e — quando as regras permitirem — alteração ou cancelamento. Tags PLAN / REPLAN / ADIÇÃO e filtro por período.</p>
-        <h4>O que muda</h4><ul class="pl"><li>Substitui e-mails por consulta centralizada</li><li>Alteração/cancelamento no portal, quando permitido</li></ul></div>
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Informações dispersas e acompanhamento por e-mail</li><li>Dependência do time interno</li><li>Ausência de visão centralizada de status/datas/volumes</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9pt;margin-bottom:2mm">Lista centralizada com pesquisa e filtros, status, datas, volumes, contrato/protocolo relacionado, histórico, próximas ações e — quando as regras permitirem — alteração ou cancelamento. Tags PLAN / REPLAN / ADIÇÃO e filtro por período.</p><h4>O que muda</h4><ul class="pl"><li>Substitui e-mails por consulta centralizada</li><li>Alteração/cancelamento no portal, quando permitido</li></ul></div>
     </div>
-    <h3 class="ph">Benefícios</h3>
-    <div class="jflex">
-      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Acompanha o planejamento sem depender de e-mail</b></li><li><b>Status, datas e volumes em um só lugar</b></li></ul></div>
-      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos trocas de e-mail de status</b></li><li><b>Dados de acompanhamento centralizados</b></li></ul></div>
+    <div class="jflex" style="margin-top:1mm">
+      <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Acompanha o planejamento sem depender de e-mail</li><li>Status, datas e volumes em um só lugar</li></ul></div>
+      <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos trocas de e-mail de status</li><li>Dados de acompanhamento centralizados</li></ul></div>
     </div>
     <div class="pnum">9</div>
+  </section>
+<section class="page">
+    <div class="pk">Telas &amp; usabilidade</div>
+    <h2 class="pt">Melhorias em componentes</h2>
+    <p class="pp">Decisões de UX transversais aplicadas às telas, com o ganho e a referência de mercado — e em quais telas cada uma aparece.</p>
+    <div class="cg">
+      <div class="cgi"><div class="n"><b>01</b>Modal centralizado de seleção</div><div class="g">Foco na tarefa; ações fixas no rodapé; hierarquia clara.</div><div class="r">Salesforce · Gmail · <span>Criar Protocolo · Agendar</span></div></div>
+      <div class="cgi"><div class="n"><b>02</b>Tabela zebrada</div><div class="g">Reduz erro de leitura em tabelas densas.</div><div class="r">WCAG 1.4.8 · Material · <span>Relatórios</span></div></div>
+      <div class="cgi"><div class="n"><b>03</b>Coluna congelada</div><div class="g">O identificador nunca some no scroll horizontal.</div><div class="r">Google Sheets · Excel · <span>Relatório de Protocolos · Criar</span></div></div>
+      <div class="cgi"><div class="n"><b>04</b>Cell stacking</div><div class="g">~40% menos colunas visíveis; info relacionada junta.</div><div class="r">NN/g · <span>Agendar · Criar</span></div></div>
+      <div class="cgi"><div class="n"><b>05</b>Barra inferior fixa</div><div class="g">Ação principal e total sempre acessíveis.</div><div class="r">iOS · Shopify · <span>Agendar Contrato · Protocolo</span></div></div>
+      <div class="cgi"><div class="n"><b>06</b>Hint no estado vazio</div><div class="g">Direciona o primeiro passo sem tooltip.</div><div class="r">Norman · Duolingo · <span>Agendar Contrato</span></div></div>
+      <div class="cgi"><div class="n"><b>07</b>Status na borda</div><div class="g">Scanning visual do status por cor + rótulo.</div><div class="r">Trello · Linear · <span>Criar Protocolo</span></div></div>
+      <div class="cgi"><div class="n"><b>08</b>Filtros colapsáveis</div><div class="g">Interface limpa; complexidade sob demanda.</div><div class="r">NN/g · <span>Relatórios</span></div></div>
+      <div class="cgi"><div class="n"><b>09</b>Autocomplete</div><div class="g">Reconhecer em vez de lembrar códigos longos.</div><div class="r">Nielsen #6 · <span>Criar Protocolo</span></div></div>
+      <div class="cgi"><div class="n"><b>10</b>Botões de bloco ‹ ›</div><div class="g">Navegação por colunas acessível, sem caçar a barra.</div><div class="r">Jira · Sheets · <span>Relatórios · Criar</span></div></div>
+    </div>
+    <div class="pnum">10</div>
   </section>
 <section class="page">
     <div class="pk">Impacto &amp; conclusão</div>
@@ -213,6 +236,6 @@
     <h3 class="ph">Conclusão</h3>
     <p class="pp">O portal deixa de ser apenas ponto de registro e passa a oferecer criação, planejamento e acompanhamento. 4.948 contratos normais ainda dependem de agendamento por equipes internas e 4.865 protocolos estão associados a 2.328 contratos/cotações — evidência do impacto potencial da redução de tarefas repetitivas e da maior autonomia do cliente.</p>
     <p class="src"><b>Fonte:</b> Contracts &amp; Protocols Analysis_20260707.xlsx · Dados de 2026 até 7 de julho de 2026. Pendências (tempo do novo fluxo, regras de alteração/cancelamento, limites de lote, status, integrações) seguem para validação.</p>
-    <div class="pnum">10</div>
+    <div class="pnum">11</div>
   </section>
 </body></html>
