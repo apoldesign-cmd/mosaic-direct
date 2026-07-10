@@ -79,7 +79,67 @@
   .toc li .dots{flex:1;border-bottom:1.5px dotted #b9c4bf;transform:translateY(-1mm)}
   .toc li .pg{font-weight:900;color:var(--g900)}
   .toc li.sub{margin-left:11mm;font-size:10pt;margin-bottom:2.8mm}
-  .toc li.sub .tt{font-weight:700;color:var(--t2)}</style></head><body>
+  .toc li.sub .tt{font-weight:700;color:var(--t2)}
+  /* big numbers por jornada */
+  .bnrow{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin:3mm 0}
+  .bnc{border:1px solid var(--border);border-radius:2.5mm;padding:3mm 3.5mm;background:#fbfcfb}
+  .bnv{font-size:17pt;font-weight:900;color:var(--g900);line-height:1;letter-spacing:-.2mm}
+  .bnl{font-size:7.4pt;color:var(--t2);font-weight:700;margin-top:1.6mm;line-height:1.25}
+  .jpend{margin-top:3mm;font-size:8pt;color:var(--t3);border-top:1px dashed var(--border);padding-top:2.6mm;line-height:1.4}
+  .jpend b{font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:#8a938e;margin-right:2mm}
+  /* componentes — grade de mini-demos */
+  .cgrid{display:grid;grid-template-columns:1fr 1fr;gap:3mm;margin-top:2mm}
+  .cd{border:1px solid var(--border);border-radius:2.5mm;padding:2.6mm 3mm;overflow:hidden}
+  .cd .cdh{display:flex;align-items:baseline;gap:2mm;margin-bottom:1.8mm}
+  .cd .cdh .no{font-size:8.5pt;font-weight:900;color:#006a4d}
+  .cd .cdh .nm{font-size:9.3pt;font-weight:800;color:var(--g900);flex:1}
+  .cd .cdh .rf{font-size:6.4pt;font-weight:800;color:var(--t3);text-transform:uppercase;letter-spacing:.02em;white-space:nowrap}
+  .cd .cdd{height:23mm;background:linear-gradient(160deg,#f7faf8,#eef3ef);border-radius:1.8mm;display:flex;align-items:center;justify-content:center;padding:2.5mm;overflow:hidden}
+  .md-modal{position:relative;width:44mm;height:19mm;background:#eef1ef;border-radius:1.5mm;overflow:hidden}
+  .md-bg{position:absolute;inset:2mm;background:#fff;border:.3mm solid #e3e7e5;border-radius:1mm;opacity:.6}
+  .md-ov{position:absolute;inset:0;background:rgba(0,20,12,.22);display:flex;align-items:center;justify-content:center}
+  .md-box{width:29mm;background:#fff;border-radius:1.5mm;box-shadow:0 2mm 5mm rgba(0,0,0,.2);padding:1.8mm}
+  .md-box .md-h{font-size:6pt;font-weight:800;color:#15201b;margin-bottom:1.4mm}
+  .md-box .md-r{height:2mm;background:#eef3f1;border-radius:.7mm;margin-bottom:1mm}
+  .md-box .md-r.on{background:rgba(0,106,77,.14);border:.3mm solid #006a4d}
+  .md-t{border-collapse:collapse;font-size:6.2pt;width:44mm}
+  .md-t th{background:#fff;color:#00583d;font-weight:800;text-align:left;padding:1.2mm 2mm;border-bottom:.4mm solid #00583d}
+  .md-t td{padding:1.2mm 2mm;color:#3b4642;border-bottom:.3mm solid #e3e7e5}
+  .md-t tr.z td{background:#f4f8f6}
+  .md-t.st td b{font-weight:800;color:#15201b;display:block;line-height:1.15}
+  .md-t.st td span{font-size:5.4pt;color:#6b7570}
+  .md-fr{width:47mm;overflow:hidden;border:.3mm solid #e3e7e5;border-radius:1mm;position:relative}
+  .md-fr::after{content:"›";position:absolute;top:0;bottom:0;right:0;width:5mm;display:flex;align-items:center;justify-content:center;font-weight:900;color:#006a4d;background:linear-gradient(90deg,rgba(255,255,255,0),#fff 60%)}
+  .md-t2{border-collapse:collapse;font-size:5.8pt;min-width:54mm}
+  .md-t2 th,.md-t2 td{padding:1.1mm 1.8mm;text-align:left;white-space:nowrap;border-bottom:.3mm solid #e3e7e5}
+  .md-t2 th{background:#f4f8f6;color:#00583d;font-weight:800}
+  .md-t2 .fz{background:#fff;font-weight:800;color:#15201b;border-right:.5mm solid #006a4d}
+  .md-page{width:38mm;height:19mm;background:#fff;border:.3mm solid #e3e7e5;border-radius:1.5mm;position:relative;padding:2mm}
+  .md-page .md-line{height:1.4mm;background:#eef3f1;border-radius:.6mm;margin-bottom:1.3mm}
+  .md-page .md-line:nth-child(1){width:80%}.md-page .md-line:nth-child(2){width:58%}.md-page .md-line:nth-child(3){width:70%}
+  .md-bar{position:absolute;left:0;right:0;bottom:0;background:#fff;border-top:.5mm solid #00583d;padding:1.4mm 2mm;display:flex;justify-content:space-between;align-items:center;font-size:5.6pt;color:#3b4642}
+  .md-bar .md-btn{background:#00583d;color:#fff;border-radius:2mm;padding:.7mm 2mm;font-weight:800}
+  .md-empty{text-align:center;font-size:6.2pt;color:#6b7570}
+  .md-pulse{margin-top:1.8mm;background:#00583d;color:#fff;border-radius:3mm;padding:1.5mm 4mm;font-size:6.6pt;font-weight:800;display:inline-block;box-shadow:0 0 0 1.1mm rgba(0,88,61,.18)}
+  .md-sl{display:flex;flex-direction:column;gap:1.2mm;width:44mm}
+  .md-sc{background:#fff;border:.3mm solid #e3e7e5;border-left:1mm solid #c8c8c6;border-radius:1mm;padding:1.2mm 2mm;display:flex;justify-content:space-between;align-items:center;font-size:5.8pt;font-weight:700;color:#15201b}
+  .md-sc.prog{border-left-color:#f0c020}.md-sc.comp{border-left-color:#006a4d}
+  .md-sc em{font-style:normal;font-size:5.2pt;font-weight:800;border-radius:2mm;padding:.4mm 1.4mm}
+  .md-sc em.inc{background:#ececea;color:#555}.md-sc em.prog{background:#fdf3d2;color:#8a6500}.md-sc em.comp{background:#e0f0e8;color:#00583d}
+  .md-filt{width:44mm;border:.3mm solid #e3e7e5;border-radius:1.5mm;overflow:hidden}
+  .md-fh{background:#eef3f1;padding:1.5mm 2mm;font-size:6.2pt;font-weight:800;color:#15201b;display:flex;justify-content:space-between}
+  .md-fg{display:grid;grid-template-columns:1fr 1fr;gap:1.1mm;padding:1.5mm}
+  .md-fg span{border:.3mm solid #cdcdcd;border-radius:1mm;padding:.9mm 1.4mm;font-size:5.4pt;color:#3b4642}
+  .md-ac{width:42mm}
+  .md-inp{border:.4mm solid #006a4d;border-radius:1.5mm;padding:1.5mm 2mm;font-size:6.2pt;color:#15201b;box-shadow:0 0 0 .9mm rgba(0,106,77,.1)}
+  .md-list{margin-top:1mm;background:#fff;border:.3mm solid #e3e7e5;border-radius:1.5mm;overflow:hidden}
+  .md-list div{padding:1.1mm 2mm;font-size:5.8pt;border-bottom:.3mm solid #e3e7e5}
+  .md-list div.on{background:rgba(0,106,77,.06)}
+  .md-list mark{background:rgba(240,192,32,.4);border-radius:.4mm}
+  .md-pg{width:47mm;border:.3mm solid #e3e7e5;border-radius:1.5mm;overflow:hidden}
+  .md-pgt{display:flex;justify-content:space-between;align-items:center;padding:1.3mm 2mm;border-bottom:.3mm solid #e3e7e5;font-size:5.8pt;font-weight:700;color:#3b4642}
+  .md-pgb{display:flex;gap:1mm}
+  .md-pgb i{width:3.8mm;height:3.8mm;border-radius:1mm;background:#00583d;color:#fff;font-style:normal;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:6pt}</style></head><body>
 <section class="page cover">
     <div class="eye">Relatório de UX &amp; Negócio</div>
     <h1>Benefícios das<br/>jornadas redesenhadas</h1>
@@ -159,7 +219,7 @@
     <div class="pk">Jornada 1 de 5 · Contratos · criação</div>
     <h2 class="pt">Criar Protocolo</h2>
     <p class="pp" style="margin-bottom:2mm">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
-    <div class="jmeta"><span>Atual: ~20</span><span>Novo: ~10 (medição preliminar do protótipo)</span><span>Tempo atual: 3 a 4 min (estimado)</span></div>
+    <div class="bnrow"><div class="bnc"><div class="bnv">~20→~10</div><div class="bnl">cliques · atual → novo</div></div><div class="bnc"><div class="bnv">3–4 min</div><div class="bnl">tempo por protocolo</div></div><div class="bnc"><div class="bnv">4.865</div><div class="bnl">protocolos no período</div></div><div class="bnc"><div class="bnv">2.328</div><div class="bnl">contratos/cotações</div></div></div>
     <img class="shot" src="../doc-assets/rel-criar-cur.png" alt="Tela — Criar Protocolo" />
     <div class="ptags"><span class="tl">Melhorias nesta tela</span><span class="tg">Modal centralizado</span><span class="tg">Coluna congelada</span><span class="tg">Cell stacking</span><span class="tg">Status na borda</span><span class="tg">Autocomplete</span><span class="tg">Botões de bloco ‹ ›</span></div>
     <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: ~20 interações e 3–4 min por protocolo · relaciona-se a 4.865 protocolos criados no período.</div>
@@ -171,13 +231,14 @@
       <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Menos repetição e menos etapas</li><li>Referências sempre visíveis no scroll</li><li>Sabe o que ainda falta preencher</li></ul></div>
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Dados mais estruturados na entrada</li><li>Menor exposição a erro de preenchimento</li><li>Base para operações de maior volume</li></ul></div>
     </div>
+    <div class="jpend"><b>Pendências</b>Cliques finais e tempo do novo fluxo — a validar em teste de usabilidade · Limites de operação em lote (múltiplos contratos/protocolos).</div>
     <div class="pnum">6</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 2 de 5 · Contratos · acompanhamento</div>
     <h2 class="pt">Consultar Protocolos</h2>
     <p class="pp" style="margin-bottom:2mm">Localizar e acompanhar solicitações, protocolos, saldos e status.</p>
-    <div class="jmeta"><span>Atual: Variável (depende de contato externo)</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Não determinístico</span></div>
+    <div class="bnrow"><div class="bnc"><div class="bnv">1–3</div><div class="bnl">cliques · novo fluxo</div></div><div class="bnc"><div class="bnv">4.865</div><div class="bnl">protocolos a consultar</div></div><div class="bnc"><div class="bnv">2.328</div><div class="bnl">contratos/cotações</div></div><div class="bnc"><div class="bnv">2,09</div><div class="bnl">protoc. por contrato</div></div></div>
     <img class="shot" src="../doc-assets/rel-ux-hero.png" alt="Tela — Consultar Protocolos" />
     <div class="ptags"><span class="tl">Melhorias nesta tela</span><span class="tg">Tabela zebrada</span><span class="tg">Coluna congelada</span><span class="tg">Filtros colapsáveis</span><span class="tg">Botões de bloco ‹ ›</span></div>
     <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.865 protocolos e 2.328 contratos/cotações acompanhados sem visão centralizada.</div>
@@ -189,13 +250,14 @@
       <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Autonomia para consultar sem abrir chamado</li><li>Saldo e status de relance</li><li>Histórico e próximos passos claros</li></ul></div>
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos contatos de status para o Customer Service</li><li>Rastreabilidade padronizada</li></ul></div>
     </div>
+    <div class="jpend"><b>Pendências</b>Nomenclatura oficial de status · Ações permitidas por status (regras).</div>
     <div class="pnum">7</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 3 de 5 · Agendamento</div>
     <h2 class="pt">Agendar Contrato Normal</h2>
     <p class="pp" style="margin-bottom:2mm">Programar o recebimento de um contrato normal diretamente no portal.</p>
-    <div class="jmeta"><span>Atual: Fora do portal (e-mail + cadastro manual interno)</span><span>Novo: ~7 (medição preliminar do protótipo)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <div class="bnrow"><div class="bnc"><div class="bnv">4.948</div><div class="bnl">contratos normais</div></div><div class="bnc"><div class="bnv">67,5%</div><div class="bnl">do total de contratos</div></div><div class="bnc"><div class="bnv">~7</div><div class="bnl">cliques · novo fluxo</div></div><div class="bnc"><div class="bnv">0</div><div class="bnl">e-mails no novo fluxo</div></div></div>
     <img class="shot" src="../doc-assets/agendar-contrato.png" alt="Tela — Agendar Contrato Normal" />
     <div class="ptags"><span class="tl">Melhorias nesta tela</span><span class="tg">Modal centralizado</span><span class="tg">Cell stacking</span><span class="tg">Barra fixa</span><span class="tg">Hint no estado vazio</span></div>
     <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.948 contratos normais sem autoagendamento — 67,5% dos 7.330 contratos do período.</div>
@@ -207,13 +269,14 @@
       <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Autonomia para programar sem e-mail</li><li>Data por calendário, sem erro de formato</li><li>Confirmação e acompanhamento imediatos</li></ul></div>
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos e-mails e cadastro manual no Scheduling</li><li>Menor exposição a erro de transcrição</li><li>Libera o Customer Service para tarefas de maior valor</li></ul></div>
     </div>
+    <div class="jpend"><b>Pendências</b>Regras de alteração e cancelamento · Confirmação das integrações com SAP/Scheduling.</div>
     <div class="pnum">8</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 4 de 5 · Agendamento</div>
     <h2 class="pt">Agendar Protocolo</h2>
     <p class="pp" style="margin-bottom:2mm">Dar continuidade após a criação do protocolo: consultar saldo, definir volumes e programar entregas.</p>
-    <div class="jmeta"><span>Atual: Continuação manual no Scheduling</span><span>Novo: ~6 (medição preliminar do protótipo)</span><span>Tempo atual: Depende do time interno</span></div>
+    <div class="bnrow"><div class="bnc"><div class="bnv">4.865</div><div class="bnl">protocolos</div></div><div class="bnc"><div class="bnv">2,09</div><div class="bnl">protoc. por contrato</div></div><div class="bnc"><div class="bnv">~6</div><div class="bnl">cliques · novo fluxo</div></div><div class="bnc"><div class="bnv">2.328</div><div class="bnl">contratos/cotações</div></div></div>
     <img class="shot" src="../doc-assets/agendar-protocolo.png" alt="Tela — Agendar Protocolo" />
     <div class="ptags"><span class="tl">Melhorias nesta tela</span><span class="tg">Modal centralizado</span><span class="tg">Barra fixa</span></div>
     <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: 4.865 protocolos seguem no Scheduling · média de 2,09 protocolos por contrato/cotação.</div>
@@ -225,13 +288,14 @@
       <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Continua a jornada sem mudar de canal</li><li>Saldo e volumes visíveis ao definir a entrega</li></ul></div>
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos etapas manuais no Scheduling</li><li>Planejamento mais estruturado na origem</li></ul></div>
     </div>
+    <div class="jpend"><b>Pendências</b>Regras de saldo e limites por protocolo · Integração de agendamento com o Scheduling.</div>
     <div class="pnum">9</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 5 de 5 · Agendamento · acompanhamento</div>
     <h2 class="pt">Acompanhar Agendamentos</h2>
     <p class="pp" style="margin-bottom:2mm">Acompanhar datas, volumes, status e histórico dos agendamentos.</p>
-    <div class="jmeta"><span>Atual: Trocas de e-mail com o time interno</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <div class="bnrow"><div class="bnc"><div class="bnv">4.865</div><div class="bnl">protocolos acompanhados</div></div><div class="bnc"><div class="bnv">1–3</div><div class="bnl">cliques · novo fluxo</div></div><div class="bnc"><div class="bnv">2.328</div><div class="bnl">contratos/cotações</div></div><div class="bnc"><div class="bnv">0</div><div class="bnl">e-mails de status</div></div></div>
     <img class="shot" src="../doc-assets/rel-status-cur.png" alt="Tela — Acompanhar Agendamentos" />
     <div class="ptags"><span class="tl">Melhorias nesta tela</span><span class="tg">Tabela zebrada</span><span class="tg">Coluna congelada</span><span class="tg">Filtros colapsáveis</span><span class="tg">Botões de bloco ‹ ›</span></div>
     <div class="cross"><b>Cruzamento com o cenário atual.</b> Hoje: agendamentos ligados a 4.865 protocolos acompanhados por e-mail, sem lista central.</div>
@@ -243,23 +307,24 @@
       <div class="jbox"><h4>Benefício — cliente</h4><ul class="pl"><li>Acompanha o planejamento sem depender de e-mail</li><li>Status, datas e volumes em um só lugar</li></ul></div>
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos trocas de e-mail de status</li><li>Dados de acompanhamento centralizados</li></ul></div>
     </div>
+    <div class="jpend"><b>Pendências</b>Regras de alteração e cancelamento · Nomenclatura oficial de status.</div>
     <div class="pnum">10</div>
   </section>
 <section class="page">
     <div class="pk">Telas &amp; usabilidade</div>
     <h2 class="pt">Melhorias em componentes</h2>
-    <p class="pp">Decisões de UX transversais aplicadas às telas, com o ganho e a referência de mercado — e em quais telas cada uma aparece.</p>
-    <div class="cg">
-      <div class="cgi"><div class="n"><b>01</b>Modal centralizado de seleção</div><div class="g">Foco na tarefa; ações fixas no rodapé; hierarquia clara.</div><div class="r">Salesforce · Gmail · <span>Criar Protocolo · Agendar</span></div></div>
-      <div class="cgi"><div class="n"><b>02</b>Tabela zebrada</div><div class="g">Reduz erro de leitura em tabelas densas.</div><div class="r">WCAG 1.4.8 · Material · <span>Relatórios</span></div></div>
-      <div class="cgi"><div class="n"><b>03</b>Coluna congelada</div><div class="g">O identificador nunca some no scroll horizontal.</div><div class="r">Google Sheets · Excel · <span>Relatório de Protocolos · Criar</span></div></div>
-      <div class="cgi"><div class="n"><b>04</b>Cell stacking</div><div class="g">~40% menos colunas visíveis; info relacionada junta.</div><div class="r">NN/g · <span>Agendar · Criar</span></div></div>
-      <div class="cgi"><div class="n"><b>05</b>Barra inferior fixa</div><div class="g">Ação principal e total sempre acessíveis.</div><div class="r">iOS · Shopify · <span>Agendar Contrato · Protocolo</span></div></div>
-      <div class="cgi"><div class="n"><b>06</b>Hint no estado vazio</div><div class="g">Direciona o primeiro passo sem tooltip.</div><div class="r">Norman · Duolingo · <span>Agendar Contrato</span></div></div>
-      <div class="cgi"><div class="n"><b>07</b>Status na borda</div><div class="g">Scanning visual do status por cor + rótulo.</div><div class="r">Trello · Linear · <span>Criar Protocolo</span></div></div>
-      <div class="cgi"><div class="n"><b>08</b>Filtros colapsáveis</div><div class="g">Interface limpa; complexidade sob demanda.</div><div class="r">NN/g · <span>Relatórios</span></div></div>
-      <div class="cgi"><div class="n"><b>09</b>Autocomplete</div><div class="g">Reconhecer em vez de lembrar códigos longos.</div><div class="r">Nielsen #6 · <span>Criar Protocolo</span></div></div>
-      <div class="cgi"><div class="n"><b>10</b>Botões de bloco ‹ ›</div><div class="g">Navegação por colunas acessível, sem caçar a barra.</div><div class="r">Jira · Sheets · <span>Relatórios · Criar</span></div></div>
+    <p class="pp">As 10 decisões de UX que sustentam as jornadas — com uma amostra visual, a referência de mercado e as telas onde aparecem. Versão navegável em <b>/relatorio/componentes.html</b>.</p>
+    <div class="cgrid">
+      <div class="cd"><div class="cdh"><span class="no">01</span><span class="nm">Modal centralizado</span><span class="rf">Salesforce</span></div><div class="cdd"><div class="md-modal"><div class="md-bg"></div><div class="md-ov"><div class="md-box"><div class="md-h">Selecionar</div><div class="md-r"></div><div class="md-r on"></div><div class="md-r"></div></div></div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">02</span><span class="nm">Tabela zebrada</span><span class="rf">WCAG 1.4.8</span></div><div class="cdd"><table class="md-t"><tr><th>Protocolo</th><th>Vol</th></tr><tr><td>PRT-001</td><td>120t</td></tr><tr class="z"><td>PRT-002</td><td>80t</td></tr><tr><td>PRT-003</td><td>200t</td></tr><tr class="z"><td>PRT-004</td><td>60t</td></tr></table></div></div>
+      <div class="cd"><div class="cdh"><span class="no">03</span><span class="nm">Coluna congelada</span><span class="rf">Google Sheets</span></div><div class="cdd"><div class="md-fr"><table class="md-t2"><tr><th class="fz">Protoc.</th><th>Status</th><th>Cliente</th><th>UF</th></tr><tr><td class="fz">PRT-1</td><td>Liberado</td><td>Coop A</td><td>MT</td></tr><tr><td class="fz">PRT-2</td><td>Novo</td><td>Coop B</td><td>MT</td></tr></table></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">04</span><span class="nm">Cell stacking</span><span class="rf">NN/g</span></div><div class="cdd"><table class="md-t st"><tr><th>Produto</th><th>Cliente</th></tr><tr><td><b>Soja</b><span>Saca 60kg</span></td><td><b>Coop A</b><span>12.345</span></td></tr><tr><td><b>Milho</b><span>Granel</span></td><td><b>Coop B</b><span>23.456</span></td></tr></table></div></div>
+      <div class="cd"><div class="cdh"><span class="no">05</span><span class="nm">Barra inferior fixa</span><span class="rf">iOS · Shopify</span></div><div class="cdd"><div class="md-page"><div class="md-line"></div><div class="md-line"></div><div class="md-line"></div><div class="md-bar"><span>3 · 340t</span><span class="md-btn">Agendar</span></div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">06</span><span class="nm">Hint no estado vazio</span><span class="rf">Norman</span></div><div class="cdd"><div class="md-empty">Comece selecionando<div class="md-pulse">+ Adicionar</div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">07</span><span class="nm">Status na borda</span><span class="rf">Trello · Linear</span></div><div class="cdd"><div class="md-sl"><div class="md-sc inc">Contrato 4521<em class="inc">Incompleto</em></div><div class="md-sc prog">Contrato 4523<em class="prog">Progresso</em></div><div class="md-sc comp">Contrato 4528<em class="comp">Completo</em></div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">08</span><span class="nm">Filtros colapsáveis</span><span class="rf">NN/g</span></div><div class="cdd"><div class="md-filt"><div class="md-fh">Filtros avançados <span>▾</span></div><div class="md-fg"><span>Status</span><span>Cliente</span><span>Cidade</span><span>Período</span></div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">09</span><span class="nm">Autocomplete</span><span class="rf">Nielsen #6</span></div><div class="cdd"><div class="md-ac"><div class="md-inp">coop</div><div class="md-list"><div class="on"><mark>Coop</mark>erativa Sorriso</div><div><mark>Coop</mark>er Cuiabá</div></div></div></div></div>
+      <div class="cd"><div class="cdh"><span class="no">10</span><span class="nm">Botões de bloco ‹ ›</span><span class="rf">Jira · Sheets</span></div><div class="cdd"><div class="md-pg"><div class="md-pgt"><span>Colunas 1–4</span><span class="md-pgb"><i>‹</i><i>›</i></span></div><table class="md-t2"><tr><th class="fz">Protoc.</th><th>Status</th><th>Cliente</th></tr><tr><td class="fz">PRT-1</td><td>Liberado</td><td>Coop A</td></tr></table></div></div></div>
     </div>
     <div class="pnum">11</div>
   </section>
