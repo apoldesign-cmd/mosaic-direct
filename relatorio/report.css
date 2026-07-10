@@ -184,6 +184,16 @@ ul.plain li::before{content:"–";position:absolute;left:4px;color:var(--g700);f
 .pager .disabled{opacity:.4;pointer-events:none}
 .open-real{display:inline-flex;align-items:center;gap:8px;background:var(--g800);color:#fff;text-decoration:none;font-weight:800;font-size:13.5px;padding:12px 20px;border-radius:10px}
 
+/* screenshot da tela + tags de melhorias (páginas de jornada) */
+.screen-card{overflow:hidden;margin-top:16px}
+.screen-card .cap{width:100%;display:block;border-bottom:1px solid var(--border);background:#fbfcfb}
+.screen-card .tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 18px}
+.screen-card .tags .tlbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-right:2px}
+a.ctag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--g800);background:var(--section);border:1px solid #cfe3d9;border-radius:999px;padding:6px 12px;text-decoration:none;transition:background .12s ease,color .12s ease}
+a.ctag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--g700)}
+a.ctag:hover{background:var(--g800);color:#fff}
+a.ctag:hover::before{background:#7ad9b5}
+
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(max-width:860px){
   .kpis{grid-template-columns:1fr 1fr}.ba,.jgrid,.two,.defs,.uni{grid-template-columns:1fr}
