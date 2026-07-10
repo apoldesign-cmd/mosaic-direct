@@ -1,182 +1,218 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mosaic Direct 2.0 — Benefícios por Tela</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<html lang="pt-BR"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mosaic Direct 2.0 — Benefícios das jornadas redesenhadas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 <style>
-  :root{--g900:#003e2a;--g800:#00583d;--g700:#006a4d;--section:#eef3f1;--border:#e3e7e5;--t1:#15201b;--t2:#3b4642;--t3:#6b7570}
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
+  :root{--g900:#003e2a;--g800:#00583d;--g700:#006a4d;--teal:#2c8b78;--red:#b9202a;--section:#eef3f1;--border:#e3e7e5;--t1:#15201b;--t2:#3b4642;--t3:#6b7570;--good:#1f9d6b}
+  *{box-sizing:border-box}html,body{margin:0;padding:0}
   body{font-family:"Barlow",-apple-system,system-ui,sans-serif;color:var(--t1);-webkit-print-color-adjust:exact;print-color-adjust:exact}
   @page{size:A4;margin:0}
-  .page{width:210mm;height:297mm;padding:20mm 18mm;position:relative;overflow:hidden;background:#fff;page-break-after:always}
+  .page{width:210mm;height:297mm;padding:18mm 17mm;position:relative;overflow:hidden;background:#fff;page-break-after:always}
   .page:last-child{page-break-after:auto}
-
-  /* capa */
-  .cover{background:linear-gradient(150deg,#003e2a 0%,#00583d 60%,#006a4d 100%);color:#fff;padding:26mm 20mm}
-  .cover .eye{font-size:11pt;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#7ad9b5}
-  .cover h1{font-size:40pt;font-weight:900;letter-spacing:-.02em;line-height:1.02;margin:8mm 0 4mm}
-  .cover .sub{font-size:15pt;font-weight:700;color:rgba(255,255,255,.92)}
-  .cover .lede{font-size:11.5pt;line-height:1.6;color:rgba(255,255,255,.82);max-width:135mm;margin-top:7mm}
-  .cover .cfoot{position:absolute;left:20mm;right:20mm;bottom:22mm;display:flex;justify-content:space-between;align-items:center;font-size:10pt;color:rgba(255,255,255,.8);border-top:1px solid rgba(255,255,255,.25);padding-top:5mm}
-  .cover .cbrand{font-size:14pt;font-weight:900}
-  .cover .cbrand sup{font-size:7pt;opacity:.7}
-
-  /* páginas de conteúdo */
-  .pk{font-size:9.5pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g700)}
-  h2.pt{font-size:24pt;font-weight:900;letter-spacing:-.01em;color:var(--g900);margin:2mm 0 3mm}
-  .pp{font-size:11pt;color:var(--t2);margin:0 0 6mm;max-width:150mm}
-  .shot{width:100%;max-height:95mm;object-fit:contain;object-position:top;border:1px solid var(--border);border-radius:3mm;margin-bottom:7mm;background:#fbfcfb}
-  .bt{font-size:9.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin:0 0 4mm}
+  .cover{background:linear-gradient(150deg,#003e2a,#00583d 60%,#006a4d);color:#fff;padding:24mm 19mm}
+  .cover .eye{font-size:11pt;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#7ad9b5}
+  .cover h1{font-size:38pt;font-weight:900;line-height:1.03;margin:7mm 0 4mm;letter-spacing:-.02em}
+  .cover .sub{font-size:14pt;font-weight:700;color:rgba(255,255,255,.92)}
+  .cover .lede{font-size:11pt;line-height:1.6;color:rgba(255,255,255,.82);max-width:140mm;margin-top:6mm}
+  .cover .cfoot{position:absolute;left:19mm;right:19mm;bottom:20mm;display:flex;justify-content:space-between;align-items:center;font-size:9.5pt;color:rgba(255,255,255,.8);border-top:1px solid rgba(255,255,255,.25);padding-top:4mm}
+  .cover .cbrand{font-size:13pt;font-weight:900}.cover .cbrand sup{font-size:6pt;opacity:.7}
+  .pk{font-size:9pt;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--g700)}
+  h2.pt{font-size:22pt;font-weight:900;color:var(--g900);margin:2mm 0 4mm;letter-spacing:-.01em}
+  h3.ph{font-size:12.5pt;font-weight:800;color:var(--g900);margin:6mm 0 2mm}
+  .pp{font-size:10.5pt;color:var(--t2);margin:0 0 5mm;line-height:1.55;max-width:165mm}
+  .kg{display:grid;grid-template-columns:1fr 1fr;gap:4mm;margin:0 0 5mm}
+  .kc{border:1px solid var(--border);border-radius:3mm;padding:4mm 5mm}
+  .kc .k{font-size:20pt;font-weight:900;color:var(--g900);line-height:1}
+  .kc .l{font-size:9.5pt;color:var(--t2);font-weight:700;margin-top:2mm}
+  .kc .b{font-size:7.5pt;font-weight:800;text-transform:uppercase;color:#00583d;margin-top:2mm;display:inline-block}
+  .split{display:flex;height:12mm;border-radius:2mm;overflow:hidden;font-size:10pt;font-weight:800;color:#fff;margin:2mm 0}
+  .split span{display:flex;align-items:center;justify-content:center}.split .n{background:#00583d}.split .v{background:#2c8b78}
+  .bars{display:flex;flex-direction:column;gap:2.4mm;margin-top:2mm}
+  .bar{display:grid;grid-template-columns:58mm 1fr 12mm;gap:3mm;align-items:center;font-size:8.5pt}
+  .bar .nm{color:var(--t2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar .tr{background:var(--section);border-radius:1.5mm;height:5mm;position:relative;overflow:hidden}
+  .bar .fl{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#006a4d,#00583d);border-radius:1.5mm}
+  .bar .vl{font-weight:800;color:var(--g900);text-align:right}
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:2mm}
+  .ba h4{margin:0 0 2mm;font-size:9pt;font-weight:800;text-transform:uppercase}
+  .ba .before h4{color:#8a1820}.ba .after h4{color:#00583d}
+  .ba ul{list-style:none;margin:0;padding:0}.ba li{font-size:9pt;padding-left:5mm;position:relative;margin-bottom:2mm;line-height:1.35}
+  .ba .before li::before{content:"–";position:absolute;left:1mm;color:#b9202a;font-weight:900}
+  .ba .after li::before{content:"✓";position:absolute;left:0;color:#1f9d6b;font-weight:900;font-size:8pt}
   ul.pben{list-style:none;margin:0;padding:0}
-  ul.pben li{position:relative;padding-left:9mm;margin-bottom:4.5mm;line-height:1.5}
-  ul.pben li::before{content:"✓";position:absolute;left:0;top:.3mm;width:6mm;height:6mm;border-radius:50%;background:var(--g800);color:#fff;font-size:9pt;font-weight:800;display:flex;align-items:center;justify-content:center}
-  ul.pben li b{display:block;font-size:12pt;font-weight:800;color:var(--g900)}
-  ul.pben li span{font-size:10.5pt;color:var(--t2)}
-  .pnum{position:absolute;right:18mm;bottom:14mm;font-size:9pt;font-weight:700;color:var(--t3)}
-
-  /* resumo */
-  ol.slist{list-style:none;counter-reset:s;margin:0 0 7mm;padding:0}
-  ol.slist li{counter-increment:s;position:relative;padding-left:10mm;margin-bottom:3.5mm;line-height:1.45}
-  ol.slist li::before{content:counter(s);position:absolute;left:0;top:0;width:6.5mm;height:6.5mm;border-radius:50%;background:var(--section);color:var(--g800);font-size:9pt;font-weight:900;display:flex;align-items:center;justify-content:center}
-  ol.slist li b{font-size:11.5pt;font-weight:800;color:var(--g900)}
-  ol.slist li span{font-size:10pt;color:var(--t3)}
-  .intro-p{font-size:11pt;color:var(--t2);line-height:1.6;margin:0 0 7mm;max-width:155mm}
-  </style>
-</head>
-<body>
+  ul.pben li{position:relative;padding-left:7mm;margin-bottom:3mm;line-height:1.45}
+  ul.pben li::before{content:"✓";position:absolute;left:0;top:.2mm;width:5mm;height:5mm;border-radius:50%;background:#00583d;color:#fff;font-size:8pt;font-weight:800;display:flex;align-items:center;justify-content:center}
+  ul.pben li b{display:block;font-size:11pt;font-weight:800;color:var(--g900)}
+  ul.pben li span{font-size:9.5pt;color:var(--t2)}
+  .jflex{display:grid;grid-template-columns:1fr 1fr;gap:5mm}
+  .jbox h4{font-size:8.5pt;font-weight:800;text-transform:uppercase;color:var(--t3);margin:0 0 2mm}
+  ul.pl{list-style:none;margin:0 0 3mm;padding:0}ul.pl li{font-size:9pt;color:var(--t2);padding-left:4mm;position:relative;margin-bottom:1.6mm;line-height:1.35}
+  ul.pl li::before{content:"–";position:absolute;left:0;color:#006a4d;font-weight:900}
+  .jmeta{display:flex;gap:3mm;flex-wrap:wrap;margin:2mm 0 3mm}
+  .jmeta span{font-size:8pt;font-weight:800;color:#00583d;background:var(--section);border-radius:2mm;padding:1.5mm 3mm}
+  .pnum{position:absolute;right:17mm;bottom:12mm;font-size:8.5pt;font-weight:700;color:var(--t3)}
+  .src{font-size:8.5pt;color:var(--t3);margin-top:4mm}
+  .defrow{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:2mm}
+  .defbox{border:1px solid var(--border);border-radius:3mm;padding:4mm 5mm}
+  .defbox b{color:var(--g900)}</style></head><body>
 <section class="page cover">
-    <div class="eye">Relatório de UX · Benefícios</div>
-    <h1>Benefícios<br/>por Tela</h1>
+    <div class="eye">Relatório de UX &amp; Negócio</div>
+    <h1>Benefícios das<br/>jornadas redesenhadas</h1>
     <div class="sub">Mosaic Direct 2.0 — Portal do Cliente</div>
-    <p class="lede">Documento com os benefícios de cada tela desenvolvida: o que muda, na prática, para quem opera o portal. Organização da informação, foco na tarefa e consistência entre telas.</p>
-    <div class="cfoot"><span><span class="cbrand">Mosaic<sup>&reg;</sup></span> Direct 2.0</span><span>KRON · Julho de 2026</span></div>
+    <p class="lede">Comparativo entre os processos atuais e as experiências redesenhadas: esforço do usuário e das equipes, volume operacional e benefícios esperados, com os dados consolidados da análise de contratos e protocolos.</p>
+    <div class="cfoot"><span><span class="cbrand">Mosaic<sup>&reg;</sup></span> Direct 2.0</span><span>Dados de 2026 até 7 de julho de 2026 · KRON</span></div>
   </section>
 <section class="page">
-    <div class="pk">Resumo</div>
-    <h2 class="pt">Da planilha ao sistema</h2>
-    <p class="intro-p">Antes, o trabalho vivia em <b>planilhas</b>: muitas colunas, scroll para todo lado e pouca hierarquia. O Mosaic Direct 2.0 organiza as mesmas informações em <b>telas consistentes</b> — com seleções em modais no foco, tabelas contidas, colunas congeladas e navegação por botões. Este documento apresenta os benefícios de cada uma das 7 telas.</p>
-    <div class="bt">As 7 telas</div>
-    <ol class="slist">
-      <li><b>Relatório de Protocolos</b> <span>— Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</span></li>
-      <li><b>Relatório de Status de Agendamento</b> <span>— Acompanhamento das solicitações de agendamento por semana, tipo e status.</span></li>
-      <li><b>Agendar Contrato Normal</b> <span>— Seleção de contratos e itens para criação de agendamentos.</span></li>
-      <li><b>Agendar Protocolo</b> <span>— Seleção de protocolos para criação de agendamentos.</span></li>
-      <li><b>Criar Protocolo</b> <span>— Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</span></li>
-      <li><b>Editar Protocolo</b> <span>— Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</span></li>
-      <li><b>Hub do Portal</b> <span>— Página inicial que lista e dá acesso a todas as telas do portal.</span></li>
-    </ol>
-    <div class="bt">Benefícios gerais</div>
-    <ul class="pben">
-      <li><b>Consistência</b><span>Os mesmos padrões em todas as telas reduzem a curva de aprendizado.</span></li>
-      <li><b>Foco na tarefa</b><span>Seleções em modais centralizados, no lugar de painéis laterais.</span></li>
-      <li><b>Menos erro</b><span>Datas por calendário, status visível e ações sempre à mão.</span></li>
-      <li><b>Informação organizada</b><span>O que era planilha vira tela legível, com hierarquia e destaque no que importa.</span></li>
-      <li><b>Acessibilidade</b><span>Botões reais (‹ ›) e modais funcionam por teclado e leitor de tela.</span></li>
-    </ul>
+    <div class="pk">Visão executiva</div>
+    <h2 class="pt">Mosaic Direct 2.0</h2>
+    <p class="pp">Jornadas mais simples para o cliente e menos operação manual para a Mosaic. Dados de 2026 até 7 de julho de 2026.</p>
+    <div class="kg">
+      <div class="kc"><div class="k">5</div><div class="l">jornadas redesenhadas</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">4.948</div><div class="l">contratos normais sem autoagendamento</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">4.865</div><div class="l">protocolos analisados</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">~20</div><div class="l">interações no fluxo atual de protocolo</div><div class="b">Estimativa</div></div>
+      <div class="kc"><div class="k">7.330</div><div class="l">contratos criados em 2026</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">2.382</div><div class="l">contratos VCO</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">2.328</div><div class="l">contratos/cotações relacionados a protocolos</div><div class="b">Confirmado</div></div>
+      <div class="kc"><div class="k">2,09</div><div class="l">protocolos por contrato/cotação</div><div class="b">Confirmado</div></div>
+    </div>
+    <h3 class="ph">Nota metodológica</h3>
+    <p class="pp">Volumes extraídos da análise consolidada em 7 de julho de 2026 (Contracts &amp; Protocols Analysis_20260707.xlsx). Cliques e tempo do fluxo atual são observados/estimados; do novo fluxo são medição preliminar do protótipo. O tempo do novo fluxo fica “a validar em teste de usabilidade”. Números anteriores sem lastro (3.218 protocolos / ~1.600 contratos) foram substituídos pelos valores da planilha.</p>
     <div class="pnum">2</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 1 de 7 · Contratos · relatório</div>
-    <h2 class="pt">Relatório de Protocolos</h2>
-    <p class="pp">Acompanhamento dos protocolos por status, quantidades agendadas/faturadas e saldos.</p>
-    <img class="shot" src="../doc-assets/rel-ux-hero.png" alt="Relatório de Protocolos" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Nunca perde a linha</b><span>O número do protocolo fica congelado à esquerda enquanto você navega as demais colunas.</span></li>
-      <li><b>Saldo e status de relance</b><span>Saldo em destaque, status em badge colorido e linhas zebradas guiam o olho.</span></li>
-      <li><b>Navega colunas com um clique</b><span>Botões ‹ › avançam blocos de colunas — sem caçar a barra de scroll.</span></li>
-      <li><b>Tela mais limpa</b><span>Filtros colapsáveis e o aviso convertido em ícone ⓘ deixam mais espaço para os dados.</span></li>
-      <li><b>Menos erro de operação</b><span>Edição pelo menu de ações, sem edição acidental direto na linha.</span></li>
-    </ul>
+    <div class="pk">Volume e relevância</div>
+    <h2 class="pt">Por que essas jornadas importam</h2>
+    <h3 class="ph">Contratos criados em 2026 — Normal × VCO</h3>
+    <div class="split"><span class="n" style="width:67.5%">Normal · 67,5%</span><span class="v" style="width:32.5%">VCO · 32,5%</span></div>
+    <p class="pp">Total de 7.330 contratos — 4.948 normais (sem autoagendamento) e 2.382 VCO.</p>
+    <h3 class="ph">Protocolos — concentração por registro de cliente</h3>
+    <div class="bars">
+      <div class="bar"><span class="nm">PROTEC PRODUTOS AGRICOLAS LTDA</span><span class="tr"><span class="fl" style="width:100.0%"></span></span><span class="vl">792</span></div>
+      <div class="bar"><span class="nm">AGREX DO BRASIL SA</span><span class="tr"><span class="fl" style="width:92.2%"></span></span><span class="vl">730</span></div>
+      <div class="bar"><span class="nm">COOPERCITRUS COOP DE PROD RURAIS</span><span class="tr"><span class="fl" style="width:82.6%"></span></span><span class="vl">654</span></div>
+      <div class="bar"><span class="nm">CARGILL AGRICOLA S A</span><span class="tr"><span class="fl" style="width:52.4%"></span></span><span class="vl">415</span></div>
+      <div class="bar"><span class="nm">CARGILL AGRICOLA SA</span><span class="tr"><span class="fl" style="width:37.9%"></span></span><span class="vl">300</span></div>
+      <div class="bar"><span class="nm">ADM DO BRASIL LTDA</span><span class="tr"><span class="fl" style="width:35.5%"></span></span><span class="vl">281</span></div>
+      <div class="bar"><span class="nm">COOPERATIVA AGROINDUSTRIAL DE…</span><span class="tr"><span class="fl" style="width:32.6%"></span></span><span class="vl">258</span></div>
+      <div class="bar"><span class="nm">FUTURA INSUMOS AGRICOLAS LTDA</span><span class="tr"><span class="fl" style="width:22.1%"></span></span><span class="vl">175</span></div>
+    </div>
+    <p class="pp">4.865 protocolos associados a 2.328 contratos/cotações (média 2,09). Os 3 maiores registros somam ~2.176 (44,7%); os 5 maiores, ~2.891 (59,4%). Protocolos e contratos/cotações são unidades diferentes; há possíveis duplicidades de nomenclatura (CARGILL S A × SA).</p>
+    <h3 class="ph">Contrato Normal × VCO</h3>
+    <div class="defrow"><div class="defbox"><b>Normal</b> — a Mosaic vende e entrega para a própria empresa, incluindo filiais.</div><div class="defbox"><b>VCO</b> — venda por conta e ordem: entrega ao cliente final da empresa, com dados de destinatário/cooperado.</div></div>
     <div class="pnum">3</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 2 de 7 · Agendamento · relatório</div>
-    <h2 class="pt">Relatório de Status de Agendamento</h2>
-    <p class="pp">Acompanhamento das solicitações de agendamento por semana, tipo e status.</p>
-    <img class="shot" src="../doc-assets/rel-status-cur.png" alt="Relatório de Status de Agendamento" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Identifica o tipo na hora</b><span>Tags PLAN / REPLAN / ADIÇÃO e status em cor, sem precisar ler.</span></li>
-      <li><b>Recorta por período</b><span>Filtro avançado por semana de início e fim.</span></li>
-      <li><b>Nada novo a aprender</b><span>Coluna congelada e botões ‹ › no mesmo padrão do Relatório de Protocolos.</span></li>
-      <li><b>Mais dados na tela</b><span>O banner virou ícone ⓘ, liberando linhas visíveis.</span></li>
-    </ul>
+    <div class="pk">Comparativo</div>
+    <h2 class="pt">Antes × Depois</h2>
+    <div class="ba">
+      <div class="before"><h4>Antes (fluxo atual)</h4><ul><li>Um protocolo por vez</li><li>Aproximadamente 20 interações</li><li>3 a 4 minutos por protocolo</li><li>Busca manual de filial e contrato</li><li>Etapa de carrinho</li><li>Repetição por filial</li><li>Solicitações por e-mail</li><li>Cadastro manual interno</li><li>Informações dispersas</li><li>Acompanhamento dependente do time interno</li></ul></div>
+      <div class="after"><h4>Depois (jornadas redesenhadas)</h4><ul><li>Contratos e protocolos organizados</li><li>Seleção centralizada em modais</li><li>Operações múltiplas, quando aplicável</li><li>Validações inline e status por linha</li><li>Agendamento pelo portal</li><li>Status e saldo visíveis</li><li>Histórico centralizado</li><li>Pesquisa e filtros</li><li>Maior autonomia do cliente</li><li>Menos tarefas manuais internas</li></ul></div>
+    </div>
     <div class="pnum">4</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 3 de 7 · Agendamento</div>
-    <h2 class="pt">Agendar Contrato Normal</h2>
-    <p class="pp">Seleção de contratos e itens para criação de agendamentos.</p>
-    <img class="shot" src="../doc-assets/agendar-contrato.png" alt="Agendar Contrato Normal" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Seleção sem perder o contexto</b><span>Contratos escolhidos em modal centralizado, com o fundo de referência.</span></li>
-      <li><b>Data por clique</b><span>Calendário para a semana — sem digitação livre e sem erro de formato.</span></li>
-      <li><b>Não recomeça do zero</b><span>Reabrir a seleção mantém o que já foi escolhido.</span></li>
-      <li><b>Ação sempre à mão</b><span>Rodapé fixo com total selecionado e botão principal.</span></li>
-      <li><b>Roteiro quando precisa</b><span>Opcional, em modal, com preview do texto preenchido.</span></li>
-    </ul>
+    <div class="pk">Jornada 1 de 5 · Contratos · criação</div>
+    <h2 class="pt">Criar Protocolo</h2>
+    <p class="pp">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
+    <div class="jmeta"><span>Atual: ~20</span><span>Novo: ~10 (medição preliminar do protótipo)</span><span>Tempo atual: 3 a 4 min (estimado)</span></div>
+    <div class="jflex">
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Busca manual de filial e de contrato</li><li>Uso de carrinho em jornada operacional</li><li>Alto número de etapas e preenchimento repetitivo</li><li>Informações dispersas / dependência de outros sistemas</li><li>Criação individual (um protocolo por vez)</li><li>Pouca escalabilidade para clientes de alto volume</li></ul>
+        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Consulta a outros sistemas</li><li>Cliente (ou equipe interna)</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Jornada estruturada: seleção de contratos, tabela de itens contida com colunas congeladas e cabeçalho fixo, cadastro de cooperado sem sair da tela, busca com autocomplete e status por linha (incompleto → em progresso → completo).</p>
+        <h4>O que muda</h4><ul class="pl"><li>Elimina a busca manual de filial</li><li>Elimina a busca manual de contrato</li><li>Elimina a etapa de carrinho</li><li>Itens adicionais reaproveitam a mesma jornada, sem repetir a busca</li></ul></div>
+    </div>
+    <h3 class="ph">Benefícios</h3>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Menos repetição e menos etapas</b></li><li><b>Referências sempre visíveis no scroll</b></li><li><b>Sabe o que ainda falta preencher</b></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Dados mais estruturados na entrada</b></li><li><b>Menor exposição a erro de preenchimento</b></li><li><b>Base para operações de maior volume</b></li></ul></div>
+    </div>
     <div class="pnum">5</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 4 de 7 · Agendamento</div>
-    <h2 class="pt">Agendar Protocolo</h2>
-    <p class="pp">Seleção de protocolos para criação de agendamentos.</p>
-    <img class="shot" src="../doc-assets/agendar-protocolo.png" alt="Agendar Protocolo" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Curva de aprendizado zero</b><span>Mesmo fluxo e padrão do Agendar Contrato.</span></li>
-      <li><b>Seleção no foco</b><span>Protocolo e roteiro em modal centralizado.</span></li>
-      <li><b>Total e ação sempre visíveis</b><span>Rodapé fixo com o resumo do que foi selecionado.</span></li>
-    </ul>
+    <div class="pk">Jornada 2 de 5 · Contratos · acompanhamento</div>
+    <h2 class="pt">Consultar Protocolos</h2>
+    <p class="pp">Localizar e acompanhar solicitações, protocolos, saldos e status.</p>
+    <div class="jmeta"><span>Atual: Variável (depende de contato externo)</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Não determinístico</span></div>
+    <div class="jflex">
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Falta de rastreabilidade</li><li>Dependência do Customer Service</li><li>Dificuldade para localizar uma solicitação</li><li>Ausência de visão do ciclo completo (contrato → protocolo → agendamento)</li><li>Baixa transparência</li></ul>
+        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Contato externo (e-mail/telefone)</li><li>Cliente</li><li>Customer Service</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Ambiente único com número da solicitação e do protocolo, contrato e filial relacionados, quantidade e saldo, datas, status, histórico, pesquisa, filtros e ações disponíveis. Coluna congelada + botões de bloco ‹ › para as 24 colunas.</p>
+        <h4>O que muda</h4><ul class="pl"><li>Substitui o contato com o Customer Service por consulta no portal</li><li>Ciclo completo visível em uma tela</li></ul></div>
+    </div>
+    <h3 class="ph">Benefícios</h3>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Autonomia para consultar sem abrir chamado</b></li><li><b>Saldo e status de relance</b></li><li><b>Histórico e próximos passos claros</b></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos contatos de status para o Customer Service</b></li><li><b>Rastreabilidade padronizada</b></li></ul></div>
+    </div>
     <div class="pnum">6</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 5 de 7 · Contratos · criação</div>
-    <h2 class="pt">Criar Protocolo</h2>
-    <p class="pp">Criação de protocolos a partir de contratos e itens, com seleção de cooperado.</p>
-    <img class="shot" src="../doc-assets/rel-criar-cur.png" alt="Criar Protocolo" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Três seleções no foco</b><span>Contratos, cooperado e roteiro em modais centralizados.</span></li>
-      <li><b>Referências sempre visíveis</b><span>As primeiras colunas ficam congeladas e o cabeçalho acompanha o scroll.</span></li>
-      <li><b>Sabe o que ainda falta</b><span>Status por linha: incompleto → em progresso → completo.</span></li>
-      <li><b>Cadastra cooperado sem sair da tela</b><span>Modal com dados e endereço; botão com contraste corrigido.</span></li>
-      <li><b>Encontra rápido</b><span>Busca de cooperado com autocomplete.</span></li>
-    </ul>
+    <div class="pk">Jornada 3 de 5 · Agendamento</div>
+    <h2 class="pt">Agendar Contrato Normal</h2>
+    <p class="pp">Programar o recebimento de um contrato normal diretamente no portal.</p>
+    <div class="jmeta"><span>Atual: Fora do portal (e-mail + cadastro manual interno)</span><span>Novo: ~7 (medição preliminar do protótipo)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <div class="jflex">
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Dependência de e-mail e de pessoas internas</li><li>Cadastro manual e retrabalho</li><li>Informação duplicada e exposição a erro de transcrição</li><li>Ausência de confirmação imediata</li><li>Baixa autonomia e visibilidade</li><li>Esforço operacional do Customer Service</li></ul>
+        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>E-mail</li><li>SAP</li><li>Scheduling</li><li>Cliente</li><li>Gerente de contas / Vendedor</li><li>Customer Service</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">O cliente visualiza seus contratos, seleciona, informa a quantidade, escolhe semana/data/período em calendário, confirma e acompanha o status — em modais centralizados, com rodapé fixo de totais e ação.</p>
+        <h4>O que muda</h4><ul class="pl"><li>Elimina o e-mail e o cadastro manual interno</li><li>Confirmação estruturada no próprio portal</li><li>Substitui espera por acompanhamento visível</li></ul></div>
+    </div>
+    <h3 class="ph">Benefícios</h3>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Autonomia para programar sem e-mail</b></li><li><b>Data por calendário, sem erro de formato</b></li><li><b>Confirmação e acompanhamento imediatos</b></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos e-mails e cadastro manual no Scheduling</b></li><li><b>Menor exposição a erro de transcrição</b></li><li><b>Libera o Customer Service para tarefas de maior valor</b></li></ul></div>
+    </div>
     <div class="pnum">7</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 6 de 7 · Contratos · edição</div>
-    <h2 class="pt">Editar Protocolo</h2>
-    <p class="pp">Tela completa de edição de um protocolo (campos, quantidades, NF, roteiro).</p>
-    <img class="shot" src="../doc-assets/editar-protocolo.png" alt="Editar Protocolo" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Tudo num lugar só</b><span>Campos do protocolo organizados em blocos legíveis (padrão Salesforce).</span></li>
-      <li><b>Espaço para o roteiro</b><span>Campo em largura total.</span></li>
-      <li><b>Edição previsível</b><span>Salvar e cancelar no rodapé.</span></li>
-    </ul>
+    <div class="pk">Jornada 4 de 5 · Agendamento</div>
+    <h2 class="pt">Agendar Protocolo</h2>
+    <p class="pp">Dar continuidade após a criação do protocolo: consultar saldo, definir volumes e programar entregas.</p>
+    <div class="jmeta"><span>Atual: Continuação manual no Scheduling</span><span>Novo: ~6 (medição preliminar do protótipo)</span><span>Tempo atual: Depende do time interno</span></div>
+    <div class="jflex">
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Ruptura entre Mosaic Direct e Scheduling</li><li>Etapas manuais do Customer Service</li><li>Saldo e planejamento pouco disponíveis ao cliente</li></ul>
+        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>Mosaic Direct</li><li>Scheduling</li><li>Cliente</li><li>Customer Service</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">O cliente seleciona protocolos, consulta saldos, define volumes, escolhe datas/semanas/roteiros, confirma o agendamento e acompanha a execução — mesmo padrão de modais e roteiro do Agendar Contrato.</p>
+        <h4>O que muda</h4><ul class="pl"><li>Reduz a ruptura entre portal e Scheduling</li><li>Continuidade da jornada no mesmo ambiente</li></ul></div>
+    </div>
+    <h3 class="ph">Benefícios</h3>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Continua a jornada sem mudar de canal</b></li><li><b>Saldo e volumes visíveis ao definir a entrega</b></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos etapas manuais no Scheduling</b></li><li><b>Planejamento mais estruturado na origem</b></li></ul></div>
+    </div>
     <div class="pnum">8</div>
   </section>
 <section class="page">
-    <div class="pk">Tela 7 de 7 · Início</div>
-    <h2 class="pt">Hub do Portal</h2>
-    <p class="pp">Página inicial que lista e dá acesso a todas as telas do portal.</p>
-    <img class="shot" src="../doc-assets/index.png" alt="Hub do Portal" />
-    <div class="bt">Benefícios para o usuário</div>
-    <ul class="pben">
-      <li><b>Acha a tela rápido</b><span>Telas agrupadas por contexto de uso.</span></li>
-      <li><b>Só o que interessa ao cliente</b><span>Telas internas (Salesforce) ficam ocultas.</span></li>
-      <li><b>Um clique para cada fluxo</b><span>Acesso direto às telas principais.</span></li>
-    </ul>
+    <div class="pk">Jornada 5 de 5 · Agendamento · acompanhamento</div>
+    <h2 class="pt">Acompanhar Agendamentos</h2>
+    <p class="pp">Acompanhar datas, volumes, status e histórico dos agendamentos.</p>
+    <div class="jmeta"><span>Atual: Trocas de e-mail com o time interno</span><span>Novo: 1–3 (pesquisar / filtrar)</span><span>Tempo atual: Depende de terceiros</span></div>
+    <div class="jflex">
+      <div class="jbox"><h4>Cenário atual — problemas</h4><ul class="pl"><li>Informações dispersas e acompanhamento por e-mail</li><li>Dependência do time interno</li><li>Ausência de visão centralizada de status/datas/volumes</li></ul>
+        <h4>Sistemas &amp; pessoas</h4><ul class="pl"><li>E-mail</li><li>Scheduling</li><li>Cliente</li><li>Customer Service</li></ul></div>
+      <div class="jbox"><h4>Nova experiência</h4><p class="pp" style="font-size:9.5pt">Lista centralizada com pesquisa e filtros, status, datas, volumes, contrato/protocolo relacionado, histórico, próximas ações e — quando as regras permitirem — alteração ou cancelamento. Tags PLAN / REPLAN / ADIÇÃO e filtro por período.</p>
+        <h4>O que muda</h4><ul class="pl"><li>Substitui e-mails por consulta centralizada</li><li>Alteração/cancelamento no portal, quando permitido</li></ul></div>
+    </div>
+    <h3 class="ph">Benefícios</h3>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Acompanha o planejamento sem depender de e-mail</b></li><li><b>Status, datas e volumes em um só lugar</b></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos trocas de e-mail de status</b></li><li><b>Dados de acompanhamento centralizados</b></li></ul></div>
+    </div>
     <div class="pnum">9</div>
   </section>
-</body>
-</html>
+<section class="page">
+    <div class="pk">Impacto &amp; conclusão</div>
+    <h2 class="pt">Impacto para cliente e Mosaic</h2>
+    <div class="jflex">
+      <div class="jbox"><h4>Para o cliente</h4><ul class="pben"><li><b>Autonomia</b><span>Cria, agenda e acompanha no mesmo ambiente, sem depender de contatos.</span></li><li><b>Clareza e previsibilidade</b><span>Saldo, status, datas e próximos passos visíveis.</span></li><li><b>Menos repetição</b><span>Jornadas estruturadas reduzem o retrabalho por filial/contrato.</span></li><li><b>Rastreabilidade</b><span>Ciclo contrato → protocolo → agendamento visível de ponta a ponta.</span></li></ul></div>
+      <div class="jbox"><h4>Para a Mosaic</h4><ul class="pben"><li><b>Menos tarefas administrativas</b><span>Menor dependência de e-mails e de cadastro manual.</span></li><li><b>Dados mais estruturados</b><span>Entrada padronizada reduz duplicação de informação.</span></li><li><b>Menor exposição a erros</b><span>Menos transcrição manual entre e-mail, SAP e Scheduling.</span></li><li><b>Foco do Customer Service</b><span>Libera o time para atividades de maior valor.</span></li></ul></div>
+    </div>
+    <p class="pp" style="margin-top:4mm;font-size:9pt;font-style:italic">Não declaramos horas economizadas, valor financeiro, percentual de redução de erros, redução de headcount ou ganho de produtividade — não há dados específicos que sustentem esses números.</p>
+    <h3 class="ph">Conclusão</h3>
+    <p class="pp">O portal deixa de ser apenas ponto de registro e passa a oferecer criação, planejamento e acompanhamento. 4.948 contratos normais ainda dependem de agendamento por equipes internas e 4.865 protocolos estão associados a 2.328 contratos/cotações — evidência do impacto potencial da redução de tarefas repetitivas e da maior autonomia do cliente.</p>
+    <p class="src"><b>Fonte:</b> Contracts &amp; Protocols Analysis_20260707.xlsx · Dados de 2026 até 7 de julho de 2026. Pendências (tempo do novo fluxo, regras de alteração/cancelamento, limites de lote, status, integrações) seguem para validação.</p>
+    <div class="pnum">10</div>
+  </section>
+</body></html>

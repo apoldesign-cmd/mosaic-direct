@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jornada 1 — Criar Protocolo · Mosaic Direct 2.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="report.css" />
+</head>
+<body>
+<a href="#main" class="skip">Pular para o conteúdo</a>
+<div class="wrap">
+  <header class="topbar">
+    <div class="lft"><a class="tb-btn back" href="index.html"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Relatório</a><a class="tb-btn" href="../criar-protocolo.html" target="_blank" rel="noopener"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> Protótipo</a></div>
+    <div class="logo"><span class="lt">Mosaic<sup>&reg;</sup></span><img src="../logo-shapes.png" alt="Mosaic"/></div>
+  </header>
+  <main id="main">
+  <section class="card jhero">
+    <div class="jtop"><span class="jn"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><div><div class="kick">Jornada 1 de 5 · Contratos · criação</div><h1>Criar Protocolo</h1></div></div>
+    <p class="obj">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
+    <div class="meta">
+      <div class="m"><div class="ml">Início</div><div class="mv">Área de protocolos / seleção de filial e contrato.</div></div><div class="m"><div class="ml">Conclusão</div><div class="mv">Protocolo criado e confirmado.</div></div><div class="m"><div class="ml">Interações atuais</div><div class="mv">~20</div></div><div class="m"><div class="ml">Interações novo fluxo</div><div class="mv">~10 (medição preliminar do protótipo)</div></div>
+    </div>
+  </section>
+
+  <h2 class="sec">Cenário atual</h2>
+  <p class="sec-sub">Como acontece hoje — esforço, pessoas e sistemas.</p>
+  <div class="two">
+    <div class="card" style="padding:20px 22px"><p class="sec-sub" style="margin:0 0 10px">Fluxo atual</p><ol class="steps"><li>Acessar a área correspondente</li><li>Localizar a filial</li><li>Selecionar a filial</li><li>Localizar o contrato</li><li>Abrir o contrato</li><li>Adicionar o contrato ao carrinho</li><li>Abrir o carrinho</li><li>Prosseguir para a solicitação</li><li>Selecionar o item</li><li>Informar a quantidade</li><li>Informar a data prevista</li><li>Selecionar/alterar embalagem</li><li>Informar preço</li><li>Informar nota fiscal</li><li>Preencher campos obrigatórios</li><li>Adicionar instruções</li><li>Avançar para o resumo</li><li>Revisar os dados</li><li>Confirmar a solicitação</li><li>Concluir a criação</li></ol></div>
+    <div>
+      <div class="card" style="padding:18px 20px;margin-bottom:16px">
+        <p class="sec-sub" style="margin:0 0 8px">Esforço &amp; contexto</p>
+        <div class="chips"><span>Interações: ~20 Estimativa</span><span>Tempo: 3 a 4 min (estimado)</span></div>
+        <p class="sec-sub" style="margin:12px 0 4px">Pessoas</p><div class="chips"><span>Cliente (ou equipe interna)</span></div>
+        <p class="sec-sub" style="margin:12px 0 4px">Sistemas</p><div class="chips"><span>Mosaic Direct</span><span>Consulta a outros sistemas</span></div>
+        <p class="sec-sub" style="margin:12px 0 4px">Repetição</p><p style="margin:0;font-size:13px;color:var(--t2)">Uma execução por filial/contrato — ex.: cliente com ~89 filiais repete a jornada 89 vezes.</p>
+      </div>
+      <div class="card" style="padding:18px 20px"><p class="sec-sub" style="margin:0 0 8px">Principais problemas</p><ul class="plain"><li>Busca manual de filial e de contrato</li><li>Uso de carrinho em jornada operacional</li><li>Alto número de etapas e preenchimento repetitivo</li><li>Informações dispersas / dependência de outros sistemas</li><li>Criação individual (um protocolo por vez)</li><li>Pouca escalabilidade para clientes de alto volume</li></ul></div>
+    </div>
+  </div>
+
+  <h2 class="sec">Nova experiência</h2>
+  <p class="sec-sub">Como fica no Mosaic Direct 2.0.</p>
+  <div class="card" style="padding:20px 22px"><p style="margin:0 0 14px;font-size:14.5px;color:var(--t2)">Jornada estruturada: seleção de contratos, tabela de itens contida com colunas congeladas e cabeçalho fixo, cadastro de cooperado sem sair da tela, busca com autocomplete e status por linha (incompleto → em progresso → completo).</p>
+    <p class="sec-sub" style="margin:0 0 8px">O que muda em relação ao fluxo atual</p>
+    <ul class="blist" style="columns:2;column-gap:26px"><li>Elimina a busca manual de filial</li><li>Elimina a busca manual de contrato</li><li>Elimina a etapa de carrinho</li><li>Itens adicionais reaproveitam a mesma jornada, sem repetir a busca</li></ul>
+  </div>
+
+  <h2 class="sec">Benefícios</h2>
+  <div class="two">
+    <div class="card benc"><h3><span class="i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></span> Para o cliente</h3><ul class="blist"><li>Menos repetição e menos etapas</li><li>Referências sempre visíveis no scroll</li><li>Sabe o que ainda falta preencher</li></ul></div>
+    <div class="card benc"><h3><span class="i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M1 12h4M19 12h4M4.2 19.8 7 17M17 7l2.8-2.8"/></svg></span> Para a Mosaic</h3><ul class="blist"><li>Dados mais estruturados na entrada</li><li>Menor exposição a erro de preenchimento</li><li>Base para operações de maior volume</li></ul></div>
+  </div>
+
+  <h2 class="sec">Dados &amp; pendências</h2>
+  <div class="two">
+    <div class="card" style="padding:20px 22px"><p class="sec-sub" style="margin:0 0 8px">Dados relacionados <span class="sbadge conf">Confirmado</span></p><ul class="plain"><li>4.865 protocolos</li><li>2.328 contratos/cotações</li><li>média de 2,09 protocolos por contrato/cotação</li><li>concentração relevante em clientes de alto volume</li></ul></div>
+    <div class="card" style="padding:20px 22px"><p class="sec-sub" style="margin:0 0 8px">Pendências <span class="sbadge pend">A validar</span></p><ul class="plain"><li>Cliques finais e tempo do novo fluxo — a validar em teste de usabilidade</li><li>Limites de operação em lote (múltiplos contratos/protocolos)</li></ul></div>
+  </div>
+
+  <div style="margin-top:22px"><a class="open-real" href="../criar-protocolo.html" target="_blank" rel="noopener">Abrir o protótipo desta jornada <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div>
+  <div class="pager">
+    <span class="card prev disabled"><span class="dir">Início</span><span class="nm">—</span></span>
+    <a class="card next" href="jornada-2-consultar-protocolos.html"><span class="dir">Jornada 2 →</span><span class="nm">Consultar Protocolos</span></a>
+  </div>
+  </main>
+</div>
+</body>
+</html>
