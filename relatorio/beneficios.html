@@ -148,7 +148,19 @@
   .cd2 .tx .hd .nm{font-size:11.5pt;font-weight:900;color:var(--g900)}
   .cd2 .tx .wh{font-size:8.8pt;color:var(--t2);line-height:1.42;margin-top:1.6mm}
   .cd2 .tx .bm{font-size:7.8pt;color:var(--t3);margin-top:2.2mm}
-  .cd2 .tx .bm b{color:#006a4d;text-transform:uppercase;letter-spacing:.03em;font-weight:800}</style></head><body>
+  .cd2 .tx .bm b{color:#006a4d;text-transform:uppercase;letter-spacing:.03em;font-weight:800}  .calc{border:1px solid var(--border);border-radius:2.5mm;overflow:hidden;margin:1mm 0 3mm}
+  .calc .cr{display:flex;justify-content:space-between;align-items:baseline;gap:4mm;padding:2.6mm 4mm;font-size:9.5pt;border-top:1px solid var(--border)}
+  .calc .cr:first-child{border-top:none}
+  .calc .cr .lb{color:var(--t2)}
+  .calc .cr .vl{font-weight:800;color:var(--g900);white-space:nowrap}
+  .calc .cr.tot{background:var(--section)}
+  .calc .cr.tot .lb{color:var(--g900);font-weight:800}
+  .etab{width:100%;border-collapse:collapse;font-size:9pt;margin-top:1mm}
+  .etab th,.etab td{text-align:left;padding:2.4mm 3mm;border-bottom:1px solid var(--border);vertical-align:top}
+  .etab th{color:var(--g800);font-weight:800;font-size:7.6pt;text-transform:uppercase;letter-spacing:.03em}
+  .etab td b{color:var(--g900)}
+  .etab .old{color:#8a1820}.etab .new{color:#00583d;font-weight:800}
+</style></head><body>
 <section class="page cover">
     <div class="eye">Relatório de UX &amp; Negócio</div>
     <h1>Benefícios das<br/>jornadas redesenhadas</h1>
@@ -164,13 +176,14 @@
       <li><span class="no">02</span><span class="tt">Melhorias em componentes<small>O que é, o ganho e o benchmark de cada uma das 10</small></span><span class="dots"></span><span class="pg">4–5</span></li>
       <li><span class="no">03</span><span class="tt">Volume e relevância<small>Contratos Normal × VCO · concentração de protocolos</small></span><span class="dots"></span><span class="pg">6</span></li>
       <li><span class="no">04</span><span class="tt">Antes × Depois<small>Comparativo do esforço e da experiência</small></span><span class="dots"></span><span class="pg">7</span></li>
-      <li><span class="no">05</span><span class="tt">As 5 jornadas redesenhadas<small>Tela, cruzamento com o cenário atual e benefícios</small></span><span class="dots"></span><span class="pg">8</span></li>
-      <li class="sub"><span class="no">5.1</span><span class="tt">Criar Protocolo</span><span class="dots"></span><span class="pg">8</span></li>
-      <li class="sub"><span class="no">5.2</span><span class="tt">Consultar Protocolos</span><span class="dots"></span><span class="pg">9</span></li>
-      <li class="sub"><span class="no">5.3</span><span class="tt">Agendar Contrato Normal</span><span class="dots"></span><span class="pg">10</span></li>
-      <li class="sub"><span class="no">5.4</span><span class="tt">Agendar Protocolo</span><span class="dots"></span><span class="pg">11</span></li>
-      <li class="sub"><span class="no">5.5</span><span class="tt">Acompanhar Agendamentos</span><span class="dots"></span><span class="pg">12</span></li>
-      <li><span class="no">06</span><span class="tt">Impacto &amp; conclusão<small>Para o cliente, para a Mosaic e próximos passos</small></span><span class="dots"></span><span class="pg">13</span></li>
+      <li><span class="no">05</span><span class="tt">Esforço da jornada atual<small>Cálculo do tempo (base: reunião 07/07) e comparação</small></span><span class="dots"></span><span class="pg">8</span></li>
+      <li><span class="no">06</span><span class="tt">As 5 jornadas redesenhadas<small>Tela, cruzamento com o cenário atual e benefícios</small></span><span class="dots"></span><span class="pg">9</span></li>
+      <li class="sub"><span class="no">6.1</span><span class="tt">Criar Protocolo</span><span class="dots"></span><span class="pg">9</span></li>
+      <li class="sub"><span class="no">6.2</span><span class="tt">Consultar Protocolos</span><span class="dots"></span><span class="pg">10</span></li>
+      <li class="sub"><span class="no">6.3</span><span class="tt">Agendar Contrato Normal</span><span class="dots"></span><span class="pg">11</span></li>
+      <li class="sub"><span class="no">6.4</span><span class="tt">Agendar Protocolo</span><span class="dots"></span><span class="pg">12</span></li>
+      <li class="sub"><span class="no">6.5</span><span class="tt">Acompanhar Agendamentos</span><span class="dots"></span><span class="pg">13</span></li>
+      <li><span class="no">07</span><span class="tt">Impacto &amp; conclusão<small>Para o cliente, para a Mosaic e próximos passos</small></span><span class="dots"></span><span class="pg">14</span></li>
     </ul>
     <p class="src" style="position:absolute;bottom:14mm;left:17mm"><b>Fonte:</b> Contracts &amp; Protocols Analysis_20260707.xlsx · Dados de 2026 até 7 de julho de 2026.</p>
     <div class="pnum">2</div>
@@ -247,6 +260,32 @@
     <div class="pnum">7</div>
   </section>
 <section class="page">
+    <div class="pk">Esforço &amp; metodologia</div>
+    <h2 class="pt">Esforço da jornada atual — como calculamos</h2>
+    <p class="pp">Base: reunião &ldquo;Mosaic Direct — Mapeamento de melhorias&rdquo; (07/07/2026, com Gustavo Gomes). Contamos as intera&ccedil;&otilde;es necess&aacute;rias para concluir a tarefa (sem hover nem scroll) e estimamos o tempo assumindo que o usu&aacute;rio j&aacute; tem as informa&ccedil;&otilde;es em m&atilde;os — cada intera&ccedil;&atilde;o ~10s, com as etapas de busca e carrinho pesando mais.</p>
+    <h3 class="ph">Criar Protocolo — c&aacute;lculo do tempo atual</h3>
+    <div class="calc">
+      <div class="cr"><span class="lb">Localizar + selecionar filial</span><span class="vl">~30s</span></div>
+      <div class="cr"><span class="lb">Localizar + abrir contrato + carrinho</span><span class="vl">~45s</span></div>
+      <div class="cr"><span class="lb">Preencher o item (qtd, data, embalagem, pre&ccedil;o, NF, campos, instru&ccedil;&otilde;es)</span><span class="vl">~90s</span></div>
+      <div class="cr"><span class="lb">Revisar + confirmar</span><span class="vl">~30s</span></div>
+      <div class="cr tot"><span class="lb">Total — ~20 intera&ccedil;&otilde;es, um protocolo por execu&ccedil;&atilde;o</span><span class="vl">&asymp; 195s &asymp; 3&ndash;4 min</span></div>
+    </div>
+    <h3 class="ph">Efeito de escala</h3>
+    <p class="pp">S&oacute; um protocolo por execu&ccedil;&atilde;o, repetindo o fluxo por filial/contrato. Um cliente com ~89 filiais repete a jornada ~89 vezes: <b>~89 &times; 3,5 min &asymp; 5,2 horas</b> apenas criando protocolos. As jornadas em lote reduzem drasticamente essa repeti&ccedil;&atilde;o.</p>
+    <h3 class="ph">Esfor&ccedil;o por jornada — atual &times; novo</h3>
+    <table class="etab">
+      <tr><th>Jornada</th><th>Atual</th><th>Novo*</th></tr>
+      <tr><td><b>Criar Protocolo</b></td><td class="old">~20 intera&ccedil;&otilde;es &middot; 3&ndash;4 min</td><td class="new">~10 &middot; ~1,5&ndash;2 min</td></tr>
+      <tr><td><b>Consultar Protocolos</b></td><td class="old">contato com o Customer Service (ass&iacute;ncrono)</td><td class="new">1&ndash;3 &middot; segundos</td></tr>
+      <tr><td><b>Agendar Contrato Normal</b></td><td class="old">e-mail ~2&ndash;3 min + cadastro interno (horas/dias)</td><td class="new">~7 &middot; ~1&ndash;1,5 min</td></tr>
+      <tr><td><b>Agendar Protocolo</b></td><td class="old">manual no Scheduling (time interno)</td><td class="new">~6 &middot; ~1 min</td></tr>
+      <tr><td><b>Acompanhar Agendamentos</b></td><td class="old">e-mails ao time interno (ass&iacute;ncrono)</td><td class="new">1&ndash;3 &middot; segundos</td></tr>
+    </table>
+    <p class="src">Tempos do fluxo atual: observados/estimados na reuni&atilde;o. Tempos do novo fluxo (*): estimativa por propor&ccedil;&atilde;o de etapas — a validar em teste de usabilidade. Consulta e acompanhamento hoje saem do portal (e-mail / Customer Service): o tempo &eacute; dominado pela lat&ecirc;ncia de terceiros, n&atilde;o por cliques.</p>
+    <div class="pnum">8</div>
+  </section>
+<section class="page">
     <div class="pk">Jornada 1 de 5 · Contratos · criação</div>
     <h2 class="pt">Criar Protocolo</h2>
     <p class="pp" style="margin-bottom:2mm">Criar um protocolo a partir de um contrato/cotação e seus itens.</p>
@@ -263,7 +302,7 @@
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Dados mais estruturados na entrada</li><li>Menor exposição a erro de preenchimento</li><li>Base para operações de maior volume</li></ul></div>
     </div>
     <div class="jpend"><b>Pendências</b>Cliques finais e tempo do novo fluxo — a validar em teste de usabilidade · Limites de operação em lote (múltiplos contratos/protocolos).</div>
-    <div class="pnum">8</div>
+    <div class="pnum">9</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 2 de 5 · Contratos · acompanhamento</div>
@@ -282,7 +321,7 @@
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos contatos de status para o Customer Service</li><li>Rastreabilidade padronizada</li></ul></div>
     </div>
     <div class="jpend"><b>Pendências</b>Nomenclatura oficial de status · Ações permitidas por status (regras).</div>
-    <div class="pnum">9</div>
+    <div class="pnum">10</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 3 de 5 · Agendamento</div>
@@ -301,7 +340,7 @@
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos e-mails e cadastro manual no Scheduling</li><li>Menor exposição a erro de transcrição</li><li>Libera o Customer Service para tarefas de maior valor</li></ul></div>
     </div>
     <div class="jpend"><b>Pendências</b>Regras de alteração e cancelamento · Confirmação das integrações com SAP/Scheduling.</div>
-    <div class="pnum">10</div>
+    <div class="pnum">11</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 4 de 5 · Agendamento</div>
@@ -320,7 +359,7 @@
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos etapas manuais no Scheduling</li><li>Planejamento mais estruturado na origem</li></ul></div>
     </div>
     <div class="jpend"><b>Pendências</b>Regras de saldo e limites por protocolo · Integração de agendamento com o Scheduling.</div>
-    <div class="pnum">11</div>
+    <div class="pnum">12</div>
   </section>
 <section class="page">
     <div class="pk">Jornada 5 de 5 · Agendamento · acompanhamento</div>
@@ -339,7 +378,7 @@
       <div class="jbox"><h4>Benefício — Mosaic</h4><ul class="pl"><li>Menos trocas de e-mail de status</li><li>Dados de acompanhamento centralizados</li></ul></div>
     </div>
     <div class="jpend"><b>Pendências</b>Regras de alteração e cancelamento · Nomenclatura oficial de status.</div>
-    <div class="pnum">12</div>
+    <div class="pnum">13</div>
   </section>
 
 <section class="page">
@@ -353,6 +392,6 @@
     <h3 class="ph">Conclusão</h3>
     <p class="pp">O portal deixa de ser apenas ponto de registro e passa a oferecer criação, planejamento e acompanhamento. 4.948 contratos normais ainda dependem de agendamento por equipes internas e 4.865 protocolos estão associados a 2.328 contratos/cotações — evidência do impacto potencial da redução de tarefas repetitivas e da maior autonomia do cliente.</p>
     <p class="src"><b>Fonte:</b> Contracts &amp; Protocols Analysis_20260707.xlsx · Dados de 2026 até 7 de julho de 2026. Pendências (tempo do novo fluxo, regras de alteração/cancelamento, limites de lote, status, integrações) seguem para validação.</p>
-    <div class="pnum">13</div>
+    <div class="pnum">14</div>
   </section>
 </body></html>

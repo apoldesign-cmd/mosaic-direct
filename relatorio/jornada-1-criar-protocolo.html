@@ -66,6 +66,16 @@
     <ul class="blist" style="columns:2;column-gap:26px"><li>Elimina a busca manual de filial</li><li>Elimina a busca manual de contrato</li><li>Elimina a etapa de carrinho</li><li>Itens adicionais reaproveitam a mesma jornada, sem repetir a busca</li></ul>
   </div>
 
+  
+  <h2 class="sec">Estimativa de esforço — atual × novo</h2>
+  <p class="sec-sub">Base: reunião de 07/07/2026 com Gustavo. Contamos as interações necessárias (sem hover nem scroll) e estimamos o tempo com as informações já em mãos — ~10s por interação, com buscas e carrinho pesando mais.</p>
+  <div class="two">
+    <div class="card col before" style="border-top:3px solid var(--red)"><h4 style="margin:0 0 10px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#8a1820">Jornada atual</h4><div class="chips"><span>~20 interações</span><span>3–4 min / protocolo</span></div><p class="sec-sub" style="margin:12px 0 6px">Como chegamos a 3–4 min</p><ul class="plain"><li>Localizar + selecionar filial — ~30s</li><li>Localizar + abrir contrato + carrinho — ~45s</li><li>Preencher o item (qtd, data, embalagem, preço, NF, campos, instruções) — ~90s</li><li>Revisar + confirmar — ~30s</li></ul><p style="margin:10px 0 0;font-size:14px"><b>≈ 195s ≈ 3–4 min</b> · só um protocolo por execução.</p></div>
+    <div class="card col after" style="border-top:3px solid var(--good)"><h4 style="margin:0 0 10px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--g800)">Jornada redesenhada</h4><div class="chips"><span>~10 interações</span><span>~1,5–2 min*</span></div><p class="sec-sub" style="margin:12px 0 6px">O que reduz o tempo</p><ul class="plain"><li>Elimina a busca de filial (−~30s)</li><li>Elimina busca de contrato + carrinho (−~45s)</li><li>Autocomplete e dados pré-carregados no preenchimento</li></ul></div>
+  </div>
+  <div class="card" style="padding:18px 20px;margin-top:16px;border-left:3px solid var(--g700)"><p class="sec-sub" style="margin:0 0 6px">Efeito de escala</p><p style="margin:0;font-size:14px;color:var(--t2)">Um cliente com <b>~89 filiais</b> repete o fluxo ~89 vezes: <b>~89 × 3,5 min ≈ 5,2 horas</b> apenas criando protocolos. A jornada em lote reduz drasticamente essa repetição.</p></div>
+  <p class="sec-sub" style="margin-top:10px;font-style:italic">* estimativa por proporção de etapas — a validar em teste de usabilidade.</p>
+
   <h2 class="sec">Benefícios</h2>
   <div class="two">
     <div class="card benc"><h3><span class="i"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg></span> Para o cliente</h3><ul class="blist"><li>Menos repetição e menos etapas</li><li>Referências sempre visíveis no scroll</li><li>Sabe o que ainda falta preencher</li></ul></div>
