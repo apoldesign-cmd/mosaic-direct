@@ -190,9 +190,9 @@ ul.plain li::before{content:"–";position:absolute;left:4px;color:var(--g700);f
 .screen-card .tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 18px}
 .screen-card .tags .tlbl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-right:2px}
 a.ctag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--g800);background:var(--section);border:1px solid #cfe3d9;border-radius:999px;padding:6px 12px;text-decoration:none;transition:background .12s ease,color .12s ease}
-a.ctag::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--g700)}
+a.ctag .cn{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 3px;border-radius:999px;background:var(--g800);color:#fff;font-size:10px;font-weight:900;line-height:1}
 a.ctag:hover{background:var(--g800);color:#fff}
-a.ctag:hover::before{background:#7ad9b5}
+a.ctag:hover .cn{background:#7ad9b5;color:var(--g900)}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(max-width:860px){
