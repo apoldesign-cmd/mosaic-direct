@@ -193,6 +193,14 @@ a.ctag{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight
 a.ctag .cn{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 3px;border-radius:999px;background:var(--g800);color:#fff;font-size:10px;font-weight:900;line-height:1}
 a.ctag:hover{background:var(--g800);color:#fff}
 a.ctag:hover .cn{background:#7ad9b5;color:var(--g900)}
+/* pins numerados sobre a tela + prints de detalhe */
+.screen-card .shotwrap{position:relative;line-height:0}
+.pin{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--g800);color:#fff;font-size:12.5px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 7px rgba(0,0,0,.4),0 0 0 3px rgba(255,255,255,.92);z-index:2;line-height:1}
+.detail-shots{display:flex;gap:14px;flex-wrap:wrap;padding:14px 18px 18px;border-top:1px solid var(--border)}
+.detail-shots figure{margin:0;flex:1 1 240px;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:#fbfcfb}
+.detail-shots img{width:100%;display:block;border-bottom:1px solid var(--border)}
+.detail-shots figcaption{font-size:12.5px;color:var(--t2);padding:9px 13px;font-weight:600;line-height:1.4}
+.detail-shots figcaption b{color:var(--g800);font-weight:900}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(max-width:860px){
