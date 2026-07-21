@@ -139,6 +139,36 @@
   .proto-foot-arrow { transition: transform var(--ease-fast); display: flex; }
   .proto-card:hover .proto-foot-arrow { transform: translateX(4px); }
 
+  /* Rodapé com dois destinos: versão atual (aprovada) x versão com ajustes do PO */
+  .proto-foot.dual { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 12px; }
+  .proto-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text-2);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: border-color var(--ease-fast), background var(--ease-fast), color var(--ease-fast);
+  }
+  .proto-link:hover { border-color: var(--mosaic-green-700); color: var(--mosaic-green-800); text-decoration: none; }
+  .proto-link .n { font-size: 9.5px; font-weight: 800; opacity: 0.7; letter-spacing: 0.04em; }
+  .proto-link.rev {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .proto-link.rev:hover { background: var(--mosaic-green-700); border-color: var(--mosaic-green-700); color: #fff; }
+  .proto-link.rev .n { opacity: 0.85; }
+  @media (max-width: 480px) { .proto-foot.dual { grid-template-columns: 1fr; } }
+
   .section-block { margin-top: var(--space-7); }
   .section-block-head {
     display: flex;
@@ -285,7 +315,7 @@
 
       <div class="grid-cards">
 
-        <a href="criar-protocolo.html" class="proto-card">
+        <div class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">SMDP-70</span>
@@ -299,15 +329,13 @@
             Criação de protocolos a partir de contratos. Cooperado picker com cadastro
             inline, máscaras pt-BR, validações de NF, sticky columns.
           </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">criar-protocolo</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
+          <div class="proto-foot dual">
+            <a href="criar-protocolo.html" class="proto-link">Atual</a>
+            <a href="criar-protocolo-rev1.html" class="proto-link rev">Com ajustes <span class="n">34</span></a>
           </div>
-        </a>
+        </div>
 
-        <a href="agendar-contrato-normal.html" class="proto-card">
+        <div class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">SMDP-131</span>
@@ -321,15 +349,13 @@
             Cards multi-item, drawer de seleção com Ref. Cliente/CNPJ/IE/Preço/Status,
             validações de volume agregado por contrato.
           </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">agendar-contrato-normal</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
+          <div class="proto-foot dual">
+            <a href="agendar-contrato-normal-v5.html" class="proto-link">Atual · V5</a>
+            <a href="agendar-contrato-normal-v5-rev1.html" class="proto-link rev">Com ajustes <span class="n">21</span></a>
           </div>
-        </a>
+        </div>
 
-        <a href="agendar-protocolo.html" class="proto-card">
+        <div class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">SMDP-168</span>
@@ -343,15 +369,13 @@
             Agendamento de protocolos já criados. Cards agrupados por contrato, tabela
             compacta com Volume/Semana/Roteiro, confirmação multi-step.
           </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">agendar-protocolo</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
+          <div class="proto-foot dual">
+            <a href="agendar-protocolo.html" class="proto-link">Atual</a>
+            <a href="agendar-protocolo-rev1.html" class="proto-link rev">Com ajustes <span class="n">17</span></a>
           </div>
-        </a>
+        </div>
 
-        <a href="relatorio-status-agendamento.html" class="proto-card">
+        <div class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">SMDP-137</span>
@@ -363,15 +387,13 @@
             Listagem read-only de todas as solicitações. Filtros, autocomplete, exportação
             XLS, breakdown semanal expansível.
           </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">relatorio-status-agendamento</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
+          <div class="proto-foot dual">
+            <a href="relatorio-status-agendamento.html" class="proto-link">Atual</a>
+            <a href="relatorio-status-agendamento-rev1.html" class="proto-link rev">Com ajustes <span class="n">11</span></a>
           </div>
-        </a>
+        </div>
 
-        <a href="relatorio-protocolos.html" class="proto-card">
+        <div class="proto-card">
           <div class="proto-card-head">
             <div class="proto-id">
               <span class="proto-id-chip">final</span>
@@ -385,13 +407,11 @@
             modal pelo lápis para ajustar com <strong>resumo das demais informações</strong> em
             modo view.
           </div>
-          <div class="proto-foot">
-            <span class="proto-foot-meta">relatorio-protocolos</span>
-            <span class="proto-foot-arrow">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
+          <div class="proto-foot dual">
+            <a href="relatorio-protocolos.html" class="proto-link">Atual</a>
+            <a href="relatorio-protocolos-rev1.html" class="proto-link rev">Com ajustes <span class="n">15</span></a>
           </div>
-        </a>
+        </div>
 
       </div>
     </section>
