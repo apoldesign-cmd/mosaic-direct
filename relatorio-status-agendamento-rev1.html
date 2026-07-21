@@ -2272,6 +2272,10 @@
   .status-pill--em_carregamento { background: var(--status-carregando-bg) !important; color: var(--status-carregando-fg) !important; }
   .status-pill--faturado        { background: var(--status-faturado-bg) !important;   color: var(--status-faturado-fg) !important;   }
   .status-pill--rejeitado       { background: var(--status-cancelado-bg) !important;  color: var(--status-cancelado-fg) !important;  }
+  /* NV-01 — mesmo tratamento visual de estado encerrado ja usado por Rejeitado */
+  .status-pill--cancelado       { background: var(--status-cancelado-bg) !important;  color: var(--status-cancelado-fg) !important;  }
+  .action-menu-item[disabled] { opacity: .45; cursor: not-allowed; }
+  .action-menu-item[disabled]:hover { background: transparent; }
   .status-pill--cancelado       { background: #f4f4f2 !important; color: var(--text-3) !important; border: 1px solid var(--border) !important; }
 
   /* Daily breakdown diff coloring */
@@ -3045,6 +3049,7 @@
           <option value="em_carregamento">Em Carregamento</option>
           <option value="faturado">Faturado</option>
           <option value="cancelado">Cancelado</option>
+          <option value="cancelado">Cancelado</option>
         </select>
       </div>
       <div class="filter-block filter-block--range">
@@ -3129,12 +3134,16 @@ function mkRow(base, planned, realized) {
   return Object.assign({}, base, { planned, realized, diff });
 }
 
+/* NV-01 — so da para cancelar enquanto a solicitacao nao entrou em carregamento */
+const CANCELAVEIS = ["em_analise", "aprovado"];
+const SVG_CANCEL_SMALL = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>`;
 const STATUS_LABELS = {
   em_analise:      "Em Análise",
   rejeitado:       "Rejeitado",
   aprovado:        "Aprovado",
   em_carregamento: "Em Carregamento",
   faturado:        "Faturado",
+  cancelado:       "Cancelado",
   cancelado:       "Cancelado",
 };
 
@@ -3457,19 +3466,31 @@ function openActionMenu(cluster, key) {
     pop.style.top  = `${rect.bottom + 4}px`;
     pop.style.left = `${rect.left}px`;
   }
+  /* NV-01 — solicitacao em andamento tambem pode ser cancelada, junto do Editar */
+  const rMenu = findRequest(key);
+  const podeCancelar = rMenu && CANCELAVEIS.includes(rMenu.status);
+  const motivo = rMenu && !podeCancelar
+    ? `Não é possível cancelar: a solicitação está como "${STATUS_LABELS[rMenu.status] || rMenu.status}".`
+    : "";
   pop.innerHTML = `
     <button class="action-menu-item" data-menu-act="edit" data-key="${key}" type="button">
       ${SVG_EDIT_SMALL}
       <span>Editar Solicitação</span>
     </button>
+    <button class="action-menu-item is-danger" data-menu-act="cancel" data-key="${key}" type="button"
+            ${podeCancelar ? "" : `disabled title="${motivo}"`}>
+      ${SVG_CANCEL_SMALL}
+      <span>Cancelar Solicitação</span>
+    </button>
   `;
   pop.addEventListener("click", (e) => {
     const item = e.target.closest(".action-menu-item");
-    if (!item) return;
+    if (!item || item.disabled) return;
     const itemKey = item.dataset.key;
     const itemAct = item.dataset.menuAct;
     closeAllActionMenus();
     if (itemAct === "edit") openRsaEditModal(itemKey);
+    if (itemAct === "cancel") openCancelSolModal(itemKey);
   });
   document.body.appendChild(pop);
   cluster.classList.add("is-open");
@@ -3770,6 +3791,36 @@ function saveEdit(key) {
   render();
   showInlineToast(`Linha ${r.sol} atualizada`);
 }
+
+/* NV-01 — cancelamento da solicitacao */
+let cancelingKey = null;
+function openCancelSolModal(key) {
+  const r = findRequest(key);
+  if (!r || !CANCELAVEIS.includes(r.status)) return;
+  cancelingKey = key;
+  document.getElementById("cancelSolNum").textContent   = r.sol;
+  document.getElementById("cancelSolProto").textContent = r.protocolo;
+  document.getElementById("cancelSolModal").classList.add("is-open");
+}
+function closeCancelSolModal() {
+  cancelingKey = null;
+  document.getElementById("cancelSolModal").classList.remove("is-open");
+}
+/* delegacao: o markup do modal vem depois deste script no documento */
+document.addEventListener("click", (e) => {
+  if (e.target.closest("#cancelSolNo")) { closeCancelSolModal(); return; }
+  if (!e.target.closest("#cancelSolYes")) return;
+  const r = findRequest(cancelingKey);
+  if (r) {
+    r.status = "cancelado";
+    showInlineToast(`Solicitação ${r.sol} cancelada.`);
+  }
+  closeCancelSolModal();
+  render();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && document.getElementById("cancelSolModal").classList.contains("is-open")) closeCancelSolModal();
+});
 
 function showInlineToast(msg) {
   const t = document.getElementById("inlineToast");
@@ -4139,6 +4190,30 @@ else bindConfirmModal();
 </script>
 
 <!-- CONFIRM DISCARD MODAL -->
+<!-- NV-01 — MODAL CANCELAR SOLICITACAO (mesma estrutura do confirm de descarte) -->
+<div class="confirm-modal-backdrop" id="cancelSolModal" role="dialog" aria-modal="true">
+  <div class="confirm-modal">
+    <div class="confirm-modal-head">
+      <span class="confirm-modal-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <h3>Cancelar solicitação?</h3>
+    </div>
+    <p class="confirm-modal-text">
+      Você está prestes a cancelar a solicitação
+      <strong id="cancelSolNum">—</strong> do protocolo <strong id="cancelSolProto">—</strong>.
+      Tem certeza?
+    </p>
+    <div class="confirm-modal-actions">
+      <button class="confirm-btn confirm-btn-secondary" id="cancelSolNo" type="button">Voltar</button>
+      <button class="confirm-btn confirm-btn-danger" id="cancelSolYes" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>
+        Cancelar solicitação
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="confirm-modal-backdrop" id="confirmDiscardModal" role="dialog" aria-modal="true">
   <div class="confirm-modal">
     <div class="confirm-modal-head">
@@ -4232,6 +4307,8 @@ else bindConfirmModal();
 
 
 
+
+
 <style id="mdrev-style">
 .mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99997;display:inline-flex;align-items:center;gap:9px;
  background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;font-family:inherit;
@@ -4283,6 +4360,8 @@ else bindConfirmModal();
 .mdrev-w.po{color:#a3200f;border-color:#f0c7c1;background:#fdf1ef}
 .mdrev-w.al{color:#00583d;border-color:#b6e0cd;background:#eef8f3}
 .mdrev-w.pr{color:#8a6100;border-color:#f0dca6;background:#fdf7e6}
+.mdrev-w.nv{color:#00427f;border-color:#b8d4ef;background:#eef4fb}
+.mdrev-q.nv{border-left-color:#0563c1}
 .mdrev-q.pr{border-left-color:#f0c020}
 .mdrev-q{margin:8px 0 0;padding:7px 10px;font-size:11.5px;line-height:1.5;color:#3b4642;background:#fafaf8;border-left:3px solid #cdcdcd}
 .mdrev-q.po{border-left-color:#c82613}
@@ -4307,7 +4386,7 @@ else bindConfirmModal();
 .mdrev-pin:hover .mdrev-tip,.mdrev-pin:focus .mdrev-tip{opacity:1}
 @media(max-width:600px){.mdrev-pintog{right:14px;bottom:44px}.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
 </style>
-<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">11</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Status de Agendamento</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>11</b><span>ajustes aplicados</span></div><div><b>2</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">6</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G5-02</span><span class="mdrev-tt">Roteiro de entrega</span><span class="mdrev-c">6</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Adicionado campo `roteiro` no mock de cada solicitação (7 linhas), com textos plausíveis e coerentes com cidade/planta/recebedor de cada linha; MD-00000127 fica com &quot;—&quot; para exercitar o estado vazio. <i>— const REQUESTS[] / mkRow({...}) — chave `roteiro`, logo após `cidade`/`uf`</i></li><li>Nova coluna no cabeçalho da tabela, como última coluna do bloco principal (depois de UF, antes das colunas de totais). <i>— buildThead() → array `main`</i></li><li>Nova célula da linha, inserida nos DOIS ramos do render() (modo normal e modo edição), para as contagens de &lt;td&gt; baterem com o &lt;th&gt;. Texto completo no atributo title porque a célula trunca. <i>— render() → tds (ramo `editing` e ramo `else`), logo após a célula de UF</i></li><li>COLSPAN da linha de detalhe (breakdown semanal) atualizado de 24 para 25 e comentário de contagem corrigido, para a tabela larga com colunas congeladas não desalinhar. <i>— render() → const COLSPAN (usado em &lt;td colspan=&quot;${COLSPAN}&quot;&gt;)</i></li><li>Estilo da nova célula seguindo o padrão das demais células da report-table (sem cor nova, sem tipografia nova): trunca com ellipsis em no máx. 280px, cor --text-2. <i>— CSS — `.report-table .cell-roteiro`, junto de .cell-sol/.cell-mono/.cell-stack</i></li><li>Coluna Roteiro também incluída no CSV exportado, na mesma posição da tela (após UF). <i>— handler de #btnExport → array `header` e array `cells`</i></li></ul><div class="mdrev-who"><span class="lb">Levantado por</span><span class="mdrev-w in">Inara</span><span class="pt">e-mail 10.1</span></div></details><div class="mdrev-sec">Transversal<span class="sn">5</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Formatadores de quantidade passam a emitir sempre 3 casas decimais (pt-BR). Criado helper fmtQty() reutilizado por fmt(), fmtDiff(), toast e export. Removidos os atalhos que devolviam &quot;0&quot; cru para zero. <i>— const fmt / fmtDiff (bloco &quot;---- Formatters ----&quot;)</i></li><li>Como fmt()/fmtDiff() são usados pelas colunas Total Plan. / Total Real. / Δ Total e por todo o breakdown semanal (Planejado, Realizado, Diferença — Total + 7 dias), todos esses números passaram a 3 casas sem alteração de markup. <i>— render() → td.vol-cell.col-total; buildWeeklyBreakdown() → mkRow()/diffRow()</i></li><li>Toast de confirmação da edição inline de quantidade passou a usar fmtQty em vez de toLocaleString sem opções. <i>— commitCellEdit() → showInlineToast(...)</i></li><li>Inputs numéricos de quantidade passaram a aceitar passo de 3 casas (senão o browser barra valores como 100,125). <i>— #rsaEditQty (modal Editar Solicitação) e input.qty-inline-input (startCellEdit)</i></li><li>Quantidades do CSV exportado também saem com 3 casas, mantendo consistência com a tela. <i>— handler de #btnExport → cells (Qtd Solicitada/Confirmada/Faturada, totais e os 7 dias × Plan/Real/Δ)</i></li></ul><div class="mdrev-who"><span class="lb">Levantado por</span><span class="mdrev-w in">Inara</span><span class="pt">e-mail 1.1</span></div><blockquote class="mdrev-q po">Você quer [dizer] em relação a quantidade do protocolo, agendamento de contrato normal e de protocolo? As quantidades que serão informadas pelo usuário na tela? OU o Saldo do contrato?<cite>Marco · PO</cite></blockquote><blockquote class="mdrev-q al">Sempre deixar 3 casas decimais em todos os campos de quantidades, para termos todos os ambientes no mesmo formato.<cite>Alessandra</cite></blockquote></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-status-agendamento.html" target="_blank">Tela original &rarr;</a></div></aside><button class="mdrev-pintog" id="mdrevPinTog" aria-pressed="true">Pins na tela</button><div class="mdrev-pins" id="mdrevPins"></div>
+<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">15</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Status de Agendamento</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>15</b><span>ajustes aplicados</span></div><div><b>3</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">10</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G5-02</span><span class="mdrev-tt">Roteiro de entrega</span><span class="mdrev-c">6</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Adicionado campo `roteiro` no mock de cada solicitação (7 linhas), com textos plausíveis e coerentes com cidade/planta/recebedor de cada linha; MD-00000127 fica com &quot;—&quot; para exercitar o estado vazio. <i>— const REQUESTS[] / mkRow({...}) — chave `roteiro`, logo após `cidade`/`uf`</i></li><li>Nova coluna no cabeçalho da tabela, como última coluna do bloco principal (depois de UF, antes das colunas de totais). <i>— buildThead() → array `main`</i></li><li>Nova célula da linha, inserida nos DOIS ramos do render() (modo normal e modo edição), para as contagens de &lt;td&gt; baterem com o &lt;th&gt;. Texto completo no atributo title porque a célula trunca. <i>— render() → tds (ramo `editing` e ramo `else`), logo após a célula de UF</i></li><li>COLSPAN da linha de detalhe (breakdown semanal) atualizado de 24 para 25 e comentário de contagem corrigido, para a tabela larga com colunas congeladas não desalinhar. <i>— render() → const COLSPAN (usado em &lt;td colspan=&quot;${COLSPAN}&quot;&gt;)</i></li><li>Estilo da nova célula seguindo o padrão das demais células da report-table (sem cor nova, sem tipografia nova): trunca com ellipsis em no máx. 280px, cor --text-2. <i>— CSS — `.report-table .cell-roteiro`, junto de .cell-sol/.cell-mono/.cell-stack</i></li><li>Coluna Roteiro também incluída no CSV exportado, na mesma posição da tela (após UF). <i>— handler de #btnExport → array `header` e array `cells`</i></li></ul><div class="mdrev-who"><span class="lb">Levantado por</span><span class="mdrev-w in">Inara</span><span class="pt">e-mail 10.1</span></div></details><details class="mdrev-acc"><summary><span class="mdrev-id">NV-01</span><span class="mdrev-tt">Cancelar solicitação em andamento</span><span class="mdrev-c">4</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>O menu da linha (chevron) passou a ter “Cancelar Solicitação” logo abaixo de “Editar Solicitação”, em vermelho. <i>— buildActionMenu() — pop.innerHTML</i></li><li>Só é possível cancelar enquanto a solicitação está Em Análise ou Aprovada. Em Carregamento, Faturado e Rejeitado aparecem com a opção desabilitada e uma dica explicando o motivo. <i>— const CANCELAVEIS; atributo disabled/title do item de menu</i></li><li>Confirmação antes de cancelar, reaproveitando o modal de confirmação já existente na tela, e aviso (toast) ao concluir. <i>— #cancelSolModal, openCancelSolModal(), showInlineToast()</i></li><li>Novo status “Cancelado”, com o mesmo tratamento visual de Rejeitado, e opção correspondente no filtro avançado. <i>— STATUS_LABELS, .status-pill--cancelado, &lt;select&gt; de status</i></li></ul><div class="mdrev-who novo"><span class="lb">Origem</span><span class="mdrev-w nv">Pedido novo</span><span class="pt">Victor · 21/07</span></div><blockquote class="mdrev-q nv">Ajuste pedido depois da rodada de e-mail, ainda não validado com o PO.<cite>a validar</cite></blockquote></details><div class="mdrev-sec">Transversal<span class="sn">5</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Formatadores de quantidade passam a emitir sempre 3 casas decimais (pt-BR). Criado helper fmtQty() reutilizado por fmt(), fmtDiff(), toast e export. Removidos os atalhos que devolviam &quot;0&quot; cru para zero. <i>— const fmt / fmtDiff (bloco &quot;---- Formatters ----&quot;)</i></li><li>Como fmt()/fmtDiff() são usados pelas colunas Total Plan. / Total Real. / Δ Total e por todo o breakdown semanal (Planejado, Realizado, Diferença — Total + 7 dias), todos esses números passaram a 3 casas sem alteração de markup. <i>— render() → td.vol-cell.col-total; buildWeeklyBreakdown() → mkRow()/diffRow()</i></li><li>Toast de confirmação da edição inline de quantidade passou a usar fmtQty em vez de toLocaleString sem opções. <i>— commitCellEdit() → showInlineToast(...)</i></li><li>Inputs numéricos de quantidade passaram a aceitar passo de 3 casas (senão o browser barra valores como 100,125). <i>— #rsaEditQty (modal Editar Solicitação) e input.qty-inline-input (startCellEdit)</i></li><li>Quantidades do CSV exportado também saem com 3 casas, mantendo consistência com a tela. <i>— handler de #btnExport → cells (Qtd Solicitada/Confirmada/Faturada, totais e os 7 dias × Plan/Real/Δ)</i></li></ul><div class="mdrev-who"><span class="lb">Levantado por</span><span class="mdrev-w in">Inara</span><span class="pt">e-mail 1.1</span></div><blockquote class="mdrev-q po">Você quer [dizer] em relação a quantidade do protocolo, agendamento de contrato normal e de protocolo? As quantidades que serão informadas pelo usuário na tela? OU o Saldo do contrato?<cite>Marco · PO</cite></blockquote><blockquote class="mdrev-q al">Sempre deixar 3 casas decimais em todos os campos de quantidades, para termos todos os ambientes no mesmo formato.<cite>Alessandra</cite></blockquote></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-status-agendamento.html" target="_blank">Tela original &rarr;</a></div></aside><button class="mdrev-pintog" id="mdrevPinTog" aria-pressed="true">Pins na tela</button><div class="mdrev-pins" id="mdrevPins"></div>
 <script>
 (function(){
  var f=document.getElementById('mdrevFab'),n=document.getElementById('mdrevNav'),
@@ -4319,7 +4398,7 @@ else bindConfirmModal();
  document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&n.classList.contains('on'))close();});
 
  /* ---- pins na tela ---- */
- var DEFS=[{"sel": "th", "has": "Roteiro de Entrega", "item": "G5-02", "tip": "Nova coluna com o Roteiro de Entrega, também incluída no CSV exportado."}, {"sel": "th", "has": "Total Plan.", "item": "G6-01", "tip": "Totais com 3 casas decimais. As colunas de totais seguem como estão — por decisão, o detalhamento fica no Excel."}], box=document.getElementById('mdrevPins'), tog=document.getElementById('mdrevPinTog');
+ var DEFS=[{"sel": "th", "has": "Roteiro de Entrega", "item": "G5-02", "tip": "Nova coluna com o Roteiro de Entrega, também incluída no CSV exportado."}, {"sel": "[data-act='menu']", "item": "NV-01", "tip": "NOVO: solicitação em andamento (Em Análise ou Aprovada) agora pode ser cancelada por aqui, junto de Editar."}, {"sel": "th", "has": "Total Plan.", "item": "G6-01", "tip": "Totais com 3 casas decimais. As colunas de totais seguem como estão — por decisão, o detalhamento fica no Excel."}], box=document.getElementById('mdrevPins'), tog=document.getElementById('mdrevPinTog');
  if(!box||!DEFS.length)return;
  function find(d){
    var els=document.querySelectorAll(d.sel);
