@@ -2974,6 +2974,9 @@ window.addEventListener("scroll", () => {
 
 
 
+
+
+
 <style id="mdrev-style">
 .mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99997;display:inline-flex;align-items:center;gap:9px;
  background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;font-family:inherit;
@@ -3020,14 +3023,16 @@ window.addEventListener("scroll", () => {
 .mdrev-pintog{position:fixed;right:24px;bottom:60px;z-index:99997;background:#fff;color:#00583d;border:1px solid #cdcdcd;
  border-radius:999px;padding:8px 14px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12)}
 .mdrev-pintog[aria-pressed="false"]{color:#6b7570}
-.mdrev-pins{position:fixed;inset:0;pointer-events:none;z-index:99996}
+/* acima do FAB e do toggle, senao o tooltip passa por baixo deles */
+.mdrev-pins{position:fixed;inset:0;pointer-events:none;z-index:99998}
 .mdrev-pins.off{display:none}
-.mdrev-pin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#00583d;color:#fff;
+/* sem transform: transform no pin viraria containing block e quebraria o position:fixed do tooltip */
+.mdrev-pin{position:absolute;box-sizing:border-box;margin:-16px 0 0 -16px;width:32px;height:32px;border-radius:50%;background:#00583d;color:#fff;
  border:3px solid #fff;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;pointer-events:auto;
  box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:0}
 .mdrev-pin:hover,.mdrev-pin:focus{background:#006a4d;outline:none}
-.mdrev-tip{position:absolute;left:50%;top:calc(100% + 9px);transform:translateX(-50%);width:250px;background:#15201b;color:#fff;
- padding:9px 11px;font-size:11.5px;font-weight:500;line-height:1.45;text-align:left;opacity:0;pointer-events:none;transition:opacity .15s;z-index:2}
+.mdrev-tip{position:fixed;left:0;top:0;width:250px;max-width:calc(100vw - 16px);background:#15201b;color:#fff;
+ padding:9px 11px;font-size:11.5px;font-weight:500;line-height:1.45;text-align:left;opacity:0;pointer-events:none;transition:opacity .15s;z-index:99998}
 .mdrev-tip b{display:block;color:#7ad9b5;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
 .mdrev-pin:hover .mdrev-tip,.mdrev-pin:focus .mdrev-tip{opacity:1}
 @media(max-width:600px){.mdrev-pintog{right:14px;bottom:44px}.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
@@ -3057,11 +3062,25 @@ window.addEventListener("scroll", () => {
    }
    return null;
  }
+ function placeTip(el){
+   var tip=el.querySelector('.mdrev-tip'); if(!tip)return;
+   var r=el.getBoundingClientRect(), w=tip.offsetWidth, h=tip.offsetHeight, M=8;
+   var L=r.left+r.width/2-w/2;
+   L=Math.max(M,Math.min(L,innerWidth-w-M));
+   var T=r.bottom+9;
+   if(T+h>innerHeight-M) T=r.top-h-9;     /* sem espaco abaixo -> abre pra cima */
+   T=Math.max(M,Math.min(T,innerHeight-h-M));
+   tip.style.left=Math.round(L)+'px';
+   tip.style.top=Math.round(T)+'px';
+ }
  var pins=DEFS.map(function(d,i){
    var b=document.createElement('button');
    b.className='mdrev-pin'; b.type='button'; b.style.display='none';
    b.setAttribute('aria-label','Ajuste '+(i+1)+': '+d.tip);
    b.innerHTML=(i+1)+'<span class="mdrev-tip"><b>'+d.item+'</b>'+d.tip+'</span>';
+   /* tooltip posicionado no viewport e preso dentro dele (nunca corta) */
+   b.addEventListener('mouseenter',function(){placeTip(b)});
+   b.addEventListener('focus',function(){placeTip(b)});
    b.addEventListener('click',function(){
      open();
      var all=n.querySelectorAll('.mdrev-acc');
@@ -3086,6 +3105,7 @@ window.addEventListener("scroll", () => {
      p.el.style.left=Math.round(Math.min(Math.max(r.left+10,16),innerWidth-16))+'px';
      p.el.style.top=Math.round(Math.min(Math.max(r.top+8,16),innerHeight-16))+'px';
    });
+   var hov=box.querySelector('.mdrev-pin:hover'); if(hov)placeTip(hov);
    if(tog&&!box.classList.contains('off')){var lb=vis?('Pins na tela ('+vis+'/'+pins.length+')'):('Pins: role a tabela →');if(tog.textContent!==lb)tog.textContent=lb;}
  }
  tog&&tog.addEventListener('click',function(){
