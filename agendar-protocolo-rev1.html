@@ -2968,5 +2968,48 @@ window.addEventListener("scroll", () => {
 })();
 </script>
 <script src="review-overlay.js" defer></script>
+
+<style id="mdrev-style">
+.mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99998;display:inline-flex;align-items:center;gap:9px;
+ background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;
+ font-family:inherit;font-size:13px;font-weight:800;box-shadow:0 6px 22px rgba(0,62,42,.34)}
+.mdrev-fab:hover{background:#006a4d}
+.mdrev-fab .mdrev-n{background:rgba(255,255,255,.22);border-radius:999px;padding:2px 8px;font-size:12px}
+.mdrev-ov{position:fixed;inset:0;z-index:99999;background:rgba(0,20,12,.55);display:flex;align-items:center;justify-content:center;padding:24px}
+.mdrev-ov[hidden]{display:none}
+.mdrev-modal{background:#fff;width:100%;max-width:720px;max-height:86vh;display:flex;flex-direction:column;
+ box-shadow:0 24px 70px rgba(0,0,0,.35);font-family:inherit}
+.mdrev-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 26px 18px;border-bottom:1px solid #e1e1e1}
+.mdrev-kick{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#006a4d}
+.mdrev-hd h2{margin:6px 0 0;font-size:21px;font-weight:800;color:#003e2a;letter-spacing:-.01em}
+.mdrev-hd p{margin:6px 0 0;font-size:13px;color:#6b7570}
+.mdrev-x{background:none;border:none;font-size:20px;color:#6b7570;cursor:pointer;line-height:1;padding:4px}
+.mdrev-body{overflow:auto;padding:8px 26px 4px}
+.mdrev-grp{border-bottom:1px solid #ececec;padding:15px 0}
+.mdrev-grp:last-child{border-bottom:none}
+.mdrev-gh{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.mdrev-id{font-size:10.5px;font-weight:800;color:#006a4d;background:#eef3f1;padding:3px 8px;letter-spacing:.02em}
+.mdrev-gt{font-size:14.5px;font-weight:800;color:#003e2a}
+.mdrev-grp ul{margin:0;padding-left:17px}
+.mdrev-grp li{font-size:12.5px;color:#3b4642;margin-bottom:5px;line-height:1.5}
+.mdrev-grp li span{color:#6b7570}
+.mdrev-ft{display:flex;gap:10px;flex-wrap:wrap;padding:16px 26px 20px;border-top:1px solid #e1e1e1;background:#fafaf8}
+.mdrev-ft a{font-size:12.5px;font-weight:800;text-decoration:none;color:#006a4d;border:1px solid #cdcdcd;padding:9px 15px}
+.mdrev-ft a.p{background:#00583d;color:#fff;border-color:#00583d}
+@media(max-width:600px){.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}}
+</style>
+<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">✦ Ajustes aplicados <span class="mdrev-n">17</span></button><div class="mdrev-ov" id="mdrevOv" hidden><div class="mdrev-modal" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Agendar Protocolo</h2><p>17 ajustes aplicados nesta cópia. A tela original foi preservada.</p></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">✕</button></div><div class="mdrev-body"><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G3-01</span><span class="mdrev-gt">1ª linha do contrato mantida</span></div><ul><li>Mantida integralmente a primeira linha de meta com informações do CONTRATO no item do drawer (modal Selecionar protocolo). Nenhuma alteração de conteúdo ou ordem. <span>— renderDrawerList() → div.drawer-item-meta, spans &#x27;Ref. Cliente&#x27; / &#x27;Embalagem&#x27; / &#x27;Planta&#x27; / &#x27;Enviar para&#x27;</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G3-02</span><span class="mdrev-gt">Remoção da 2ª linha do contrato</span></div><ul><li>Removidos do drawer os 4 campos que puxavam dado do CONTRATO e não do protocolo. <span>— renderDrawerList() → div.drawer-item-meta (segunda parte da lista de spans)</span></li><li>Consistência na tela: removida a Vigência do contrato do header do card e o CNPJ Filial da coluna Produto da tabela. <span>— renderCardsView() → header.proto-head (bloco &#x27;Vigência&#x27;); renderTableView() → 3ª coluna, div.stack-tertiary</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G3-03</span><span class="mdrev-gt">Recebedor = Cooperado</span></div><ul><li>Recebedor mantido em todas as views, agora rotulado explicitamente como Cooperado para deixar claro que Recebedor = Cooperado. <span>— drawer (span &#x27;Recebedor (Cooperado)&#x27;), card (proto-meta-label &#x27;Recebedor (Cooperado)&#x27;), tabela (&lt;th&gt;Recebedor (Cooperado) / Destino&lt;/th&gt;)</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G3-04</span><span class="mdrev-gt">Dados do cooperado/protocolo</span></div><ul><li>Adicionados 6 campos novos ao dataset PROTOCOLS nos 6 registros, com mocks consistentes: nomeCooperado, cnpjCooperado, ieCooperado, cidadeCooperado (espelhando o recebedor existente, pois Recebedor = Cooperado), valorUnitProtocolo e numeroNf (valores novos, ligeiramente abaixo do preço de contrato para evidenciar que o valor é DO PROTOCOLO). <span>— const PROTOCOLS (bloco comentado /* dados do COOPERADO / PROTOCOLO (não do contrato) */ em cada objeto)</span></li><li>No lugar da linha removida do contrato, renderizados no drawer os 6 campos do COOPERADO/PROTOCOLO, seguindo o mesmo padrão visual dos vizinhos (span com &lt;strong&gt; label dentro de .drawer-item-meta). <span>— renderDrawerList() → div.drawer-item-meta</span></li><li>Cards e tabela passam a exibir os dados do cooperado/protocolo em vez dos do contrato. <span>— renderCardsView() → div.proto-item-line--bottom; renderTableView() → coluna Recebedor (cell-stack) e coluna Protocolo/Contrato</span></li><li>Busca do drawer atualizada para procurar pelos campos do protocolo/cooperado (e não mais pelos do contrato removidos). <span>— renderDrawerList() → haystack; handler de elDrawerSelectAll → haystack</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">TR-01</span><span class="mdrev-gt">Contrato SAP (transversal)</span></div><ul><li>Adicionado o campo contratoSap (10 dígitos iniciando em 45) aos 6 registros do dataset, convivendo com o número Q- (que segue exibido normalmente). <span>— const PROTOCOLS → propriedade contratoSap, logo após &#x27;contrato&#x27;/&#x27;item&#x27;</span></li><li>Contrato SAP exibido como informação secundária, rotulado &#x27;Contrato SAP&#x27;, nas três views. <span>— drawer: novo span.drawer-item-sap na .drawer-item-line1 (após &#x27;Contrato Q-… · Item …&#x27;); card: .proto-head-inline com .proto-meta-label &#x27;Contrato SAP&#x27;; tabela: div.stack-tertiary da 1ª coluna</span></li><li>Criada classe CSS para o Contrato SAP no drawer seguindo o design system (label uppercase 9px, letter-spacing 0.06em, weight 800, var(--text-3)); sem border-radius, sem cor nova. <span>— &lt;style&gt; → .drawer-item-sap e .drawer-item-sap-label (inseridas antes de .drawer-item-product)</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G6-01</span><span class="mdrev-gt">Quantidades com 3 casas decimais</span></div><ul><li>Saldos do dataset convertidos para 3 casas decimais. <span>— const PROTOCOLS → propriedade saldo (6 registros)</span></li><li>Máscara do campo Volume passou a aceitar 3 casas decimais em vez de 2. <span>— maskVolumeDecimal() → truncamento da parte decimal</span></li><li>Criado helper fmtQty3() para padronizar toda quantidade em 3 casas decimais no formato pt-BR. <span>— bloco de utilitários, logo antes de maskVolumeDecimal()</span></li><li>Totais do rodapé fixo e do modal de confirmação passam a usar fmtQty3. <span>— updateSummary() → #statVolume; handler do #agendarBtn → #submitSummary linha &#x27;Volume total&#x27;</span></li><li>Placeholders do input Volume e valor inicial do stat do rodapé alinhados a 3 casas. <span>— renderCardsView() e renderTableView() → input[data-field=volume]; HTML estático → span#statVolume</span></li><li>Adicionado normalizador no blur do Volume: ao sair do campo, o valor digitado é reformatado com 3 casas decimais e gravado no state. <span>— novo listener elBody.addEventListener(&#x27;focusout&#x27;, …) inserido imediatamente antes de afterFieldChange()</span></li></ul></div></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo →</a><a href="agendar-protocolo.html" target="_blank">Abrir a tela original →</a></div></div></div>
+<script>
+(function(){
+ var f=document.getElementById('mdrevFab'),o=document.getElementById('mdrevOv'),x=document.getElementById('mdrevX');
+ if(!f||!o)return;
+ function open(){o.hidden=false;document.body.style.overflow='hidden';x&&x.focus();}
+ function close(){o.hidden=true;document.body.style.overflow='';f.focus();}
+ f.addEventListener('click',open); x&&x.addEventListener('click',close);
+ o.addEventListener('click',function(ev){if(ev.target===o)close();});
+ document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&!o.hidden)close();});
+})();
+</script>
+
 </body>
 </html>

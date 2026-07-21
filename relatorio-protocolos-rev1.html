@@ -4166,5 +4166,48 @@ render();
 })();
 </script>
 <script src="review-overlay.js" defer></script>
+
+<style id="mdrev-style">
+.mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99998;display:inline-flex;align-items:center;gap:9px;
+ background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;
+ font-family:inherit;font-size:13px;font-weight:800;box-shadow:0 6px 22px rgba(0,62,42,.34)}
+.mdrev-fab:hover{background:#006a4d}
+.mdrev-fab .mdrev-n{background:rgba(255,255,255,.22);border-radius:999px;padding:2px 8px;font-size:12px}
+.mdrev-ov{position:fixed;inset:0;z-index:99999;background:rgba(0,20,12,.55);display:flex;align-items:center;justify-content:center;padding:24px}
+.mdrev-ov[hidden]{display:none}
+.mdrev-modal{background:#fff;width:100%;max-width:720px;max-height:86vh;display:flex;flex-direction:column;
+ box-shadow:0 24px 70px rgba(0,0,0,.35);font-family:inherit}
+.mdrev-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 26px 18px;border-bottom:1px solid #e1e1e1}
+.mdrev-kick{font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#006a4d}
+.mdrev-hd h2{margin:6px 0 0;font-size:21px;font-weight:800;color:#003e2a;letter-spacing:-.01em}
+.mdrev-hd p{margin:6px 0 0;font-size:13px;color:#6b7570}
+.mdrev-x{background:none;border:none;font-size:20px;color:#6b7570;cursor:pointer;line-height:1;padding:4px}
+.mdrev-body{overflow:auto;padding:8px 26px 4px}
+.mdrev-grp{border-bottom:1px solid #ececec;padding:15px 0}
+.mdrev-grp:last-child{border-bottom:none}
+.mdrev-gh{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.mdrev-id{font-size:10.5px;font-weight:800;color:#006a4d;background:#eef3f1;padding:3px 8px;letter-spacing:.02em}
+.mdrev-gt{font-size:14.5px;font-weight:800;color:#003e2a}
+.mdrev-grp ul{margin:0;padding-left:17px}
+.mdrev-grp li{font-size:12.5px;color:#3b4642;margin-bottom:5px;line-height:1.5}
+.mdrev-grp li span{color:#6b7570}
+.mdrev-ft{display:flex;gap:10px;flex-wrap:wrap;padding:16px 26px 20px;border-top:1px solid #e1e1e1;background:#fafaf8}
+.mdrev-ft a{font-size:12.5px;font-weight:800;text-decoration:none;color:#006a4d;border:1px solid #cdcdcd;padding:9px 15px}
+.mdrev-ft a.p{background:#00583d;color:#fff;border-color:#00583d}
+@media(max-width:600px){.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}}
+</style>
+<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">✦ Ajustes aplicados <span class="mdrev-n">15</span></button><div class="mdrev-ov" id="mdrevOv" hidden><div class="mdrev-modal" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Protocolos</h2><p>15 ajustes aplicados nesta cópia. A tela original foi preservada.</p></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">✕</button></div><div class="mdrev-body"><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G5-01</span><span class="mdrev-gt">Descrição da filial</span></div><ul><li>Acrescentei o código da filial ao lado da descrição, mantendo o que já existia. Novo campo filialCod no mock e helper filialLabel(p) que monta &quot;código · descrição&quot;. <span>— Coluna &quot;Filial do Cliente&quot; (th data-sort=&quot;filial&quot;) / células &lt;td&gt;${filialLabel(p)}&lt;/td&gt; em renderRowNormal e renderRowEditing; helper filialLabel() logo antes de numCell()</span></li><li>Filtro avançado de filial passou a casar com código + descrição e as opções do autocomplete foram atualizadas para o mesmo formato. <span>— #filterFilial (div.filter-ac data-options) e a linha de filtro dentro de render()</span></li><li>Modal &quot;Editar protocolo&quot; (bloco Demais informações) passou a mostrar código + descrição da filial. <span>— setText(&quot;efViewFilial&quot;, ...) — campo com label &quot;Filial do Cliente&quot;</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">TR-01</span><span class="mdrev-gt">Contrato SAP (transversal)</span></div><ul><li>Criei a coluna &quot;Contrato SAP&quot; convivendo com o contrato existente e com a Cotação Q-. O cabeçalho antigo (que rotulava C-00X-2024 como &quot;Contrato SAP&quot;) passou a se chamar apenas &quot;Contrato&quot;; a nova coluna traz o número SAP no formato de 10 dígitos iniciando em 45, como informação secundária (estilo muted + tabular-nums, igual às colunas IE/Produto). <span>— &lt;thead&gt; da .wide-table: th data-sort=&quot;contrato&quot; e novo th data-sort=&quot;contratoSap&quot;, posicionados antes de &quot;Cotação&quot;; células correspondentes em renderRowNormal e renderRowEditing</span></li><li>Adicionei o campo contratoSap ao mock dos 5 protocolos, sequencial e coerente com os contratos existentes. <span>— const PROTOCOLS — cada objeto, logo após a chave contrato</span></li><li>Busca livre passou a encontrar pelo número SAP (o placeholder já prometia &quot;Buscar Protocolo, Contrato SAP ou Cotação&quot;). <span>— render() — filtro do campo #filterSearch</span></li><li>Modal &quot;Editar protocolo&quot;: item &quot;Contrato SAP&quot; renomeado para &quot;Contrato&quot; e criado um novo item &quot;Contrato SAP&quot; com o número 45…, mantendo o item &quot;Cotação&quot; logo em seguida. <span>— Bloco .ef-view-grid — #efViewContrato (label &quot;Contrato&quot;) e novo #efViewContratoSap (label &quot;Contrato SAP&quot;); preenchimento em setText()</span></li><li>Modais &quot;Agendar&quot; e &quot;Cancelar protocolo&quot; passaram a exibir o número SAP, coerente com o rótulo &quot;Contrato SAP&quot; que já usavam. <span>— #agCtxContrato (label &quot;Contrato SAP&quot; do modal Agendar) e #cpContrato (texto &quot;do contrato …&quot; do modal Cancelar)</span></li><li>Export CSV atualizado para a nova contagem de colunas. <span>— Handler de #btnExport — array headers e csvRows.push</span></li><li>Atualizei o COLSPAN do estado vazio para acompanhar a coluna nova (a tabela não tem tfoot nem contagem de colunas no paginador — o texto de paginação é derivado de rows.length e não precisou mudar). <span>— render() — linha do empty state em #tableBody</span></li></ul></div><div class="mdrev-grp"><div class="mdrev-gh"><span class="mdrev-id">G6-01</span><span class="mdrev-gt">Quantidades com 3 casas decimais</span></div><ul><li>Criei o helper fmtQtd() (pt-BR, mínimo e máximo 3 casas) e apliquei em todas as células numéricas da tabela. <span>— Novo fmtQtd() antes de numCell(); numCell(), editableQtyCell() e as duas células bloqueadas de Qtd. Protocolo em renderRowNormal/renderRowEditing</span></li><li>Quantidades dos modais e hints passaram a 3 casas. <span>— #efQtdAgendada, #efQtdSaldo, #efQtdFaturada (setVal); recálculo ao vivo do saldo em elProto.oninput; #efQtdProtoHint; #agCtxSaldo; #agVolumeHint (mensagem normal e a de erro &quot;Volume excede o saldo&quot;); #cpVolume do modal Cancelar</span></li><li>Toasts de confirmação com quantidade passaram a 3 casas. <span>— commitCellEdit (display do toast de campo numérico) e confirmAgendamento (toast &quot;Protocolo … agendado · X t&quot;)</span></li><li>Inputs numéricos de quantidade passaram a aceitar 3 decimais. <span>— #efQtdProto (modal Editar), #agVolume (modal Agendar) e editNumCell() (edição inline de linha)</span></li><li>Colunas de quantidade no CSV exportadas já formatadas com 3 casas. <span>— Handler de #btnExport — csvRows.push</span></li></ul></div></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo →</a><a href="relatorio-protocolos.html" target="_blank">Abrir a tela original →</a></div></div></div>
+<script>
+(function(){
+ var f=document.getElementById('mdrevFab'),o=document.getElementById('mdrevOv'),x=document.getElementById('mdrevX');
+ if(!f||!o)return;
+ function open(){o.hidden=false;document.body.style.overflow='hidden';x&&x.focus();}
+ function close(){o.hidden=true;document.body.style.overflow='';f.focus();}
+ f.addEventListener('click',open); x&&x.addEventListener('click',close);
+ o.addEventListener('click',function(ev){if(ev.target===o)close();});
+ document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&!o.hidden)close();});
+})();
+</script>
+
 </body>
 </html>
