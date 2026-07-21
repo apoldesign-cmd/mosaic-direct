@@ -1,0 +1,2972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1440" />
+<title>Mosaic Direct — Agendar Protocolo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="tokens.css" />
+<link rel="stylesheet" href="base.css" />
+<style>
+  /* ============================================================
+     Breadcrumb + page title
+     ============================================================ */
+  .breadcrumbs {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 8px;
+    padding-top: 24px;
+  }
+  .breadcrumbs a { color: var(--mosaic-green-700); text-decoration: none; }
+  .breadcrumbs a:hover { text-decoration: underline; }
+  .breadcrumbs .sep { margin: 0 4px; color: var(--text-3); }
+  .breadcrumbs .current { color: var(--text-2); }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+  }
+
+  /* ============================================================
+     Vindo do Relatório de Protocolos banner
+     ============================================================ */
+  .from-report-banner {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    background: var(--status-aprovado-bg);
+    border: 1px solid var(--status-aprovado-bd);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+    margin-bottom: 18px;
+  }
+  .from-report-icon {
+    color: var(--mosaic-green-800);
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+  .from-report-text { flex: 1; line-height: 1.4; }
+  .from-report-title { font-size: 13px; color: var(--text-1); font-weight: 600; }
+  .from-report-meta { font-size: 12px; color: var(--text-3); margin-top: 2px; }
+  .from-report-meta a { color: var(--mosaic-green-700); text-decoration: none; font-weight: 600; }
+  .from-report-meta a:hover { text-decoration: underline; }
+  .from-report-meta strong { color: var(--text-1); font-weight: 700; }
+  .from-report-close {
+    background: transparent;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    color: var(--text-3);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .from-report-close:hover { background: rgba(0,0,0,0.05); color: var(--text-1); }
+
+  /* ============================================================
+     Title row + view toggle
+     ============================================================ */
+  .title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 18px;
+  }
+  .title-row .page-title { margin: 0; }
+  /* Toggle Cards/Tabela desabilitado — apenas tabela disponível */
+  .view-toggle { display: none !important; }
+  .view-toggle.__legacy_unused {
+    display: inline-flex;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    letter-spacing: 0.02em;
+    transition: background-color 120ms, color 120ms;
+  }
+  .view-toggle button:hover:not(.is-active) {
+    background: var(--bg-section);
+    color: var(--text-1);
+  }
+  .view-toggle button.is-active {
+    background: var(--mosaic-green-800);
+    color: #fff;
+  }
+  .view-toggle button + button {
+    border-left: 1.5px solid var(--border);
+  }
+
+  /* ============================================================
+     Action row
+     ============================================================ */
+  .action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+  }
+  .action-label { font-size: 14px; font-weight: 700; color: var(--text-1); }
+  .action-help { font-size: 12px; color: var(--text-3); margin-top: 2px; font-weight: 500; }
+  .btn-with-icon { display: inline-flex; align-items: center; gap: 8px; }
+
+  /* ============================================================
+     Side drawer (Selecionar protocolo)
+     ============================================================ */
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 25, 20, 0.45);
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 240ms ease-out;
+  }
+  .drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: min(820px, 96vw);
+    max-height: calc(100vh - 56px);
+    background: #fff;
+    z-index: 101;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    transform: translate(-50%, -48%) scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+  }
+  .drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .drawer-header {
+    padding: 22px 28px 18px;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    flex-shrink: 0;
+  }
+  .drawer-header .modal-icon {
+    width: 40px; height: 40px;
+    background: var(--mosaic-green-800);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .drawer-header .titles { flex: 1; }
+  .drawer-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+  }
+  .drawer-header .subtitle {
+    font-size: 13px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .drawer-header .close-x {
+    width: 32px; height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background-color 120ms, color 120ms;
+  }
+  .drawer-header .close-x:hover { background: var(--bg-section); color: var(--text-1); }
+
+  .drawer-search {
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .drawer-search-wrap { position: relative; }
+  .drawer-search-wrap input {
+    width: 100%;
+    height: 44px;
+    padding: 0 44px 0 44px;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    outline: none;
+    font-family: inherit;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .drawer-search-wrap input::placeholder { color: var(--text-3); font-weight: 500; }
+  .drawer-search-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .drawer-search-wrap .icon-left {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-2);
+    pointer-events: none;
+  }
+  .drawer-search-wrap .clear-btn {
+    position: absolute; right: 8px; top: 50%;
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    background: transparent;
+    border: none;
+    color: var(--text-2);
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .drawer-search-wrap .clear-btn:hover { color: var(--text-1); }
+  .drawer-search-wrap.has-value .clear-btn { display: inline-flex; }
+
+  .drawer-meta {
+    padding: 12px 28px;
+    background: #fafafa;
+    border-bottom: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .drawer-meta .select-all {
+    background: transparent;
+    border: none;
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .drawer-meta .select-all:hover { text-decoration: underline; }
+
+  .drawer-list {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .drawer-empty {
+    padding: 60px 28px;
+    text-align: center;
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 14px;
+  }
+  .drawer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border-soft);
+    cursor: pointer;
+    transition: background-color 120ms;
+    user-select: none;
+  }
+  .drawer-item:hover { background: rgba(0, 106, 77, 0.04); }
+  .drawer-item.is-selected {
+    background: rgba(0, 106, 77, 0.08);
+    box-shadow: inset 3px 0 0 var(--mosaic-green-700);
+  }
+  .drawer-item.is-selected:hover { background: rgba(0, 106, 77, 0.12); }
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--border-strong);
+    background: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: background-color 120ms, border-color 120ms;
+  }
+  .drawer-item.is-selected .checkbox {
+    background: var(--mosaic-green-800);
+    border-color: var(--mosaic-green-800);
+  }
+  .checkbox svg { opacity: 0; transition: opacity 120ms; }
+  .drawer-item.is-selected .checkbox svg { opacity: 1; }
+
+  .drawer-item-body { flex: 1; min-width: 0; }
+  .drawer-item-line1 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .drawer-item-proto {
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--text-1);
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: -0.01em;
+  }
+  .drawer-item-item {
+    font-weight: 700;
+    color: var(--text-2);
+    font-size: 13px;
+  }
+  .drawer-item-frete {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .drawer-item-frete--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .drawer-item-frete--cif {
+    color: var(--mosaic-orange);
+    border-color: var(--mosaic-orange);
+    background: rgba(213,107,26,0.08);
+  }
+  .drawer-item-sap {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-3);
+  }
+  .drawer-item-sap-label {
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+  }
+  .drawer-item-product {
+    font-weight: 800;
+    color: var(--text-1);
+    font-size: 13px;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .drawer-item-meta {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+  .drawer-item-meta strong { color: var(--text-2); font-weight: 800; }
+  .drawer-item-saldo {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .drawer-item-saldo .unit {
+    font-size: 10px;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+    color: var(--text-2);
+  }
+  .drawer-item mark {
+    background: rgba(240,192,32,0.45);
+    color: inherit;
+    padding: 0 1px;
+    font-weight: 800;
+  }
+  .drawer-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .drawer-footer .count {
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 700;
+  }
+  .drawer-footer .count strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    font-size: 15px;
+  }
+  .drawer-footer .actions { display: flex; gap: 12px; }
+
+  /* ============================================================
+     Empty state + cards container
+     ============================================================ */
+  .cards-empty {
+    border: 1.5px dashed var(--border);
+    background: var(--bg-section);
+    padding: 80px 32px;
+    text-align: center;
+    color: var(--text-3);
+    font-size: 14px;
+    font-style: italic;
+  }
+  .cards-empty strong {
+    display: block;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--text-2);
+    margin-bottom: 6px;
+  }
+
+  .cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .proto-card {
+    background: #fff;
+    border: 1.5px solid var(--border-soft);
+    border-left-width: 4px;
+    border-left-color: var(--border);
+    transition: border-color 200ms, background-color 200ms;
+  }
+  .proto-card.is-incomplete { border-left-color: var(--border-strong); }
+  .proto-card.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.06), #fff 30%);
+  }
+  .proto-card.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.04), #fff 25%);
+  }
+  .cards-container.show-validation .proto-card.is-incomplete,
+  .cards-container.show-validation .proto-card.is-progress {
+    border-left-color: var(--mosaic-red);
+    background: linear-gradient(to right, rgba(185,32,42,0.05), #fff 25%);
+  }
+
+  /* Proto card header */
+  .proto-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-bottom: 2px solid var(--border-soft);
+    background: linear-gradient(180deg, #f7f7f5 0%, #fafaf8 100%);
+  }
+  .proto-level-tag {
+    display: inline-flex;
+    align-items: center;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #fff;
+    background: var(--mosaic-green-800);
+    padding: 3px 7px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .proto-level-tag--item { background: var(--mosaic-green-700); }
+  .proto-id {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text-1);
+    letter-spacing: -0.005em;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .proto-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  .proto-head-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .proto-head-inline strong { color: var(--text-1); font-weight: 800; }
+  .proto-meta-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 800;
+    margin-right: 1px;
+  }
+  .proto-head-inline .arrow { color: var(--mosaic-green-700); font-weight: 800; }
+  .proto-head-spacer { margin-left: auto; }
+  .proto-head-remove {
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: color 120ms, background-color 120ms, border-color 120ms;
+  }
+  .proto-head-remove:hover {
+    color: var(--mosaic-red);
+    background: rgba(185,32,42,0.06);
+    border-color: var(--border-soft);
+  }
+
+  /* Proto card body: item info + fields */
+  .proto-item-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 12px 18px;
+    align-items: center;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .proto-item-row:last-of-type { border-bottom: none; }
+  .proto-item-info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .proto-item-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .proto-item-line--top { gap: 8px; }
+  .proto-item-line--bottom {
+    color: var(--text-2);
+    font-size: 11.5px;
+    font-weight: 600;
+  }
+  .proto-item-product {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-1);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+    flex: 1;
+  }
+  .proto-meta-piece {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .proto-meta-piece strong { color: var(--text-1); font-weight: 800; }
+  .proto-meta-sep { color: var(--border); font-weight: 800; }
+  .proto-saldo {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .proto-saldo .unit {
+    font-size: 10px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Frete badge */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border: 1.5px solid;
+    font-weight: 800;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    background: #fff;
+  }
+  .badge--fob {
+    color: var(--mosaic-green-700);
+    border-color: var(--mosaic-green-700);
+  }
+  .badge--cif {
+    color: var(--mosaic-orange);
+    border-color: var(--mosaic-orange);
+    background: rgba(213,107,26,0.08);
+  }
+
+  /* Editable fields */
+  .proto-item-fields {
+    display: grid;
+    grid-template-columns: 100px 130px minmax(180px, 240px);
+    gap: 8px;
+    align-items: end;
+  }
+  .field-block {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .field-block label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-3);
+    font-weight: 700;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .field-block label .req { color: var(--mosaic-red); margin-left: 2px; }
+  .field-block label .opt-tag {
+    color: var(--text-3);
+    font-weight: 600;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-left: 4px;
+  }
+  .input-with-suffix {
+    position: relative;
+    height: 32px;
+  }
+  .input-with-suffix input {
+    width: 100%;
+    height: 32px;
+    padding: 0 28px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .input-with-suffix input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .input-with-suffix .suffix {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-3);
+    letter-spacing: 0.06em;
+    pointer-events: none;
+  }
+  .card-date-wrap {
+    position: relative;
+    height: 32px;
+  }
+  .card-date-wrap input {
+    width: 100%;
+    height: 32px;
+    padding: 0 32px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    color: var(--text-1);
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .card-date-wrap input:focus,
+  .card-date-wrap.is-open input {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .card-date-wrap input::placeholder {
+    color: var(--text-3);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .card-date-wrap .cal-trigger {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
+
+  .roteiro-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    border: 1.5px dashed var(--border);
+    background: #fff;
+    color: var(--text-3);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    box-sizing: border-box;
+    line-height: 32px;
+    transition: all 120ms;
+  }
+  .roteiro-toggle-btn:hover {
+    border-color: var(--mosaic-green-700);
+    color: var(--mosaic-green-800);
+    background: rgba(0,106,77,0.03);
+  }
+  .roteiro-toggle-btn.has-value {
+    border-style: solid;
+    color: var(--text-1);
+    background: #fff;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+  .roteiro-toggle-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+  .roteiro-toggle-btn.has-value .roteiro-toggle-text { font-weight: 700; }
+  .roteiro-toggle-icon { flex-shrink: 0; color: var(--text-3); }
+  .roteiro-toggle-btn:hover .roteiro-toggle-icon { color: var(--mosaic-green-700); }
+
+  .proto-item-actions {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .row-icon-btn {
+    width: 30px; height: 30px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 120ms, background-color 120ms, border-color 120ms;
+  }
+  .row-icon-btn:hover {
+    color: var(--mosaic-green-800);
+    background: var(--bg-section);
+    border-color: var(--border-soft);
+  }
+  .row-icon-btn.danger:hover { color: var(--mosaic-red); }
+
+  /* Card status footer */
+  .card-status {
+    padding: 8px 18px;
+    border-top: 1px solid var(--border-soft);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.02em;
+  }
+  .card-status--complete {
+    color: var(--mosaic-green-700);
+    background: rgba(0,106,77,0.04);
+  }
+  .card-status--incomplete {
+    color: var(--text-3);
+    background: var(--bg-section);
+  }
+  .cards-container.show-validation .card-status--incomplete {
+    color: var(--mosaic-red);
+    background: rgba(185,32,42,0.05);
+  }
+
+  /* ============================================================
+     Table view
+     ============================================================ */
+  .proto-table-wrap {
+    border: 1px solid var(--border-soft);
+    background: #fff;
+    overflow-x: visible;
+  }
+  .proto-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    table-layout: auto;
+  }
+  /* Header padronizado (igual relatorio-protocolos): cinza, verde-800, 13px, weight 600, sem uppercase */
+  .proto-table thead th {
+    background: var(--bg-section);
+    color: var(--mosaic-green-800);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    text-align: left;
+    white-space: nowrap;
+    vertical-align: middle;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+  }
+  .proto-table thead th .req { color: var(--mosaic-red); font-weight: 800; margin-left: 2px; }
+  .proto-table thead th .opt-tag {
+    font-size: 9px;
+    color: var(--text-3);
+    font-weight: 700;
+    margin-left: 4px;
+    text-transform: uppercase;
+  }
+  .proto-table tbody td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-1);
+    font-weight: 500;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+  .proto-table tbody tr {
+    transition: background-color 120ms;
+    border-left: 4px solid transparent;
+  }
+  .proto-table tbody tr:hover td { background: var(--bg-hover); }
+  .proto-table tbody tr:nth-child(even) td { background: var(--bg-hover); }
+  .proto-table tbody tr.is-incomplete { border-left-color: var(--border-strong); }
+  .proto-table tbody tr.is-progress {
+    border-left-color: var(--mosaic-yellow);
+    background: linear-gradient(to right, rgba(240,192,32,0.04), transparent 30%);
+  }
+  .proto-table tbody tr.is-complete {
+    border-left-color: var(--mosaic-green-700);
+    background: linear-gradient(to right, rgba(0,106,77,0.03), transparent 30%);
+  }
+  .proto-table-wrap.show-validation tr.is-incomplete,
+  .proto-table-wrap.show-validation tr.is-progress {
+    border-left-color: var(--mosaic-red);
+  }
+  .proto-table .cell-stack { line-height: 1.35; }
+  .proto-table .stack-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    color: var(--text-1);
+    font-weight: 800;
+    font-size: 13px;
+    margin-bottom: 2px;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  .proto-table .stack-secondary {
+    color: var(--text-3);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .proto-table .stack-secondary strong { color: var(--text-2); font-weight: 800; }
+  .proto-table .stack-secondary .arrow-to {
+    color: var(--mosaic-green-700);
+    font-weight: 800;
+  }
+  .proto-table .stack-tertiary {
+    font-size: 11px;
+    color: var(--text-3);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .proto-table .saldo-primary {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+  }
+  .proto-table .saldo-unit {
+    font-size: 11px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 2px;
+  }
+  .proto-table .v3-status-cell { text-align: center; width: 32px; }
+  .proto-table .v3-status-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .proto-table .v3-status-dot--complete { background: var(--mosaic-green-700); color: #fff; }
+  .proto-table .v3-status-dot--progress { background: var(--mosaic-yellow); color: var(--text-1); }
+  .proto-table .v3-status-dot--incomplete {
+    background: #ececea;
+    color: var(--text-3);
+    border: 1.5px solid var(--border-strong);
+  }
+  .proto-table-wrap.show-validation tr.is-incomplete .v3-status-dot,
+  .proto-table-wrap.show-validation tr.is-progress .v3-status-dot {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+  .proto-table .v5-table-roteiro {
+    height: 30px !important;
+    line-height: 30px !important;
+    padding: 0 8px !important;
+    font-size: 11.5px;
+    min-width: 130px;
+  }
+  /* Larguras das colunas — compacto pra caber em 1320px sem scroll H */
+  .proto-table { table-layout: fixed; }
+  .proto-table thead th:nth-child(1),
+  .proto-table tbody td:nth-child(1) { width: 28px;  padding: 12px 4px; }   /* Status dot */
+  .proto-table thead th:nth-child(2),
+  .proto-table tbody td:nth-child(2) { width: 170px; }                       /* Protocolo/Contrato */
+  .proto-table thead th:nth-child(3),
+  .proto-table tbody td:nth-child(3) { width: 200px; }                       /* Produto/Embalagem */
+  .proto-table thead th:nth-child(4),
+  .proto-table tbody td:nth-child(4) { width: 190px; }                       /* Recebedor/Destino */
+  .proto-table thead th:nth-child(5),
+  .proto-table tbody td:nth-child(5) { width: 80px;  text-align: right; }    /* Saldo */
+  .proto-table thead th:nth-child(6),
+  .proto-table tbody td:nth-child(6) { width: 96px;  padding-left: 8px; padding-right: 8px; }  /* Volume */
+  .proto-table thead th:nth-child(7),
+  .proto-table tbody td:nth-child(7) { width: 140px; padding-left: 8px; padding-right: 8px; }  /* Semana */
+  .proto-table thead th:nth-child(8),
+  .proto-table tbody td:nth-child(8) { width: 110px; padding-left: 8px; padding-right: 8px; }  /* Roteiro */
+  .proto-table thead th:nth-child(9),
+  .proto-table tbody td:nth-child(9) { width: 60px;  padding-left: 4px; padding-right: 8px; }  /* Ações */
+  /* Forçar wrap em textos longos pra não estourar */
+  .proto-table .cell-stack .stack-primary,
+  .proto-table .cell-stack .stack-secondary,
+  .proto-table .cell-stack .stack-tertiary {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .proto-table .v3-cell-volume-wrap {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+  .proto-table .v3-cell-volume-wrap input {
+    width: 100%;
+    height: 32px;
+    padding: 0 22px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+    box-sizing: border-box;
+    text-align: right;
+  }
+  .proto-table .v3-cell-volume-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .proto-table .v3-cell-volume-wrap .suffix {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--text-3);
+    pointer-events: none;
+  }
+  .proto-table .v3-cell-date-wrap {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+  .proto-table .v3-cell-date-wrap input {
+    width: 100%;
+    height: 32px;
+    padding: 0 30px 0 10px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    font-size: 12.5px;
+    font-family: inherit;
+    font-weight: 600;
+    color: var(--text-1);
+    outline: none;
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+  .proto-table .v3-cell-date-wrap input:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .proto-table .v3-cell-date-wrap .cal-trigger {
+    position: absolute;
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .proto-table .v3-cell-date-wrap .cal-trigger:hover { color: var(--mosaic-green-800); }
+  .proto-table .v3-row-actions {
+    display: inline-flex;
+    gap: 4px;
+  }
+
+  /* Validation: Semana passada */
+  input.is-invalid,
+  .card-date-wrap.is-invalid input,
+  .v3-cell-date-wrap.is-invalid input,
+  .v3-cell-volume-wrap.is-invalid input {
+    border-color: var(--mosaic-red) !important;
+    box-shadow: 0 0 0 2px rgba(185,32,42,0.10);
+  }
+
+  /* ============================================================
+     Summary footer (fixed)
+     ============================================================ */
+  .summary-footer {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    background: #fff;
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 50;
+  }
+  .summary-footer-inner {
+    width: 100%;
+    max-width: 1320px;
+    padding: 16px 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .page { padding-bottom: 110px !important; }
+  .summary-stats {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .summary-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .summary-stat .label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-3);
+    font-weight: 800;
+  }
+  .summary-stat .value {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--mosaic-green-800);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .summary-stat .value.muted { color: var(--text-3); }
+  .summary-stat .unit {
+    font-size: 12px;
+    color: var(--text-2);
+    font-weight: 700;
+    margin-left: 4px;
+  }
+  .summary-actions { display: flex; gap: 12px; }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 22px;
+    border: 1.5px solid transparent;
+    background: #fff;
+    color: var(--text-1);
+    font-size: 14px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background var(--ease-fast, 120ms), border-color var(--ease-fast, 120ms), color var(--ease-fast, 120ms);
+  }
+  .btn-primary {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    border-color: var(--mosaic-green-800);
+  }
+  .btn-primary:hover { background: var(--mosaic-green-900); border-color: var(--mosaic-green-900); }
+  .btn-primary:disabled, .btn:disabled {
+    background: #d6d6d6;
+    color: #8a8a8a;
+    border-color: #d6d6d6;
+    cursor: not-allowed;
+  }
+  .btn-secondary {
+    background: #fff;
+    color: var(--text-1);
+    border-color: var(--border-strong);
+  }
+  .btn-secondary:hover { background: var(--bg-section); }
+  .btn-danger {
+    background: var(--mosaic-red);
+    color: #fff;
+    border-color: var(--mosaic-red);
+  }
+  .btn-danger:hover { background: #9c1b22; border-color: #9c1b22; }
+
+  /* Hint pulse */
+  @keyframes pulse-hint {
+    0%   { box-shadow: 0 0 0 0 rgba(0,106,77,0.50); }
+    70%  { box-shadow: 0 0 0 14px rgba(0,106,77,0.00); }
+    100% { box-shadow: 0 0 0 0 rgba(0,106,77,0.00); }
+  }
+  .hint-pulse {
+    position: relative;
+    animation: pulse-hint 1800ms ease-out infinite;
+  }
+  .hint-pulse::after {
+    content: attr(data-hint);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: calc(100% + 14px);
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 8px 14px;
+    white-space: nowrap;
+    z-index: 70;
+    pointer-events: none;
+    letter-spacing: 0.01em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  .hint-pulse::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 7px);
+    transform: translateX(-50%) rotate(45deg);
+    width: 10px;
+    height: 10px;
+    background: var(--mosaic-green-800);
+    z-index: 70;
+    pointer-events: none;
+    opacity: 0;
+    animation: hint-fadein 320ms ease-out 200ms forwards;
+  }
+  @keyframes hint-fadein { to { opacity: 1; } }
+
+  /* ============================================================
+     Confirm + Success modals
+     ============================================================ */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 200;
+  }
+  .modal-backdrop.is-open { display: flex; }
+  .modal-confirm-v2 {
+    background: #fff;
+    width: 100%;
+    max-width: 540px;
+    overflow: hidden;
+    box-shadow: var(--shadow-modal, 0 18px 60px rgba(0,0,0,0.22));
+    animation: modal-pop 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  @keyframes modal-pop {
+    from { opacity: 0; transform: translateY(8px) scale(0.99); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .confirm-v2-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .confirm-v2-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .confirm-v2-close {
+    width: 32px; height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .confirm-v2-close:hover {
+    background: rgba(0,0,0,0.05);
+    color: var(--mosaic-green-900);
+  }
+  .confirm-v2-body {
+    padding: 28px 28px 24px;
+    background: #fff;
+  }
+  .confirm-v2-icon {
+    width: 56px;
+    height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    border-radius: 999px;
+  }
+  .confirm-v2-icon--info,
+  .confirm-v2-icon--success {
+    background: rgba(0,106,77,0.10);
+    color: var(--mosaic-green-700);
+  }
+  .confirm-v2-icon--warn {
+    background: rgba(199,104,20,0.12);
+    color: var(--mosaic-orange);
+  }
+  .confirm-v2-text {
+    margin: 0 0 22px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text-1);
+    font-weight: 500;
+  }
+  .confirm-v2-text strong { font-weight: 800; }
+  .confirm-v2-summary {
+    background: var(--bg-section);
+    border: 1px solid var(--border-soft);
+    padding: 14px 18px;
+    margin-bottom: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .confirm-v2-summary .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 13px;
+    color: var(--text-2);
+    font-weight: 600;
+  }
+  .confirm-v2-summary .row strong {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    font-size: 14px;
+  }
+  .confirm-v2-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .confirm-v2-actions--stack {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  .confirm-v2-actions--stack .btn { width: 100%; }
+
+  /* ============================================================
+     Roteiro drawer
+     ============================================================ */
+  .roteiro-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,25,20,0.45);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out;
+  }
+  .roteiro-drawer-backdrop.is-open { opacity: 1; pointer-events: auto; }
+  .roteiro-drawer {
+    position: fixed;
+    top: 50%; left: 50%;
+    width: min(640px, 96vw);
+    max-height: calc(100vh - 56px);
+    background: #fff;
+    z-index: 111;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    transform: translate(-50%, -48%) scale(0.98);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 260ms cubic-bezier(0.2, 0.8, 0.3, 1), opacity 200ms ease-out;
+  }
+  .roteiro-drawer.is-open { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+  .roteiro-drawer-header {
+    background: var(--bg-section);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .roteiro-drawer-header .titles { flex: 1; min-width: 0; }
+  .roteiro-drawer-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--mosaic-green-900);
+    letter-spacing: -0.005em;
+  }
+  .roteiro-drawer-header .subtitle {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-top: 2px;
+    font-weight: 600;
+  }
+  .roteiro-drawer-header .subtitle strong { color: var(--text-1); font-weight: 800; }
+  .roteiro-drawer-header .close-x {
+    width: 32px; height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--mosaic-green-800);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roteiro-drawer-header .close-x:hover { background: rgba(0,0,0,0.05); }
+  .roteiro-drawer-body {
+    flex: 1;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow-y: auto;
+  }
+  .roteiro-drawer-body label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-1);
+    letter-spacing: 0.01em;
+  }
+  .roteiro-drawer-body label .opt-tag {
+    color: var(--text-3);
+    font-weight: 600;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-left: 4px;
+  }
+  .roteiro-drawer-body textarea {
+    flex: 1;
+    width: 100%;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    padding: 14px 16px;
+    font-size: 14px;
+    line-height: 1.55;
+    font-family: inherit;
+    font-weight: 500;
+    color: var(--text-1);
+    outline: none;
+    resize: none;
+    min-height: 380px;
+    box-sizing: border-box;
+  }
+  .roteiro-drawer-body textarea:focus {
+    border-color: var(--mosaic-green-700);
+    box-shadow: 0 0 0 3px rgba(0,106,77,0.10);
+  }
+  .roteiro-drawer-body textarea::placeholder {
+    color: var(--text-3);
+    font-style: italic;
+    font-weight: 500;
+  }
+  .roteiro-drawer-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    background: #fafafa;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  /* ============================================================
+     Datepicker popup
+     ============================================================ */
+  .dp-popup {
+    position: absolute;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.08);
+    padding: 14px;
+    width: 280px;
+    z-index: 300;
+    display: none;
+    user-select: none;
+    animation: dp-pop 160ms ease-out;
+  }
+  @keyframes dp-pop {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .dp-popup.is-open { display: block; }
+  .dp-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .dp-nav {
+    width: 28px; height: 28px;
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--text-2);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dp-nav:hover {
+    background: var(--bg-section);
+    color: var(--mosaic-green-800);
+    border-color: var(--border);
+  }
+  .dp-month {
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--text-1);
+    text-transform: capitalize;
+  }
+  .dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: 6px;
+  }
+  .dp-weekdays div {
+    text-align: center;
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-3);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    padding: 4px 0;
+  }
+  .dp-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+  }
+  .dp-day {
+    background: transparent;
+    border: none;
+    height: 30px;
+    color: var(--text-1);
+    font-weight: 600;
+    font-size: 12px;
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .dp-day:hover { background: var(--bg-section); }
+  .dp-day.is-other { color: #b8b8b6; }
+  .dp-day.is-today {
+    color: var(--mosaic-green-800);
+    font-weight: 800;
+    box-shadow: inset 0 0 0 1.5px var(--mosaic-green-700);
+  }
+  .dp-day.is-selected {
+    background: var(--mosaic-green-800);
+    color: #fff;
+    font-weight: 800;
+  }
+  .dp-day.is-disabled {
+    color: #b8b8b6;
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+  .dp-footer {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .dp-clear,
+  .dp-today-btn {
+    background: transparent;
+    border: none;
+    color: var(--mosaic-green-700);
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+    padding: 4px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: inherit;
+  }
+  .dp-clear:hover, .dp-today-btn:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- HEADER ========================================================= -->
+<header class="mosaic-header">
+  <div class="mosaic-header-top">
+    <a href="index.html" class="mosaic-logo" aria-label="Mosaic Direct — Home">
+      <span class="logo-text">Mosaic<sup>®</sup></span>
+      <img class="logo-shapes" src="logo-shapes.png" alt="" />
+    </a>
+    <div class="mosaic-search">
+      <input type="text" placeholder="Pesquisa" aria-label="Pesquisa global" />
+      <span class="search-icon" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </span>
+    </div>
+    <div class="mosaic-user-cluster">
+      <button class="lang-switch" type="button">
+        PT
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="mosaic-user-info">
+        <span class="user-name">Alyssa Harris</span>
+        <span class="user-org">MAR JAC POULT...</span>
+      </div>
+      <button class="icon-btn" aria-label="Trocar empresa" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l8-4v18M19 21V11l-6-4"/><path d="M9 9h.01M9 12h.01M9 15h.01M9 18h.01"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Carrinho" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      </button>
+    </div>
+  </div>
+  <nav class="mosaic-nav" aria-label="Principal">
+    <div class="mosaic-nav-inner">
+      <a href="index.html" class="nav-item">Home</a>
+      <a href="#" class="nav-item">Produtos</a>
+      <a href="#" class="nav-item">Cotações</a>
+      <span class="nav-item" tabindex="0">
+        Contratos<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="criar-protocolo.html">Criar Protocolo</a>
+          <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+        </div>
+      </span>
+      <span class="nav-item is-active" tabindex="0">
+        Agendamento<span class="chev" aria-hidden="true"></span>
+        <div class="nav-submenu">
+          <a href="agendar-contrato-normal.html">Agendar Contratos Normais</a>
+          <a href="agendar-protocolo.html" class="is-active">Agendar Protocolo</a>
+          <a href="relatorio-status-agendamento.html">Relatório de Status de Agendamento</a>
+        </div>
+      </span>
+      <a href="#" class="nav-item">Faturamento</a>
+      <a href="#" class="nav-item">Documentos</a>
+      <a href="#" class="nav-item">Financeiro</a>
+      <a href="#" class="nav-item">Suporte</a>
+    </div>
+  </nav>
+</header>
+
+<!-- PAGE ============================================================ -->
+<main class="page">
+  <div class="breadcrumbs">
+    <a href="index.html">Home</a>
+    <span class="sep">›</span>
+    <a href="#">Agendamento</a>
+    <span class="sep">›</span>
+    <span class="current">Agendar Protocolo</span>
+  </div>
+
+  <div class="title-row">
+    <h1 class="page-title">Agendar Protocolo(s)</h1>
+    <div style="display:flex;align-items:center;gap:0;">
+      <div class="view-toggle" id="viewToggle" role="tablist" aria-label="Visualização">
+        <button data-view="cards" type="button" class="is-active" role="tab" aria-selected="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Cards
+        </button>
+        <button data-view="table" type="button" role="tab" aria-selected="false">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18M3 12h18M3 19h18"/></svg>
+          Tabela
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner vindo do Relatório de Protocolos -->
+  <div class="from-report-banner" id="fromReportBanner">
+    <div class="from-report-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2"/>
+        <line x1="16" y1="2" x2="16" y2="6"/>
+        <line x1="8" y1="2" x2="8" y2="6"/>
+        <line x1="3" y1="10" x2="21" y2="10"/>
+        <path d="M12 14v4"/>
+        <path d="M10 16h4"/>
+      </svg>
+    </div>
+    <div class="from-report-text">
+      <div class="from-report-title">
+        Protocolo <strong id="fromReportProto">—</strong> pronto para agendamento
+      </div>
+      <div class="from-report-meta">
+        Vindo do <a href="relatorio-protocolos.html">Relatório de Protocolos</a>
+        · Contrato <strong id="fromReportContrato">—</strong>
+      </div>
+    </div>
+    <button type="button" class="from-report-close" aria-label="Fechar"
+      onclick="document.getElementById('fromReportBanner').style.display='none'">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Action row -->
+  <div class="action-row">
+    <div>
+      <div class="action-label">Selecionar protocolo(s)</div>
+      <div class="action-help">Clique no botão ao lado para escolher protocolos para agendar.</div>
+    </div>
+    <button class="btn btn-primary btn-with-icon" id="openDrawerBtn" type="button">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Selecionar Protocolo
+    </button>
+  </div>
+
+  <!-- Container -->
+  <div class="cards-container" id="cardsContainer">
+    <!-- Renderizado por JS -->
+  </div>
+</main>
+
+<!-- Sticky summary footer -->
+<div class="summary-footer" id="summaryFooter">
+  <div class="summary-footer-inner">
+    <div class="summary-stats">
+      <div class="summary-stat">
+        <span class="label">Protocolos</span>
+        <span class="value" id="statProtos">0</span>
+      </div>
+      <div class="summary-stat">
+        <span class="label">Volume Total</span>
+        <span class="value" id="statVolume">0,000<span class="unit">t</span></span>
+      </div>
+      <div class="summary-stat">
+        <span class="label">Prontos para Agendar</span>
+        <span class="value" id="statReady">0/0</span>
+      </div>
+    </div>
+    <div class="summary-actions">
+      <button class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+      <button class="btn btn-primary" id="agendarBtn" disabled>Agendar</button>
+    </div>
+  </div>
+</div>
+
+<!-- DRAWER: Selecionar protocolo ==================================== -->
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="drawer" id="protoDrawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <div class="drawer-header">
+    <span class="modal-icon" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    </span>
+    <div class="titles">
+      <h3 id="drawerTitle">Selecionar protocolo</h3>
+      <div class="subtitle">Escolha um ou mais protocolos para adicionar ao agendamento.</div>
+    </div>
+    <button class="close-x" data-close-drawer aria-label="Fechar" type="button">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="drawer-search">
+    <div class="drawer-search-wrap" id="drawerSearchWrap">
+      <span class="icon-left" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      </span>
+      <input type="text" id="drawerSearch" placeholder="Buscar por protocolo, contrato, produto, recebedor..." autocomplete="off" />
+      <button class="clear-btn" id="drawerClearBtn" type="button" aria-label="Limpar">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="drawer-meta">
+    <span><span id="drawerCount">0</span> resultado(s)</span>
+    <button class="select-all" id="drawerSelectAll" type="button">Selecionar todos</button>
+  </div>
+
+  <div class="drawer-list" id="drawerList"></div>
+
+  <div class="drawer-footer">
+    <div class="count" id="drawerFooterCount">Nenhum protocolo selecionado</div>
+    <div class="actions">
+      <button class="btn btn-secondary" data-close-drawer type="button">Cancelar</button>
+      <button class="btn btn-primary" id="drawerAddBtn" type="button" disabled>Adicionar selecionados</button>
+    </div>
+  </div>
+</aside>
+
+<!-- ROTEIRO DRAWER ================================================== -->
+<div class="roteiro-drawer-backdrop" id="roteiroDrawerBackdrop"></div>
+<aside class="roteiro-drawer" id="roteiroDrawer" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="roteiro-drawer-header">
+    <div class="titles">
+      <h3>Roteiro de entrega</h3>
+      <div class="subtitle" id="roteiroDrawerSubtitle"></div>
+    </div>
+    <button class="close-x" id="roteiroDrawerClose" type="button" aria-label="Fechar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div class="roteiro-drawer-body">
+    <label id="roteiroDrawerLabel">Descrição</label>
+    <textarea id="roteiroDrawerText"
+              placeholder="Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."></textarea>
+  </div>
+  <div class="roteiro-drawer-footer">
+    <button class="btn btn-secondary" id="roteiroDrawerCancel" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="roteiroDrawerSave" type="button">Salvar</button>
+  </div>
+</aside>
+
+<!-- MODAIS ========================================================== -->
+<div class="modal-backdrop" id="cancelModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Cancelar agendamentos</h3>
+      <button class="confirm-v2-close" data-close="cancelModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--warn" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m12 3 10 18H2L12 3z" stroke-width="1.8"/>
+          <path d="M12 10v4" stroke-width="2.2"/>
+          <circle cx="12" cy="17.5" r="0.5" fill="currentColor"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text">Você está prestes a <strong>cancelar todos os agendamentos</strong>. Uma vez confirmado, essa ação não poderá ser desfeita. Tem certeza de que deseja continuar?</p>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" data-close="cancelModal" type="button">Voltar</button>
+        <button class="btn btn-danger" id="cancelConfirm" type="button">Sim, cancelar agendamentos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="submitModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Confirmar agendamento</h3>
+      <button class="confirm-v2-close" data-close="submitModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--info" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text">Você está prestes a agendar <strong id="confirmCount">0</strong> protocolos. Após o envio, eles entrarão em processamento e não poderão ser editados.</p>
+      <div class="confirm-v2-summary" id="submitSummary"></div>
+      <div class="confirm-v2-actions">
+        <button class="btn btn-secondary" data-close="submitModal" type="button">Voltar</button>
+        <button class="btn btn-primary" id="submitConfirm" type="button">Confirmar e enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="successModal">
+  <div class="modal-confirm-v2" role="dialog" aria-modal="true">
+    <div class="confirm-v2-header">
+      <h3>Protocolos agendados</h3>
+      <button class="confirm-v2-close" data-close="successModal" aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="confirm-v2-body">
+      <div class="confirm-v2-icon confirm-v2-icon--success" aria-hidden="true">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10" stroke-width="1.8"/>
+          <polyline points="8 12.5 11 15.5 16 9.5"/>
+        </svg>
+      </div>
+      <p class="confirm-v2-text"><strong>Seus protocolos foram AGENDADOS!</strong><br/>Acompanhe o status pelo Relatório de Agendamento.</p>
+      <div class="confirm-v2-actions confirm-v2-actions--stack">
+        <button class="btn btn-primary" id="successReport" type="button">Ver Relatório de Agendamento</button>
+        <button class="btn btn-secondary" id="successNew" type="button">Agendar novos protocolos</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   DATA: protocolos disponiveis para selecao
+   =================================================================== */
+const PROTOCOLS = [
+  {
+    id: "M9W38746",
+    contrato: "Q-85721", item: "10",
+    contratoSap: "4500123456",
+    refCliente: "612847",
+    descProduto: "STRAF 04 30 10 STR + 50 BMI2",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.620,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "30/09/2025",
+    saldo: "1.500,000",
+    frete: "CIF",
+    nomeRecebedor: "JOSE DA SILVA",
+    cnpjRecebedor: "712.865.870.640",
+    ieRecebedor: "618.281.300-87",
+    cidadeRecebedor: "Limeira/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "JOSE DA SILVA",
+    cnpjCooperado: "712.865.870.640",
+    ieCooperado: "618.281.300-87",
+    cidadeCooperado: "Limeira/SP",
+    valorUnitProtocolo: "2.585,00",
+    numeroNf: "128.447"
+  },
+  {
+    id: "M93HD231",
+    contrato: "Q-20303", item: "10",
+    contratoSap: "4500128877",
+    refCliente: "474663",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/08/2025", vigenciaFim: "30/10/2025",
+    saldo: "1.000,000",
+    frete: "FOB",
+    nomeRecebedor: "CARLOS ALVES",
+    cnpjRecebedor: "488.722.440-05",
+    ieRecebedor: "877.714.770.605",
+    cidadeRecebedor: "Limeira/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "CARLOS ALVES",
+    cnpjCooperado: "488.722.440-05",
+    ieCooperado: "877.714.770.605",
+    cidadeCooperado: "Limeira/SP",
+    valorUnitProtocolo: "2.410,00",
+    numeroNf: "128.512"
+  },
+  {
+    id: "M586JF3BH",
+    contrato: "Q-94721", item: "20",
+    contratoSap: "4500131204",
+    refCliente: "",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/08/2025", vigenciaFim: "30/10/2025",
+    saldo: "203,130",
+    frete: "CIF",
+    nomeRecebedor: "MARIA BEZERRA",
+    cnpjRecebedor: "40.908.039/0001-26",
+    ieRecebedor: "118.299.922.567",
+    cidadeRecebedor: "Sertãozinho/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "MARIA BEZERRA",
+    cnpjCooperado: "40.908.039/0001-26",
+    ieCooperado: "118.299.922.567",
+    cidadeCooperado: "Sertãozinho/SP",
+    valorUnitProtocolo: "2.438,00",
+    numeroNf: "128.690"
+  },
+  {
+    id: "M092DB23",
+    contrato: "Q-20351", item: "80",
+    contratoSap: "4500129910",
+    refCliente: "2084442",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "4,640",
+    frete: "CIF",
+    nomeRecebedor: "TEREZA AKEMI",
+    cnpjRecebedor: "91.459.226/0001-00",
+    ieRecebedor: "032.475.991.210",
+    cidadeRecebedor: "Sertãozinho/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "TEREZA AKEMI",
+    cnpjCooperado: "91.459.226/0001-00",
+    ieCooperado: "032.475.991.210",
+    cidadeCooperado: "Sertãozinho/SP",
+    valorUnitProtocolo: "2.475,00",
+    numeroNf: "128.733"
+  },
+  {
+    id: "MK4HD928",
+    contrato: "Q-13945", item: "50",
+    contratoSap: "4500124418",
+    refCliente: "",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "160,000",
+    frete: "FOB",
+    nomeRecebedor: "CARLOS ALVES",
+    cnpjRecebedor: "488.722.440-05",
+    ieRecebedor: "877.714.770.605",
+    cidadeRecebedor: "Limeira/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "CARLOS ALVES",
+    cnpjCooperado: "488.722.440-05",
+    ieCooperado: "877.714.770.605",
+    cidadeCooperado: "Limeira/SP",
+    valorUnitProtocolo: "2.402,00",
+    numeroNf: "128.801"
+  },
+  {
+    id: "M3D49483",
+    contrato: "Q-20356", item: "10",
+    contratoSap: "4500130562",
+    refCliente: "2735331",
+    descProduto: "EXCLN 24 05 24 UR",
+    embalagem: "BagOneWay Liner 1,40",
+    planta: "Toll Cefértil - Cubatão",
+    enviarPara: "Sertãozinho/SP",
+    cnpjFilial: "71.320.915/0006-37",
+    ie: "287.456.987.114",
+    precoTon: "2.450,00",
+    vigenciaInicio: "01/07/2025", vigenciaFim: "31/12/2025",
+    saldo: "32,000",
+    frete: "CIF",
+    nomeRecebedor: "JOSE DA SILVA",
+    cnpjRecebedor: "712.865.870.640",
+    ieRecebedor: "618.281.300-87",
+    cidadeRecebedor: "Limeira/SP",
+    /* dados do COOPERADO / PROTOCOLO (não do contrato) */
+    nomeCooperado: "JOSE DA SILVA",
+    cnpjCooperado: "712.865.870.640",
+    ieCooperado: "618.281.300-87",
+    cidadeCooperado: "Limeira/SP",
+    valorUnitProtocolo: "2.463,00",
+    numeroNf: "128.874"
+  }
+];
+
+/* ===================================================================
+   STATE
+   =================================================================== */
+const state = {
+  rows: [],                       // [{ ...protoData, volume, semana, roteiro }]
+  selectedInDrawer: new Set(),    // indices em PROTOCOLS
+  viewMode: "table"  // toggle Cards/Tabela removido — sempre tabela
+};
+
+/* SVGs */
+const ICON_DUP = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h3"/></svg>';
+const ICON_DEL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M10 11v6M14 11v6"/></svg>';
+const ICON_CAL = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="1"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+const ICON_CHECK = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+const ICON_WARN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r="0.6" fill="currentColor"/></svg>';
+const ICON_EXP = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>';
+const ICON_DOT = '<svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="6"/></svg>';
+const ICON_BANG = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="6" x2="12" y2="13"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>';
+const ICON_CHK = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+
+/* ===================================================================
+   HELPERS
+   =================================================================== */
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function highlightMatch(text, query) {
+  if (!query) return escapeHtml(text);
+  const safe = String(text);
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp("(" + escaped + ")", "gi");
+  return escapeHtml(safe).replace(re, "<mark>$1</mark>");
+}
+function parseBR(s) {
+  if (!s) return 0;
+  const n = parseFloat(String(s).replace(/\./g, "").replace(",", "."));
+  return isNaN(n) ? 0 : n;
+}
+/* Quantidades: SEMPRE 3 casas decimais (padrao definido com o negocio) */
+function fmtQty3(n) {
+  return Number(n || 0).toLocaleString("pt-BR", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+}
+function maskVolumeDecimal(input) {
+  let v = (input.value || "").replace(/[^\d,]/g, "");
+  const parts = v.split(",");
+  if (parts.length > 2) v = parts[0] + "," + parts.slice(1).join("");
+  const segs = v.split(",");
+  segs[0] = segs[0].replace(/^0+(\d)/, "$1");
+  if (segs.length === 2) segs[1] = segs[1].slice(0, 3);
+  segs[0] = segs[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  input.value = segs.join(",");
+}
+function rowStatus(r) {
+  const ok = !!(r.volume && r.semana);
+  if (ok) return "complete";
+  const anyTouched = !!(r.volume || r.semana || r.roteiro);
+  return anyTouched ? "progress" : "incomplete";
+}
+function brDateToDate(br) {
+  if (!br) return null;
+  const m = String(br).match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!m) return null;
+  return new Date(+m[3], +m[2] - 1, +m[1]);
+}
+function todayStart() {
+  const t = new Date(); t.setHours(0, 0, 0, 0); return t;
+}
+function rowInvalidSemana(r) {
+  if (!r.semana) return false;
+  const d = brDateToDate(r.semana);
+  return d && d < todayStart();
+}
+function rowVolumeExceeds(r) {
+  const vol = parseBR(r.volume);
+  const saldo = parseBR(r.saldo);
+  return vol > 0 && vol > saldo;
+}
+function canAgendar() {
+  if (state.rows.length === 0) return false;
+  return state.rows.every(r => rowStatus(r) === "complete" && !rowInvalidSemana(r) && !rowVolumeExceeds(r));
+}
+function isAlreadyAdded(p) {
+  return state.rows.some(row => row.id === p.id);
+}
+
+/* ===================================================================
+   DRAWER (Selecionar protocolo)
+   =================================================================== */
+const elDrawer         = document.getElementById("protoDrawer");
+const elDrawerBackdrop = document.getElementById("drawerBackdrop");
+const elDrawerSearch   = document.getElementById("drawerSearch");
+const elDrawerSearchWrap = document.getElementById("drawerSearchWrap");
+const elDrawerClearBtn = document.getElementById("drawerClearBtn");
+const elDrawerList     = document.getElementById("drawerList");
+const elDrawerCount    = document.getElementById("drawerCount");
+const elDrawerSelectAll = document.getElementById("drawerSelectAll");
+const elDrawerAddBtn   = document.getElementById("drawerAddBtn");
+const elDrawerFooterCount = document.getElementById("drawerFooterCount");
+
+function renderDrawerList() {
+  const q = (elDrawerSearch.value || "").trim().toLowerCase();
+  elDrawerSearchWrap.classList.toggle("has-value", q.length > 0);
+
+  const filtered = PROTOCOLS
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => {
+      if (!q) return true;
+      const haystack = [
+        p.id, p.contrato, p.contratoSap, p.item, p.refCliente, p.descProduto, p.embalagem,
+        p.frete, p.planta, p.enviarPara, p.nomeCooperado, p.cnpjCooperado,
+        p.ieCooperado, p.cidadeCooperado, p.valorUnitProtocolo, p.numeroNf, p.saldo
+      ].join(" ").toLowerCase();
+      return haystack.includes(q);
+    });
+
+  elDrawerCount.textContent = filtered.length;
+
+  if (filtered.length === 0) {
+    elDrawerList.innerHTML = '<div class="drawer-empty">Nenhum protocolo encontrado para "' + escapeHtml(q) + '"</div>';
+    updateDrawerFooter();
+    return;
+  }
+
+  elDrawerList.innerHTML = filtered.map(({ p, i }) => {
+    const selected = state.selectedInDrawer.has(i);
+    const added = isAlreadyAdded(p);
+    const fretePill = p.frete === "FOB"
+      ? '<span class="drawer-item-frete drawer-item-frete--fob">FOB</span>'
+      : '<span class="drawer-item-frete drawer-item-frete--cif">CIF</span>';
+    return ''
+      + '<label class="drawer-item ' + (selected ? 'is-selected' : '') + ' ' + (added ? 'is-disabled' : '') + '" data-i="' + i + '">'
+      + '<span class="checkbox"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>'
+      + '<div class="drawer-item-body">'
+        + '<div class="drawer-item-line1">'
+          + '<span class="drawer-item-proto">' + highlightMatch(p.id, q) + '</span>'
+          + '<span style="color:var(--border-strong);">·</span>'
+          + '<span class="drawer-item-item">Contrato ' + highlightMatch(p.contrato, q) + ' · Item ' + highlightMatch(p.item, q) + '</span>'
+          + '<span class="drawer-item-sap"><span class="drawer-item-sap-label">Contrato SAP</span>' + highlightMatch(p.contratoSap, q) + '</span>'
+          + fretePill
+          + (added ? '<span style="font-size:11px;color:var(--text-3);font-weight:700;letter-spacing:0.04em;">JÁ ADICIONADO</span>' : '')
+        + '</div>'
+        + '<div class="drawer-item-product">' + highlightMatch(p.descProduto, q) + '</div>'
+        + '<div class="drawer-item-meta">'
+          + '<span><strong>Ref. Cliente:</strong> ' + highlightMatch(p.refCliente || '—', q) + '</span>'
+          + '<span><strong>Embalagem:</strong> ' + highlightMatch(p.embalagem, q) + '</span>'
+          + '<span><strong>Planta:</strong> ' + highlightMatch(p.planta, q) + '</span>'
+          + '<span><strong>Enviar para:</strong> ' + highlightMatch(p.enviarPara, q) + '</span>'
+          + '<span><strong>Recebedor (Cooperado):</strong> ' + highlightMatch(p.nomeCooperado, q) + '</span>'
+          + '<span><strong>CNPJ/CPF Cooperado:</strong> ' + highlightMatch(p.cnpjCooperado, q) + '</span>'
+          + '<span><strong>IE Cooperado:</strong> ' + highlightMatch(p.ieCooperado, q) + '</span>'
+          + '<span><strong>Cidade/UF:</strong> ' + highlightMatch(p.cidadeCooperado, q) + '</span>'
+          + '<span><strong>Valor unit. protocolo:</strong> R$ ' + escapeHtml(p.valorUnitProtocolo) + '</span>'
+          + '<span><strong>Nº NF:</strong> ' + highlightMatch(p.numeroNf, q) + '</span>'
+        + '</div>'
+      + '</div>'
+      + '<div class="drawer-item-saldo">' + escapeHtml(p.saldo) + '<span class="unit">t</span></div>'
+      + '</label>';
+  }).join("");
+  updateDrawerFooter();
+}
+function updateDrawerFooter() {
+  const n = state.selectedInDrawer.size;
+  elDrawerFooterCount.innerHTML = n === 0
+    ? "Nenhum protocolo selecionado"
+    : "<strong>" + n + "</strong> " + (n === 1 ? "protocolo selecionado" : "protocolos selecionados");
+  elDrawerAddBtn.disabled = n === 0;
+}
+function openDrawer() {
+  state.selectedInDrawer.clear();
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawer.classList.add("is-open");
+  elDrawer.setAttribute("aria-hidden", "false");
+  elDrawerBackdrop.classList.add("is-open");
+  setTimeout(() => elDrawerSearch.focus(), 320);
+}
+function closeDrawer() {
+  elDrawer.classList.remove("is-open");
+  elDrawer.setAttribute("aria-hidden", "true");
+  elDrawerBackdrop.classList.remove("is-open");
+}
+document.getElementById("openDrawerBtn").addEventListener("click", openDrawer);
+document.querySelectorAll("[data-close-drawer]").forEach(b => b.addEventListener("click", closeDrawer));
+elDrawerBackdrop.addEventListener("click", closeDrawer);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && elDrawer.classList.contains("is-open")) closeDrawer();
+});
+elDrawerSearch.addEventListener("input", renderDrawerList);
+elDrawerClearBtn.addEventListener("click", () => {
+  elDrawerSearch.value = "";
+  renderDrawerList();
+  elDrawerSearch.focus();
+});
+elDrawerList.addEventListener("click", e => {
+  const item = e.target.closest(".drawer-item");
+  if (!item || item.classList.contains("is-disabled")) return;
+  e.preventDefault();
+  const i = parseInt(item.dataset.i, 10);
+  if (state.selectedInDrawer.has(i)) state.selectedInDrawer.delete(i);
+  else state.selectedInDrawer.add(i);
+  item.classList.toggle("is-selected");
+  updateDrawerFooter();
+});
+elDrawerSelectAll.addEventListener("click", () => {
+  const q = (elDrawerSearch.value || "").trim().toLowerCase();
+  const visible = PROTOCOLS.map((p, i) => ({ p, i })).filter(({ p }) => {
+    if (!q) return true;
+    const haystack = [
+      p.id, p.contrato, p.contratoSap, p.item, p.refCliente, p.descProduto,
+      p.embalagem, p.frete, p.planta, p.enviarPara,
+      p.nomeCooperado, p.cnpjCooperado, p.ieCooperado, p.cidadeCooperado, p.numeroNf
+    ].join(" ").toLowerCase();
+    return haystack.includes(q);
+  }).filter(({ p }) => !isAlreadyAdded(p)).map(({ i }) => i);
+  const allSelected = visible.every(i => state.selectedInDrawer.has(i));
+  if (allSelected) visible.forEach(i => state.selectedInDrawer.delete(i));
+  else visible.forEach(i => state.selectedInDrawer.add(i));
+  renderDrawerList();
+});
+elDrawerAddBtn.addEventListener("click", () => {
+  const indices = [...state.selectedInDrawer].sort((a, b) => a - b);
+  indices.forEach(i => {
+    const p = PROTOCOLS[i];
+    if (!isAlreadyAdded(p)) {
+      state.rows.push(Object.assign({}, p, { volume: "", semana: "", roteiro: "" }));
+    }
+  });
+  state.selectedInDrawer.clear();
+  closeDrawer();
+  renderTable();
+});
+
+/* ===================================================================
+   VIEW TOGGLE
+   =================================================================== */
+const elBody = document.getElementById("cardsContainer");
+const elAgendar = document.getElementById("agendarBtn");
+
+document.getElementById("viewToggle").addEventListener("click", e => {
+  const btn = e.target.closest("button[data-view]");
+  if (!btn) return;
+  const m = btn.dataset.view;
+  if (m === state.viewMode) return;
+  state.viewMode = m;
+  try { localStorage.setItem("mosaicProtoViewMode", m); } catch (_) {}
+  renderTable();
+});
+
+/* ===================================================================
+   RENDERING
+   =================================================================== */
+function renderTable() {
+  if (state.viewMode === "table") renderTableView();
+  else renderCardsView();
+  document.querySelectorAll("#viewToggle button").forEach(b => {
+    const active = b.dataset.view === state.viewMode;
+    b.classList.toggle("is-active", active);
+    b.setAttribute("aria-selected", active ? "true" : "false");
+  });
+}
+
+function refreshHint() {
+  document.querySelectorAll(".hint-pulse").forEach(el => {
+    el.classList.remove("hint-pulse");
+    el.removeAttribute("data-hint");
+  });
+  if (state.rows.length === 0) {
+    const btn = document.getElementById("openDrawerBtn");
+    if (btn) {
+      btn.classList.add("hint-pulse");
+      btn.setAttribute("data-hint", "Comece selecionando protocolos");
+    }
+  }
+}
+
+function renderCardsView() {
+  elBody.innerHTML = "";
+
+  if (state.rows.length === 0) {
+    elBody.innerHTML = ''
+      + '<div class="cards-empty">'
+      +   '<strong>Nenhum protocolo selecionado</strong>'
+      +   'Use o botão "Selecionar Protocolo" acima para adicionar protocolos ao agendamento.'
+      + '</div>';
+    elAgendar.disabled = true;
+    updateSummary();
+    refreshHint();
+    return;
+  }
+
+  const list = document.createElement("div");
+  list.className = "cards-list";
+
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const fretePill = '<span class="badge badge--' + (isCIF ? 'cif' : 'fob') + '">' + r.frete + '</span>';
+    const card = document.createElement("article");
+    card.className = "proto-card is-" + status;
+    card.setAttribute("data-row", idx);
+
+    card.innerHTML = ''
+      + '<header class="proto-head">'
+        + '<span class="proto-level-tag">Protocolo</span>'
+        + '<span class="proto-id">' + escapeHtml(r.id) + '</span>'
+        + '<span class="proto-divider"></span>'
+        + '<span class="proto-head-inline"><span class="proto-meta-label">Contrato</span><strong>' + escapeHtml(r.contrato) + '</strong> · Item <strong>' + escapeHtml(r.item) + '</strong></span>'
+        + '<span class="proto-divider"></span>'
+        + '<span class="proto-head-inline"><span class="proto-meta-label">Contrato SAP</span><strong>' + escapeHtml(r.contratoSap) + '</strong></span>'
+        + '<span class="proto-divider"></span>'
+        + '<span class="proto-head-inline"><span class="proto-meta-label">NF</span><strong>' + escapeHtml(r.numeroNf) + '</strong></span>'
+        + '<span class="proto-head-spacer"></span>'
+        + '<button class="proto-head-remove" data-action="remove" data-row="' + idx + '" title="Remover protocolo" aria-label="Remover protocolo">' + ICON_DEL + '</button>'
+      + '</header>'
+
+      + '<div class="proto-item-row">'
+        + '<div class="proto-item-info">'
+          + '<div class="proto-item-line proto-item-line--top">'
+            + '<span class="proto-level-tag proto-level-tag--item">Item</span>'
+            + fretePill
+            + '<span class="proto-item-product" title="' + escapeHtml(r.descProduto) + '">' + escapeHtml(r.descProduto) + '</span>'
+          + '</div>'
+          + '<div class="proto-item-line proto-item-line--bottom">'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Embalagem</span><strong>' + escapeHtml(r.embalagem) + '</strong></span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Rota</span><strong>' + escapeHtml(r.planta) + '</strong><span style="color:var(--mosaic-green-700);font-weight:800;margin:0 2px;">→</span>' + escapeHtml(r.enviarPara) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Recebedor (Cooperado)</span><strong>' + escapeHtml(r.nomeCooperado) + '</strong> · ' + escapeHtml(r.cidadeCooperado) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">CNPJ/CPF</span>' + escapeHtml(r.cnpjCooperado) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">IE</span>' + escapeHtml(r.ieCooperado) + '</span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Valor unit.</span><strong>R$ ' + escapeHtml(r.valorUnitProtocolo) + '</strong></span>'
+            + '<span class="proto-meta-sep">·</span>'
+            + '<span class="proto-meta-piece"><span class="proto-meta-label">Saldo</span><span class="proto-saldo">' + escapeHtml(r.saldo) + '<span class="unit">t</span></span></span>'
+          + '</div>'
+        + '</div>'
+
+        + '<div class="proto-item-fields">'
+          + '<div class="field-block">'
+            + '<label>Volume <span class="req">*</span></label>'
+            + '<div class="input-with-suffix">'
+              + '<input type="text" inputmode="decimal" value="' + escapeHtml(r.volume) + '" placeholder="0,000" data-row="' + idx + '" data-field="volume" />'
+              + '<span class="suffix">t</span>'
+            + '</div>'
+          + '</div>'
+          + '<div class="field-block">'
+            + '<label>Semana <span class="req">*</span></label>'
+            + '<div class="card-date-wrap" data-row="' + idx + '">'
+              + '<input type="text" class="card-date-input" value="' + escapeHtml(r.semana) + '" placeholder="DD/MM/AAAA" data-row="' + idx + '" data-field="semana" readonly />'
+              + '<button class="cal-trigger" data-action="open-dp" data-row="' + idx + '" type="button" aria-label="Abrir calendário">' + ICON_CAL + '</button>'
+            + '</div>'
+          + '</div>'
+          + '<div class="field-block">'
+            + '<label>Roteiro <span class="opt-tag">Opc.</span></label>'
+            + '<button class="roteiro-toggle-btn ' + (r.roteiro ? 'has-value' : '') + '" data-action="open-roteiro" data-row="' + idx + '" type="button" aria-label="' + (r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro') + '">'
+              + '<span class="roteiro-toggle-text">' + (r.roteiro ? escapeHtml(r.roteiro.substring(0, 40) + (r.roteiro.length > 40 ? '…' : '')) : 'Adicionar roteiro') + '</span>'
+              + '<svg class="roteiro-toggle-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg>'
+            + '</button>'
+          + '</div>'
+        + '</div>'
+      + '</div>'
+
+      + (status === "complete"
+          ? '<div class="card-status card-status--complete">' + ICON_CHECK + ' Pronto para agendar</div>'
+          : '<div class="card-status card-status--incomplete">' + ICON_WARN + ' Preencha Volume e Semana</div>'
+      );
+
+    list.appendChild(card);
+  });
+
+  elBody.appendChild(list);
+  updateSummary();
+  refreshHint();
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
+}
+
+function renderTableView() {
+  elBody.innerHTML = "";
+  if (state.rows.length === 0) {
+    elBody.innerHTML = ''
+      + '<div class="cards-empty">'
+      +   '<strong>Nenhum protocolo selecionado</strong>'
+      +   'Use o botão "Selecionar Protocolo" acima para adicionar protocolos ao agendamento.'
+      + '</div>';
+    elAgendar.disabled = true;
+    updateSummary();
+    refreshHint();
+    return;
+  }
+
+  const wrap = document.createElement("div");
+  wrap.className = "proto-table-wrap";
+
+  wrap.innerHTML = ''
+    + '<table class="proto-table">'
+      + '<thead><tr>'
+        + '<th class="v3-status-cell" aria-label="Status"></th>'
+        + '<th>Protocolo / Contrato</th>'
+        + '<th>Produto / Embalagem</th>'
+        + '<th>Recebedor (Cooperado) / Destino</th>'
+        + '<th>Saldo</th>'
+        + '<th>Volume <span class="req">*</span></th>'
+        + '<th>Semana <span class="req">*</span></th>'
+        + '<th>Roteiro <span class="opt-tag">opc.</span></th>'
+        + '<th aria-label="Ações"></th>'
+      + '</tr></thead>'
+      + '<tbody></tbody>'
+    + '</table>';
+  elBody.appendChild(wrap);
+  const tbody = wrap.querySelector("tbody");
+
+  state.rows.forEach((r, idx) => {
+    const status = rowStatus(r);
+    const isCIF = r.frete === "CIF";
+    const fretePill = '<span class="badge badge--' + (isCIF ? 'cif' : 'fob') + '">' + r.frete + '</span>';
+    const roteiroPreview = r.roteiro ? (r.roteiro.length > 28 ? r.roteiro.substring(0, 28) + '…' : r.roteiro) : '';
+
+    let dot;
+    if (status === "complete") dot = '<span class="v3-status-dot v3-status-dot--complete" title="Pronto">' + ICON_CHK + '</span>';
+    else if (status === "progress") dot = '<span class="v3-status-dot v3-status-dot--progress" title="Em progresso">' + ICON_BANG + '</span>';
+    else dot = '<span class="v3-status-dot v3-status-dot--incomplete" title="Aguardando">' + ICON_DOT + '</span>';
+
+    const tr = document.createElement("tr");
+    tr.className = "is-" + status;
+    tr.setAttribute("data-row", idx);
+    tr.innerHTML = ''
+      + '<td class="v3-status-cell">' + dot + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary">' + escapeHtml(r.id) + ' ' + fretePill + '</div>'
+        + '<div class="stack-secondary"><strong>' + escapeHtml(r.contrato) + '</strong> · Item ' + escapeHtml(r.item) + (r.refCliente ? ' · Ref. ' + escapeHtml(r.refCliente) : '') + '</div>'
+        + '<div class="stack-tertiary">Contrato SAP ' + escapeHtml(r.contratoSap) + '</div>'
+        + '<div class="stack-tertiary">NF ' + escapeHtml(r.numeroNf) + ' · R$ ' + escapeHtml(r.valorUnitProtocolo) + '/t</div>'
+      + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.descProduto) + '</div>'
+        + '<div class="stack-secondary">' + escapeHtml(r.embalagem) + '</div>'
+        + '<div class="stack-tertiary">De ' + escapeHtml(r.planta) + '</div>'
+      + '</td>'
+      + '<td class="cell-stack">'
+        + '<div class="stack-primary" style="font-family:inherit;">' + escapeHtml(r.nomeCooperado) + '</div>'
+        + '<div class="stack-secondary">' + escapeHtml(r.cidadeCooperado) + '</div>'
+        + '<div class="stack-tertiary">CNPJ/CPF ' + escapeHtml(r.cnpjCooperado) + (r.ieCooperado ? ' · IE ' + escapeHtml(r.ieCooperado) : '') + '</div>'
+      + '</td>'
+      + '<td><div class="saldo-primary">' + escapeHtml(r.saldo) + ' <span class="saldo-unit">t</span></div></td>'
+      + '<td>'
+        + '<div class="v3-cell-volume-wrap">'
+          + '<input type="text" inputmode="decimal" value="' + escapeHtml(r.volume) + '" placeholder="0,000" data-row="' + idx + '" data-field="volume" />'
+          + '<span class="suffix">t</span>'
+        + '</div>'
+      + '</td>'
+      + '<td>'
+        + '<div class="v3-cell-date-wrap" data-row="' + idx + '">'
+          + '<input type="text" class="v3-cell-date-input" value="' + escapeHtml(r.semana) + '" placeholder="DD/MM/AAAA" data-row="' + idx + '" data-field="semana" readonly />'
+          + '<button class="cal-trigger" data-action="open-dp" data-row="' + idx + '" type="button" aria-label="Abrir calendário">' + ICON_CAL + '</button>'
+        + '</div>'
+      + '</td>'
+      + '<td>'
+        + '<button class="roteiro-toggle-btn ' + (r.roteiro ? 'has-value' : '') + ' v5-table-roteiro" data-action="open-roteiro" data-row="' + idx + '" type="button" aria-label="' + (r.roteiro ? 'Editar roteiro' : 'Adicionar roteiro') + '">'
+          + '<span class="roteiro-toggle-text">' + (roteiroPreview ? escapeHtml(roteiroPreview) : 'Adicionar') + '</span>'
+          + ICON_EXP
+        + '</button>'
+      + '</td>'
+      + '<td>'
+        + '<span class="v3-row-actions">'
+          + '<button class="row-icon-btn" data-action="duplicate" data-row="' + idx + '" type="button" title="Duplicar">' + ICON_DUP + '</button>'
+          + '<button class="row-icon-btn danger" data-action="remove" data-row="' + idx + '" type="button" title="Remover">' + ICON_DEL + '</button>'
+        + '</span>'
+      + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  updateSummary();
+  refreshHint();
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
+}
+
+function refreshValidation() {
+  state.rows.forEach((r, idx) => {
+    document.querySelectorAll('[data-row="' + idx + '"][data-field="semana"]').forEach(el => {
+      const wrap = el.closest('.card-date-wrap, .v3-cell-date-wrap') || el;
+      const bad = rowInvalidSemana(r);
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = bad ? "Semana desejada não pode ser uma data passada" : "";
+    });
+    document.querySelectorAll('[data-row="' + idx + '"][data-field="volume"]').forEach(el => {
+      const wrap = el.closest('.input-with-suffix, .v3-cell-volume-wrap') || el;
+      const bad = rowVolumeExceeds(r);
+      wrap.classList.toggle('is-invalid', bad);
+      el.classList.toggle('is-invalid', bad);
+      el.title = bad ? "Volume excede o saldo do protocolo (" + r.saldo + " t)" : "";
+    });
+  });
+}
+
+function updateSummary() {
+  const totalVolume = state.rows.reduce((s, r) => s + parseBR(r.volume), 0);
+  const ready = state.rows.filter(r => rowStatus(r) === "complete").length;
+  document.getElementById("statProtos").textContent = state.rows.length;
+  document.getElementById("statVolume").innerHTML = fmtQty3(totalVolume) + '<span class="unit">t</span>';
+  const statReady = document.getElementById("statReady");
+  statReady.textContent = ready + "/" + (state.rows.length || 0);
+  statReady.classList.toggle("muted", ready < state.rows.length);
+}
+
+/* ===================================================================
+   INPUT WIRING (event delegation)
+   =================================================================== */
+elBody.addEventListener("input", e => {
+  const t = e.target;
+  if (!t.matches || !t.matches("[data-field]")) return;
+  if (t.dataset.field === "volume") maskVolumeDecimal(t);
+  const idx = parseInt(t.dataset.row, 10);
+  const field = t.dataset.field;
+  if (!state.rows[idx]) return;
+  state.rows[idx][field] = t.value;
+  afterFieldChange(idx, t);
+});
+/* ao sair do campo, normaliza o volume para 3 casas decimais */
+elBody.addEventListener("focusout", e => {
+  const t = e.target;
+  if (!t.matches || !t.matches('[data-field="volume"]')) return;
+  const idx = parseInt(t.dataset.row, 10);
+  if (!state.rows[idx] || !t.value) return;
+  t.value = fmtQty3(parseBR(t.value));
+  state.rows[idx].volume = t.value;
+  afterFieldChange(idx, t);
+});
+function afterFieldChange(idx, sourceEl) {
+  refreshValidation();
+  elAgendar.disabled = !canAgendar();
+  updateSummary();
+  const r = state.rows[idx];
+  if (!r) return;
+  // update row/card status class
+  const card = sourceEl.closest(".proto-card");
+  if (card) {
+    card.classList.remove("is-incomplete", "is-progress", "is-complete");
+    card.classList.add("is-" + rowStatus(r));
+  }
+  const tr = sourceEl.closest("tr[data-row]");
+  if (tr) {
+    tr.classList.remove("is-incomplete", "is-progress", "is-complete");
+    tr.classList.add("is-" + rowStatus(r));
+  }
+}
+elBody.addEventListener("click", e => {
+  const actBtn = e.target.closest("[data-action]");
+  if (!actBtn) return;
+  const action = actBtn.dataset.action;
+  const idx = parseInt(actBtn.dataset.row, 10);
+  if (action === "remove") {
+    state.rows.splice(idx, 1);
+    renderTable();
+  } else if (action === "duplicate") {
+    const r = state.rows[idx];
+    state.rows.splice(idx + 1, 0, Object.assign({}, r));
+    renderTable();
+  } else if (action === "open-dp") {
+    const wrap = actBtn.closest(".card-date-wrap, .v3-cell-date-wrap");
+    if (!wrap) return;
+    const input = wrap.querySelector(".card-date-input, .v3-cell-date-input");
+    openDatePicker(input, wrap);
+  } else if (action === "open-roteiro") {
+    openRoteiroDrawer(idx);
+  }
+});
+// click on the date input itself opens picker
+elBody.addEventListener("click", e => {
+  const input = e.target.closest(".card-date-input, .v3-cell-date-input");
+  if (!input) return;
+  const wrap = input.closest(".card-date-wrap, .v3-cell-date-wrap");
+  openDatePicker(input, wrap);
+});
+
+/* ===================================================================
+   MODAL HELPERS
+   =================================================================== */
+function openModal(id) { document.getElementById(id).classList.add("is-open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("is-open"); }
+document.querySelectorAll("[data-close]").forEach(btn => {
+  btn.addEventListener("click", () => closeModal(btn.dataset.close));
+});
+document.querySelectorAll(".modal-backdrop").forEach(bd => {
+  bd.addEventListener("click", e => {
+    if (e.target === bd) bd.classList.remove("is-open");
+  });
+});
+
+/* ===================================================================
+   FOOTER ACTIONS
+   =================================================================== */
+document.getElementById("cancelBtn").addEventListener("click", () => {
+  if (state.rows.length === 0) return;
+  openModal("cancelModal");
+});
+document.getElementById("cancelConfirm").addEventListener("click", () => {
+  state.rows = [];
+  closeModal("cancelModal");
+  renderTable();
+});
+document.getElementById("agendarBtn").addEventListener("click", () => {
+  elBody.classList.add("show-validation");
+  const wrap = elBody.querySelector(".proto-table-wrap");
+  if (wrap) wrap.classList.add("show-validation");
+  if (!canAgendar()) return;
+  document.getElementById("confirmCount").textContent = state.rows.length;
+  const summaryEl = document.getElementById("submitSummary");
+  const totalVolume = state.rows.reduce((s, r) => s + parseBR(r.volume), 0);
+  summaryEl.innerHTML = ''
+    + '<div class="row"><span>Protocolos a agendar</span><strong>' + state.rows.length + '</strong></div>'
+    + '<div class="row"><span>Volume total</span><strong>' + fmtQty3(totalVolume) + ' t</strong></div>';
+  openModal("submitModal");
+});
+elBody.addEventListener("input", () => {
+  if (elBody.classList.contains("show-validation") && canAgendar()) {
+    elBody.classList.remove("show-validation");
+    const wrap = elBody.querySelector(".proto-table-wrap");
+    if (wrap) wrap.classList.remove("show-validation");
+  }
+});
+document.getElementById("submitConfirm").addEventListener("click", () => {
+  closeModal("submitModal");
+  openModal("successModal");
+});
+document.getElementById("successReport").addEventListener("click", () => {
+  closeModal("successModal");
+  window.location.href = "relatorio-status-agendamento.html";
+});
+document.getElementById("successNew").addEventListener("click", () => {
+  closeModal("successModal");
+  state.rows = [];
+  renderTable();
+});
+
+/* ===================================================================
+   ROTEIRO DRAWER
+   =================================================================== */
+const elRoteiroDrawer    = document.getElementById("roteiroDrawer");
+const elRoteiroBackdrop  = document.getElementById("roteiroDrawerBackdrop");
+const elRoteiroText      = document.getElementById("roteiroDrawerText");
+const elRoteiroSubtitle  = document.getElementById("roteiroDrawerSubtitle");
+const elRoteiroLabel     = document.getElementById("roteiroDrawerLabel");
+let roteiroIdx = null;
+
+function openRoteiroDrawer(idx) {
+  const r = state.rows[idx];
+  if (!r) return;
+  roteiroIdx = idx;
+  const isCIF = r.frete === "CIF";
+  elRoteiroSubtitle.innerHTML = '<strong>' + escapeHtml(r.id) + '</strong> · Contrato ' + escapeHtml(r.contrato) + ' · Item ' + escapeHtml(r.item) + ' · ' + r.frete;
+  elRoteiroLabel.innerHTML = 'Descrição <span class="opt-tag">Opcional</span>';
+  elRoteiroText.value = r.roteiro || "";
+  elRoteiroText.placeholder = isCIF
+    ? "Descreva o roteiro de entrega: instruções de acesso, restrições de horário, contatos no local, etc."
+    : "Adicione observações de entrega se necessário (opcional para FOB).";
+  elRoteiroDrawer.classList.add("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "false");
+  elRoteiroBackdrop.classList.add("is-open");
+  setTimeout(() => elRoteiroText.focus(), 320);
+}
+function closeRoteiroDrawer() {
+  elRoteiroDrawer.classList.remove("is-open");
+  elRoteiroDrawer.setAttribute("aria-hidden", "true");
+  elRoteiroBackdrop.classList.remove("is-open");
+}
+function saveRoteiroDrawer() {
+  if (roteiroIdx == null) { closeRoteiroDrawer(); return; }
+  const r = state.rows[roteiroIdx];
+  if (!r) { closeRoteiroDrawer(); return; }
+  r.roteiro = elRoteiroText.value;
+  closeRoteiroDrawer();
+  renderTable();
+}
+document.getElementById("roteiroDrawerClose").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroDrawerCancel").addEventListener("click", closeRoteiroDrawer);
+document.getElementById("roteiroDrawerSave").addEventListener("click", saveRoteiroDrawer);
+elRoteiroBackdrop.addEventListener("click", closeRoteiroDrawer);
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && elRoteiroDrawer.classList.contains("is-open")) closeRoteiroDrawer();
+});
+
+/* ===================================================================
+   DATEPICKER
+   =================================================================== */
+let dpPopup = null;
+let dpCurrentInput = null;
+let dpViewYear = 0;
+let dpViewMonth = 0;
+let dpSelected = null;
+const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const WEEKDAY_NAMES = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+
+function ensureDP() {
+  if (dpPopup) return dpPopup;
+  dpPopup = document.createElement("div");
+  dpPopup.className = "dp-popup";
+  dpPopup.innerHTML = ''
+    + '<div class="dp-header">'
+      + '<button class="dp-nav" data-dp="prev" type="button" aria-label="Mês anterior"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>'
+      + '<span class="dp-month"></span>'
+      + '<button class="dp-nav" data-dp="next" type="button" aria-label="Próximo mês"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>'
+    + '</div>'
+    + '<div class="dp-weekdays"></div>'
+    + '<div class="dp-grid"></div>'
+    + '<div class="dp-footer">'
+      + '<button class="dp-clear" data-dp="clear" type="button">Limpar</button>'
+      + '<button class="dp-today-btn" data-dp="today" type="button">Hoje</button>'
+    + '</div>';
+  document.body.appendChild(dpPopup);
+  dpPopup.querySelector(".dp-weekdays").innerHTML = WEEKDAY_NAMES.map(n => '<div>' + n + '</div>').join("");
+  dpPopup.addEventListener("click", e => {
+    const nav = e.target.closest("[data-dp]");
+    if (nav) {
+      const a = nav.dataset.dp;
+      if (a === "prev") {
+        dpViewMonth--; if (dpViewMonth < 0) { dpViewMonth = 11; dpViewYear--; }
+        renderDP();
+      } else if (a === "next") {
+        dpViewMonth++; if (dpViewMonth > 11) { dpViewMonth = 0; dpViewYear++; }
+        renderDP();
+      } else if (a === "today") {
+        const t = new Date();
+        dpViewYear = t.getFullYear(); dpViewMonth = t.getMonth();
+        selectDPDate(t);
+      } else if (a === "clear") {
+        clearDPDate();
+      }
+      return;
+    }
+    const day = e.target.closest(".dp-day");
+    if (day && !day.classList.contains("is-disabled")) {
+      const y = parseInt(day.dataset.y, 10);
+      const m = parseInt(day.dataset.m, 10);
+      const d = parseInt(day.dataset.d, 10);
+      selectDPDate(new Date(y, m, d));
+    }
+  });
+  return dpPopup;
+}
+function openDatePicker(input, wrap) {
+  ensureDP();
+  dpCurrentInput = input;
+  if (input.value && /^\d{2}\/\d{2}\/\d{4}$/.test(input.value)) {
+    const parts = input.value.split("/");
+    dpSelected = new Date(parseInt(parts[2]), parseInt(parts[1]) - 1, parseInt(parts[0]));
+    dpViewYear = dpSelected.getFullYear();
+    dpViewMonth = dpSelected.getMonth();
+  } else {
+    dpSelected = null;
+    const t = new Date();
+    dpViewYear = t.getFullYear();
+    dpViewMonth = t.getMonth();
+  }
+  dpPopup.classList.add("is-open");
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  if (wrap) wrap.classList.add("is-open");
+  renderDP();
+  const rect = (wrap || input).getBoundingClientRect();
+  const popupRect = dpPopup.getBoundingClientRect();
+  const popupHeight = popupRect.height || 320;
+  const popupWidth = popupRect.width || 280;
+  const viewportH = window.innerHeight;
+  const viewportW = window.innerWidth;
+  const spaceBelow = viewportH - rect.bottom;
+  const spaceAbove = rect.top;
+  const offset = 6;
+  let top, left;
+  if (spaceBelow < popupHeight + offset && spaceAbove > popupHeight + offset) {
+    top = window.scrollY + rect.top - popupHeight - offset;
+  } else {
+    top = window.scrollY + rect.bottom + offset;
+  }
+  left = window.scrollX + rect.left;
+  if (rect.left + popupWidth > viewportW - 8) {
+    left = window.scrollX + rect.right - popupWidth;
+    if (left < window.scrollX + 8) left = window.scrollX + 8;
+  }
+  dpPopup.style.top = top + "px";
+  dpPopup.style.left = left + "px";
+}
+function closeDatePicker() {
+  if (dpPopup) dpPopup.classList.remove("is-open");
+  document.querySelectorAll(".card-date-wrap.is-open, .v3-cell-date-wrap.is-open").forEach(w => w.classList.remove("is-open"));
+  dpCurrentInput = null;
+}
+function renderDP() {
+  if (!dpPopup) return;
+  dpPopup.querySelector(".dp-month").textContent = MONTH_NAMES[dpViewMonth] + " " + dpViewYear;
+  const firstDay = new Date(dpViewYear, dpViewMonth, 1);
+  const startWeekDay = firstDay.getDay();
+  const daysInMonth = new Date(dpViewYear, dpViewMonth + 1, 0).getDate();
+  const daysInPrev = new Date(dpViewYear, dpViewMonth, 0).getDate();
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const cells = [];
+  for (let i = startWeekDay - 1; i >= 0; i--) {
+    const day = daysInPrev - i;
+    cells.push({ d: new Date(dpViewYear, dpViewMonth - 1, day), isOther: true });
+  }
+  for (let day = 1; day <= daysInMonth; day++) {
+    cells.push({ d: new Date(dpViewYear, dpViewMonth, day), isOther: false });
+  }
+  while (cells.length < 42) {
+    const last = cells[cells.length - 1].d;
+    const next = new Date(last);
+    next.setDate(next.getDate() + 1);
+    cells.push({ d: next, isOther: next.getMonth() !== dpViewMonth });
+  }
+  const grid = dpPopup.querySelector(".dp-grid");
+  const blockPast = dpCurrentInput && dpCurrentInput.dataset && dpCurrentInput.dataset.field === "semana";
+  grid.innerHTML = cells.map(c => {
+    const d = c.d;
+    const sameDay = function(a, b) {
+      return a && b
+        && a.getFullYear() === b.getFullYear()
+        && a.getMonth() === b.getMonth()
+        && a.getDate() === b.getDate();
+    };
+    const classes = ["dp-day"];
+    if (c.isOther) classes.push("is-other");
+    if (sameDay(d, today)) classes.push("is-today");
+    if (sameDay(d, dpSelected)) classes.push("is-selected");
+    let titleAttr = "";
+    if (blockPast && d < today) {
+      classes.push("is-disabled");
+      titleAttr = ' title="Não pode data anterior à atual"';
+    }
+    return '<button type="button" class="' + classes.join(" ") + '"' + titleAttr + ' data-y="' + d.getFullYear() + '" data-m="' + d.getMonth() + '" data-d="' + d.getDate() + '">' + d.getDate() + '</button>';
+  }).join("");
+}
+function selectDPDate(date) {
+  dpSelected = date;
+  if (dpCurrentInput) {
+    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const yy = date.getFullYear();
+    dpCurrentInput.value = dd + "/" + mm + "/" + yy;
+    const idx = parseInt(dpCurrentInput.dataset.row, 10);
+    const field = dpCurrentInput.dataset.field;
+    if (!isNaN(idx) && state.rows[idx] && field) {
+      state.rows[idx][field] = dpCurrentInput.value;
+      afterFieldChange(idx, dpCurrentInput);
+    }
+  }
+  closeDatePicker();
+}
+function clearDPDate() {
+  dpSelected = null;
+  if (dpCurrentInput) {
+    dpCurrentInput.value = "";
+    const idx = parseInt(dpCurrentInput.dataset.row, 10);
+    const field = dpCurrentInput.dataset.field;
+    if (!isNaN(idx) && state.rows[idx] && field) {
+      state.rows[idx][field] = "";
+      afterFieldChange(idx, dpCurrentInput);
+    }
+  }
+  closeDatePicker();
+}
+document.addEventListener("click", e => {
+  if (!dpPopup || !dpPopup.classList.contains("is-open")) return;
+  if (e.target.closest(".dp-popup") || e.target.closest(".card-date-wrap, .v3-cell-date-wrap")) return;
+  closeDatePicker();
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") closeDatePicker();
+});
+window.addEventListener("scroll", () => {
+  if (dpPopup && dpPopup.classList.contains("is-open") && dpCurrentInput) {
+    const wrap = dpCurrentInput.closest(".card-date-wrap, .v3-cell-date-wrap");
+    const rect = (wrap || dpCurrentInput).getBoundingClientRect();
+    dpPopup.style.top = (window.scrollY + rect.bottom + 6) + "px";
+    dpPopup.style.left = (window.scrollX + rect.left) + "px";
+  }
+}, true);
+
+/* ===================================================================
+   INIT
+   =================================================================== */
+(function init() {
+  // Detect query-string from Relatório de Protocolos
+  const params = new URLSearchParams(window.location.search);
+  const proto = params.get("protocolo");
+  const contrato = params.get("contrato");
+  if (proto) {
+    const banner = document.getElementById("fromReportBanner");
+    document.getElementById("fromReportProto").textContent = proto;
+    document.getElementById("fromReportContrato").textContent = contrato || "—";
+    if (banner) banner.style.display = "flex";
+  }
+  renderTable();
+})();
+</script>
+<script src="review-overlay.js" defer></script>
+</body>
+</html>
