@@ -2979,6 +2979,9 @@ window.addEventListener("scroll", () => {
 
 
 
+
+
+
 <style id="mdrev-style">
 .mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99997;display:inline-flex;align-items:center;gap:9px;
  background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;font-family:inherit;
@@ -3038,6 +3041,8 @@ window.addEventListener("scroll", () => {
 .mdrev-pintog{position:fixed;right:24px;bottom:60px;z-index:99997;background:#fff;color:#00583d;border:1px solid #cdcdcd;
  border-radius:999px;padding:8px 14px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12)}
 .mdrev-pintog[aria-pressed="false"]{color:#6b7570}
+/* some quando um modal/drawer do proprio prototipo esta aberto */
+.mdrev-fab.mdrev-away,.mdrev-pintog.mdrev-away{opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .15s,transform .15s}
 /* acima do FAB e do toggle, senao o tooltip passa por baixo deles */
 .mdrev-pins{position:fixed;inset:0;pointer-events:none;z-index:99998}
 .mdrev-pins.off{display:none}
@@ -3077,6 +3082,24 @@ window.addEventListener("scroll", () => {
    }
    return null;
  }
+ /* o prototipo usa z-index 100-111 nos modais; os controles injetados ficam
+    muito acima disso, entao precisam sair da frente quando algo abrir */
+ function overlayOpen(){
+   var k=document.body.children, W=innerWidth, H=innerHeight;
+   for(var i=0;i<k.length;i++){
+     var el=k[i];
+     if(el.id&&el.id.indexOf('mdrev')===0) continue;
+     var cs=getComputedStyle(el);
+     if(cs.position!=='fixed'||cs.display==='none'||cs.visibility==='hidden') continue;
+     /* o backdrop fica com opacity 0 mesmo aberto (quem aparece e o painel);
+        o sinal confiavel de "aberto" e ele passar a capturar clique */
+     if(cs.pointerEvents==='none') continue;
+     if((parseInt(cs.zIndex,10)||0)<100) continue;
+     var r=el.getBoundingClientRect();
+     if(r.width>=W*0.85&&r.height>=H*0.85) return true;
+   }
+   return false;
+ }
  function placeTip(el){
    var tip=el.querySelector('.mdrev-tip'); if(!tip)return;
    var r=el.getBoundingClientRect(), w=tip.offsetWidth, h=tip.offsetHeight, M=8;
@@ -3107,7 +3130,10 @@ window.addEventListener("scroll", () => {
    box.appendChild(b); return {d:d,el:b};
  });
  function place(){
-   if(n.classList.contains('on')||box.classList.contains('off')){
+   var ov=overlayOpen();
+   f.classList.toggle('mdrev-away',ov);
+   tog&&tog.classList.toggle('mdrev-away',ov);
+   if(ov||n.classList.contains('on')||box.classList.contains('off')){
      pins.forEach(function(p){p.el.style.display='none'}); return;
    }
    var vis=0;
@@ -3132,10 +3158,13 @@ window.addEventListener("scroll", () => {
  var raf=0; function schedule(){ if(raf)return; raf=requestAnimationFrame(function(){raf=0;place();}); }
  addEventListener('scroll',schedule,true); addEventListener('resize',schedule);
  new MutationObserver(function(ms){
+   /* ignora SO as mutacoes que eu mesmo causo (senao vira loop);
+      antes isso descartava o lote inteiro e engolia a abertura dos modais */
    for(var i=0;i<ms.length;i++){ var t=ms[i].target;
-     if(t&&t.closest&&t.closest('#mdrevPins,#mdrevPinTog,#mdrevNav')) return; }
-   schedule();
- }).observe(document.body,{childList:true,subtree:true});
+     if(t&&t.closest&&t.closest('#mdrevPins,#mdrevPinTog,#mdrevNav,#mdrevFab')) continue;
+     schedule(); return;
+   }
+ }).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class','style']});
  window.__mdrevPlace=place; setTimeout(place,300); place();
 })();
 </script>
