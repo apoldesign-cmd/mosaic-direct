@@ -4168,6 +4168,10 @@ render();
 <script src="review-overlay.js" defer></script>
 
 
+
+
+
+
 <style id="mdrev-style">
 .mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99997;display:inline-flex;align-items:center;gap:9px;
  background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;font-family:inherit;
@@ -4211,18 +4215,91 @@ render();
 .mdrev-ft{display:flex;gap:9px;flex-wrap:wrap;padding:15px 24px;border-top:1px solid #e1e1e1;background:#fafaf8}
 .mdrev-ft a{font-size:12.5px;font-weight:800;text-decoration:none;color:#006a4d;border:1px solid #cdcdcd;padding:9px 14px;background:#fff}
 .mdrev-ft a.p{background:#00583d;color:#fff;border-color:#00583d}
-@media(max-width:600px){.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
+.mdrev-pintog{position:fixed;right:24px;bottom:60px;z-index:99997;background:#fff;color:#00583d;border:1px solid #cdcdcd;
+ border-radius:999px;padding:8px 14px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.mdrev-pintog[aria-pressed="false"]{color:#6b7570}
+.mdrev-pins{position:fixed;inset:0;pointer-events:none;z-index:99996}
+.mdrev-pins.off{display:none}
+.mdrev-pin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#00583d;color:#fff;
+ border:3px solid #fff;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;pointer-events:auto;
+ box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:0}
+.mdrev-pin:hover,.mdrev-pin:focus{background:#006a4d;outline:none}
+.mdrev-tip{position:absolute;left:50%;top:calc(100% + 9px);transform:translateX(-50%);width:250px;background:#15201b;color:#fff;
+ padding:9px 11px;font-size:11.5px;font-weight:500;line-height:1.45;text-align:left;opacity:0;pointer-events:none;transition:opacity .15s;z-index:2}
+.mdrev-tip b{display:block;color:#7ad9b5;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.mdrev-pin:hover .mdrev-tip,.mdrev-pin:focus .mdrev-tip{opacity:1}
+@media(max-width:600px){.mdrev-pintog{right:14px;bottom:44px}.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
 </style>
-<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">15</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Protocolos</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>15</b><span>ajustes aplicados</span></div><div><b>3</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">3</span></div><details class="mdrev-acc" open><summary><span class="mdrev-id">G5-01</span><span class="mdrev-tt">Descrição da filial do cliente</span><span class="mdrev-c">3</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Acrescentei o código da filial ao lado da descrição, mantendo o que já existia. Novo campo filialCod no mock e helper filialLabel(p) que monta &quot;código · descrição&quot;. <i>— Coluna &quot;Filial do Cliente&quot; (th data-sort=&quot;filial&quot;) / células &lt;td&gt;${filialLabel(p)}&lt;/td&gt; em renderRowNormal e renderRowEditing; helper filialLabel() logo antes de numCell()</i></li><li>Filtro avançado de filial passou a casar com código + descrição e as opções do autocomplete foram atualizadas para o mesmo formato. <i>— #filterFilial (div.filter-ac data-options) e a linha de filtro dentro de render()</i></li><li>Modal &quot;Editar protocolo&quot; (bloco Demais informações) passou a mostrar código + descrição da filial. <i>— setText(&quot;efViewFilial&quot;, ...) — campo com label &quot;Filial do Cliente&quot;</i></li></ul></details><div class="mdrev-sec">Transversal<span class="sn">12</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">TR-01</span><span class="mdrev-tt">Contrato SAP (transversal)</span><span class="mdrev-c">7</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Criei a coluna &quot;Contrato SAP&quot; convivendo com o contrato existente e com a Cotação Q-. O cabeçalho antigo (que rotulava C-00X-2024 como &quot;Contrato SAP&quot;) passou a se chamar apenas &quot;Contrato&quot;; a nova coluna traz o número SAP no formato de 10 dígitos iniciando em 45, como informação secundária (estilo muted + tabular-nums, igual às colunas IE/Produto). <i>— &lt;thead&gt; da .wide-table: th data-sort=&quot;contrato&quot; e novo th data-sort=&quot;contratoSap&quot;, posicionados antes de &quot;Cotação&quot;; células correspondentes em renderRowNormal e renderRowEditing</i></li><li>Adicionei o campo contratoSap ao mock dos 5 protocolos, sequencial e coerente com os contratos existentes. <i>— const PROTOCOLS — cada objeto, logo após a chave contrato</i></li><li>Busca livre passou a encontrar pelo número SAP (o placeholder já prometia &quot;Buscar Protocolo, Contrato SAP ou Cotação&quot;). <i>— render() — filtro do campo #filterSearch</i></li><li>Modal &quot;Editar protocolo&quot;: item &quot;Contrato SAP&quot; renomeado para &quot;Contrato&quot; e criado um novo item &quot;Contrato SAP&quot; com o número 45…, mantendo o item &quot;Cotação&quot; logo em seguida. <i>— Bloco .ef-view-grid — #efViewContrato (label &quot;Contrato&quot;) e novo #efViewContratoSap (label &quot;Contrato SAP&quot;); preenchimento em setText()</i></li><li>Modais &quot;Agendar&quot; e &quot;Cancelar protocolo&quot; passaram a exibir o número SAP, coerente com o rótulo &quot;Contrato SAP&quot; que já usavam. <i>— #agCtxContrato (label &quot;Contrato SAP&quot; do modal Agendar) e #cpContrato (texto &quot;do contrato …&quot; do modal Cancelar)</i></li><li>Export CSV atualizado para a nova contagem de colunas. <i>— Handler de #btnExport — array headers e csvRows.push</i></li><li>Atualizei o COLSPAN do estado vazio para acompanhar a coluna nova (a tabela não tem tfoot nem contagem de colunas no paginador — o texto de paginação é derivado de rows.length e não precisou mudar). <i>— render() — linha do empty state em #tableBody</i></li></ul></details><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Criei o helper fmtQtd() (pt-BR, mínimo e máximo 3 casas) e apliquei em todas as células numéricas da tabela. <i>— Novo fmtQtd() antes de numCell(); numCell(), editableQtyCell() e as duas células bloqueadas de Qtd. Protocolo em renderRowNormal/renderRowEditing</i></li><li>Quantidades dos modais e hints passaram a 3 casas. <i>— #efQtdAgendada, #efQtdSaldo, #efQtdFaturada (setVal); recálculo ao vivo do saldo em elProto.oninput; #efQtdProtoHint; #agCtxSaldo; #agVolumeHint (mensagem normal e a de erro &quot;Volume excede o saldo&quot;); #cpVolume do modal Cancelar</i></li><li>Toasts de confirmação com quantidade passaram a 3 casas. <i>— commitCellEdit (display do toast de campo numérico) e confirmAgendamento (toast &quot;Protocolo … agendado · X t&quot;)</i></li><li>Inputs numéricos de quantidade passaram a aceitar 3 decimais. <i>— #efQtdProto (modal Editar), #agVolume (modal Agendar) e editNumCell() (edição inline de linha)</i></li><li>Colunas de quantidade no CSV exportadas já formatadas com 3 casas. <i>— Handler de #btnExport — csvRows.push</i></li></ul></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-protocolos.html" target="_blank">Tela original &rarr;</a></div></aside>
+<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">15</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Protocolos</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>15</b><span>ajustes aplicados</span></div><div><b>3</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">3</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G5-01</span><span class="mdrev-tt">Descrição da filial do cliente</span><span class="mdrev-c">3</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Acrescentei o código da filial ao lado da descrição, mantendo o que já existia. Novo campo filialCod no mock e helper filialLabel(p) que monta &quot;código · descrição&quot;. <i>— Coluna &quot;Filial do Cliente&quot; (th data-sort=&quot;filial&quot;) / células &lt;td&gt;${filialLabel(p)}&lt;/td&gt; em renderRowNormal e renderRowEditing; helper filialLabel() logo antes de numCell()</i></li><li>Filtro avançado de filial passou a casar com código + descrição e as opções do autocomplete foram atualizadas para o mesmo formato. <i>— #filterFilial (div.filter-ac data-options) e a linha de filtro dentro de render()</i></li><li>Modal &quot;Editar protocolo&quot; (bloco Demais informações) passou a mostrar código + descrição da filial. <i>— setText(&quot;efViewFilial&quot;, ...) — campo com label &quot;Filial do Cliente&quot;</i></li></ul></details><div class="mdrev-sec">Transversal<span class="sn">12</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">TR-01</span><span class="mdrev-tt">Contrato SAP (transversal)</span><span class="mdrev-c">7</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Criei a coluna &quot;Contrato SAP&quot; convivendo com o contrato existente e com a Cotação Q-. O cabeçalho antigo (que rotulava C-00X-2024 como &quot;Contrato SAP&quot;) passou a se chamar apenas &quot;Contrato&quot;; a nova coluna traz o número SAP no formato de 10 dígitos iniciando em 45, como informação secundária (estilo muted + tabular-nums, igual às colunas IE/Produto). <i>— &lt;thead&gt; da .wide-table: th data-sort=&quot;contrato&quot; e novo th data-sort=&quot;contratoSap&quot;, posicionados antes de &quot;Cotação&quot;; células correspondentes em renderRowNormal e renderRowEditing</i></li><li>Adicionei o campo contratoSap ao mock dos 5 protocolos, sequencial e coerente com os contratos existentes. <i>— const PROTOCOLS — cada objeto, logo após a chave contrato</i></li><li>Busca livre passou a encontrar pelo número SAP (o placeholder já prometia &quot;Buscar Protocolo, Contrato SAP ou Cotação&quot;). <i>— render() — filtro do campo #filterSearch</i></li><li>Modal &quot;Editar protocolo&quot;: item &quot;Contrato SAP&quot; renomeado para &quot;Contrato&quot; e criado um novo item &quot;Contrato SAP&quot; com o número 45…, mantendo o item &quot;Cotação&quot; logo em seguida. <i>— Bloco .ef-view-grid — #efViewContrato (label &quot;Contrato&quot;) e novo #efViewContratoSap (label &quot;Contrato SAP&quot;); preenchimento em setText()</i></li><li>Modais &quot;Agendar&quot; e &quot;Cancelar protocolo&quot; passaram a exibir o número SAP, coerente com o rótulo &quot;Contrato SAP&quot; que já usavam. <i>— #agCtxContrato (label &quot;Contrato SAP&quot; do modal Agendar) e #cpContrato (texto &quot;do contrato …&quot; do modal Cancelar)</i></li><li>Export CSV atualizado para a nova contagem de colunas. <i>— Handler de #btnExport — array headers e csvRows.push</i></li><li>Atualizei o COLSPAN do estado vazio para acompanhar a coluna nova (a tabela não tem tfoot nem contagem de colunas no paginador — o texto de paginação é derivado de rows.length e não precisou mudar). <i>— render() — linha do empty state em #tableBody</i></li></ul></details><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Criei o helper fmtQtd() (pt-BR, mínimo e máximo 3 casas) e apliquei em todas as células numéricas da tabela. <i>— Novo fmtQtd() antes de numCell(); numCell(), editableQtyCell() e as duas células bloqueadas de Qtd. Protocolo em renderRowNormal/renderRowEditing</i></li><li>Quantidades dos modais e hints passaram a 3 casas. <i>— #efQtdAgendada, #efQtdSaldo, #efQtdFaturada (setVal); recálculo ao vivo do saldo em elProto.oninput; #efQtdProtoHint; #agCtxSaldo; #agVolumeHint (mensagem normal e a de erro &quot;Volume excede o saldo&quot;); #cpVolume do modal Cancelar</i></li><li>Toasts de confirmação com quantidade passaram a 3 casas. <i>— commitCellEdit (display do toast de campo numérico) e confirmAgendamento (toast &quot;Protocolo … agendado · X t&quot;)</i></li><li>Inputs numéricos de quantidade passaram a aceitar 3 decimais. <i>— #efQtdProto (modal Editar), #agVolume (modal Agendar) e editNumCell() (edição inline de linha)</i></li><li>Colunas de quantidade no CSV exportadas já formatadas com 3 casas. <i>— Handler de #btnExport — csvRows.push</i></li></ul></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-protocolos.html" target="_blank">Tela original &rarr;</a></div></aside><button class="mdrev-pintog" id="mdrevPinTog" aria-pressed="true">Pins na tela</button><div class="mdrev-pins" id="mdrevPins"></div>
 <script>
 (function(){
  var f=document.getElementById('mdrevFab'),n=document.getElementById('mdrevNav'),
      s=document.getElementById('mdrevScrim'),x=document.getElementById('mdrevX');
  if(!f||!n||!s)return;
- function open(){n.classList.add('on');s.classList.add('on');x&&x.focus();}
- function close(){n.classList.remove('on');s.classList.remove('on');f.focus();}
+ function open(){n.classList.add('on');s.classList.add('on');x&&x.focus();if(window.__mdrevPlace)__mdrevPlace();}
+ function close(){n.classList.remove('on');s.classList.remove('on');f.focus();if(window.__mdrevPlace)__mdrevPlace();}
  f.addEventListener('click',open); x&&x.addEventListener('click',close); s.addEventListener('click',close);
  document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&n.classList.contains('on'))close();});
+
+ /* ---- pins na tela ---- */
+ var DEFS=[{"sel": "th", "has": "Contrato SAP", "item": "TR-01", "tip": "Nova coluna com o número do Contrato SAP."}, {"sel": "th", "has": "Filial", "item": "G5-01", "tip": "Filial do cliente agora traz código e descrição."}, {"sel": "th", "has": "Qtd. Protocolo", "item": "G6-01", "tip": "Quantidades e saldos com 3 casas decimais (role a tabela para o lado)."}], box=document.getElementById('mdrevPins'), tog=document.getElementById('mdrevPinTog');
+ if(!box||!DEFS.length)return;
+ function find(d){
+   var els=document.querySelectorAll(d.sel);
+   for(var i=0;i<els.length;i++){
+     var el=els[i];
+     if(d.has && (el.textContent||'').indexOf(d.has)<0) continue;
+     if(d.has && el.children.length>3) continue;
+     var r=el.getBoundingClientRect();
+     if(r.width>0&&r.height>0) return el;
+   }
+   return null;
+ }
+ var pins=DEFS.map(function(d,i){
+   var b=document.createElement('button');
+   b.className='mdrev-pin'; b.type='button'; b.style.display='none';
+   b.setAttribute('aria-label','Ajuste '+(i+1)+': '+d.tip);
+   b.innerHTML=(i+1)+'<span class="mdrev-tip"><b>'+d.item+'</b>'+d.tip+'</span>';
+   b.addEventListener('click',function(){
+     open();
+     var all=n.querySelectorAll('.mdrev-acc');
+     for(var k=0;k<all.length;k++){
+       var id=all[k].querySelector('.mdrev-id');
+       if(id&&id.textContent.indexOf(d.item)>=0){all[k].open=true;all[k].scrollIntoView({block:'center',behavior:'smooth'});break;}
+     }
+   });
+   box.appendChild(b); return {d:d,el:b};
+ });
+ function place(){
+   if(n.classList.contains('on')||box.classList.contains('off')){
+     pins.forEach(function(p){p.el.style.display='none'}); return;
+   }
+   var vis=0;
+   pins.forEach(function(p){
+     var t=find(p.d);
+     if(!t){p.el.style.display='none';return;}
+     var r=t.getBoundingClientRect();
+     if(r.bottom<0||r.top>innerHeight||r.right<0||r.left>innerWidth){p.el.style.display='none';return;}
+     p.el.style.display='flex'; vis++;
+     p.el.style.left=Math.round(Math.min(Math.max(r.left+10,16),innerWidth-16))+'px';
+     p.el.style.top=Math.round(Math.min(Math.max(r.top+8,16),innerHeight-16))+'px';
+   });
+   if(tog&&!box.classList.contains('off')){var lb=vis?('Pins na tela ('+vis+'/'+pins.length+')'):('Pins: role a tabela →');if(tog.textContent!==lb)tog.textContent=lb;}
+ }
+ tog&&tog.addEventListener('click',function(){
+   var on=box.classList.toggle('off');
+   tog.setAttribute('aria-pressed',String(!on));
+   tog.textContent=on?'Mostrar pins':'Pins na tela';
+   place();
+ });
+ var raf=0; function schedule(){ if(raf)return; raf=requestAnimationFrame(function(){raf=0;place();}); }
+ addEventListener('scroll',schedule,true); addEventListener('resize',schedule);
+ new MutationObserver(function(ms){
+   for(var i=0;i<ms.length;i++){ var t=ms[i].target;
+     if(t&&t.closest&&t.closest('#mdrevPins,#mdrevPinTog,#mdrevNav')) return; }
+   schedule();
+ }).observe(document.body,{childList:true,subtree:true});
+ window.__mdrevPlace=place; setTimeout(place,300); place();
 })();
 </script>
 

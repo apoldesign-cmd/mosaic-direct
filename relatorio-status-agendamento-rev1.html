@@ -4220,6 +4220,10 @@ else bindConfirmModal();
 <script src="review-overlay.js" defer></script>
 
 
+
+
+
+
 <style id="mdrev-style">
 .mdrev-fab{position:fixed;right:24px;bottom:104px;z-index:99997;display:inline-flex;align-items:center;gap:9px;
  background:#00583d;color:#fff;border:none;border-radius:999px;padding:13px 20px;cursor:pointer;font-family:inherit;
@@ -4263,18 +4267,91 @@ else bindConfirmModal();
 .mdrev-ft{display:flex;gap:9px;flex-wrap:wrap;padding:15px 24px;border-top:1px solid #e1e1e1;background:#fafaf8}
 .mdrev-ft a{font-size:12.5px;font-weight:800;text-decoration:none;color:#006a4d;border:1px solid #cdcdcd;padding:9px 14px;background:#fff}
 .mdrev-ft a.p{background:#00583d;color:#fff;border-color:#00583d}
-@media(max-width:600px){.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
+.mdrev-pintog{position:fixed;right:24px;bottom:60px;z-index:99997;background:#fff;color:#00583d;border:1px solid #cdcdcd;
+ border-radius:999px;padding:8px 14px;font-family:inherit;font-size:11.5px;font-weight:800;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+.mdrev-pintog[aria-pressed="false"]{color:#6b7570}
+.mdrev-pins{position:fixed;inset:0;pointer-events:none;z-index:99996}
+.mdrev-pins.off{display:none}
+.mdrev-pin{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;background:#00583d;color:#fff;
+ border:3px solid #fff;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;pointer-events:auto;
+ box-shadow:0 2px 8px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:0}
+.mdrev-pin:hover,.mdrev-pin:focus{background:#006a4d;outline:none}
+.mdrev-tip{position:absolute;left:50%;top:calc(100% + 9px);transform:translateX(-50%);width:250px;background:#15201b;color:#fff;
+ padding:9px 11px;font-size:11.5px;font-weight:500;line-height:1.45;text-align:left;opacity:0;pointer-events:none;transition:opacity .15s;z-index:2}
+.mdrev-tip b{display:block;color:#7ad9b5;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.mdrev-pin:hover .mdrev-tip,.mdrev-pin:focus .mdrev-tip{opacity:1}
+@media(max-width:600px){.mdrev-pintog{right:14px;bottom:44px}.mdrev-fab{right:14px;bottom:82px;padding:11px 15px;font-size:12px}.mdrev-stats b{font-size:21px}}
 </style>
-<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">11</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Status de Agendamento</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>11</b><span>ajustes aplicados</span></div><div><b>2</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">6</span></div><details class="mdrev-acc" open><summary><span class="mdrev-id">G5-02</span><span class="mdrev-tt">Roteiro de entrega</span><span class="mdrev-c">6</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Adicionado campo `roteiro` no mock de cada solicitação (7 linhas), com textos plausíveis e coerentes com cidade/planta/recebedor de cada linha; MD-00000127 fica com &quot;—&quot; para exercitar o estado vazio. <i>— const REQUESTS[] / mkRow({...}) — chave `roteiro`, logo após `cidade`/`uf`</i></li><li>Nova coluna no cabeçalho da tabela, como última coluna do bloco principal (depois de UF, antes das colunas de totais). <i>— buildThead() → array `main`</i></li><li>Nova célula da linha, inserida nos DOIS ramos do render() (modo normal e modo edição), para as contagens de &lt;td&gt; baterem com o &lt;th&gt;. Texto completo no atributo title porque a célula trunca. <i>— render() → tds (ramo `editing` e ramo `else`), logo após a célula de UF</i></li><li>COLSPAN da linha de detalhe (breakdown semanal) atualizado de 24 para 25 e comentário de contagem corrigido, para a tabela larga com colunas congeladas não desalinhar. <i>— render() → const COLSPAN (usado em &lt;td colspan=&quot;${COLSPAN}&quot;&gt;)</i></li><li>Estilo da nova célula seguindo o padrão das demais células da report-table (sem cor nova, sem tipografia nova): trunca com ellipsis em no máx. 280px, cor --text-2. <i>— CSS — `.report-table .cell-roteiro`, junto de .cell-sol/.cell-mono/.cell-stack</i></li><li>Coluna Roteiro também incluída no CSV exportado, na mesma posição da tela (após UF). <i>— handler de #btnExport → array `header` e array `cells`</i></li></ul></details><div class="mdrev-sec">Transversal<span class="sn">5</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Formatadores de quantidade passam a emitir sempre 3 casas decimais (pt-BR). Criado helper fmtQty() reutilizado por fmt(), fmtDiff(), toast e export. Removidos os atalhos que devolviam &quot;0&quot; cru para zero. <i>— const fmt / fmtDiff (bloco &quot;---- Formatters ----&quot;)</i></li><li>Como fmt()/fmtDiff() são usados pelas colunas Total Plan. / Total Real. / Δ Total e por todo o breakdown semanal (Planejado, Realizado, Diferença — Total + 7 dias), todos esses números passaram a 3 casas sem alteração de markup. <i>— render() → td.vol-cell.col-total; buildWeeklyBreakdown() → mkRow()/diffRow()</i></li><li>Toast de confirmação da edição inline de quantidade passou a usar fmtQty em vez de toLocaleString sem opções. <i>— commitCellEdit() → showInlineToast(...)</i></li><li>Inputs numéricos de quantidade passaram a aceitar passo de 3 casas (senão o browser barra valores como 100,125). <i>— #rsaEditQty (modal Editar Solicitação) e input.qty-inline-input (startCellEdit)</i></li><li>Quantidades do CSV exportado também saem com 3 casas, mantendo consistência com a tela. <i>— handler de #btnExport → cells (Qtd Solicitada/Confirmada/Faturada, totais e os 7 dias × Plan/Real/Δ)</i></li></ul></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-status-agendamento.html" target="_blank">Tela original &rarr;</a></div></aside>
+<button class="mdrev-fab" id="mdrevFab" title="Ver o que mudou nesta tela">&#10022; Ajustes aplicados <span class="mdrev-n">11</span></button><div class="mdrev-scrim" id="mdrevScrim"></div><aside class="mdrev-nav" id="mdrevNav" role="dialog" aria-modal="true" aria-labelledby="mdrevTitle"><div class="mdrev-hd"><div><div class="mdrev-kick">Revisão Protótipo MD · e-mail de 17/07</div><h2 id="mdrevTitle">O que mudou em Relatório de Status de Agendamento</h2></div><button class="mdrev-x" id="mdrevX" aria-label="Fechar">&#10005;</button></div><div class="mdrev-stats"><div><b>11</b><span>ajustes aplicados</span></div><div><b>2</b><span>itens do backlog</span></div><div><b>2</b><span>áreas da tela</span></div></div><div class="mdrev-body"><div class="mdrev-sec">Tela principal<span class="sn">6</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G5-02</span><span class="mdrev-tt">Roteiro de entrega</span><span class="mdrev-c">6</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Adicionado campo `roteiro` no mock de cada solicitação (7 linhas), com textos plausíveis e coerentes com cidade/planta/recebedor de cada linha; MD-00000127 fica com &quot;—&quot; para exercitar o estado vazio. <i>— const REQUESTS[] / mkRow({...}) — chave `roteiro`, logo após `cidade`/`uf`</i></li><li>Nova coluna no cabeçalho da tabela, como última coluna do bloco principal (depois de UF, antes das colunas de totais). <i>— buildThead() → array `main`</i></li><li>Nova célula da linha, inserida nos DOIS ramos do render() (modo normal e modo edição), para as contagens de &lt;td&gt; baterem com o &lt;th&gt;. Texto completo no atributo title porque a célula trunca. <i>— render() → tds (ramo `editing` e ramo `else`), logo após a célula de UF</i></li><li>COLSPAN da linha de detalhe (breakdown semanal) atualizado de 24 para 25 e comentário de contagem corrigido, para a tabela larga com colunas congeladas não desalinhar. <i>— render() → const COLSPAN (usado em &lt;td colspan=&quot;${COLSPAN}&quot;&gt;)</i></li><li>Estilo da nova célula seguindo o padrão das demais células da report-table (sem cor nova, sem tipografia nova): trunca com ellipsis em no máx. 280px, cor --text-2. <i>— CSS — `.report-table .cell-roteiro`, junto de .cell-sol/.cell-mono/.cell-stack</i></li><li>Coluna Roteiro também incluída no CSV exportado, na mesma posição da tela (após UF). <i>— handler de #btnExport → array `header` e array `cells`</i></li></ul></details><div class="mdrev-sec">Transversal<span class="sn">5</span></div><details class="mdrev-acc"><summary><span class="mdrev-id">G6-01</span><span class="mdrev-tt">Quantidades com 3 casas decimais</span><span class="mdrev-c">5</span><span class="mdrev-chev">&#9660;</span></summary><ul><li>Formatadores de quantidade passam a emitir sempre 3 casas decimais (pt-BR). Criado helper fmtQty() reutilizado por fmt(), fmtDiff(), toast e export. Removidos os atalhos que devolviam &quot;0&quot; cru para zero. <i>— const fmt / fmtDiff (bloco &quot;---- Formatters ----&quot;)</i></li><li>Como fmt()/fmtDiff() são usados pelas colunas Total Plan. / Total Real. / Δ Total e por todo o breakdown semanal (Planejado, Realizado, Diferença — Total + 7 dias), todos esses números passaram a 3 casas sem alteração de markup. <i>— render() → td.vol-cell.col-total; buildWeeklyBreakdown() → mkRow()/diffRow()</i></li><li>Toast de confirmação da edição inline de quantidade passou a usar fmtQty em vez de toLocaleString sem opções. <i>— commitCellEdit() → showInlineToast(...)</i></li><li>Inputs numéricos de quantidade passaram a aceitar passo de 3 casas (senão o browser barra valores como 100,125). <i>— #rsaEditQty (modal Editar Solicitação) e input.qty-inline-input (startCellEdit)</i></li><li>Quantidades do CSV exportado também saem com 3 casas, mantendo consistência com a tela. <i>— handler de #btnExport → cells (Qtd Solicitada/Confirmada/Faturada, totais e os 7 dias × Plan/Real/Δ)</i></li></ul></details></div><div class="mdrev-ft"><a class="p" href="/backlog/" target="_blank">Backlog completo &rarr;</a><a href="relatorio-status-agendamento.html" target="_blank">Tela original &rarr;</a></div></aside><button class="mdrev-pintog" id="mdrevPinTog" aria-pressed="true">Pins na tela</button><div class="mdrev-pins" id="mdrevPins"></div>
 <script>
 (function(){
  var f=document.getElementById('mdrevFab'),n=document.getElementById('mdrevNav'),
      s=document.getElementById('mdrevScrim'),x=document.getElementById('mdrevX');
  if(!f||!n||!s)return;
- function open(){n.classList.add('on');s.classList.add('on');x&&x.focus();}
- function close(){n.classList.remove('on');s.classList.remove('on');f.focus();}
+ function open(){n.classList.add('on');s.classList.add('on');x&&x.focus();if(window.__mdrevPlace)__mdrevPlace();}
+ function close(){n.classList.remove('on');s.classList.remove('on');f.focus();if(window.__mdrevPlace)__mdrevPlace();}
  f.addEventListener('click',open); x&&x.addEventListener('click',close); s.addEventListener('click',close);
  document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&n.classList.contains('on'))close();});
+
+ /* ---- pins na tela ---- */
+ var DEFS=[{"sel": "th", "has": "Roteiro de Entrega", "item": "G5-02", "tip": "Nova coluna com o Roteiro de Entrega, também incluída no CSV exportado."}, {"sel": "th", "has": "Total Plan.", "item": "G6-01", "tip": "Totais com 3 casas decimais. As colunas de totais seguem como estão — por decisão, o detalhamento fica no Excel."}], box=document.getElementById('mdrevPins'), tog=document.getElementById('mdrevPinTog');
+ if(!box||!DEFS.length)return;
+ function find(d){
+   var els=document.querySelectorAll(d.sel);
+   for(var i=0;i<els.length;i++){
+     var el=els[i];
+     if(d.has && (el.textContent||'').indexOf(d.has)<0) continue;
+     if(d.has && el.children.length>3) continue;
+     var r=el.getBoundingClientRect();
+     if(r.width>0&&r.height>0) return el;
+   }
+   return null;
+ }
+ var pins=DEFS.map(function(d,i){
+   var b=document.createElement('button');
+   b.className='mdrev-pin'; b.type='button'; b.style.display='none';
+   b.setAttribute('aria-label','Ajuste '+(i+1)+': '+d.tip);
+   b.innerHTML=(i+1)+'<span class="mdrev-tip"><b>'+d.item+'</b>'+d.tip+'</span>';
+   b.addEventListener('click',function(){
+     open();
+     var all=n.querySelectorAll('.mdrev-acc');
+     for(var k=0;k<all.length;k++){
+       var id=all[k].querySelector('.mdrev-id');
+       if(id&&id.textContent.indexOf(d.item)>=0){all[k].open=true;all[k].scrollIntoView({block:'center',behavior:'smooth'});break;}
+     }
+   });
+   box.appendChild(b); return {d:d,el:b};
+ });
+ function place(){
+   if(n.classList.contains('on')||box.classList.contains('off')){
+     pins.forEach(function(p){p.el.style.display='none'}); return;
+   }
+   var vis=0;
+   pins.forEach(function(p){
+     var t=find(p.d);
+     if(!t){p.el.style.display='none';return;}
+     var r=t.getBoundingClientRect();
+     if(r.bottom<0||r.top>innerHeight||r.right<0||r.left>innerWidth){p.el.style.display='none';return;}
+     p.el.style.display='flex'; vis++;
+     p.el.style.left=Math.round(Math.min(Math.max(r.left+10,16),innerWidth-16))+'px';
+     p.el.style.top=Math.round(Math.min(Math.max(r.top+8,16),innerHeight-16))+'px';
+   });
+   if(tog&&!box.classList.contains('off')){var lb=vis?('Pins na tela ('+vis+'/'+pins.length+')'):('Pins: role a tabela →');if(tog.textContent!==lb)tog.textContent=lb;}
+ }
+ tog&&tog.addEventListener('click',function(){
+   var on=box.classList.toggle('off');
+   tog.setAttribute('aria-pressed',String(!on));
+   tog.textContent=on?'Mostrar pins':'Pins na tela';
+   place();
+ });
+ var raf=0; function schedule(){ if(raf)return; raf=requestAnimationFrame(function(){raf=0;place();}); }
+ addEventListener('scroll',schedule,true); addEventListener('resize',schedule);
+ new MutationObserver(function(ms){
+   for(var i=0;i<ms.length;i++){ var t=ms[i].target;
+     if(t&&t.closest&&t.closest('#mdrevPins,#mdrevPinTog,#mdrevNav')) return; }
+   schedule();
+ }).observe(document.body,{childList:true,subtree:true});
+ window.__mdrevPlace=place; setTimeout(place,300); place();
 })();
 </script>
 
